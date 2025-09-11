@@ -32,6 +32,17 @@ class Structure(Base):
     acheteur: Mapped[bool] = mapped_column(default=False)
 
 
+class ModificationSousTraitance(Base):
+    uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uid_acte_sous_traitance: Mapped[int] = mapped_column(
+        ForeignKey("acte_sous_traitance.uid")
+    )
+    duree_mois: Mapped[int]
+    date_notif: Mapped[date]
+    date_publication: Mapped[date]
+    montant: Mapped[Decimal]
+
+
 class ActeSousTraitance(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
@@ -43,6 +54,7 @@ class ActeSousTraitance(Base):
     date_publication: Mapped[date]
     montant: Mapped[Decimal]
     variation_prix: Mapped[int | None]  # enum VariationPrix
+    modifications: Mapped[list[ModificationSousTraitance]] = relationship()
 
 
 modification_titulaire_table = Table(
@@ -66,17 +78,6 @@ class ModificationMarche(Base):
     )  # **
 
 
-class ModificationSousTraitance(Base):
-    uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid_acte_sous_traitance: Mapped[int] = mapped_column(
-        ForeignKey("acte_sous_traitance.uid")
-    )
-    duree_mois: Mapped[int]
-    date_notif: Mapped[date]
-    date_publication: Mapped[date]
-    montant: Mapped[Decimal]
-
-
 class Lieu(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     code: Mapped[str]
@@ -94,7 +95,6 @@ class Tarif(Base):
 
 class DonneeExecution(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    id: Mapped[int]
     uid_contrat_concession: Mapped[int] = mapped_column(
         ForeignKey("contrat_concession.uid")
     )

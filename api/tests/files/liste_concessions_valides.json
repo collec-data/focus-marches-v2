@@ -1,0 +1,94 @@
+{
+    "marches": {
+        "contrat-concession": [
+            {
+                "id": "2025S00001",
+                "autoriteConcedante": {
+                    "id": "12345678912345"
+                },
+                "nature": "Concession de service",
+                "objet": "Lorem ipsum dolor",
+                "procedure": "Procédure non négociée ouverte",
+                "dureeMois": 180,
+                "dateSignature": "2025-01-10",
+                "datePublicationDonnees": "2025-02-01",
+                "dateDebutExecution": "2025-03-01",
+                "valeurGlobale": 31987.0,
+                "montantSubventionPublique": 0.0,
+                "concessionnaires": [
+                    {
+                        "concessionnaire": {
+                            "typeIdentifiant": "SIRET",
+                            "id": "12398755624565"
+                        }
+                    }
+                ],
+                "considerationsSociales": {
+                    "considerationSociale": [
+                        "Pas de considération sociale"
+                    ]
+                },
+                "considerationsEnvironnementales": {
+                    "considerationEnvironnementale": [
+                        "Pas de considération environnementale"
+                    ]
+                },
+                "donneesExecution": [
+                    {
+                        "donneesAnnuelles": {
+                            "datePublicationDonneesExecution": "2025-01-01",
+                            "depensesInvestissement": 100000,
+                            "tarifs": [
+                                {
+                                    "tarif": {
+                                        "intituleTarif": "1 voyage",
+                                        "tarif": 1
+                                    }
+                                },
+                                {
+                                    "tarif": {
+                                        "intituleTarif": "10 voyages",
+                                        "tarif": 9
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            {
+                "id": "2025S00002",
+                "autoriteConcedante": {
+                    "id": "12345678912666"
+                },
+                "nature": "Délégation de service public",
+                "objet": "Lorem ipsum dolor dolor",
+                "procedure": "Procédure négociée ouverte",
+                "dureeMois": 10,
+                "dateSignature": "2025-06-01",
+                "datePublicationDonnees": "2025-07-01",
+                "dateDebutExecution": "2025-09-01",
+                "valeurGlobale": 1.400E7,
+                "montantSubventionPublique": 0.0,
+                "concessionnaires": [
+                    {
+                        "concessionnaire": {
+                            "typeIdentifiant": "SIRET",
+                            "id": "98625215582658"
+                        }
+                    }
+                ],
+                "considerationsSociales": {
+                    "considerationSociale": [
+                        "Pas de considération sociale"
+                    ]
+                },
+                "considerationsEnvironnementales": {
+                    "considerationEnvironnementale": [
+                        "Pas de considération environnementale"
+                    ]
+                }
+            }
+        ]
+    }
+}
