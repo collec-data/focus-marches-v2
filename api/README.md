@@ -49,4 +49,4 @@ On utilise pour cela [`pytest`](https://docs.pytest.org/en/stable/contents.html)
 
 Ces tests sont lancés automatiquement dans le script de build de la CI.
 
-On peut les lancer manuellement à l'aide de la commande : `pytest`.
+On peut les lancer manuellement à l'aide de la commande `pytest` ou via VSCode (en faisant attention d'avoir ouvert le dossier `/api` en tant que projet et non le *repository* entier).
