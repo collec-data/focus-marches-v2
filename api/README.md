@@ -1,0 +1,52 @@
+# API Focus Marche v2 (back)
+
+[← Revenir au README général](../README.md)
+
+## Initialisation pour le développement
+
+Pré-requis : avoir installé Python (3.12).
+
+Depuis le dossier courant (`api`) :
+
+```shell
+# initialiser le virtualenv
+python3 -m venv .venv
+source .venv/bin/activate
+
+# installer les dépendances :
+pip install -r dev-requirements.txt
+pip install pip-tools
+```
+
+Utiliser Visual Studio Code et installer les extensions recommandées (extension Python).
+
+## Tâches courantes
+
+### Epingler les versions des dépendances
+
+Les fichiers (générés) `requirements.txt` et `dev-requirements.txt` listent les dépendances directes et transitives avec leurs versions (pour la reproductibilité des builds).
+
+Ces fichiers ne sont pas à modifier manuellement, les dépendances sont à gérer dans le fichier [api/pyproject.toml](api/pyproject.toml).
+
+Après une mise à jour de version ou un ajout de dépendance dans le `pyproject.toml`, re-générer les requirements :
+
+```shell
+pip-compile pyproject.toml -o requirements.txt  && \
+  pip-compile pyproject.toml --extra dev -o dev-requirements.txt
+
+# Ne pas oublier ensuite de réinstaller les dépendances.
+pip install -r dev-requirements.txt
+```
+
+
+## Tests
+
+### Tests Unitaires
+
+Les tests unitaires sont situés dans le dossier (`api/app/tests/`).
+
+On utilise pour cela [`pytest`](https://docs.pytest.org/en/stable/contents.html), associé à [`pytest-cov`](https://pytest-cov.readthedocs.io/en/latest/) pour mesurer la couverture de test, ainsi qu'à [`factoryboy`](https://factoryboy.readthedocs.io/en/stable/) pour la génération simplifiée de jeux de données de test.
+
+Ces tests sont lancés automatiquement dans le script de build de la CI.
+
+On peut les lancer manuellement à l'aide de la commande : `pytest`.

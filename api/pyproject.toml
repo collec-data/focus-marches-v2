@@ -1,0 +1,50 @@
+[project]
+name = "focus-marche-v2"
+version = "2.0.1"
+description = ""
+requires-python = ">=3.12,<4.0"
+dependencies = [
+    "pydantic",
+    "pydantic-settings",
+    "fastapi[standard]",
+    "sqlalchemy",
+    "ijson",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "mypy<2.0.0,>=1.17.1",
+    "factory-boy",
+]
+
+[tool.ruff]
+target-version = "py312"
+[tool.ruff.lint]
+extend-select = [
+    "TID", # activation des règles "flake8-tidy-imports"
+]
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+# On interdits certains imports.
+"typing.List".msg = "Utiliser 'list' sans import"
+"typing.Set".msg = "Utiliser 'set' sans import"
+"typing.Dict".msg = "Utiliser 'dict' sans import"
+"typing.Optional".msg = "Remplacer 'Optional[Foo]' par 'Foo | None'"
+"typing.Union".msg = "Remplacer 'Union[Foo, Bar]' par 'Foo | Bar'"
+
+[tool.mypy]
+exclude = ["venv", ".venv", "alembic"]
+[[tool.mypy.overrides]]
+module = ['ijson.*',]
+follow_untyped_imports = true
+
+[tool.setuptools]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+addopts = "--cov=app -vv"
