@@ -28,7 +28,7 @@ class LieuFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     uid = factory.Sequence(lambda n: n)
     code = factory.Sequence(lambda n: str(n))
-    type_code = "Code Générique"
+    type_code = enums.TypeCodeLieu.DEP
 
 
 class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):

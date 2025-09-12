@@ -54,6 +54,16 @@
                             ]
                         }
                     }
+                ],
+                "modifications": [
+                    {
+                        "modification": {
+                            "id": 9764,
+                            "dateSignatureModification": "2025-05-01",
+                            "datePublicationDonneesModification": "2025-05-10",
+                            "valeurGlobale": 4000.0
+                        }
+                    }
                 ]
             },
             {

@@ -3,12 +3,27 @@ from decimal import Decimal
 from sqlalchemy import select
 
 from app.importation import ImportateurDecp
-from app.models.db import Marche, ContratConcession, DecpMalForme
+from app.models.db import Marche, ContratConcession, DecpMalForme, Lieu
+from app.models.enums import TypeCodeLieu
+
+from .factories import LieuFactory
 
 
 def test_cast_jour():
     i = ImportateurDecp(None, None, "marche")
     assert i.cast_jour("2020-05-15") == datetime(2020, 5, 15)
+
+
+def test_get_or_create_lieu(db):
+    i = ImportateurDecp(db, None, objet_type="marche")
+
+    existing_lieu = LieuFactory.create()
+
+    i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # nouveau lieu créé
+    i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # cache utilisé
+    i.get_or_create_lieu(existing_lieu.code, existing_lieu.type_code)  # existant en bdd
+
+    assert len(i._cache_lieux) == 2
 
 
 def test_importation_marche_succes(db):
@@ -66,6 +81,24 @@ def test_importation_marche_succes(db):
     assert marche1.modifications[0].titulaires[0].type_identifiant == "SIRET"
     assert marche1.modifications[0].titulaires[0].acheteur == False
     assert marche1.modifications[0].titulaires[0].vendeur == True
+    assert len(marche1.actes_sous_traitance) == 1
+    assert marche1.actes_sous_traitance[0].id == 1010
+    assert marche1.actes_sous_traitance[0].sous_traitant.identifiant == "12365478962145"
+    assert marche1.actes_sous_traitance[0].sous_traitant.type_identifiant == "SIRET"
+    assert marche1.actes_sous_traitance[0].date_notification == date(2025, 6, 1)
+    assert marche1.actes_sous_traitance[0].date_publication == date(2025, 6, 3)
+    assert marche1.actes_sous_traitance[0].montant == Decimal("5.66E7")
+    assert marche1.actes_sous_traitance[0].duree_mois == 8
+    assert marche1.actes_sous_traitance[0].variation_prix == 2
+    assert len(marche1.actes_sous_traitance[0].modifications) == 2
+    assert marche1.actes_sous_traitance[0].modifications[0].duree_mois == 10
+    assert marche1.actes_sous_traitance[0].modifications[0].date_notif == date(
+        2025, 7, 1
+    )
+    assert marche1.actes_sous_traitance[0].modifications[0].date_publication == date(
+        2025, 7, 3
+    )
+    assert marche1.actes_sous_traitance[0].modifications[0].montant == Decimal("5.86E7")
 
     # marche2 est un exemple du strict minimum de champs remplis
     marche1 = marches_crees[1]
@@ -112,6 +145,11 @@ def test_importation_concession_succes(db):
     assert len(concession1.donnees_execution[0].tarifs) == 2
     assert concession1.donnees_execution[0].tarifs[0].intitule == "1 voyage"
     assert concession1.donnees_execution[0].tarifs[0].tarif == Decimal(1)
+    assert len(concession1.modifications) == 1
+    assert concession1.modifications[0].id == 9764
+    assert concession1.modifications[0].date_signature == date(2025, 5, 1)
+    assert concession1.modifications[0].date_publication == date(2025, 5, 10)
+    assert concession1.modifications[0].valeur_globale == Decimal(4000)
 
 
 def test_importation_erreur(db):

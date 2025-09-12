@@ -39,6 +39,7 @@ from app.models.db import (
     ModificationMarche,
     ModificationSousTraitance,
 )
+from app.models.enums import TypeCodeLieu
 from app.db import engine
 
 
@@ -113,31 +114,27 @@ class ImportateurDecp:
 
         return structure
 
+    def get_or_create_lieu(self, code: str, type_code: TypeCodeLieu) -> Lieu:
+        if code + str(type_code.db_value) in self._cache_lieux:
+            return self._cache_lieux[code + str(type_code.db_value)]
+
+        lieu = self._session.execute(
+            select(Lieu)
+            .where(Lieu.code == code)
+            .where(Lieu.type_code == type_code.db_value)
+        ).scalar()
+        if not lieu:
+            lieu = Lieu(
+                code=code,
+                type_code=type_code.db_value,
+            )
+        self._cache_lieux[code + str(type_code.db_value)] = lieu
+        return lieu
+
     def marche_transformer(
         self,
         data: MarcheSchema,
     ):
-        lieu: Lieu | None
-        if data.lieuExecution.code + data.lieuExecution.typeCode in self._cache_lieux:
-            lieu = self._cache_lieux[
-                data.lieuExecution.code + data.lieuExecution.typeCode
-            ]
-        else:
-            lieu = self._session.execute(
-                select(Lieu)
-                .where(Lieu.code == data.lieuExecution.code)
-                .where(Lieu.type_code == data.lieuExecution.typeCode)
-            ).scalar()
-            if not lieu:
-                lieu = (
-                    Lieu(
-                        code=data.lieuExecution.code,
-                        type_code=data.lieuExecution.typeCode.db_value,
-                    )
-                    if data.lieuExecution
-                    else None
-                )
-
         accord_cadre: Marche | None = None
         # if data.idAccordCadre:
         #     accord_cadre = self._session.execute(
@@ -178,7 +175,13 @@ class ImportateurDecp:
                 data.sousTraitanceDeclaree if data.sousTraitanceDeclaree else False
             ),
             procedure=data.procedure.db_value if data.procedure else None,
-            lieu=lieu,
+            lieu=(
+                self.get_or_create_lieu(
+                    data.lieuExecution.code, data.lieuExecution.typeCode
+                )
+                if data.lieuExecution
+                else None
+            ),
             duree_mois=data.dureeMois,
             date_notification=self.cast_jour(data.dateNotification),
             date_publication=(
@@ -230,6 +233,7 @@ class ImportateurDecp:
                 date_notification=self.cast_jour(dacte.dateNotification),
                 date_publication=self.cast_jour(dacte.datePublicationDonnees),
                 montant=dacte.montant,
+                variation_prix=dacte.variationPrix.db_value,
             )
             marche.actes_sous_traitance.append(acte)
             index_actes_sous_traitance[acte.id] = acte
@@ -373,9 +377,9 @@ class ImportateurDecp:
 
         decp = DecpMalForme(decp=json.dumps(o, default=decimal_serializer))
         for erreur in e.errors():
-            # print(
-            #     f"> {erreur["type"]} - {".".join(str(v) for v in erreur["loc"])} - {erreur["msg"]}"
-            # )
+            print(
+                f"> {erreur["type"]} - {".".join(str(v) for v in erreur["loc"])} - {erreur["msg"]}"
+            )
             decp.erreurs.append(
                 Erreur(
                     type=erreur["type"],
@@ -407,7 +411,7 @@ class ImportateurDecp:
             )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
 
     base_file = "app/test_data/decp-megalis-2025.json"
     cleaned_file = "app/test_data/clean-decp.json"

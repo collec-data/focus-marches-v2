@@ -92,6 +92,42 @@
                             ]
                         }
                     }
+                ],
+                "actesSousTraitance": [
+                    {
+                        "acteSousTraitance": {
+                            "id": 1010,
+                            "sousTraitant": {
+                                "typeIdentifiant": "SIRET",
+                                "id": "12365478962145"
+                            },
+                            "dateNotification": "2025-06-01",
+                            "datePublicationDonnees": "2025-06-03",
+                            "montant": 5.66E7,
+                            "dureeMois": 8,
+                            "variationPrix": "Actualisable"
+                        }
+                    }
+                ],
+                "modificationsActesSousTraitance": [
+                    {
+                        "modificationActeSousTraitance": {
+                            "id": 1010,
+                            "dureeMois": 10,
+                            "dateNotificationModificationSousTraitance": "2025-07-01",
+                            "montant": 5.86E7,
+                            "datePublicationDonnees": "2025-07-03"
+                        }
+                    },
+                    {
+                        "modificationActeSousTraitance": {
+                            "id": 1010,
+                            "dureeMois": 20,
+                            "dateNotificationModificationSousTraitance": "2025-08-01",
+                            "montant": 5.9E7,
+                            "datePublicationDonnees": "2025-08-03"
+                        }
+                    }
                 ]
             },
             {
