@@ -95,7 +95,7 @@ class MarcheDto(BaseModel):
     type_groupement_operateurs: TypeGroupementOperateur | None
     sous_traitance_declaree: bool
     actes_sous_traitance: list[ActeSousTraitanceDto]
-    procedure: ProcedureMarche | None
+    # procedure: ProcedureMarche | None
     lieu: LieuDto
     duree_mois: int
     date_notification: date
@@ -110,6 +110,11 @@ class MarcheDto(BaseModel):
     considerations_environnementales: list[ConsiderationsEnvironnementales]
     # modifications_actes_sous_traitance: list[ModificationSousTraitanceDto]
     modifications: list[ModificationMarcheDto]
+
+    # @field_validator("procedure", mode="before")
+    # @classmethod
+    # def transform(cls, i: int) -> ProcedureMarche:
+    #     return int(x), int(y)
 
 
 class ModificationConcessionDto(BaseModel):
@@ -150,3 +155,38 @@ class ErreurDto(BaseModel):
 class DecpMalFormeDto(BaseModel):
     decp: Json
     erreurs: list[ErreurDto]
+
+
+class MarcheProcedureDto(BaseModel):
+    procedure: int | None
+    montant: Decimal
+    nombre: int
+
+
+class MarcheNatureDto(BaseModel):
+    mois: date
+    nature: int
+    montant: Decimal
+    nombre: int
+
+
+class MarcheCcagDto(BaseModel):
+    ccag: int | None
+    montant: Decimal
+    nombre: int
+
+
+class IndicateursDto(BaseModel):
+    periode: int | None
+    nb_contrats: int
+    montant_total: Decimal
+    nb_acheteurs: int
+    nb_fournisseurs: int
+    nb_sous_traitance: int
+    nb_innovant: int
+
+
+class MarcheDepartementDto(BaseModel):
+    code: str
+    montant: Decimal
+    nombre: int

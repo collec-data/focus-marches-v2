@@ -44,10 +44,12 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     techniques_achat: list[enums.TechniqueAchat] = []
     modalites_execution: list[enums.ModaliteExecution] = []
     marche_innovant = False
+    ccag: int
     offres_recues = 1
     attribution_avance = False
     taux_avance = 0
     sous_traitance_declaree = False
+    procedure = enums.ProcedureMarche.ADAPTE.db_value
     lieu = factory.SubFactory(LieuFactory)
     duree_mois = 1
     date_notification = factory.Faker("date_time")
