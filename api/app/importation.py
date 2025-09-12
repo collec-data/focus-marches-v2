@@ -377,9 +377,9 @@ class ImportateurDecp:
 
         decp = DecpMalForme(decp=json.dumps(o, default=decimal_serializer))
         for erreur in e.errors():
-            print(
-                f"> {erreur["type"]} - {".".join(str(v) for v in erreur["loc"])} - {erreur["msg"]}"
-            )
+            # print(
+            #     f"> {erreur["type"]} - {".".join(str(v) for v in erreur["loc"])} - {erreur["msg"]}"
+            # )
             decp.erreurs.append(
                 Erreur(
                     type=erreur["type"],
