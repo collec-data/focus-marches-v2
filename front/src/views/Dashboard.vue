@@ -1,13 +1,13 @@
 <script setup>
-import BuyersRanking from '@/components/dashboard/BuyersRanking.vue';
-import CategoryDistribution from '@/components/dashboard/CategoryDistribution.vue';
 import KeyIndicators from '@/components/dashboard/KeyIndicators.vue';
+import Procedure from '@/components/dashboard/Procedure.vue';
 </script>
 
 <template>
     <KeyIndicators />
+    <Procedure />
 
-    <CategoryDistribution />
+    <!-- <CategoryDistribution /> -->
 
-    <BuyersRanking />
+    <!-- <BuyersRanking /> -->
 </template>
