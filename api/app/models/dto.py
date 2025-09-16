@@ -190,3 +190,8 @@ class MarcheDepartementDto(BaseModel):
     code: str
     montant: Decimal
     nombre: int
+
+
+class AcheteurDto(BaseModel):
+    structure: StructureDto
+    montant: Decimal

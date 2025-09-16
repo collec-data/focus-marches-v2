@@ -30,6 +30,7 @@ class Structure(Base):
     type_identifiant: Mapped[str]
     vendeur: Mapped[bool] = mapped_column(default=False)
     acheteur: Mapped[bool] = mapped_column(default=False)
+    marches_acheteurs: Mapped[list["Marche"]] = relationship(back_populates="acheteur")
 
 
 class ModificationSousTraitance(Base):
