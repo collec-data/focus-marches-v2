@@ -47,31 +47,31 @@ export type ActeSousTraitanceDto = {
  * ConsiderationsEnvironnementales
  */
 export const ConsiderationsEnvironnementales = {
-    'CRITÈRE_ENVIRONNEMENTAL': 'Critère environnemental',
+    CRITÈRE_ENVIRONNEMENTAL: 'Critère environnemental',
     CLAUSE_ENVIRONNEMENTALE: 'Clause environnementale',
-    'PAS_DE_CONSIDÉRATION_ENVIRONNEMENTALE': 'Pas de considération environnementale'
+    PAS_DE_CONSIDÉRATION_ENVIRONNEMENTALE: 'Pas de considération environnementale'
 } as const;
 
 /**
  * ConsiderationsEnvironnementales
  */
-export type ConsiderationsEnvironnementales = typeof ConsiderationsEnvironnementales[keyof typeof ConsiderationsEnvironnementales];
+export type ConsiderationsEnvironnementales = (typeof ConsiderationsEnvironnementales)[keyof typeof ConsiderationsEnvironnementales];
 
 /**
  * ConsiderationsSociales
  */
 export const ConsiderationsSociales = {
-    'CRITÈRE_SOCIAL': 'Critère social',
+    CRITÈRE_SOCIAL: 'Critère social',
     CLAUSE_SOCIALE: 'Clause sociale',
-    'MARCHÉ_RÉSERVÉ': 'Marché réservé',
-    'CONCESSION_RÉSERVÉ': 'Concession réservé',
-    'PAS_DE_CONSIDÉRATION_SOCIALE': 'Pas de considération sociale'
+    MARCHÉ_RÉSERVÉ: 'Marché réservé',
+    CONCESSION_RÉSERVÉ: 'Concession réservé',
+    PAS_DE_CONSIDÉRATION_SOCIALE: 'Pas de considération sociale'
 } as const;
 
 /**
  * ConsiderationsSociales
  */
-export type ConsiderationsSociales = typeof ConsiderationsSociales[keyof typeof ConsiderationsSociales];
+export type ConsiderationsSociales = (typeof ConsiderationsSociales)[keyof typeof ConsiderationsSociales];
 
 /**
  * ContratConcessionDto
@@ -212,7 +212,7 @@ export const FormePrix = {
 /**
  * FormePrix
  */
-export type FormePrix = typeof FormePrix[keyof typeof FormePrix];
+export type FormePrix = (typeof FormePrix)[keyof typeof FormePrix];
 
 /**
  * HTTPValidationError
@@ -241,7 +241,7 @@ export const IdentifiantStructure = {
 /**
  * IdentifiantStructure
  */
-export type IdentifiantStructure = typeof IdentifiantStructure[keyof typeof IdentifiantStructure];
+export type IdentifiantStructure = (typeof IdentifiantStructure)[keyof typeof IdentifiantStructure];
 
 /**
  * IndicateursDto
@@ -468,14 +468,14 @@ export type MarcheProcedureDto = {
 export const ModaliteExecution = {
     TRANCHES: 'Tranches',
     BONS_DE_COMMANDE: 'Bons de commande',
-    'MARCHÉS_SUBSÉQUENTS': 'Marchés subséquents',
+    MARCHÉS_SUBSÉQUENTS: 'Marchés subséquents',
     SANS_OBJET: 'Sans objet'
 } as const;
 
 /**
  * ModaliteExecution
  */
-export type ModaliteExecution = typeof ModaliteExecution[keyof typeof ModaliteExecution];
+export type ModaliteExecution = (typeof ModaliteExecution)[keyof typeof ModaliteExecution];
 
 /**
  * ModificationConcessionDto
@@ -548,42 +548,42 @@ export const NatureConcession = {
     CONCESSION_DE_TRAVAUX: 'Concession de travaux',
     CONCESSION_DE_SERVICE: 'Concession de service',
     CONCESSION_DE_SERVICE_PUBLIC: 'Concession de service public',
-    'DÉLÉGATION_DE_SERVICE_PUBLIC': 'Délégation de service public'
+    DÉLÉGATION_DE_SERVICE_PUBLIC: 'Délégation de service public'
 } as const;
 
 /**
  * NatureConcession
  */
-export type NatureConcession = typeof NatureConcession[keyof typeof NatureConcession];
+export type NatureConcession = (typeof NatureConcession)[keyof typeof NatureConcession];
 
 /**
  * NatureMarche
  */
 export const NatureMarche = {
-    'MARCHÉ': 'Marché',
-    'MARCHÉ_DE_PARTENARIAT': 'Marché de partenariat',
-    'MARCHÉ_DE_DÉFENSE_OU_DE_SÉCURITÉ': 'Marché de défense ou de sécurité'
+    MARCHÉ: 'Marché',
+    MARCHÉ_DE_PARTENARIAT: 'Marché de partenariat',
+    MARCHÉ_DE_DÉFENSE_OU_DE_SÉCURITÉ: 'Marché de défense ou de sécurité'
 } as const;
 
 /**
  * NatureMarche
  */
-export type NatureMarche = typeof NatureMarche[keyof typeof NatureMarche];
+export type NatureMarche = (typeof NatureMarche)[keyof typeof NatureMarche];
 
 /**
  * ProcedureConcession
  */
 export const ProcedureConcession = {
-    'PROCÉDURE_NÉGOCIÉE_OUVERTE': 'Procédure négociée ouverte',
-    'PROCÉDURE_NON_NÉGOCIÉE_OUVERTE': 'Procédure non négociée ouverte',
-    'PROCÉDURE_NÉGOCIÉE_RESTREINTE': 'Procédure négociée restreinte',
-    'PROCÉDURE_NON_NÉGOCIÉE_RESTREINTE': 'Procédure non négociée restreinte'
+    PROCÉDURE_NÉGOCIÉE_OUVERTE: 'Procédure négociée ouverte',
+    PROCÉDURE_NON_NÉGOCIÉE_OUVERTE: 'Procédure non négociée ouverte',
+    PROCÉDURE_NÉGOCIÉE_RESTREINTE: 'Procédure négociée restreinte',
+    PROCÉDURE_NON_NÉGOCIÉE_RESTREINTE: 'Procédure non négociée restreinte'
 } as const;
 
 /**
  * ProcedureConcession
  */
-export type ProcedureConcession = typeof ProcedureConcession[keyof typeof ProcedureConcession];
+export type ProcedureConcession = (typeof ProcedureConcession)[keyof typeof ProcedureConcession];
 
 /**
  * StructureDto
@@ -639,17 +639,17 @@ export type TarifDto = {
 export const TechniqueAchat = {
     ACCORD_CADRE: 'Accord-cadre',
     CONCOURS: 'Concours',
-    'SYSTÈME_DE_QUALIFICATION': 'Système de qualification',
-    'SYSTÈME_D'ACQUISITION_DYNAMIQUE': "Système d'acquisition dynamique",
-    'CATALOGUE_ÉLECTRONIQUE': 'Catalogue électronique',
-    'ENCHÈRE_ÉLECTRONIQUE': 'Enchère électronique',
+    SYSTÈME_DE_QUALIFICATION: 'Système de qualification',
+    SYSTÈME_D_ACQUISITION_DYNAMIQUE: "Système d'acquisition dynamique",
+    CATALOGUE_ÉLECTRONIQUE: 'Catalogue électronique',
+    ENCHÈRE_ÉLECTRONIQUE: 'Enchère électronique',
     SANS_OBJET: 'Sans objet'
 } as const;
 
 /**
  * TechniqueAchat
  */
-export type TechniqueAchat = typeof TechniqueAchat[keyof typeof TechniqueAchat];
+export type TechniqueAchat = (typeof TechniqueAchat)[keyof typeof TechniqueAchat];
 
 /**
  * TypeGroupementOperateur
@@ -663,22 +663,22 @@ export const TypeGroupementOperateur = {
 /**
  * TypeGroupementOperateur
  */
-export type TypeGroupementOperateur = typeof TypeGroupementOperateur[keyof typeof TypeGroupementOperateur];
+export type TypeGroupementOperateur = (typeof TypeGroupementOperateur)[keyof typeof TypeGroupementOperateur];
 
 /**
  * TypePrix
  */
 export const TypePrix = {
-    'DÉFINITIF_FERME': 'Définitif ferme',
-    'DÉFINITIF_ACTUALISABLE': 'Définitif actualisable',
-    'DÉFINITIF_RÉVISABLE': 'Définitif révisable',
+    DÉFINITIF_FERME: 'Définitif ferme',
+    DÉFINITIF_ACTUALISABLE: 'Définitif actualisable',
+    DÉFINITIF_RÉVISABLE: 'Définitif révisable',
     PROVISOIRE: 'Provisoire'
 } as const;
 
 /**
  * TypePrix
  */
-export type TypePrix = typeof TypePrix[keyof typeof TypePrix];
+export type TypePrix = (typeof TypePrix)[keyof typeof TypePrix];
 
 /**
  * ValidationError
@@ -704,14 +704,14 @@ export type ValidationError = {
 export const VariationPrix = {
     FERME: 'Ferme',
     ACTUALISABLE: 'Actualisable',
-    'RÉVISABLE': 'Révisable',
+    RÉVISABLE: 'Révisable',
     NC: 'NC'
 } as const;
 
 /**
  * VariationPrix
  */
-export type VariationPrix = typeof VariationPrix[keyof typeof VariationPrix];
+export type VariationPrix = (typeof VariationPrix)[keyof typeof VariationPrix];
 
 export type GetErreursImportErreursImportGetData = {
     body?: never;
