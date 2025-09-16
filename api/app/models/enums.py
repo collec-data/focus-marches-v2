@@ -29,19 +29,18 @@ class ProcedureMarche(CustomStrEnum):
 
 class CCAG(CustomStrEnum):
     TRAVAUX = "Travaux", 1
-    MO = "Maîtrise d'œuvre", 2
+    MO = "Maitrise d'œuvre", 2
     FOURNITURE = "Fournitures courantes et services", 3
     INDUS = "Marchés industriels", 4
     PRESTA = "Prestations intellectuelles", 5
     TIC = "Techniques de l'information et de la communication", 6
-    MO2 = "Maitrise d'œuvre", 2  # hors-norme
-    AUCUN = "Pas de CCAG", None  # hors-norme
+    AUCUN = "Pas de CCAG", None
 
 
 class TypeGroupementOperateur(CustomStrEnum):
     CONJOINT = "Conjoint", 1
     SOLIDAIRE = "Solidaire", 2
-    AUCUN = "Pas de groupement", None  # hors-norme
+    AUCUN = "Pas de groupement", None
 
 
 class TypePrix(CustomStrEnum):
@@ -69,13 +68,13 @@ class ConsiderationsSociales(CustomStrEnum):
     CLAUSE = "Clause sociale", 2
     MARCHE_RESERVE = "Marché réservé", 3
     CONCESSION_RESERVE = "Concession réservé", 4
-    AUCUNE = "Pas de considération sociale", None  # hors-norme
+    AUCUNE = "Pas de considération sociale", None
 
 
 class ConsiderationsEnvironnementales(CustomStrEnum):
     CRITERE = "Critère environnemental", 1
     CLAUSE = "Clause environnementale", 2
-    AUCUNE = "Pas de considération environnementale", None  # hors-norme
+    AUCUNE = "Pas de considération environnementale", None
 
 
 class NatureConcession(CustomStrEnum):
@@ -99,18 +98,14 @@ class TechniqueAchat(CustomStrEnum):
     ACQUISITION_DYNAMIQUE = "Système d'acquisition dynamique", 4
     CATALOGUE = "Catalogue électronique", 5
     ENCHERE = "Enchère électronique", 6
-    SANS_OBJET = "Sans objet", None  # hors-norme
+    SANS_OBJET = "Sans objet", None
 
 
 class ModaliteExecution(CustomStrEnum):
-    MARCHE_TRANCHES = "Marché à tranches", 1
-    BON_COMMANDE = "Bon de commande", 2
-    MARCHE_SUBSEQUENT = "Marché subséquent", 3
-    MIXTE = "Mixte", 4
-    SANS_OBJET = "Sans objet", None  # hors-norme
-    BONS_COMMANDE = "Bons de commande", 2  # hors-norme
-    MARCHES_SUBSEQUENTS = "Marchés subséquents", 3  # hors-norme
-    TRANCHES = "Tranches", 1  # hors-norme
+    MARCHE_TRANCHES = "Tranches", 1
+    BON_COMMANDE = "Bons de commande", 2
+    MARCHE_SUBSEQUENT = "Marchés subséquents", 3
+    SANS_OBJET = "Sans objet", None
 
 
 class IdentifiantStructure(StrEnum):

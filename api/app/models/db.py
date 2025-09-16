@@ -38,10 +38,10 @@ class ModificationSousTraitance(Base):
     uid_acte_sous_traitance: Mapped[int] = mapped_column(
         ForeignKey("acte_sous_traitance.uid")
     )
-    duree_mois: Mapped[int]
+    duree_mois: Mapped[int | None]
     date_notif: Mapped[date]
     date_publication: Mapped[date]
-    montant: Mapped[Decimal]
+    montant: Mapped[Decimal | None]
 
 
 class ActeSousTraitance(Base):
@@ -130,7 +130,7 @@ class Marche(Base):
     uid_accord_cadre: Mapped[None | int] = mapped_column(ForeignKey("marche.uid"))
     marche_innovant: Mapped[bool]
     ccag: Mapped[int | None]
-    offres_recues: Mapped[int]
+    offres_recues: Mapped[int | None]
     attribution_avance: Mapped[bool]
     taux_avance: Mapped[Decimal]
     type_groupement_operateurs: Mapped[int | None]  # enum TypeGroupementOperateur
