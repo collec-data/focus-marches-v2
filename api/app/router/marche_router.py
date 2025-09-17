@@ -110,21 +110,37 @@ def get_indicateurs(
         periode = int(delta.days / 30)
     else:
         periode = None
-    nb_contrats = session.execute(select(func.count(Marche.id))).one()[0]
-    montant_total = session.execute(select(func.sum(Marche.montant))).one()[0]
+    nb_contrats = session.execute(
+        application_filtres(select(func.count(Marche.id)), filtres)
+    ).one()[0]
+    montant_total = session.execute(
+        application_filtres(select(func.sum(Marche.montant)), filtres)
+    ).one()[0]
     nb_acheteurs = session.execute(
-        select(func.count(distinct(Structure.uid))).join(Marche.acheteur)
+        application_filtres(
+            select(func.count(distinct(Structure.uid))).join(Marche.acheteur), filtres
+        )
     ).one()[0]
     nb_fournisseurs = session.execute(
-        select(func.count(distinct(Structure.uid))).join(Marche.titulaires)
+        application_filtres(
+            select(func.count(distinct(Structure.uid))).join(Marche.titulaires), filtres
+        )
     ).one()[0]
     nb_sous_traitance = session.execute(
-        select(func.count(Marche.sous_traitance_declaree)).where(
-            Marche.sous_traitance_declaree == True
+        application_filtres(
+            select(func.count(Marche.sous_traitance_declaree)).where(
+                Marche.sous_traitance_declaree == True
+            ),
+            filtres,
         )
     ).one()[0]
     nb_innovant = session.execute(
-        select(func.count(Marche.marche_innovant)).where(Marche.marche_innovant == True)
+        application_filtres(
+            select(func.count(Marche.marche_innovant)).where(
+                Marche.marche_innovant == True
+            ),
+            filtres,
+        )
     ).one()[0]
 
     return IndicateursDto(

@@ -28,7 +28,6 @@ function transform(input) {
 
 onMounted(() => {
     listAcheteursStructureAcheteurGet().then((response) => {
-        console.log(response);
         listeAcheteurs.value = response.data;
         let rawData = transform(response.data);
         graphData.value.labels = rawData.structures;
@@ -53,7 +52,9 @@ onMounted(() => {
             <Chart type="bar" :data="graphData" :options="graphOptions" class="basis-2/3" />
         </div>
         <div class="flex flex-wrap">
-            <Button label="Liste complète des organismes acheteurs" variant="text" severity="secondary" icon="pi pi-list" />
+            <RouterLink to="/acheteurs">
+                <Button label="Liste complète des organismes acheteurs" variant="text" severity="secondary" icon="pi pi-list" />
+            </RouterLink>
         </div>
     </section>
 </template>

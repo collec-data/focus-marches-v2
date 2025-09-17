@@ -2,9 +2,11 @@
 import { getIndicateursMarcheIndicateursGet } from '@/client';
 import { onMounted, ref } from 'vue';
 
+const props = defineProps({ acheteur_id: { type: [String, null], default: null } });
+
 const indicateurs = ref({});
 onMounted(() => {
-    getIndicateursMarcheIndicateursGet().then((data) => {
+    getIndicateursMarcheIndicateursGet({ query: { identifiant_acheteur: props.acheteur_id, date_debut: '2010-01-01' } }).then((data) => {
         indicateurs.value = data.data;
     });
 });
@@ -34,7 +36,7 @@ onMounted(() => {
                 <div class="label">MONTANT TOTAL</div>
                 <div class="value">{{ Math.round(indicateurs.montant_total * 100) / 100 }} €</div>
             </div>
-            <div class="indicateur">
+            <div v-if="acheteur_id == null" class="indicateur">
                 <i class="pi pi-users"></i>
                 <div class="label">NB ACHETEURS</div>
                 <div class="value">{{ indicateurs.nb_acheteurs }}</div>

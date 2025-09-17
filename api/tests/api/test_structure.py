@@ -13,6 +13,7 @@ def test_list_acheteurs(client):
     assert response.json() == [
         {
             "montant": "20.0000000000",
+            "nb_contrats": 1,
             "structure": {
                 "acheteur": True,
                 "identifiant": acheteurs[1].identifiant,
@@ -23,6 +24,7 @@ def test_list_acheteurs(client):
         },
         {
             "montant": "10.0000000000",
+            "nb_contrats": 2,
             "structure": {
                 "acheteur": True,
                 "identifiant": acheteurs[0].identifiant,

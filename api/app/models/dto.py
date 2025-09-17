@@ -179,7 +179,7 @@ class MarcheCcagDto(BaseModel):
 class IndicateursDto(BaseModel):
     periode: int | None
     nb_contrats: int
-    montant_total: Decimal
+    montant_total: Decimal | None
     nb_acheteurs: int
     nb_fournisseurs: int
     nb_sous_traitance: int
@@ -195,3 +195,4 @@ class MarcheDepartementDto(BaseModel):
 class AcheteurDto(BaseModel):
     structure: StructureDto
     montant: Decimal
+    nb_contrats: int
