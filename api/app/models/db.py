@@ -24,6 +24,14 @@ class Base(DeclarativeBase):
         return re.sub(r"(?!^)([A-Z]+)", r"_\1", cls.__name__).lower()
 
 
+marche_titulaire_table = Table(
+    "marche_titulaire_table",
+    Base.metadata,
+    Column("uid_marche", ForeignKey("marche.uid")),
+    Column("uid_titulaire", ForeignKey("structure.uid")),
+)
+
+
 class Structure(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     identifiant: Mapped[str]
@@ -31,6 +39,9 @@ class Structure(Base):
     vendeur: Mapped[bool] = mapped_column(default=False)
     acheteur: Mapped[bool] = mapped_column(default=False)
     marches_acheteurs: Mapped[list["Marche"]] = relationship(back_populates="acheteur")
+    marches_vendeur: Mapped[list["Marche"]] = relationship(
+        back_populates="titulaires", secondary=marche_titulaire_table
+    )
 
 
 class ModificationSousTraitance(Base):
@@ -102,14 +113,6 @@ class DonneeExecution(Base):
     date_publication: Mapped[date]
     depenses_investissement: Mapped[Decimal]  # nbr
     tarifs: Mapped[list[Tarif]] = relationship()
-
-
-marche_titulaire_table = Table(
-    "marche_titulaire_table",
-    Base.metadata,
-    Column("uid_marche", ForeignKey("marche.uid")),
-    Column("uid_titulaire", ForeignKey("structure.uid")),
-)
 
 
 class Marche(Base):

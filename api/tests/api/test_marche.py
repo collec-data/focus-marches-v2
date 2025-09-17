@@ -13,55 +13,55 @@ def test_list_marche(client):
 
 
 def test_procedure_et_filtres_succes(client):
-    acheteur_id = "1234"
-    titulaire_id = "9876"
+    acheteur = AcheteurFactory()
+    vendeur = VendeurFactory()
     MarcheFactory.create_batch(
         1,
         procedure=None,
         montant=Decimal(5),
-        acheteur__identifiant=acheteur_id,
+        acheteur=acheteur,
         date_notification=date(2025, 1, 1),
-        titulaires=[VendeurFactory.create(identifiant=titulaire_id)],
+        titulaires=[vendeur],
     )
     MarcheFactory.create_batch(
         2,
         procedure=1,
         montant=Decimal(3),
-        acheteur__identifiant=acheteur_id,
+        acheteur=acheteur,
         date_notification=date(2025, 1, 1),
-        titulaires=[VendeurFactory.create(identifiant=titulaire_id)],
+        titulaires=[vendeur],
     )
     MarcheFactory.create_batch(
         3,
         procedure=2,
         montant=Decimal(4),
-        acheteur__identifiant=acheteur_id,
+        acheteur=acheteur,
         date_notification=date(2025, 1, 1),
-        titulaires=[VendeurFactory.create(identifiant=titulaire_id)],
+        titulaires=[vendeur],
     )
 
     # les marchés suivants sont hors filtres et ne doivent pas êtres comptabilisés
     MarcheFactory.create(
-        titulaires=[VendeurFactory.create(identifiant=titulaire_id)],
+        titulaires=[vendeur],
         date_notification=date(2025, 1, 1),
     )  # ...car acheteur différent
-    MarcheFactory.create(acheteur__identifiant=acheteur_id)  # car vendeur différent
+    MarcheFactory.create(acheteur=acheteur)  # car vendeur différent
     MarcheFactory.create(
         date_notification=date(2000, 1, 1),
-        titulaires=[VendeurFactory.create(identifiant=titulaire_id)],
-        acheteur__identifiant=acheteur_id,
+        titulaires=[vendeur],
+        acheteur=acheteur,
     )  # ...car trop ancien
     MarcheFactory.create(
         date_notification=date(2026, 1, 1),
-        titulaires=[VendeurFactory.create(identifiant=titulaire_id)],
-        acheteur__identifiant=acheteur_id,
+        titulaires=[vendeur],
+        acheteur=acheteur,
     )  # ...car trop récent
 
     response = client.get(
         "/marche/procedure",
         params={
-            "identifiant_acheteur": acheteur_id,
-            "identifiant_vendeur": titulaire_id,
+            "acheteur_uid": acheteur.uid,
+            "vendeur_uid": vendeur.uid,
             "date_debut": "2019-01-01",
             "date_fin": "2025-07-01",
         },

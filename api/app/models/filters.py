@@ -8,8 +8,5 @@ from .enums import IdentifiantStructure
 class FiltreTemporelStructure(BaseModel):
     date_debut: date | None = None
     date_fin: date | None = None
-    identifiant_acheteur: str | None = None
-    identifiant_vendeur: str | None = None
-    type_identifiant: IdentifiantStructure | None = Field(
-        default=IdentifiantStructure.SIRET
-    )
+    acheteur_uid: str | None = None
+    vendeur_uid: str | None = None

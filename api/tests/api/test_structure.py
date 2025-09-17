@@ -34,3 +34,29 @@ def test_list_acheteurs(client):
             },
         },
     ]
+
+
+def test_list_vendeurs(client):
+    vendeurs = VendeurFactory.create_batch(3)
+    MarcheFactory.create_batch(2, titulaires=[vendeurs[0]], montant=5)
+    MarcheFactory(titulaires=[vendeurs[1]], montant=2)
+    MarcheFactory(titulaires=vendeurs, montant=3)
+
+    response = client.get("/structure/vendeur")
+
+    assert response.status_code == 200
+
+    data = response.json()
+
+    assert len(data) == 3
+    assert data[0]["structure"]["identifiant"] == vendeurs[0].identifiant
+    assert data[0]["nb_contrats"] == 3
+    assert data[0]["montant"] == "13.0000000000"
+
+    assert data[1]["structure"]["identifiant"] == vendeurs[1].identifiant
+    assert data[1]["nb_contrats"] == 2
+    assert data[1]["montant"] == "5.0000000000"
+
+    assert data[2]["structure"]["identifiant"] == vendeurs[2].identifiant
+    assert data[2]["nb_contrats"] == 1
+    assert data[2]["montant"] == "3.0000000000"

@@ -55,6 +55,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     date_notification = factory.Faker("date_time")
     montant = factory.Faker("pyint")
     type_prix: list[enums.TypePrix] = []
+    titulaires: list[VendeurFactory] = []
     considerations_sociales: list[enums.ConsiderationsSociales] = []
     considerations_environnementales: list[enums.ConsiderationsEnvironnementales] = []
 

@@ -192,7 +192,7 @@ class MarcheDepartementDto(BaseModel):
     nombre: int
 
 
-class AcheteurDto(BaseModel):
+class StructureAggMarchesDto(BaseModel):
     structure: StructureDto
     montant: Decimal
     nb_contrats: int

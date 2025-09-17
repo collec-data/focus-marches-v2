@@ -27,7 +27,7 @@ function transform(input) {
 }
 
 onMounted(() => {
-    listAcheteursStructureAcheteurGet().then((response) => {
+    listAcheteursStructureAcheteurGet({ query: { limit: 12 } }).then((response) => {
         listeAcheteurs.value = response.data;
         let rawData = transform(response.data);
         graphData.value.labels = rawData.structures;

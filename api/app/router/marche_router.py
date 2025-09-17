@@ -32,15 +32,13 @@ def application_filtres(stmt, f: FiltreTemporelStructure):
     if f.date_fin:
         stmt = stmt.where(Marche.date_notification <= f.date_fin)
 
-    if f.identifiant_acheteur:
+    if f.acheteur_uid:
         stmt = stmt.join(acheteur, Marche.acheteur)
-        stmt = stmt.where(acheteur.identifiant == f.identifiant_acheteur)
-        stmt = stmt.where(acheteur.type_identifiant == f.type_identifiant)
+        stmt = stmt.where(acheteur.uid == f.acheteur_uid)
 
-    if f.identifiant_vendeur:
+    if f.vendeur_uid:
         stmt = stmt.join(titulaires, Marche.titulaires)
-        stmt = stmt.where(titulaires.identifiant == f.identifiant_vendeur)
-        stmt = stmt.where(titulaires.type_identifiant == f.type_identifiant)
+        stmt = stmt.where(titulaires.uid == f.vendeur_uid)
 
     return stmt
 

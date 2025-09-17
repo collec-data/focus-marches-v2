@@ -2,7 +2,7 @@
 import { getMarchesParProcedureMarcheProcedureGet } from '@/client';
 import { onMounted, ref } from 'vue';
 
-const props = defineProps({ acheteur_id: { type: [String, null], default: null } });
+const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
 
 const graphNombreData = ref({
     labels: [],
@@ -67,7 +67,7 @@ function transform(input) {
 }
 
 onMounted(() => {
-    getMarchesParProcedureMarcheProcedureGet({ query: { identifiant_acheteur: props.acheteur_id, date_debut: '2010-01-01' } }).then((data) => {
+    getMarchesParProcedureMarcheProcedureGet({ query: { date_debut: '2010-01-01', acheteur_uid: props.acheteur_uid, vendeur_uid: props.vendeur_uid } }).then((data) => {
         let raw_data = transform(data.data);
         graphNombreData.value.labels = raw_data.procedure;
         graphNombreData.value.datasets[0].data = raw_data.nombre;
