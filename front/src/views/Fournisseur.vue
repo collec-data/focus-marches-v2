@@ -12,6 +12,7 @@ const route = useRoute();
         <h2>Localisation et contexte</h2>
 
         <IndicateursCles :vendeur_uid="route.params.uid" />
+        <ListeMarches :vendeur_uid="route.params.uid" />
         <Procedure :vendeur_uid="route.params.uid" />
     </section>
 </template>

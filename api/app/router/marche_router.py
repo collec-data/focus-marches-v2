@@ -10,7 +10,7 @@ from app.models.filters import FiltreTemporelStructure
 from app.models.db import Marche, Structure, Lieu
 from app.models.enums import TypeCodeLieu
 from app.models.dto import (
-    MarcheDto,
+    MarcheAllegeDto,
     MarcheProcedureDto,
     MarcheNatureDto,
     IndicateursDto,
@@ -43,11 +43,20 @@ def application_filtres(stmt, f: FiltreTemporelStructure):
     return stmt
 
 
-@router.get("/", response_model=list[MarcheDto])
+@router.get("/", response_model=list[MarcheAllegeDto])
 def get_liste_marches(
-    session: SessionDep, limit: int = 20, offset: int = 0
-) -> list[Marche]:
-    return list(session.execute(select(Marche).offset(offset).limit(limit)).scalars())
+    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+) -> list[MarcheAllegeDto]:
+    acheteur = aliased(Structure)
+    titulaires = aliased(Structure)
+    stmt = application_filtres(
+        select(Marche)
+        .join(acheteur, Marche.acheteur, isouter=True)
+        .join(titulaires, Marche.titulaires, isouter=True)
+        .join(Marche.actes_sous_traitance, isouter=True),
+        filtres,
+    )
+    return list(session.execute(stmt).scalars())
 
 
 @router.get("/procedure", response_model=list[MarcheProcedureDto])

@@ -9,7 +9,7 @@ def test_list_marche(client):
     response = client.get("/marche")
 
     assert response.status_code == 200
-    assert len(response.json()) == 20
+    assert len(response.json()) == 30
 
 
 def test_procedure_et_filtres_succes(client):

@@ -2,38 +2,14 @@
 
 import type { GetListeMarchesMarcheGetResponse, GetListeConcessionsContratConcessionGetResponse } from './types.gen';
 
-const acteSousTraitanceDtoSchemaResponseTransformer = (data: any) => {
+const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
     data.date_notification = new Date(data.date_notification);
-    data.date_publication = new Date(data.date_publication);
-    return data;
-};
-
-const modificationMarcheDtoSchemaResponseTransformer = (data: any) => {
-    data.date_notification = new Date(data.date_notification);
-    data.date_publication = new Date(data.date_publication);
-    return data;
-};
-
-const marcheDtoSchemaResponseTransformer = (data: any) => {
-    if (data.accord_cadre) {
-        data.accord_cadre = marcheDtoSchemaResponseTransformer(data.accord_cadre);
-    }
-    data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => {
-        return acteSousTraitanceDtoSchemaResponseTransformer(item);
-    });
-    data.date_notification = new Date(data.date_notification);
-    if (data.date_publication) {
-        data.date_publication = new Date(data.date_publication);
-    }
-    data.modifications = data.modifications.map((item: any) => {
-        return modificationMarcheDtoSchemaResponseTransformer(item);
-    });
     return data;
 };
 
 export const getListeMarchesMarcheGetResponseTransformer = async (data: any): Promise<GetListeMarchesMarcheGetResponse> => {
     data = data.map((item: any) => {
-        return marcheDtoSchemaResponseTransformer(item);
+        return marcheAllegeDtoSchemaResponseTransformer(item);
     });
     return data;
 };

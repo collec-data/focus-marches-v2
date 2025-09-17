@@ -17,13 +17,13 @@ class StructureDto(BaseModel):
 
 class ActeSousTraitanceDto(BaseModel):
     uid: int
-    id: int
-    sous_traitant: StructureDto
-    duree_mois: int | None
-    date_notification: date
-    date_publication: date
-    montant: Decimal
-    variation_prix: VariationPrix
+    # id: int
+    # sous_traitant: StructureDto
+    # duree_mois: int | None
+    # date_notification: date
+    # date_publication: date
+    # montant: Decimal
+    # variation_prix: VariationPrix
 
 
 class ModificationMarcheDto(BaseModel):
@@ -65,6 +65,23 @@ class DonneeExecutionDto(BaseModel):
     date_publication: date
     depenses_investissement: Decimal
     tarifs: list[TarifDto]
+
+
+class MarcheAllegeDto(BaseModel):
+    uid: int
+    id: str
+    acheteur: StructureDto
+    objet: str
+    cpv: str = Field(
+        description="Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))"
+    )
+    sous_traitance_declaree: bool
+    actes_sous_traitance: list[ActeSousTraitanceDto]
+    date_notification: date
+    montant: Decimal
+    titulaires: list[StructureDto]
+    # considerations_sociales: list[ConsiderationsSociales]
+    # considerations_environnementales: list[ConsiderationsEnvironnementales]
 
 
 class MarcheDto(BaseModel):

@@ -8,28 +8,6 @@ export type ActeSousTraitanceDto = {
      * Uid
      */
     uid: number;
-    /**
-     * Id
-     */
-    id: number;
-    sous_traitant: StructureDto;
-    /**
-     * Duree Mois
-     */
-    duree_mois: number | null;
-    /**
-     * Date Notification
-     */
-    date_notification: Date;
-    /**
-     * Date Publication
-     */
-    date_publication: Date;
-    /**
-     * Montant
-     */
-    montant: string;
-    variation_prix: VariationPrix;
 };
 
 /**
@@ -190,20 +168,6 @@ export type ErreurDto = {
 };
 
 /**
- * FormePrix
- */
-export const FormePrix = {
-    UNITAIRE: 'Unitaire',
-    FORFAITAIRE: 'Forfaitaire',
-    MIXTE: 'Mixte'
-} as const;
-
-/**
- * FormePrix
- */
-export type FormePrix = (typeof FormePrix)[keyof typeof FormePrix];
-
-/**
  * HTTPValidationError
  */
 export type HttpValidationError = {
@@ -248,21 +212,47 @@ export type IndicateursDto = {
 };
 
 /**
- * LieuDto
+ * MarcheAllegeDto
  */
-export type LieuDto = {
+export type MarcheAllegeDto = {
     /**
      * Uid
      */
     uid: number;
     /**
-     * Code
+     * Id
      */
-    code: string;
+    id: string;
+    acheteur: StructureDto;
     /**
-     * Type Code
+     * Objet
      */
-    type_code: string;
+    objet: string;
+    /**
+     * Cpv
+     * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
+     */
+    cpv: string;
+    /**
+     * Sous Traitance Declaree
+     */
+    sous_traitance_declaree: boolean;
+    /**
+     * Actes Sous Traitance
+     */
+    actes_sous_traitance: Array<ActeSousTraitanceDto>;
+    /**
+     * Date Notification
+     */
+    date_notification: Date;
+    /**
+     * Montant
+     */
+    montant: string;
+    /**
+     * Titulaires
+     */
+    titulaires: Array<StructureDto>;
 };
 
 /**
@@ -302,119 +292,6 @@ export type MarcheDepartementDto = {
 };
 
 /**
- * MarcheDto
- */
-export type MarcheDto = {
-    /**
-     * Uid
-     */
-    uid: number;
-    /**
-     * Id
-     */
-    id: string;
-    acheteur: StructureDto;
-    nature: NatureMarche;
-    /**
-     * Objet
-     */
-    objet: string;
-    /**
-     * Cpv
-     * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
-     */
-    cpv: string;
-    /**
-     * Techniques Achat
-     */
-    techniques_achat: Array<TechniqueAchat>;
-    /**
-     * Modalites Execution
-     */
-    modalites_execution: Array<ModaliteExecution>;
-    accord_cadre: MarcheDto | null;
-    /**
-     * Marche Innovant
-     */
-    marche_innovant: boolean;
-    /**
-     * Ccag
-     * Cahiers des clauses administratives générales de référence du marché public
-     */
-    ccag: number | null;
-    /**
-     * Offres Recues
-     * Nombre d'offres reçues par l'acheteur de la part des soumissionnaires. Comprend aussi les offres irrégulières, inacceptables, inappropriées et anormalement basses.
-     */
-    offres_recues: number;
-    /**
-     * Attribution Avance
-     * Une avance a été attribuée au titulaire principal du marché public
-     */
-    attribution_avance: boolean;
-    /**
-     * Taux Avance
-     * Taux de l'avance attribuée au titulaire principal du marché public par rapport au montant du marché (O.1 = 10 % du montant du marché). En fonction de la valeur de attributionAvance, une valeur égale à 0 signifie soit qu'aucune avance n'a été accordée (si attributionAvance=false), soit que le taux de l'avance n'est pas connu (si attributionAvance=true).
-     */
-    taux_avance: string;
-    type_groupement_operateurs: TypeGroupementOperateur | null;
-    /**
-     * Sous Traitance Declaree
-     */
-    sous_traitance_declaree: boolean;
-    /**
-     * Actes Sous Traitance
-     */
-    actes_sous_traitance: Array<ActeSousTraitanceDto>;
-    lieu: LieuDto;
-    /**
-     * Duree Mois
-     */
-    duree_mois: number;
-    /**
-     * Date Notification
-     */
-    date_notification: Date;
-    /**
-     * Date Publication
-     */
-    date_publication: Date | null;
-    /**
-     * Montant
-     */
-    montant: string;
-    /**
-     * Type Prix
-     */
-    type_prix: Array<TypePrix> | null;
-    forme_prix: FormePrix | null;
-    /**
-     * Origine Ue
-     */
-    origine_ue: string | null;
-    /**
-     * Origine France
-     */
-    origine_france: string | null;
-    /**
-     * Titulaires
-     */
-    titulaires: Array<StructureDto>;
-    /**
-     * Considerations Sociales
-     */
-    considerations_sociales: Array<ConsiderationsSociales>;
-    /**
-     * Considerations Environnementales
-     */
-    considerations_environnementales: Array<ConsiderationsEnvironnementales>;
-    /**
-     * Modifications
-     */
-    modifications: Array<ModificationMarcheDto>;
-};
-
-/**
  * MarcheProcedureDto
  */
 export type MarcheProcedureDto = {
@@ -431,21 +308,6 @@ export type MarcheProcedureDto = {
      */
     nombre: number;
 };
-
-/**
- * ModaliteExecution
- */
-export const ModaliteExecution = {
-    TRANCHES: 'Tranches',
-    BONS_DE_COMMANDE: 'Bons de commande',
-    MARCHÉS_SUBSÉQUENTS: 'Marchés subséquents',
-    SANS_OBJET: 'Sans objet'
-} as const;
-
-/**
- * ModaliteExecution
- */
-export type ModaliteExecution = (typeof ModaliteExecution)[keyof typeof ModaliteExecution];
 
 /**
  * ModificationConcessionDto
@@ -478,40 +340,6 @@ export type ModificationConcessionDto = {
 };
 
 /**
- * ModificationMarcheDto
- */
-export type ModificationMarcheDto = {
-    /**
-     * Uid
-     */
-    uid: number;
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Duree Mois
-     */
-    duree_mois: number | null;
-    /**
-     * Date Notification
-     */
-    date_notification: Date;
-    /**
-     * Date Publication
-     */
-    date_publication: Date;
-    /**
-     * Montant
-     */
-    montant: string | null;
-    /**
-     * Titulaires
-     */
-    titulaires: Array<StructureDto>;
-};
-
-/**
  * NatureConcession
  */
 export const NatureConcession = {
@@ -525,20 +353,6 @@ export const NatureConcession = {
  * NatureConcession
  */
 export type NatureConcession = (typeof NatureConcession)[keyof typeof NatureConcession];
-
-/**
- * NatureMarche
- */
-export const NatureMarche = {
-    MARCHÉ: 'Marché',
-    MARCHÉ_DE_PARTENARIAT: 'Marché de partenariat',
-    MARCHÉ_DE_DÉFENSE_OU_DE_SÉCURITÉ: 'Marché de défense ou de sécurité'
-} as const;
-
-/**
- * NatureMarche
- */
-export type NatureMarche = (typeof NatureMarche)[keyof typeof NatureMarche];
 
 /**
  * ProcedureConcession
@@ -556,9 +370,9 @@ export const ProcedureConcession = {
 export type ProcedureConcession = (typeof ProcedureConcession)[keyof typeof ProcedureConcession];
 
 /**
- * StructureAgMarchesDto
+ * StructureAggMarchesDto
  */
-export type StructureAgMarchesDto = {
+export type StructureAggMarchesDto = {
     structure: StructureDto;
     /**
      * Montant
@@ -619,53 +433,6 @@ export type TarifDto = {
 };
 
 /**
- * TechniqueAchat
- */
-export const TechniqueAchat = {
-    ACCORD_CADRE: 'Accord-cadre',
-    CONCOURS: 'Concours',
-    SYSTÈME_DE_QUALIFICATION: 'Système de qualification',
-    SYSTÈME_D_ACQUISITION_DYNAMIQUE: "Système d'acquisition dynamique",
-    CATALOGUE_ÉLECTRONIQUE: 'Catalogue électronique',
-    ENCHÈRE_ÉLECTRONIQUE: 'Enchère électronique',
-    SANS_OBJET: 'Sans objet'
-} as const;
-
-/**
- * TechniqueAchat
- */
-export type TechniqueAchat = (typeof TechniqueAchat)[keyof typeof TechniqueAchat];
-
-/**
- * TypeGroupementOperateur
- */
-export const TypeGroupementOperateur = {
-    CONJOINT: 'Conjoint',
-    SOLIDAIRE: 'Solidaire',
-    PAS_DE_GROUPEMENT: 'Pas de groupement'
-} as const;
-
-/**
- * TypeGroupementOperateur
- */
-export type TypeGroupementOperateur = (typeof TypeGroupementOperateur)[keyof typeof TypeGroupementOperateur];
-
-/**
- * TypePrix
- */
-export const TypePrix = {
-    DÉFINITIF_FERME: 'Définitif ferme',
-    DÉFINITIF_ACTUALISABLE: 'Définitif actualisable',
-    DÉFINITIF_RÉVISABLE: 'Définitif révisable',
-    PROVISOIRE: 'Provisoire'
-} as const;
-
-/**
- * TypePrix
- */
-export type TypePrix = (typeof TypePrix)[keyof typeof TypePrix];
-
-/**
  * ValidationError
  */
 export type ValidationError = {
@@ -682,21 +449,6 @@ export type ValidationError = {
      */
     type: string;
 };
-
-/**
- * VariationPrix
- */
-export const VariationPrix = {
-    FERME: 'Ferme',
-    ACTUALISABLE: 'Actualisable',
-    RÉVISABLE: 'Révisable',
-    NC: 'NC'
-} as const;
-
-/**
- * VariationPrix
- */
-export type VariationPrix = (typeof VariationPrix)[keyof typeof VariationPrix];
 
 export type GetErreursImportErreursImportGetData = {
     body?: never;
@@ -720,13 +472,21 @@ export type GetListeMarchesMarcheGetData = {
     path?: never;
     query?: {
         /**
-         * Limit
+         * Date Debut
          */
-        limit?: number;
+        date_debut?: Date | null;
         /**
-         * Offset
+         * Date Fin
          */
-        offset?: number;
+        date_fin?: Date | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: string | null;
     };
     url: '/marche/';
 };
@@ -745,7 +505,7 @@ export type GetListeMarchesMarcheGetResponses = {
      * Response Get Liste Marches Marche  Get
      * Successful Response
      */
-    200: Array<MarcheDto>;
+    200: Array<MarcheAllegeDto>;
 };
 
 export type GetListeMarchesMarcheGetResponse = GetListeMarchesMarcheGetResponses[keyof GetListeMarchesMarcheGetResponses];
@@ -937,7 +697,7 @@ export type ListAcheteursStructureAcheteurGetData = {
         /**
          * Limit
          */
-        limit?: number;
+        limit?: number | null;
     };
     url: '/structure/acheteur';
 };
@@ -956,7 +716,7 @@ export type ListAcheteursStructureAcheteurGetResponses = {
      * Response List Acheteurs Structure Acheteur Get
      * Successful Response
      */
-    200: Array<StructureAgMarchesDto>;
+    200: Array<StructureAggMarchesDto>;
 };
 
 export type ListAcheteursStructureAcheteurGetResponse = ListAcheteursStructureAcheteurGetResponses[keyof ListAcheteursStructureAcheteurGetResponses];
@@ -987,7 +747,7 @@ export type ListVendeursStructureVendeurGetResponses = {
      * Response List Vendeurs Structure Vendeur Get
      * Successful Response
      */
-    200: Array<StructureAgMarchesDto>;
+    200: Array<StructureAggMarchesDto>;
 };
 
 export type ListVendeursStructureVendeurGetResponse = ListVendeursStructureVendeurGetResponses[keyof ListVendeursStructureVendeurGetResponses];
