@@ -24,7 +24,7 @@ build app:
       - front/dist/
 
 
-docker-image:
+docker-image-front:
   extends: .build-docker
   variables:
     IMAGE: "${REGISTRY}focus-marches-v2/front"

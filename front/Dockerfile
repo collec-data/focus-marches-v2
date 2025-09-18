@@ -15,4 +15,4 @@ COPY ./substitute_environment_variables.sh /substitute_environment_variables.sh
 RUN chmod +x /substitute_environment_variables.sh
 
 EXPOSE 80
-ENTRYPOINT ["/substitute_environment_variables.sh"]
+

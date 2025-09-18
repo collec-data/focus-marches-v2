@@ -1,4 +1,4 @@
-docker-image:
+docker-image-api:
   extends: .build-docker
   variables:
     IMAGE: "${REGISTRY}focus-marches-v2/api"
