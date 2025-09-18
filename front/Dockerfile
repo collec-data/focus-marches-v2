@@ -10,9 +10,5 @@ RUN rm -rf /usr/share/nginx/html
 # Copy from the stahg 1
 COPY --chown=nginx:root dist /usr/share/nginx/html
 
-# Overriding the default NGINX container behavior
-COPY ./substitute_environment_variables.sh /substitute_environment_variables.sh
-RUN chmod +x /substitute_environment_variables.sh
-
 EXPOSE 80
 
