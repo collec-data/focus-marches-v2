@@ -1,0 +1,30 @@
+build app:
+  image: node:22
+  stage: build-vue
+  script:
+    - npm install
+    - npm run format-check
+    - npm run lint-check
+    - >
+      if [[ "$CI_COMMIT_TAG" == "" ]]; then
+        echo "TAG VIDE";
+        VERSION=${CI_COMMIT_SHA:0:8};
+      else
+        echo "TAG PAS VIDE";
+        VERSION=${CI_COMMIT_REF_NAME};
+      fi
+    - echo ${VERSION}
+    # mise à jour du fichier git-version.json avec la version du commit
+    #- sed -i "s/dev/${VERSION}/g" public/git-version.json
+    - npm run build
+  artifacts:
+    expire_in: 15 mins
+    paths:
+      - dist/
+
+
+docker-image:
+  extends: .build-docker
+  variables:
+    IMAGE: "${REGISTRY}focus-marches-v2/front"
+    BUILD_CONTEXT: "front/."
