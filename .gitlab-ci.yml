@@ -1,0 +1,6 @@
+include:
+  - /api/.gitlab-ci.yml
+
+stages:
+  - 🔨 docker-build
+
