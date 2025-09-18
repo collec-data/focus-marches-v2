@@ -2,6 +2,7 @@ build app:
   image: node:22
   stage: build-vue
   script:
+    - cd front
     - npm install
     - npm run format-check
     - npm run lint-check
