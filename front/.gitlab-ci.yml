@@ -21,7 +21,7 @@ build app:
   artifacts:
     expire_in: 15 mins
     paths:
-      - dist/
+      - front/dist/
 
 
 docker-image:
