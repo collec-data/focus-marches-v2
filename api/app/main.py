@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 
-from .config import config
+from .config import get_config
 from .router.api_router import api_router
 
 
-app = FastAPI(title="Focus Marche V2", root_path=config.API_ROOT_PATH, dependencies=[])
+app = FastAPI(
+    title="Focus Marche V2", root_path=get_config().API_ROOT_PATH, dependencies=[]
+)
 
 app.include_router(api_router)
 

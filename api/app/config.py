@@ -1,7 +1,9 @@
+from functools import lru_cache
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
+class Config(BaseSettings):
     model_config = SettingsConfigDict(
         # Use top level .env file (one level above ./api/)
         env_file="../.env",
@@ -10,8 +12,10 @@ class Settings(BaseSettings):
     )
 
     API_ROOT_PATH: str = "/api"
-    DATABASE_URL: str = f"sqlite:///app/local.db"
+    DATABASE_URL: str
     DEBUG: bool = False
 
 
-config = Settings()  # type: ignore
+@lru_cache
+def get_config() -> Config:
+    return Config()

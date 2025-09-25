@@ -3,6 +3,7 @@ from typing import Annotated, Generator
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from .config import get_config, Config
 from .db import engine
 
 
@@ -11,5 +12,6 @@ def get_db() -> Generator[Session, None, None]:
         yield session
 
 
-# Dépendance FastAPI pour la session de base de données.
 SessionDep = Annotated[Session, Depends(get_db)]
+
+ConfigDep = Annotated[Config, Depends(get_config)]
