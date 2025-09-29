@@ -1,14 +1,14 @@
-<script setup>
-import { getStructureStructureUidGet } from '@/client';
-import { onMounted, ref } from 'vue';
+<script setup lang="ts">
+import { getStructureStructureUidGet, StructureEtendueDto } from '@/client';
+import { onMounted, Ref, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const acheteur = ref({});
+const acheteur: Ref<StructureEtendueDto> = ref(<StructureEtendueDto>{});
 
 onMounted(() => {
-    getStructureStructureUidGet({ path: { uid: route.params.uid } }).then((response) => {
+    getStructureStructureUidGet({ path: { uid: parseInt(route.params.uid as string) } }).then((response) => {
         acheteur.value = response.data;
     });
 });
@@ -33,8 +33,8 @@ onMounted(() => {
             </ul>
         </div>
 
-        <IndicateursCles :acheteur_uid="route.params.uid" />
-        <ListeMarches :acheteur_uid="route.params.uid" />
-        <Procedure :acheteur_uid="route.params.uid" />
+        <IndicateursCles :acheteur_uid="route.params.uid as string" />
+        <ListeMarches :acheteur_uid="route.params.uid as string" />
+        <Procedure :acheteur_uid="route.params.uid as string" />
     </section>
 </template>

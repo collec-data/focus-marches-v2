@@ -1,9 +1,9 @@
-<script setup>
-import { listAcheteursStructureAcheteurGet } from '@/client';
+<script setup lang="ts">
+import { listAcheteursStructureAcheteurGet, StructureAggMarchesDto } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 
-const listeAcheteurs = ref({});
+const listeAcheteurs: Ref<Array<StructureAggMarchesDto>> = ref([]);
 
 const graphData = ref({
     labels: [],

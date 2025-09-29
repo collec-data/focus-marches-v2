@@ -1,14 +1,13 @@
-<script setup>
-import { getIndicateursMarcheIndicateursGet } from '@/client';
+<script setup lang="ts">
+import { getIndicateursMarcheIndicateursGet, IndicateursDto } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
-
+import { onMounted, Ref, ref } from 'vue';
 const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
 
-const indicateurs = ref({});
+const indicateurs: Ref<IndicateursDto> = ref(<IndicateursDto>{});
 
 onMounted(() => {
-    getIndicateursMarcheIndicateursGet({ query: { date_debut: '2010-01-01', acheteur_uid: props.acheteur_uid, vendeur_uid: props.vendeur_uid } }).then((data) => {
+    getIndicateursMarcheIndicateursGet({ query: { date_debut: new Date('2010-01-01'), acheteur_uid: props.acheteur_uid, vendeur_uid: props.vendeur_uid } }).then((data) => {
         indicateurs.value = data.data;
     });
 });

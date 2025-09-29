@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import Acheteurs from '@/components/dashboard/Acheteurs.vue';
 import IndicateursCles from '@/components/dashboard/IndicateursCles.vue';
 import Procedure from '@/components/dashboard/Procedure.vue';

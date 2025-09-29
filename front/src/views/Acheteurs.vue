@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { listAcheteursStructureAcheteurGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
@@ -40,7 +40,7 @@ onMounted(() => {
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2">
-                        <Button disabled icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+                        <Button disabled icon="pi pi-external-link" label="Export" />
                     </div>
                     <div class="basis-1/2 flex justify-end">
                         <IconField class="w-fit">

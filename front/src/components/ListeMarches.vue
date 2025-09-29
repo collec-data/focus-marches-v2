@@ -1,8 +1,8 @@
-<script setup>
-import { getListeMarchesMarcheGet } from '@/client';
+<script setup lang="ts">
+import { getListeMarchesMarcheGet, MarcheAllegeDto } from '@/client';
 import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
-import { onMounted, ref } from 'vue';
+import { onMounted, Ref, ref } from 'vue';
 
 const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
 
@@ -14,7 +14,7 @@ const filters = ref({
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
-const listeMarches = ref([]);
+const listeMarches: Ref<Array<MarcheAllegeDto>> = ref([]);
 
 onMounted(() => {
     getListeMarchesMarcheGet({ query: { acheteur_uid: props.acheteur_uid, vendeur_uid: props.vendeur_uid } }).then((response) => {
@@ -22,7 +22,7 @@ onMounted(() => {
     });
 });
 
-const countSousTraitants = (value) => {
+const countSousTraitants = (value: Array<any>) => {
     return value.length ? value.length : '';
 };
 </script>
@@ -35,7 +35,7 @@ const countSousTraitants = (value) => {
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2">
-                        <Button disabled icon="pi pi-external-link" label="Export" @click="exportCSV($event)" />
+                        <Button disabled icon="pi pi-external-link" label="Export" />
                     </div>
                     <div class="basis-1/2 flex justify-end">
                         <IconField class="w-fit">
