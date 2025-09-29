@@ -24,12 +24,11 @@
     - docker tag ${IMAGE_BUILD} ${IMAGE_BUILD}:${VERSION_IMAGE}
     - echo "push ${IMAGE_BUILD}:${VERSION_IMAGE}" && docker push ${IMAGE_BUILD}:${VERSION_IMAGE}
 
-
 include:
   - /api/.gitlab-ci.yml
   - /front/.gitlab-ci.yml
 
 stages:
+  - api-quality
   - build-vue
   - 🔨 docker-build
-
