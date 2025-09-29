@@ -20,7 +20,7 @@ const graphOptions = ref({
 function transform(input) {
     let output = { structures: [], montants: [] };
     for (var line of input) {
-        output.structures.push(line.structure.type_identifiant + ' ' + line.structure.identifiant);
+        output.structures.push(line.structure.nom);
         output.montants.push(line.montant);
     }
     return output;
@@ -44,7 +44,7 @@ onMounted(() => {
             <table class="basis-1/3 border-collapse text-right">
                 <tbody>
                     <tr v-for="line in listeAcheteurs">
-                        <th>{{ line.structure.type_identifiant }} {{ line.structure.identifiant }}</th>
+                        <th>{{ line.structure.nom }}</th>
                         <td>{{ Math.round(line.montant) }}</td>
                     </tr>
                 </tbody>

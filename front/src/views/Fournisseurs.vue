@@ -56,9 +56,9 @@ onMounted(() => {
                     <Button icon="pi pi-search" aria-label="Annuaire" as="a" :href="'https://annuaire-entreprises.data.gouv.fr/etablissement/' + slotProps.data.structure.identifiant" target="_blank" rel="noopener" />
                 </template>
             </Column>
-            <Column field="structure" header="Identifiant" sortable>
+            <Column field="structure" header="Nom" sortable>
                 <template #body="slotProps">
-                    <RouterLink :to="'/fournisseur/' + slotProps.data.structure.uid">{{ slotProps.data.structure.type_identifiant }} {{ slotProps.data.structure.identifiant }} </RouterLink>
+                    <RouterLink :to="'/fournisseur/' + slotProps.data.structure.uid">{{ slotProps.data.structure.nom }} {{ slotProps.data.structure.identifiant }} </RouterLink>
                 </template>
             </Column>
             <Column field="nb_contrats" header="NB contrats" sortable></Column>

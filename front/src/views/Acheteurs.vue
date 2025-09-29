@@ -51,10 +51,10 @@ onMounted(() => {
                     </div>
                 </div>
             </template>
-            <Column field="structure.identifiant" header="SIRET" sortable>
+            <Column field="structure.nom" header="Nom" sortable>
                 <template #body="slotProps">
                     <RouterLink :to="'/acheteur/' + slotProps.data.structure.uid">
-                        {{ slotProps.data.structure.identifiant }}
+                        {{ slotProps.data.structure.nom }}
                     </RouterLink>
                 </template>
             </Column>

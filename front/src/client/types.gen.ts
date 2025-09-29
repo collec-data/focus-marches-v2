@@ -11,36 +11,6 @@ export type ActeSousTraitanceDto = {
 };
 
 /**
- * ConsiderationsEnvironnementales
- */
-export const ConsiderationsEnvironnementales = {
-    CRITÈRE_ENVIRONNEMENTAL: 'Critère environnemental',
-    CLAUSE_ENVIRONNEMENTALE: 'Clause environnementale',
-    PAS_DE_CONSIDÉRATION_ENVIRONNEMENTALE: 'Pas de considération environnementale'
-} as const;
-
-/**
- * ConsiderationsEnvironnementales
- */
-export type ConsiderationsEnvironnementales = (typeof ConsiderationsEnvironnementales)[keyof typeof ConsiderationsEnvironnementales];
-
-/**
- * ConsiderationsSociales
- */
-export const ConsiderationsSociales = {
-    CRITÈRE_SOCIAL: 'Critère social',
-    CLAUSE_SOCIALE: 'Clause sociale',
-    MARCHÉ_RÉSERVÉ: 'Marché réservé',
-    CONCESSION_RÉSERVÉ: 'Concession réservé',
-    PAS_DE_CONSIDÉRATION_SOCIALE: 'Pas de considération sociale'
-} as const;
-
-/**
- * ConsiderationsSociales
- */
-export type ConsiderationsSociales = (typeof ConsiderationsSociales)[keyof typeof ConsiderationsSociales];
-
-/**
  * ContratConcessionDto
  */
 export type ContratConcessionDto = {
@@ -53,56 +23,10 @@ export type ContratConcessionDto = {
      */
     id: number;
     autorite_concedante: StructureDto;
-    nature: NatureConcession | null;
     /**
      * Objet
      */
     objet: string;
-    procedure: ProcedureConcession | null;
-    /**
-     * Duree Mois
-     */
-    duree_mois: number;
-    /**
-     * Date Signature
-     */
-    date_signature: Date;
-    /**
-     * Date Publication
-     */
-    date_publication: Date;
-    /**
-     * Date Debut Execution
-     */
-    date_debut_execution: Date;
-    /**
-     * Valeur Globale
-     */
-    valeur_globale: string;
-    /**
-     * Montant Subvention Publique
-     */
-    montant_subvention_publique: string;
-    /**
-     * Donnees Execution
-     */
-    donnees_execution: Array<DonneeExecutionDto>;
-    /**
-     * Concessionnaires
-     */
-    concessionnaires: Array<StructureDto>;
-    /**
-     * Considerations Sociales
-     */
-    considerations_sociales: Array<ConsiderationsSociales>;
-    /**
-     * Considerations Environnementales
-     */
-    considerations_environnementales: Array<ConsiderationsEnvironnementales>;
-    /**
-     * Modifications
-     */
-    modifications: Array<ModificationConcessionDto>;
 };
 
 /**
@@ -112,41 +36,13 @@ export type DecpMalFormeDto = {
     /**
      * Decp
      */
-    decp: unknown;
+    decp: {
+        [key: string]: unknown;
+    };
     /**
      * Erreurs
      */
     erreurs: Array<ErreurDto>;
-};
-
-/**
- * DonneeExecutionDto
- */
-export type DonneeExecutionDto = {
-    /**
-     * Uid
-     */
-    uid: number;
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Uid Contrat Concession
-     */
-    uid_contrat_concession: number;
-    /**
-     * Date Publication
-     */
-    date_publication: Date;
-    /**
-     * Depenses Investissement
-     */
-    depenses_investissement: string;
-    /**
-     * Tarifs
-     */
-    tarifs: Array<TarifDto>;
 };
 
 /**
@@ -310,66 +206,6 @@ export type MarcheProcedureDto = {
 };
 
 /**
- * ModificationConcessionDto
- */
-export type ModificationConcessionDto = {
-    /**
-     * Uid
-     */
-    uid: number;
-    /**
-     * Id
-     */
-    id: number;
-    /**
-     * Date Signature
-     */
-    date_signature: Date;
-    /**
-     * Date Publication
-     */
-    date_publication: Date;
-    /**
-     * Duree Mois
-     */
-    duree_mois: number | null;
-    /**
-     * Valeur Globale
-     */
-    valeur_globale: string | null;
-};
-
-/**
- * NatureConcession
- */
-export const NatureConcession = {
-    CONCESSION_DE_TRAVAUX: 'Concession de travaux',
-    CONCESSION_DE_SERVICE: 'Concession de service',
-    CONCESSION_DE_SERVICE_PUBLIC: 'Concession de service public',
-    DÉLÉGATION_DE_SERVICE_PUBLIC: 'Délégation de service public'
-} as const;
-
-/**
- * NatureConcession
- */
-export type NatureConcession = (typeof NatureConcession)[keyof typeof NatureConcession];
-
-/**
- * ProcedureConcession
- */
-export const ProcedureConcession = {
-    PROCÉDURE_NÉGOCIÉE_OUVERTE: 'Procédure négociée ouverte',
-    PROCÉDURE_NON_NÉGOCIÉE_OUVERTE: 'Procédure non négociée ouverte',
-    PROCÉDURE_NÉGOCIÉE_RESTREINTE: 'Procédure négociée restreinte',
-    PROCÉDURE_NON_NÉGOCIÉE_RESTREINTE: 'Procédure non négociée restreinte'
-} as const;
-
-/**
- * ProcedureConcession
- */
-export type ProcedureConcession = (typeof ProcedureConcession)[keyof typeof ProcedureConcession];
-
-/**
  * StructureAggMarchesDto
  */
 export type StructureAggMarchesDto = {
@@ -401,6 +237,10 @@ export type StructureDto = {
      */
     type_identifiant: string;
     /**
+     * Nom
+     */
+    nom: string | null;
+    /**
      * Vendeur
      */
     vendeur: boolean;
@@ -411,25 +251,61 @@ export type StructureDto = {
 };
 
 /**
- * TarifDto
+ * StructureEtendueDto
  */
-export type TarifDto = {
+export type StructureEtendueDto = {
     /**
      * Uid
      */
     uid: number;
     /**
-     * Uid Donnee Execution
+     * Identifiant
      */
-    uid_donnee_execution: number;
+    identifiant: string;
     /**
-     * Intitule
+     * Type Identifiant
      */
-    intitule: string;
+    type_identifiant: string;
     /**
-     * Tarif
+     * Nom
      */
-    tarif: string;
+    nom: string | null;
+    /**
+     * Vendeur
+     */
+    vendeur: boolean;
+    /**
+     * Acheteur
+     */
+    acheteur: boolean;
+    /**
+     * Denomination
+     */
+    denomination?: string | null;
+    /**
+     * Sigle
+     */
+    sigle?: string | null;
+    /**
+     * Adresse
+     */
+    adresse?: string | null;
+    /**
+     * Cat Juridique
+     */
+    cat_juridique?: string | null;
+    /**
+     * Naf
+     */
+    naf?: string | null;
+    /**
+     * Effectifs
+     */
+    effectifs?: string | null;
+    /**
+     * Date Effectifs
+     */
+    date_effectifs?: number | null;
 };
 
 /**
@@ -751,6 +627,36 @@ export type ListVendeursStructureVendeurGetResponses = {
 };
 
 export type ListVendeursStructureVendeurGetResponse = ListVendeursStructureVendeurGetResponses[keyof ListVendeursStructureVendeurGetResponses];
+
+export type GetStructureStructureUidGetData = {
+    body?: never;
+    path: {
+        /**
+         * Uid
+         */
+        uid: number;
+    };
+    query?: never;
+    url: '/structure/{uid}';
+};
+
+export type GetStructureStructureUidGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetStructureStructureUidGetError = GetStructureStructureUidGetErrors[keyof GetStructureStructureUidGetErrors];
+
+export type GetStructureStructureUidGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: StructureEtendueDto;
+};
+
+export type GetStructureStructureUidGetResponse = GetStructureStructureUidGetResponses[keyof GetStructureStructureUidGetResponses];
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}/api` | (string & {});

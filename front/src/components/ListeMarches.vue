@@ -9,7 +9,7 @@ const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
     cpv: { value: null, matchMode: FilterMatchMode.EQUALS },
     objet: { value: null, matchMode: FilterMatchMode.IN },
-    'acheteur.identifiant': { value: null, matchMode: FilterMatchMode.IN },
+    'acheteur.nom': { value: null, matchMode: FilterMatchMode.IN },
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
@@ -67,7 +67,7 @@ const countSousTraitants = (value) => {
             ></Column>
             <Column field="cpv" header="CPV" sortable></Column>
             <Column field="objet" header="Objet" sortable></Column>
-            <Column v-if="acheteur_uid == null" field="acheteur.identifiant" header="Acheteur" sortable></Column>
+            <Column v-if="acheteur_uid == null" field="acheteur.nom" header="Acheteur" sortable></Column>
             <Column field="" header="Fournisseur" sortable></Column>
             <Column field="" header="Cat entreprise" sortable></Column>
             <Column field="sous_traitance_declaree" header="Sous-traitance" sortable>
