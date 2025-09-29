@@ -1,5 +1,6 @@
 <script setup>
 import { listAcheteursStructureAcheteurGet } from '@/client';
+import { formatCurrency } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
 
@@ -59,7 +60,11 @@ onMounted(() => {
                 </template>
             </Column>
             <Column field="nb_contrats" header="NB contrats" sortable></Column>
-            <Column field="montant" header="Montant contrats" sortable></Column>
+            <Column field="montant" header="Montant contrats" sortable bodyStyle="text-align:right">
+                <template #body="{ data }">
+                    {{ formatCurrency(data.montant) }}
+                </template></Column
+            >
         </DataTable>
     </div>
 </template>

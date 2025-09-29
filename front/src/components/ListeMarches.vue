@@ -1,5 +1,6 @@
 <script setup>
 import { getListeMarchesMarcheGet } from '@/client';
+import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
 
@@ -20,22 +21,6 @@ onMounted(() => {
         listeMarches.value = response.data;
     });
 });
-
-const formatCurrency = (value) => {
-    return parseFloat(value).toLocaleString('fr-FR', { style: 'currency', currency: 'eur' });
-};
-
-const formatBoolean = (value) => {
-    return value ? 'Oui' : 'Non';
-};
-
-const formatDate = (value) => {
-    return new Date(value).toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-    });
-};
 
 const countSousTraitants = (value) => {
     return value.length ? value.length : '';

@@ -1,5 +1,6 @@
 <script setup>
 import { getIndicateursMarcheIndicateursGet } from '@/client';
+import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
@@ -35,7 +36,7 @@ onMounted(() => {
             <div class="indicateur">
                 <i class="pi pi-calculator"></i>
                 <div class="label">MONTANT TOTAL</div>
-                <div class="value">{{ Math.round(indicateurs.montant_total * 100) / 100 }} €</div>
+                <div class="value">{{ formatCurrency(indicateurs.montant_total) }}</div>
             </div>
             <div v-if="acheteur_uid == null" class="indicateur">
                 <i class="pi pi-users"></i>

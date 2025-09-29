@@ -1,5 +1,6 @@
 <script setup>
 import { listAcheteursStructureAcheteurGet } from '@/client';
+import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 const listeAcheteurs = ref({});
@@ -45,7 +46,7 @@ onMounted(() => {
                 <tbody>
                     <tr v-for="line in listeAcheteurs">
                         <th>{{ line.structure.nom }}</th>
-                        <td>{{ Math.round(line.montant) }}</td>
+                        <td>{{ formatCurrency(line.montant) }}</td>
                     </tr>
                 </tbody>
             </table>
