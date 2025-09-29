@@ -1,6 +1,6 @@
 from decimal import Decimal
 from datetime import date
-from typing import Optional
+from typing import Optional, Any
 
 from pydantic import BaseModel, Json, Field
 
@@ -181,7 +181,7 @@ class ErreurDto(BaseModel):
 
 
 class DecpMalFormeDto(BaseModel):
-    decp: Json
+    decp: Json[dict[str, Any]]
     erreurs: list[ErreurDto]
 
 

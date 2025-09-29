@@ -39,7 +39,7 @@ extend-select = [
 "typing.Union".msg = "Remplacer 'Union[Foo, Bar]' par 'Foo | Bar'"
 
 [tool.mypy]
-exclude = ["venv", ".venv", "alembic"]
+exclude = ["venv", ".venv", "tests"]
 [[tool.mypy.overrides]]
 module = ['ijson.*', 'api_entreprise.*']
 follow_untyped_imports = true

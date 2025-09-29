@@ -42,23 +42,28 @@ from app.models.db import (
 )
 from app.models.enums import TypeCodeLieu
 from app.db import get_engine
-from app.dependencies import get_api_entreprise, get_config
+from app.dependencies import get_api_entreprise
+from app.config import get_config
 
 
 class CustomValidationError(Exception):
-    def __init__(self, message="", errors=[]):
+
+    def __init__(
+        self, message: str = "", errors: list[dict[str, str | list[str]]] = []
+    ):
         super().__init__(message)
         self._errors = errors
 
-    def errors(self):
+    def errors(self) -> list[dict[str, str | list[str]]]:
         return self._errors
 
 
 class ImportateurDecp:
+
     def __init__(
         self,
         session: Session,
-        file,
+        file: str,
         objet_type: str,
         api_entreprise: ApiEntreprise | None = None,
     ):
@@ -72,8 +77,8 @@ class ImportateurDecp:
         self._finished_at: float
 
         self._session: Session = session
-        self._api_entreprise = api_entreprise
-        self._file = file
+        self._api_entreprise: ApiEntreprise | None = api_entreprise
+        self._file: str = file
 
         self._item_path: str
         self._schema: type[MarcheSchema] | type[ConcessionSchema]
@@ -155,7 +160,7 @@ class ImportateurDecp:
     def marche_transformer(
         self,
         data: MarcheSchema,
-    ):
+    ) -> None:
         accord_cadre: Marche | None = None
         # if data.idAccordCadre:
         #     accord_cadre = self._session.execute(
@@ -390,8 +395,10 @@ class ImportateurDecp:
         self._session.add(concession)
         self._session.commit()
 
-    def build_entite_erreur(self, e: ValidationError, o: dict) -> DecpMalForme:
-        def decimal_serializer(obj):
+    def build_entite_erreur(
+        self, e: ValidationError | CustomValidationError, o: dict[str, Any]
+    ) -> DecpMalForme:
+        def decimal_serializer(obj):  # type: ignore
             if isinstance(obj, Decimal):
                 return str(obj)
             raise TypeError
@@ -410,13 +417,15 @@ class ImportateurDecp:
             )
         return decp
 
-    def importer(self):
+    def importer(self) -> "ImportateurDecp":
 
         with open(self._file, "rb") as f:
             liste = ijson.items(f, f"{self._item_path}.item")  # flux objet par objet
             for objet in liste:
                 try:
-                    self._transformer(self._schema.model_validate(objet))
+                    self._transformer(
+                        self._schema.model_validate(objet)  # type: ignore
+                    )
                     self._valid_objects += 1
                 except (ValidationError, CustomValidationError) as e:
                     self._session.add(self.build_entite_erreur(e, objet))
@@ -434,7 +443,7 @@ class ImportateurDecp:
 
 if __name__ == "__main__":  # pragma: no cover
 
-    base_file = "app/test_data/decp-megalis-2025.json"
+    base_file = "app/test_data/marche.json"
     cleaned_file = "app/test_data/clean-decp.json"
 
     Base.metadata.drop_all(get_engine())  # ToDo remove after tests

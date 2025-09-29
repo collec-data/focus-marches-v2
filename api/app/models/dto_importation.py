@@ -40,12 +40,10 @@ class ActeSousTraitanceSchema(BaseModel):
 
     @field_validator("dureeMois", mode="before")
     @classmethod
-    def transform(cls, raw) -> int | None:
+    def transform(cls, raw: str | int) -> int | None:
         if raw == "NC":
             return None
-        if type(raw) == str:
-            return int(raw)
-        return raw
+        return int(raw)
 
 
 class ModificationActeSousTraitanceSchema(BaseModel):
@@ -61,12 +59,10 @@ class ModificationActeSousTraitanceSchema(BaseModel):
 
     @field_validator("dureeMois", mode="before")
     @classmethod
-    def transform(cls, raw) -> int | None:
+    def transform(cls, raw: str | int) -> int | None:
         if raw == "NC":
             return None
-        if type(raw) == str:
-            return int(raw)
-        return raw
+        return int(raw)
 
 
 class MarcheSchema(BaseModel):
@@ -108,8 +104,8 @@ class MarcheSchema(BaseModel):
 
     @field_validator("offresRecues", mode="before")
     @classmethod
-    def transform(cls, raw) -> int | None:
-        return None if raw == "NC" else raw
+    def transform(cls, raw: str | int) -> int | None:
+        return None if raw == "NC" else int(raw)
 
 
 AutoriteConcedanteSchema = AcheteurSchema

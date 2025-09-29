@@ -1,7 +1,8 @@
-from typing import Annotated
+from typing import Annotated, Any
+from decimal import Decimal
 
 from fastapi import APIRouter, Query
-from sqlalchemy import select
+from sqlalchemy import select, Row, Select
 from sqlalchemy.sql import func, distinct
 from sqlalchemy.orm import aliased
 
@@ -22,7 +23,7 @@ from app.dependencies import SessionDep
 router = APIRouter()
 
 
-def application_filtres(stmt, f: FiltreTemporelStructure):
+def application_filtres(stmt: Select[Any], f: FiltreTemporelStructure) -> Select[Any]:
     acheteur = aliased(Structure)
     titulaires = aliased(Structure)
 
@@ -62,7 +63,7 @@ def get_liste_marches(
 @router.get("/procedure", response_model=list[MarcheProcedureDto])
 def get_marches_par_procedure(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list:
+) -> list[Row[tuple[int | None, Decimal, int]]]:
     stmt = (
         application_filtres(
             select(
@@ -99,7 +100,7 @@ def get_marches_par_procedure(
 @router.get("/ccag", response_model=list[MarcheCcagDto])
 def get_marches_par_ccag(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list:
+) -> list[Row[tuple[int | None, Decimal, int]]]:
     stmt = (
         application_filtres(
             select(
@@ -170,7 +171,9 @@ def get_indicateurs(
 
 
 @router.get("/departement", response_model=list[MarcheDepartementDto])
-def get_marches_par_departement(session: SessionDep) -> list:
+def get_marches_par_departement(
+    session: SessionDep,
+) -> list[Row[tuple[str, Decimal, int]]]:
     stmt = (
         (
             select(

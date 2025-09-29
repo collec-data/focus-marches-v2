@@ -21,7 +21,7 @@ SessionDep = Annotated[Session, Depends(get_db)]
 ConfigDep = Annotated[Config, Depends(get_config)]
 
 
-def get_api_entreprise(config: ConfigDep):
+def get_api_entreprise(config: ConfigDep) -> ApiEntreprise:
     confif_api = APIEntrepriseConfig(
         base_url=config.API_ENTREPRISE_URL,
         token=config.API_ENTREPRISE_TOKEN,

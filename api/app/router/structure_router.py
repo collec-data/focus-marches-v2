@@ -37,7 +37,9 @@ def list_acheteurs(
 
 
 @router.get("/vendeur", response_model=list[StructureAggMarchesDto])
-def list_vendeurs(session: SessionDep, limit: int | None = None):
+def list_vendeurs(
+    session: SessionDep, limit: int | None = None
+) -> list[dict[str, Structure | Decimal | int]]:
     stmt = (
         select(
             Structure,
@@ -60,7 +62,9 @@ def list_vendeurs(session: SessionDep, limit: int | None = None):
 
 
 @router.get("/{uid}", response_model=StructureEtendueDto)
-def get_structure(uid: int, session: SessionDep, api_entreprise: ApiEntrepriseDep):
+def get_structure(
+    uid: int, session: SessionDep, api_entreprise: ApiEntrepriseDep
+) -> Structure:
     stmt = select(Structure).where(Structure.uid == uid)
     structure = session.execute(stmt).scalar()
 

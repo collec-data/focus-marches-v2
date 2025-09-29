@@ -12,7 +12,7 @@ app.include_router(api_router)
 
 
 @app.get("/health", include_in_schema=False)
-def health_check():
+def health_check() -> dict[str, str]:
     """
     Health-check simple pour permettre de vérifier le lancement de l'API.
     """

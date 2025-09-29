@@ -19,7 +19,7 @@ from .enums import *
 
 class Base(DeclarativeBase):
     @declared_attr  # type: ignore
-    def __tablename__(cls) -> str:  # type: ignore
+    def __tablename__(cls: "Base") -> str:
         # On transforme le nom de CamelCase à snake_case
         return re.sub(r"(?!^)([A-Z]+)", r"_\1", cls.__name__).lower()
 
