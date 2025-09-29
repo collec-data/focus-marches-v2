@@ -22,6 +22,12 @@ Utiliser Visual Studio Code et installer les extensions recommandées (extension
 
 ## Tâches courantes
 
+### Lancer l'API en local
+
+```bash
+fastapi dev
+```
+
 ### Epingler les versions des dépendances
 
 Les fichiers (générés) `requirements.txt` et `dev-requirements.txt` listent les dépendances directes et transitives avec leurs versions (pour la reproductibilité des builds).
@@ -38,15 +44,12 @@ pip-compile pyproject.toml -o requirements.txt  && \
 pip install -r dev-requirements.txt
 ```
 
-
 ## Tests
 
-### Tests Unitaires
-
-Les tests unitaires sont situés dans le dossier (`api/app/tests/`).
+Les tests sont situés dans le dossier (`api/tests/`). Il s'agit principalement de tests d'intégration avec des appels au niveau de l'API qui remontent jusqu'à la base de données.
 
 On utilise pour cela [`pytest`](https://docs.pytest.org/en/stable/contents.html), associé à [`pytest-cov`](https://pytest-cov.readthedocs.io/en/latest/) pour mesurer la couverture de test, ainsi qu'à [`factoryboy`](https://factoryboy.readthedocs.io/en/stable/) pour la génération simplifiée de jeux de données de test.
 
-Ces tests sont lancés automatiquement dans le script de build de la CI.
+Côté base de donnée, une instance docker de PostgreSQL est démarrée et gérée automatiquement par `pytest` ([`pytest-docker`](https://pypi.org/project/pytest-docker/)). Pour accélérer la vitesse d'exécution des tests, chaque test est exécuté dans une transaction et n'est jamais réellement envoyé dans le PostgreSQL (voir `tests/conftest.py::db_fixture`).
 
-On peut les lancer manuellement à l'aide de la commande `pytest` ou via VSCode (en faisant attention d'avoir ouvert le dossier `/api` en tant que projet et non le *repository* entier).
+On peut les lancer manuellement à l'aide de la commande `pytest` ou via VSCode (en faisant attention d'avoir ouvert le dossier `/api` en tant que projet et non le _repository_ entier).
