@@ -28,7 +28,7 @@ class LieuFactory(factory.alchemy.SQLAlchemyModelFactory):
 
     uid = factory.Sequence(lambda n: n)
     code = factory.Sequence(lambda n: str(n))
-    type_code = enums.TypeCodeLieu.DEP
+    type_code = enums.TypeCodeLieu.DEP.db_value
 
 
 class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
@@ -38,7 +38,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     uid = factory.Sequence(lambda n: n)
     id = factory.Sequence(lambda n: n)
     acheteur = factory.SubFactory(AcheteurFactory)
-    nature = "Marché"
+    nature = enums.NatureMarche.MARCHE.db_value
     objet = "Lorem ipsum dolor"
     cpv = "1234"
     techniques_achat: list[enums.TechniqueAchat] = []
@@ -68,7 +68,7 @@ class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
     id = factory.Sequence(lambda n: n)
     autorite_concedante = factory.SubFactory(AcheteurFactory)
     objet = "Lorem ipsum dolor"
-    procedure = enums.ProcedureConcession.NEGO_OUVERTE.value
+    procedure = enums.ProcedureConcession.NEGO_OUVERTE.db_value
     duree_mois = 1
     date_signature = factory.Faker("date_time")
     date_publication = factory.Faker("date_time")

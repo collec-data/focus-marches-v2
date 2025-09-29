@@ -4,6 +4,7 @@ from .models.db import Base
 from .config import get_config
 
 
-engine = create_engine(get_config().DATABASE_URL, echo=False)
-
-Base.metadata.create_all(engine)
+def get_engine():
+    engine = create_engine(get_config().DATABASE_URL, echo=False)
+    Base.metadata.create_all(engine)
+    return engine

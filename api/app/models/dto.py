@@ -147,20 +147,20 @@ class ContratConcessionDto(BaseModel):
     uid: int
     id: int
     autorite_concedante: StructureDto
-    nature: NatureConcession | None
+    # nature: NatureConcession | None
     objet: str
-    procedure: ProcedureConcession | None
-    duree_mois: int
-    date_signature: date
-    date_publication: date
-    date_debut_execution: date
-    valeur_globale: Decimal
-    montant_subvention_publique: Decimal
-    donnees_execution: list[DonneeExecutionDto]
-    concessionnaires: list[StructureDto]
-    considerations_sociales: list[ConsiderationsSociales]
-    considerations_environnementales: list[ConsiderationsEnvironnementales]
-    modifications: list[ModificationConcessionDto]
+    # procedure: ProcedureConcession | None
+    # duree_mois: int
+    # date_signature: date
+    # date_publication: date
+    # date_debut_execution: date
+    # valeur_globale: Decimal
+    # montant_subvention_publique: Decimal
+    # donnees_execution: list[DonneeExecutionDto]
+    # concessionnaires: list[StructureDto]
+    # considerations_sociales: list[ConsiderationsSociales]
+    # considerations_environnementales: list[ConsiderationsEnvironnementales]
+    # modifications: list[ModificationConcessionDto]
 
 
 class ErreurDto(BaseModel):

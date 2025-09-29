@@ -22,7 +22,7 @@ def list_acheteurs(
             func.count(Marche.id).label("nb_contrats"),
         )
         .join(Structure.marches_acheteurs)
-        .group_by(Structure.identifiant)
+        .group_by(Structure.uid)
         .where(Structure.acheteur == True)
         .order_by(desc("montant"))
     )

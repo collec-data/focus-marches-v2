@@ -121,7 +121,7 @@ class Marche(Base):
     acheteur: Mapped[Structure] = relationship()  # 1*
     uid_acheteur: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
     nature: Mapped[int | None]  # enum NatureMarche
-    objet: Mapped[str] = mapped_column(Text(1_000))  # max 1k
+    objet: Mapped[str] = mapped_column(Text())  # max 1k
     cpv: Mapped[str]
     techniques_achat: Mapped[list[TechniqueAchat]] = mapped_column(
         MutableList.as_mutable(PickleType)
@@ -187,7 +187,7 @@ concession_structure_table = Table(
 
 class ContratConcession(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    id: Mapped[int]  # interne propre à l'acheteur donc pas utilisable en pk
+    id: Mapped[str]  # interne propre à l'acheteur donc pas utilisable en pk
     autorite_concedante: Mapped[Structure] = relationship()  # 1*
     uid_autorite: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
     nature: Mapped[int | None]  # enum NatureConcession

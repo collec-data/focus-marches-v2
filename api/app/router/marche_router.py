@@ -34,11 +34,11 @@ def application_filtres(stmt, f: FiltreTemporelStructure):
 
     if f.acheteur_uid:
         stmt = stmt.join(acheteur, Marche.acheteur)
-        stmt = stmt.where(acheteur.uid == f.acheteur_uid)
+        stmt = stmt.where(acheteur.uid == int(f.acheteur_uid))
 
     if f.vendeur_uid:
         stmt = stmt.join(titulaires, Marche.titulaires)
-        stmt = stmt.where(titulaires.uid == f.vendeur_uid)
+        stmt = stmt.where(titulaires.uid == int(f.vendeur_uid))
 
     return stmt
 
@@ -46,7 +46,7 @@ def application_filtres(stmt, f: FiltreTemporelStructure):
 @router.get("/", response_model=list[MarcheAllegeDto])
 def get_liste_marches(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[MarcheAllegeDto]:
+) -> list[Marche]:
     acheteur = aliased(Structure)
     titulaires = aliased(Structure)
     stmt = application_filtres(
@@ -63,14 +63,18 @@ def get_liste_marches(
 def get_marches_par_procedure(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
 ) -> list:
-    stmt = application_filtres(
-        select(
-            Marche.procedure,
-            func.sum(Marche.montant).label("montant"),
-            func.count(Marche.procedure).label("nombre"),
-        ),
-        filtres,
-    ).group_by(Marche.procedure)
+    stmt = (
+        application_filtres(
+            select(
+                Marche.procedure,
+                func.sum(Marche.montant).label("montant"),
+                func.count(Marche.procedure).label("nombre"),
+            ),
+            filtres,
+        )
+        .group_by(Marche.procedure)
+        .order_by(Marche.procedure)
+    )
 
     return list(session.execute(stmt).all())
 
@@ -96,14 +100,18 @@ def get_marches_par_procedure(
 def get_marches_par_ccag(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
 ) -> list:
-    stmt = application_filtres(
-        select(
-            Marche.ccag,
-            func.sum(Marche.montant).label("montant"),
-            func.count(Marche.ccag).label("nombre"),
-        ),
-        filtres,
-    ).group_by(Marche.ccag)
+    stmt = (
+        application_filtres(
+            select(
+                Marche.ccag,
+                func.sum(Marche.montant).label("montant"),
+                func.count(Marche.ccag).label("nombre"),
+            ),
+            filtres,
+        )
+        .group_by(Marche.ccag)
+        .order_by(Marche.ccag)
+    )
 
     return list(session.execute(stmt).all())
 
@@ -164,13 +172,17 @@ def get_indicateurs(
 @router.get("/departement", response_model=list[MarcheDepartementDto])
 def get_marches_par_departement(session: SessionDep) -> list:
     stmt = (
-        select(
-            Lieu.code,
-            func.sum(Marche.montant).label("montant"),
-            func.count(Marche.id).label("nombre"),
+        (
+            select(
+                Lieu.code,
+                func.sum(Marche.montant).label("montant"),
+                func.count(Marche.id).label("nombre"),
+            )
+            .join(Marche.lieu)
+            .where(Lieu.type_code == TypeCodeLieu.DEP.db_value)
         )
-        .join(Marche.lieu)
-        .where(Lieu.type_code == TypeCodeLieu.DEP.db_value)
-    ).group_by(Lieu.code)
+        .group_by(Lieu.code)
+        .order_by("montant")
+    )
 
     return list(session.execute(stmt).all())

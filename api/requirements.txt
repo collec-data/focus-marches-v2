@@ -62,6 +62,10 @@ markupsafe==3.0.2
     # via jinja2
 mdurl==0.1.2
     # via markdown-it-py
+psycopg[binary]==3.2.10
+    # via focus-marche-v2 (pyproject.toml)
+psycopg-binary==3.2.10
+    # via psycopg
 pydantic[email]==2.11.7
     # via
     #   fastapi
@@ -110,6 +114,7 @@ typing-extensions==4.15.0
     # via
     #   anyio
     #   fastapi
+    #   psycopg
     #   pydantic
     #   pydantic-core
     #   rich-toolkit

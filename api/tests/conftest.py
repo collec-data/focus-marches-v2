@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 import pytest
+import psycopg
 
 from .factories import *
 from app.main import app
@@ -21,7 +22,7 @@ def client(db):
 
 
 @pytest.fixture(autouse=True, name="db")
-def db_fixture():
+def db_fixture(db_service):
     """
     Toutes les écritures en base de donnée lors d'un tests sont stockées dans une
     unique transaction qui n'est jamais exécutée et qui sera rollback à la fin
@@ -29,7 +30,10 @@ def db_fixture():
     en sont d'autant plus rapides.
     """
 
-    engine = create_engine("sqlite:///app/test.db", echo=False)
+    engine = create_engine(
+        "postgresql+psycopg://postgres:password@localhost:5432/test",
+        echo=False,
+    )
     Base.metadata.create_all(engine)
     connection = engine.connect()
     transaction = connection.begin()
@@ -54,3 +58,20 @@ def set_factory_db(db):
         VendeurFactory,
     ]:
         my_factory._meta.sqlalchemy_session = db
+
+
+def db_is_responsive():
+    try:
+        conn = psycopg.connect("postgresql://postgres:password@localhost:5432/test")
+        conn.close()
+        return True
+    except:
+        return False
+
+
+@pytest.fixture(scope="session", autouse=True)
+def db_service(docker_services):
+    """Ensure that PG database is up and responsive."""
+    docker_services.wait_until_responsive(
+        timeout=10.0, pause=0.1, check=lambda: db_is_responsive()
+    )

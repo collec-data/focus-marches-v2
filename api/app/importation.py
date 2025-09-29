@@ -40,7 +40,7 @@ from app.models.db import (
     ModificationSousTraitance,
 )
 from app.models.enums import TypeCodeLieu
-from app.db import engine
+from app.db import get_engine
 
 
 class CustomValidationError(Exception):
@@ -416,8 +416,8 @@ if __name__ == "__main__":  # pragma: no cover
     base_file = "app/test_data/decp-megalis-2025.json"
     cleaned_file = "app/test_data/clean-decp.json"
 
-    Base.metadata.drop_all(engine)  # ToDo remove after tests
-    Base.metadata.create_all(engine)
+    Base.metadata.drop_all(get_engine())  # ToDo remove after tests
+    Base.metadata.create_all(get_engine())
 
     # clean invalid json
     f = open(cleaned_file, "w")
@@ -427,7 +427,7 @@ if __name__ == "__main__":  # pragma: no cover
             f.write(line)
     f.close()
 
-    with Session(engine) as session:
+    with Session(get_engine()) as session:
         ImportateurDecp(
             session=session, file=cleaned_file, objet_type="marche"
         ).importer().print_stats()

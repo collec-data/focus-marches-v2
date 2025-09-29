@@ -17,11 +17,11 @@ def test_cast_jour():
 def test_get_or_create_lieu(db):
     i = ImportateurDecp(db, None, objet_type="marche")
 
-    existing_lieu = LieuFactory.create()
+    existing_lieu = LieuFactory.create(type_code=TypeCodeLieu.DEP.db_value)
 
     i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # nouveau lieu créé
     i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # cache utilisé
-    i.get_or_create_lieu(existing_lieu.code, existing_lieu.type_code)  # existant en bdd
+    i.get_or_create_lieu(existing_lieu.code, TypeCodeLieu.DEP)  # existant en bdd
 
     assert len(i._cache_lieux) == 2
 

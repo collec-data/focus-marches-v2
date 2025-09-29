@@ -69,9 +69,9 @@ def test_procedure_et_filtres_succes(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"procedure": None, "montant": "5.0000000000", "nombre": 0},
-        {"procedure": 1, "montant": "6.0000000000", "nombre": 2},
-        {"procedure": 2, "montant": "12.0000000000", "nombre": 3},
+        {"procedure": 1, "montant": "6", "nombre": 2},
+        {"procedure": 2, "montant": "12", "nombre": 3},
+        {"procedure": None, "montant": "5", "nombre": 0},
     ]
 
 
@@ -91,8 +91,8 @@ def test_ccag_succes(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"ccag": 1, "montant": "10.0000000000", "nombre": 10},
-        {"ccag": 2, "montant": "16.0000000000", "nombre": 8},
+        {"ccag": 1, "montant": "10", "nombre": 10},
+        {"ccag": 2, "montant": "16", "nombre": 8},
     ]
 
 
@@ -125,7 +125,7 @@ def test_indicateurs_succes(client):
 
     assert response.status_code == 200
     assert response.json() == {
-        "montant_total": "5400.0000000000",
+        "montant_total": "5400",
         "nb_acheteurs": 45,
         "nb_contrats": 54,
         "nb_fournisseurs": 3,
@@ -161,6 +161,6 @@ def test_departements(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"code": "29", "montant": "66.0000000000", "nombre": 2},
-        {"code": "35", "montant": "50.0000000000", "nombre": 5},
+        {"code": "35", "montant": "50", "nombre": 5},
+        {"code": "29", "montant": "66", "nombre": 2},
     ]

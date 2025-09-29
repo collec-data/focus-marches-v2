@@ -7,6 +7,7 @@ dependencies = [
     "pydantic",
     "pydantic-settings",
     "fastapi[standard]",
+    "psycopg[binary]",
     "sqlalchemy",
     "ijson",
 ]
@@ -18,6 +19,7 @@ dev = [
     "ruff",
     "mypy<2.0.0,>=1.17.1",
     "factory-boy",
+    "pytest-docker",
 ]
 
 [tool.ruff]
