@@ -36,6 +36,7 @@ class Structure(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     identifiant: Mapped[str]
     type_identifiant: Mapped[str]
+    nom: Mapped[str | None] = mapped_column(default=None)
     vendeur: Mapped[bool] = mapped_column(default=False)
     acheteur: Mapped[bool] = mapped_column(default=False)
     marches_acheteurs: Mapped[list["Marche"]] = relationship(back_populates="acheteur")

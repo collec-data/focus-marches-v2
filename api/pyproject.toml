@@ -10,12 +10,14 @@ dependencies = [
     "psycopg[binary]",
     "sqlalchemy",
     "ijson",
+    "api-entreprise>=3",
 ]
 
 [project.optional-dependencies]
 dev = [
     "pytest",
     "pytest-cov",
+    "pytest-mock",
     "ruff",
     "mypy<2.0.0,>=1.17.1",
     "factory-boy",
@@ -39,7 +41,7 @@ extend-select = [
 [tool.mypy]
 exclude = ["venv", ".venv", "alembic"]
 [[tool.mypy.overrides]]
-module = ['ijson.*',]
+module = ['ijson.*', 'api_entreprise.*']
 follow_untyped_imports = true
 
 [tool.setuptools]

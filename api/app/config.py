@@ -15,7 +15,10 @@ class Config(BaseSettings):
     DATABASE_URL: str
     DEBUG: bool = False
 
+    API_ENTREPRISE_URL: str
+    API_ENTREPRISE_TOKEN: str
+
 
 @lru_cache
 def get_config() -> Config:
-    return Config()
+    return Config()  # type: ignore

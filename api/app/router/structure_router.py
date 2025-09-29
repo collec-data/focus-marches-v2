@@ -1,11 +1,11 @@
 from decimal import Decimal
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from sqlalchemy import select, func, desc
 
 from app.models.db import Structure, Marche
-from app.models.dto import StructureAggMarchesDto
-from app.dependencies import SessionDep
+from app.models.dto import StructureAggMarchesDto, StructureEtendueDto
+from app.dependencies import SessionDep, ApiEntrepriseDep
 
 
 router = APIRouter()
@@ -57,3 +57,34 @@ def list_vendeurs(session: SessionDep, limit: int | None = None):
         {"structure": structure, "montant": montant, "nb_contrats": nb_contrats}
         for structure, montant, nb_contrats in session.execute(stmt)
     ]
+
+
+@router.get("/{uid}", response_model=StructureEtendueDto)
+def get_structure(uid: int, session: SessionDep, api_entreprise: ApiEntrepriseDep):
+    stmt = select(Structure).where(Structure.uid == uid)
+    structure = session.execute(stmt).scalar()
+
+    if not structure:
+        raise HTTPException(status_code=404, detail="Structure inconnue")
+
+    if structure.type_identifiant == "SIRET":
+        details = api_entreprise.donnees_etablissement(structure.identifiant)
+        if details:
+            dict_structure = structure.__dict__
+            dict_structure["denomination"] = (
+                details.unite_legale.personne_morale_attributs.raison_sociale
+            )
+            dict_structure["sigle"] = (
+                details.unite_legale.personne_morale_attributs.sigle
+            )
+            dict_structure["adresse"] = details.adresse_postale_legere
+            dict_structure["cat_juridique"] = details.unite_legale.forme_juridique.code
+            dict_structure["naf"] = details.unite_legale.activite_principale.code
+            dict_structure["effectifs"] = (
+                details.unite_legale.tranche_effectif_salarie.intitule
+            )
+            dict_structure["date_effectifs"] = (
+                details.unite_legale.tranche_effectif_salarie.date_reference
+            )
+
+    return structure

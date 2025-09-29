@@ -6,17 +6,22 @@
 #
 annotated-types==0.7.0
     # via pydantic
-anyio==4.10.0
+anyio==4.11.0
     # via
     #   httpx
     #   starlette
     #   watchfiles
+api-entreprise==3.7.2
+    # via focus-marche-v2 (pyproject.toml)
 certifi==2025.8.3
     # via
     #   httpcore
     #   httpx
+    #   requests
     #   sentry-sdk
-click==8.2.1
+charset-normalizer==3.4.3
+    # via requests
+click==8.3.0
     # via
     #   rich-toolkit
     #   typer
@@ -27,11 +32,11 @@ email-validator==2.3.0
     # via
     #   fastapi
     #   pydantic
-fastapi[standard]==0.116.1
+fastapi[standard]==0.118.0
     # via focus-marche-v2 (pyproject.toml)
-fastapi-cli[standard]==0.0.10
+fastapi-cli[standard]==0.0.13
     # via fastapi
-fastapi-cloud-cli==0.1.5
+fastapi-cloud-cli==0.2.1
     # via fastapi-cli
 greenlet==3.2.4
     # via sqlalchemy
@@ -52,21 +57,32 @@ idna==3.10
     #   anyio
     #   email-validator
     #   httpx
+    #   requests
 ijson==3.4.0
     # via focus-marche-v2 (pyproject.toml)
 jinja2==3.1.6
     # via fastapi
 markdown-it-py==4.0.0
     # via rich
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via jinja2
+marshmallow==3.26.1
+    # via
+    #   api-entreprise
+    #   marshmallow-dataclass
+marshmallow-dataclass==8.7.1
+    # via api-entreprise
 mdurl==0.1.2
     # via markdown-it-py
+mypy-extensions==1.1.0
+    # via typing-inspect
+packaging==25.0
+    # via marshmallow
 psycopg[binary]==3.2.10
     # via focus-marche-v2 (pyproject.toml)
 psycopg-binary==3.2.10
     # via psycopg
-pydantic[email]==2.11.7
+pydantic[email]==2.11.9
     # via
     #   fastapi
     #   fastapi-cloud-cli
@@ -74,18 +90,24 @@ pydantic[email]==2.11.7
     #   pydantic-settings
 pydantic-core==2.33.2
     # via pydantic
-pydantic-settings==2.10.1
+pydantic-settings==2.11.0
     # via focus-marche-v2 (pyproject.toml)
 pygments==2.19.2
     # via rich
+pyrate-limiter==2.10.0
+    # via api-entreprise
 python-dotenv==1.1.1
     # via
     #   pydantic-settings
     #   uvicorn
 python-multipart==0.0.20
     # via fastapi
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via uvicorn
+redis==4.6.0
+    # via api-entreprise
+requests==2.32.5
+    # via api-entreprise
 rich==14.1.0
     # via
     #   rich-toolkit
@@ -96,7 +118,7 @@ rich-toolkit==0.15.1
     #   fastapi-cloud-cli
 rignore==0.6.4
     # via fastapi-cloud-cli
-sentry-sdk==2.37.0
+sentry-sdk==2.39.0
     # via fastapi-cloud-cli
 shellingham==1.5.4
     # via typer
@@ -104,9 +126,11 @@ sniffio==1.3.1
     # via anyio
 sqlalchemy==2.0.43
     # via focus-marche-v2 (pyproject.toml)
-starlette==0.47.3
+starlette==0.48.0
     # via fastapi
-typer==0.17.4
+typeguard==4.4.4
+    # via marshmallow-dataclass
+typer==0.19.2
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
@@ -120,15 +144,21 @@ typing-extensions==4.15.0
     #   rich-toolkit
     #   sqlalchemy
     #   starlette
+    #   typeguard
     #   typer
+    #   typing-inspect
     #   typing-inspection
+typing-inspect==0.9.0
+    # via marshmallow-dataclass
 typing-inspection==0.4.1
     # via
     #   pydantic
     #   pydantic-settings
 urllib3==2.5.0
-    # via sentry-sdk
-uvicorn[standard]==0.35.0
+    # via
+    #   requests
+    #   sentry-sdk
+uvicorn[standard]==0.37.0
     # via
     #   fastapi
     #   fastapi-cli

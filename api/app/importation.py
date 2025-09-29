@@ -12,6 +12,7 @@ from typing import Callable, Any
 from pydantic_core import ValidationError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from api_entreprise.api import ApiEntreprise
 
 from app.models.dto_importation import (
     MarcheSchema,
@@ -41,6 +42,7 @@ from app.models.db import (
 )
 from app.models.enums import TypeCodeLieu
 from app.db import get_engine
+from app.dependencies import get_api_entreprise, get_config
 
 
 class CustomValidationError(Exception):
@@ -53,7 +55,13 @@ class CustomValidationError(Exception):
 
 
 class ImportateurDecp:
-    def __init__(self, session: Session, file, objet_type: str):
+    def __init__(
+        self,
+        session: Session,
+        file,
+        objet_type: str,
+        api_entreprise: ApiEntreprise | None = None,
+    ):
         self._cache_lieux: dict[str, Lieu] = {}
         self._cache_structures: dict[str, Structure] = {}
 
@@ -64,6 +72,7 @@ class ImportateurDecp:
         self._finished_at: float
 
         self._session: Session = session
+        self._api_entreprise = api_entreprise
         self._file = file
 
         self._item_path: str
@@ -104,6 +113,18 @@ class ImportateurDecp:
 
         if not structure:
             structure = Structure(identifiant=id, type_identifiant=type_id)
+
+            if type_id == "SIRET" and self._api_entreprise:
+                data = self._api_entreprise.donnees_etablissement(id)
+
+                if (
+                    data
+                    and data.unite_legale
+                    and data.unite_legale.personne_morale_attributs
+                ):
+                    structure.nom = (
+                        data.unite_legale.personne_morale_attributs.raison_sociale
+                    )
 
         if set_is_acheteur:
             structure.acheteur = True
@@ -429,8 +450,14 @@ if __name__ == "__main__":  # pragma: no cover
 
     with Session(get_engine()) as session:
         ImportateurDecp(
-            session=session, file=cleaned_file, objet_type="marche"
+            session=session,
+            file=cleaned_file,
+            objet_type="marche",
+            api_entreprise=get_api_entreprise(get_config()),
         ).importer().print_stats()
         ImportateurDecp(
-            session=session, file=cleaned_file, objet_type="concession"
+            session=session,
+            file=cleaned_file,
+            objet_type="concession",
+            api_entreprise=get_api_entreprise(get_config()),
         ).importer().print_stats()

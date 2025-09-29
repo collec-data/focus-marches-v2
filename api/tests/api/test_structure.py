@@ -1,4 +1,5 @@
 from tests.factories import *
+from app.dependencies import get_api_entreprise
 
 
 def test_list_acheteurs(client):
@@ -17,6 +18,7 @@ def test_list_acheteurs(client):
             "structure": {
                 "acheteur": True,
                 "identifiant": acheteurs[1].identifiant,
+                "nom": None,
                 "type_identifiant": acheteurs[1].type_identifiant,
                 "uid": acheteurs[1].uid,
                 "vendeur": False,
@@ -28,6 +30,7 @@ def test_list_acheteurs(client):
             "structure": {
                 "acheteur": True,
                 "identifiant": acheteurs[0].identifiant,
+                "nom": None,
                 "type_identifiant": acheteurs[0].type_identifiant,
                 "uid": acheteurs[0].uid,
                 "vendeur": False,
@@ -60,3 +63,32 @@ def test_list_vendeurs(client):
     assert data[2]["structure"]["identifiant"] == vendeurs[2].identifiant
     assert data[2]["nb_contrats"] == 1
     assert data[2]["montant"] == "3"
+
+
+def test_get_structure(client, mocker):
+    data_mock = mocker.Mock()
+    data_mock.unite_legale.personne_morale_attributs.raison_sociale = "Mon entreprise"
+    data_mock.unite_legale.personne_morale_attributs.sigle = "ME"
+    data_mock.unite_legale.forme_juridique.code = "1234"
+    data_mock.adresse_postale_legere = "Rennes"
+    data_mock.unite_legale.activite_principale.code = "00.00Z"
+    data_mock.unite_legale.tranche_effectif_salarie.intitule = "20 à 40"
+    data_mock.unite_legale.tranche_effectif_salarie.date_reference = "2025"
+
+    mock = mocker.Mock()
+    mock.donnees_etablissement.return_value = data_mock
+    client.app.dependency_overrides[get_api_entreprise] = lambda: mock
+
+    acheteur = AcheteurFactory(identifiant="9999")
+    response = client.get(f"/structure/{acheteur.uid}")
+
+    assert response.status_code == 200
+    assert response.json()["sigle"] == "ME"
+    mock.donnees_etablissement.assert_called_with(acheteur.identifiant)
+
+
+def test_get_structure_does_not_exists(client):
+    response = client.get(f"/structure/123456")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Structure inconnue"

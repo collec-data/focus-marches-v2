@@ -26,16 +26,25 @@ def test_get_or_create_lieu(db):
     assert len(i._cache_lieux) == 2
 
 
-def test_importation_marche_succes(db):
+def test_importation_marche_succes(db, mocker):
+    data_mock = mocker.Mock()
+    data_mock.unite_legale.personne_morale_attributs.raison_sociale = "UneEntreprise"
+
+    api_entreprise_mock = mocker.Mock()
+    api_entreprise_mock.donnees_etablissement.return_value = data_mock
+
     i = ImportateurDecp(
         session=db,
         file="tests/files/liste_marches_valides.json",
         objet_type="marche",
+        api_entreprise=api_entreprise_mock,
     )
     i.importer()
 
     marches_crees = list(db.execute(select(Marche)).scalars())
     assert len(marches_crees) == 3
+
+    assert api_entreprise_mock.donnees_etablissement.called
 
     # `marche1` est un exemple avec tous les champs existants remplis
     # On s'assure que toutes les données sont bien utilisées et retrouvées ensuite dans la BDD
@@ -43,6 +52,7 @@ def test_importation_marche_succes(db):
     assert marche1.id == "2021T00000"
     assert marche1.acheteur.identifiant == "13579135791357"
     assert marche1.acheteur.type_identifiant == "SIRET"
+    assert marche1.acheteur.nom == "UneEntreprise"
     assert marche1.acheteur.vendeur == False
     assert marche1.acheteur.acheteur == True
     assert marche1.nature == 1
@@ -69,6 +79,7 @@ def test_importation_marche_succes(db):
     assert len(marche1.titulaires) == 1
     assert marche1.titulaires[0].identifiant == "12345678991230"
     assert marche1.titulaires[0].type_identifiant == "SIRET"
+    assert marche1.titulaires[0].nom == "UneEntreprise"
     assert marche1.considerations_sociales == []
     assert marche1.considerations_environnementales == []
     assert len(marche1.modifications) == 2
@@ -79,12 +90,14 @@ def test_importation_marche_succes(db):
     assert len(marche1.modifications[0].titulaires) == 1
     assert marche1.modifications[0].titulaires[0].identifiant == "12345678991230"
     assert marche1.modifications[0].titulaires[0].type_identifiant == "SIRET"
+    assert marche1.modifications[0].titulaires[0].nom == "UneEntreprise"
     assert marche1.modifications[0].titulaires[0].acheteur == False
     assert marche1.modifications[0].titulaires[0].vendeur == True
     assert len(marche1.actes_sous_traitance) == 1
     assert marche1.actes_sous_traitance[0].id == 1010
     assert marche1.actes_sous_traitance[0].sous_traitant.identifiant == "12365478962145"
     assert marche1.actes_sous_traitance[0].sous_traitant.type_identifiant == "SIRET"
+    assert marche1.actes_sous_traitance[0].sous_traitant.nom == "UneEntreprise"
     assert marche1.actes_sous_traitance[0].date_notification == date(2025, 6, 1)
     assert marche1.actes_sous_traitance[0].date_publication == date(2025, 6, 3)
     assert marche1.actes_sous_traitance[0].montant == Decimal("5.66E7")

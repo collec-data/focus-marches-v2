@@ -11,8 +11,19 @@ class StructureDto(BaseModel):
     uid: int
     identifiant: str
     type_identifiant: str
+    nom: str | None
     vendeur: bool
     acheteur: bool
+
+
+class StructureEtendueDto(StructureDto):
+    denomination: str | None = None
+    sigle: str | None = None
+    adresse: str | None = None
+    cat_juridique: str | None = None
+    naf: str | None = None
+    effectifs: str | None = None
+    date_effectifs: int | None = None
 
 
 class ActeSousTraitanceDto(BaseModel):

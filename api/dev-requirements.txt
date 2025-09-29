@@ -6,24 +6,29 @@
 #
 annotated-types==0.7.0
     # via pydantic
-anyio==4.10.0
+anyio==4.11.0
     # via
     #   httpx
     #   starlette
     #   watchfiles
+api-entreprise==3.7.2
+    # via focus-marche-v2 (pyproject.toml)
 attrs==25.3.0
     # via pytest-docker
 certifi==2025.8.3
     # via
     #   httpcore
     #   httpx
+    #   requests
     #   sentry-sdk
-click==8.2.1
+charset-normalizer==3.4.3
+    # via requests
+click==8.3.0
     # via
     #   rich-toolkit
     #   typer
     #   uvicorn
-coverage[toml]==7.10.6
+coverage[toml]==7.10.7
     # via pytest-cov
 dnspython==2.8.0
     # via email-validator
@@ -33,13 +38,13 @@ email-validator==2.3.0
     #   pydantic
 factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
-faker==37.6.0
+faker==37.8.0
     # via factory-boy
-fastapi[standard]==0.116.1
+fastapi[standard]==0.118.0
     # via focus-marche-v2 (pyproject.toml)
-fastapi-cli[standard]==0.0.10
+fastapi-cli[standard]==0.0.13
     # via fastapi
-fastapi-cloud-cli==0.1.5
+fastapi-cloud-cli==0.2.1
     # via fastapi-cli
 greenlet==3.2.4
     # via sqlalchemy
@@ -60,6 +65,7 @@ idna==3.10
     #   anyio
     #   email-validator
     #   httpx
+    #   requests
 ijson==3.4.0
     # via focus-marche-v2 (pyproject.toml)
 iniconfig==2.1.0
@@ -68,16 +74,26 @@ jinja2==3.1.6
     # via fastapi
 markdown-it-py==4.0.0
     # via rich
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via jinja2
+marshmallow==3.26.1
+    # via
+    #   api-entreprise
+    #   marshmallow-dataclass
+marshmallow-dataclass==8.7.1
+    # via api-entreprise
 mdurl==0.1.2
     # via markdown-it-py
-mypy==1.17.1
+mypy==1.18.2
     # via focus-marche-v2 (pyproject.toml)
 mypy-extensions==1.1.0
-    # via mypy
+    # via
+    #   mypy
+    #   typing-inspect
 packaging==25.0
-    # via pytest
+    # via
+    #   marshmallow
+    #   pytest
 pathspec==0.12.1
     # via mypy
 pluggy==1.6.0
@@ -88,7 +104,7 @@ psycopg[binary]==3.2.10
     # via focus-marche-v2 (pyproject.toml)
 psycopg-binary==3.2.10
     # via psycopg
-pydantic[email]==2.11.7
+pydantic[email]==2.11.9
     # via
     #   fastapi
     #   fastapi-cloud-cli
@@ -96,20 +112,25 @@ pydantic[email]==2.11.7
     #   pydantic-settings
 pydantic-core==2.33.2
     # via pydantic
-pydantic-settings==2.10.1
+pydantic-settings==2.11.0
     # via focus-marche-v2 (pyproject.toml)
 pygments==2.19.2
     # via
     #   pytest
     #   rich
-pytest==8.4.1
+pyrate-limiter==2.10.0
+    # via api-entreprise
+pytest==8.4.2
     # via
     #   focus-marche-v2 (pyproject.toml)
     #   pytest-cov
     #   pytest-docker
+    #   pytest-mock
 pytest-cov==7.0.0
     # via focus-marche-v2 (pyproject.toml)
 pytest-docker==3.2.3
+    # via focus-marche-v2 (pyproject.toml)
+pytest-mock==3.15.1
     # via focus-marche-v2 (pyproject.toml)
 python-dotenv==1.1.1
     # via
@@ -117,8 +138,12 @@ python-dotenv==1.1.1
     #   uvicorn
 python-multipart==0.0.20
     # via fastapi
-pyyaml==6.0.2
+pyyaml==6.0.3
     # via uvicorn
+redis==4.6.0
+    # via api-entreprise
+requests==2.32.5
+    # via api-entreprise
 rich==14.1.0
     # via
     #   rich-toolkit
@@ -129,9 +154,9 @@ rich-toolkit==0.15.1
     #   fastapi-cloud-cli
 rignore==0.6.4
     # via fastapi-cloud-cli
-ruff==0.12.11
+ruff==0.13.2
     # via focus-marche-v2 (pyproject.toml)
-sentry-sdk==2.37.0
+sentry-sdk==2.39.0
     # via fastapi-cloud-cli
 shellingham==1.5.4
     # via typer
@@ -139,9 +164,11 @@ sniffio==1.3.1
     # via anyio
 sqlalchemy==2.0.43
     # via focus-marche-v2 (pyproject.toml)
-starlette==0.47.3
+starlette==0.48.0
     # via fastapi
-typer==0.17.4
+typeguard==4.4.4
+    # via marshmallow-dataclass
+typer==0.19.2
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
@@ -156,8 +183,12 @@ typing-extensions==4.15.0
     #   rich-toolkit
     #   sqlalchemy
     #   starlette
+    #   typeguard
     #   typer
+    #   typing-inspect
     #   typing-inspection
+typing-inspect==0.9.0
+    # via marshmallow-dataclass
 typing-inspection==0.4.1
     # via
     #   pydantic
@@ -165,8 +196,10 @@ typing-inspection==0.4.1
 tzdata==2025.2
     # via faker
 urllib3==2.5.0
-    # via sentry-sdk
-uvicorn[standard]==0.35.0
+    # via
+    #   requests
+    #   sentry-sdk
+uvicorn[standard]==0.37.0
     # via
     #   fastapi
     #   fastapi-cli

@@ -7,7 +7,7 @@ import psycopg
 from .factories import *
 from app.main import app
 from app.models.db import Base
-from app.dependencies import get_db
+from app.dependencies import get_db, get_api_entreprise
 
 
 @pytest.fixture
@@ -16,6 +16,7 @@ def client(db):
         return db
 
     app.dependency_overrides[get_db] = get_session_override
+    app.dependency_overrides[get_api_entreprise] = lambda: None
     client = TestClient(app)
 
     return client
