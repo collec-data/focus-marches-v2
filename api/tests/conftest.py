@@ -8,6 +8,7 @@ from .factories import *
 from app.main import app
 from app.models.db import Base
 from app.dependencies import get_db, get_api_entreprise
+from app.config import get_config, Config
 
 
 @pytest.fixture
@@ -15,8 +16,16 @@ def client(db):
     def get_session_override():
         return db
 
+    def get_config_override():
+        return Config(
+            DATABASE_URL="postgresql+psycopg://postgres:password@localhost:5454/test",
+            API_ENTREPRISE_URL="https://api.entreprise",
+            API_ENTREPRISE_TOKEN="MySecret",
+        )
+
     app.dependency_overrides[get_db] = get_session_override
     app.dependency_overrides[get_api_entreprise] = lambda: None
+    app.dependency_overrides[get_config] = get_config_override
     client = TestClient(app)
 
     return client
@@ -32,7 +41,7 @@ def db_fixture(db_service):
     """
 
     engine = create_engine(
-        "postgresql+psycopg://postgres:password@localhost:5432/test",
+        "postgresql+psycopg://postgres:password@localhost:5454/test",
         echo=False,
     )
     Base.metadata.create_all(engine)
@@ -63,7 +72,7 @@ def set_factory_db(db):
 
 def db_is_responsive():
     try:
-        conn = psycopg.connect("postgresql://postgres:password@localhost:5432/test")
+        conn = psycopg.connect("postgresql://postgres:password@localhost:5454/test")
         conn.close()
         return True
     except:
