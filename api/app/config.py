@@ -11,7 +11,6 @@ class Config(BaseSettings):
         extra="ignore",
     )
 
-    API_ROOT_PATH: str = "/api"
     DATABASE_URL: str
     DEBUG: bool = False
 
