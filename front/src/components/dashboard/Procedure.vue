@@ -2,14 +2,19 @@
 import { getMarchesParProcedureMarcheProcedureGet } from '@/client';
 import { onMounted, ref } from 'vue';
 
-const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
+import type { MarcheProcedureDto } from '@/client';
+
+const props = defineProps({
+    acheteurUid: { type: [String, null], default: null },
+    vendeurUid: { type: [String, null], default: null }
+});
 
 const graphNombreData = ref({
-    labels: [],
+    labels: [] as Array<number | null>,
     datasets: [
         {
             label: 'Contrats pour la procédure',
-            data: [],
+            data: [] as Array<number | null>,
             backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)']
         }
     ]
@@ -31,11 +36,11 @@ const graphNombreOptions = ref({
 });
 
 const graphMontantsData = ref({
-    labels: [],
+    labels: [] as Array<number | null>,
     datasets: [
         {
             label: 'Montants pour la procédure',
-            data: [],
+            data: [] as Array<string | null>,
             backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)']
         }
     ]
@@ -56,23 +61,35 @@ const graphMontantsOptions = ref({
     }
 });
 
-function transform(input) {
-    let output = { procedure: [], montant: [], nombre: [] };
+function transform(input: Array<MarcheProcedureDto>) {
+    let output = {
+        procedure: [] as Array<number | null>,
+        montant: [] as Array<string>,
+        nombre: [] as Array<number>
+    };
     for (var line of input) {
-        output.procedure.push(line['procedure']);
-        output.montant.push(line['montant']);
-        output.nombre.push(line['nombre']);
+        output.procedure.push(line.procedure);
+        output.montant.push(line.montant);
+        output.nombre.push(line.nombre);
     }
     return output;
 }
 
 onMounted(() => {
-    getMarchesParProcedureMarcheProcedureGet({ query: { date_debut: new Date('2010-01-01'), acheteur_uid: props.acheteur_uid, vendeur_uid: props.vendeur_uid } }).then((data) => {
-        let raw_data = transform(data.data);
-        graphNombreData.value.labels = raw_data.procedure;
-        graphNombreData.value.datasets[0].data = raw_data.nombre;
-        graphMontantsData.value.labels = raw_data.procedure;
-        graphMontantsData.value.datasets[0].data = raw_data.montant;
+    getMarchesParProcedureMarcheProcedureGet({
+        query: {
+            date_debut: new Date('2010-01-01'),
+            acheteur_uid: props.acheteurUid,
+            vendeur_uid: props.vendeurUid
+        }
+    }).then((data) => {
+        if (data.data) {
+            let raw_data = transform(data.data);
+            graphNombreData.value.labels = raw_data.procedure;
+            graphNombreData.value.datasets[0].data = raw_data.nombre;
+            graphMontantsData.value.labels = raw_data.procedure;
+            graphMontantsData.value.datasets[0].data = raw_data.montant;
+        }
     });
 });
 </script>

@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
 import { getStructureStructureUidGet } from '@/client';
-import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-const acheteur: Ref<StructureEtendueDto> = ref(<StructureEtendueDto>{});
+const acheteur = ref<Partial<StructureEtendueDto>>({});
 
 onMounted(() => {
     getStructureStructureUidGet({ path: { uid: parseInt(route.params.uid as string) } }).then((response) => {
-        acheteur.value = response.data;
+        if (response.data) {
+            acheteur.value = response.data;
+        }
     });
 });
 </script>
@@ -35,8 +36,8 @@ onMounted(() => {
             </ul>
         </div>
 
-        <IndicateursCles :acheteur_uid="route.params.uid as string" />
-        <ListeMarches :acheteur_uid="route.params.uid as string" />
-        <Procedure :acheteur_uid="route.params.uid as string" />
+        <IndicateursCles :acheteurUid="route.params.uid as string" />
+        <ListeMarches :acheteurUid="route.params.uid as string" />
+        <Procedure :acheteurUid="route.params.uid as string" />
     </section>
 </template>

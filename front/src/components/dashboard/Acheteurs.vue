@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import type { StructureAggMarchesDto } from '@/client';
 import { listAcheteursStructureAcheteurGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 
-const listeAcheteurs: Ref<Array<StructureAggMarchesDto>> = ref([]);
+import type { StructureAggMarchesDto } from '@/client';
+
+const listeAcheteurs = ref<Array<StructureAggMarchesDto>>([]);
 
 const graphData = ref({
-    labels: [],
-    datasets: [{ data: [], backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(201, 203, 207, 0.2)'] }]
+    labels: [] as Array<string | null>,
+    datasets: [
+        {
+            data: [] as Array<string>,
+            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(201, 203, 207, 0.2)']
+        }
+    ]
 });
 
 const graphOptions = ref({
@@ -20,8 +25,11 @@ const graphOptions = ref({
     }
 });
 
-function transform(input) {
-    let output = { structures: [], montants: [] };
+function transform(input: Array<StructureAggMarchesDto>) {
+    let output = {
+        structures: [] as Array<string | null>,
+        montants: [] as Array<string>
+    };
     for (var line of input) {
         output.structures.push(line.structure.nom);
         output.montants.push(line.montant);
@@ -30,11 +38,15 @@ function transform(input) {
 }
 
 onMounted(() => {
-    listAcheteursStructureAcheteurGet({ query: { limit: 12 } }).then((response) => {
-        listeAcheteurs.value = response.data;
-        let rawData = transform(response.data);
-        graphData.value.labels = rawData.structures;
-        graphData.value.datasets[0].data = rawData.montants;
+    listAcheteursStructureAcheteurGet({
+        query: { limit: 12 }
+    }).then((response) => {
+        if (response.data) {
+            listeAcheteurs.value = response.data;
+            let rawData = transform(response.data);
+            graphData.value.labels = rawData.structures;
+            graphData.value.datasets[0].data = rawData.montants;
+        }
     });
 });
 </script>
@@ -46,7 +58,7 @@ onMounted(() => {
         <div class="flex flex-row gap-5">
             <table class="basis-1/3 border-collapse text-right">
                 <tbody>
-                    <tr v-for="line in listeAcheteurs">
+                    <tr v-for="line in listeAcheteurs" :key="line.structure.uid">
                         <th>{{ line.structure.nom }}</th>
                         <td>{{ formatCurrency(line.montant) }}</td>
                     </tr>

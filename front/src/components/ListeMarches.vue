@@ -3,10 +3,12 @@ import type { MarcheAllegeDto } from '@/client';
 import { getListeMarchesMarcheGet } from '@/client';
 import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
-import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 
-const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
+const props = defineProps({
+    acheteurUid: { type: [String, null], default: null },
+    vendeurUid: { type: [String, null], default: null }
+});
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -16,11 +18,18 @@ const filters = ref({
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
-const listeMarches: Ref<Array<MarcheAllegeDto>> = ref([]);
+const listeMarches = ref<Array<MarcheAllegeDto>>([]);
 
 onMounted(() => {
-    getListeMarchesMarcheGet({ query: { acheteur_uid: props.acheteur_uid, vendeur_uid: props.vendeur_uid } }).then((response) => {
-        listeMarches.value = response.data;
+    getListeMarchesMarcheGet({
+        query: {
+            acheteur_uid: props.acheteurUid,
+            vendeur_uid: props.vendeurUid
+        }
+    }).then((response) => {
+        if (response.data) {
+            listeMarches.value = response.data;
+        }
     });
 });
 
@@ -50,11 +59,11 @@ const countSousTraitants = (value: Array<any>) => {
                 </div>
             </template>
             <Column header="Détails" sortable>
-                <template #body="slotProps"> <Button label="Voir" aria-label="Voir" disabled /> </template
+                <template #body=""> <Button label="Voir" aria-label="Voir" disabled /> </template
             ></Column>
             <Column field="cpv" header="CPV" sortable></Column>
             <Column field="objet" header="Objet" sortable></Column>
-            <Column v-if="acheteur_uid == null" field="acheteur.nom" header="Acheteur" sortable></Column>
+            <Column v-if="acheteurUid == null" field="acheteur.nom" header="Acheteur" sortable></Column>
             <Column field="" header="Fournisseur" sortable></Column>
             <Column field="" header="Cat entreprise" sortable></Column>
             <Column field="sous_traitance_declaree" header="Sous-traitance" sortable>
