@@ -5,7 +5,7 @@ import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 const props = defineProps({ acheteurUid: { type: [String, null], default: null }, vendeurUid: { type: [String, null], default: null } });
 
-const indicateurs = ref<Partial<IndicateursDto>>({});
+const indicateurs = ref({} as IndicateursDto);
 
 onMounted(() => {
     getIndicateursMarcheIndicateursGet({
