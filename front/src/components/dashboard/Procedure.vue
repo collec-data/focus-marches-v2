@@ -57,7 +57,7 @@ const graphMontantsOptions = ref({
 });
 
 function transform(input) {
-    let output = { procedure: [], montant: new Array(), nombre: [] };
+    let output = { procedure: [], montant: [], nombre: [] };
     for (var line of input) {
         output.procedure.push(line['procedure']);
         output.montant.push(line['montant']);

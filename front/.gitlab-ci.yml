@@ -3,9 +3,10 @@ build app:
   stage: build-vue
   script:
     - cd front
-    - npm install
-    #- npm run format-check
-    #- npm run lint-check
+    - npm ci
+    - npm run format-check
+    - npm run lint-check
+    - npm run build
     - >
       if [[ "$CI_COMMIT_TAG" == "" ]]; then
         echo "TAG VIDE";

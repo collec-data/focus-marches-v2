@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { getStructureStructureUidGet, StructureEtendueDto } from '@/client';
-import { onMounted, Ref, ref } from 'vue';
+import type { StructureEtendueDto } from '@/client';
+import { getStructureStructureUidGet } from '@/client';
+import type { Ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
