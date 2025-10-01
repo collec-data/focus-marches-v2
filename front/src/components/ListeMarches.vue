@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { getListeMarchesMarcheGet, MarcheAllegeDto } from '@/client';
+import type { MarcheAllegeDto } from '@/client';
+import { getListeMarchesMarcheGet } from '@/client';
 import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
-import { onMounted, Ref, ref } from 'vue';
+import type { Ref} from 'vue';
+import { onMounted, ref } from 'vue';
 
 const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
 
@@ -31,7 +33,7 @@ const countSousTraitants = (value: Array<any>) => {
     <section>
         <h2 class="title">Tous les marchés de ...</h2>
         <p>Ce tableau affiche les principales informations des marchés de ... . Cliquez sur "Voir" pour accéder au détail de chaque marché.</p>
-        <DataTable :value="listeMarches" v-model:filters="filters" sortField="date_notification" :sortOrder="-1" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]">
+        <DataTable v-model:filters="filters" :value="listeMarches" sortField="date_notification" :sortOrder="-1" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]">
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2">

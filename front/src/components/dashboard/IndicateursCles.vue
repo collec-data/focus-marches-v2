@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { getIndicateursMarcheIndicateursGet, IndicateursDto } from '@/client';
+import type { IndicateursDto } from '@/client';
+import { getIndicateursMarcheIndicateursGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import { onMounted, Ref, ref } from 'vue';
+import type { Ref} from 'vue';
+import { onMounted, ref } from 'vue';
 const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
 
 const indicateurs: Ref<IndicateursDto> = ref(<IndicateursDto>{});

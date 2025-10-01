@@ -33,33 +33,33 @@ function smoothScroll(id) {
         <span class="text-surface-900 dark:text-surface-0 font-medium text-2xl leading-normal mr-20">SAKAI</span>
     </a>
     <Button
+        v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
         class="lg:!hidden"
         text
         severity="secondary"
         rounded
-        v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
     >
         <i class="pi pi-bars !text-2xl"></i>
     </Button>
     <div class="items-center bg-surface-0 dark:bg-surface-900 grow justify-between hidden lg:flex absolute lg:static w-full left-0 top-full px-12 lg:px-0 z-20 rounded-border">
         <ul class="list-none p-0 m-0 flex lg:items-center select-none flex-col lg:flex-row cursor-pointer gap-8">
             <li>
-                <a @click="smoothScroll('hero')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                <a class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl" @click="smoothScroll('hero')">
                     <span>Home</span>
                 </a>
             </li>
             <li>
-                <a @click="smoothScroll('features')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                <a class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl" @click="smoothScroll('features')">
                     <span>Features</span>
                 </a>
             </li>
             <li>
-                <a @click="smoothScroll('highlights')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                <a class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl" @click="smoothScroll('highlights')">
                     <span>Highlights</span>
                 </a>
             </li>
             <li>
-                <a @click="smoothScroll('pricing')" class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl">
+                <a class="px-0 py-4 text-surface-900 dark:text-surface-0 font-medium text-xl" @click="smoothScroll('pricing')">
                     <span>Pricing</span>
                 </a>
             </li>

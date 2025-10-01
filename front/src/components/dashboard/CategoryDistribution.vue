@@ -5,7 +5,7 @@
       Comparaison des trois catégories d'achats (zone colorée) par rapport au total (zone grise).
     </p>
     <div class="charts-row">
-      <div class="chart-block" v-for="cat in categories" :key="cat.key">
+      <div v-for="cat in categories" :key="cat.key" class="chart-block">
         <h3 class="chart-title">{{ cat.label }}</h3>
         <Chart
           type="line"
