@@ -2,7 +2,7 @@
 import type { StructureAggMarchesDto } from '@/client';
 import { listAcheteursStructureAcheteurGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import type { Ref} from 'vue';
+import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
 
 const listeAcheteurs: Ref<Array<StructureAggMarchesDto>> = ref([]);
