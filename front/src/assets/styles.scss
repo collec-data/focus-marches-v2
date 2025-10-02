@@ -3,3 +3,47 @@
 @use '@/assets/tailwind.css';
 @use '@/assets/layout/layout.scss';
 @use '@/assets/demo/demo.scss';
+
+section {
+    margin: 5rem 0;
+}
+
+* {
+    font-size: 1.1rem;
+}
+
+p {
+    text-align: justify;
+}
+
+h2 {
+    border-top: 5px solid var(--p-primary-color);
+    width: fit-content;
+    font-size: 1.8rem;
+}
+
+h3 {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.1em;
+    text-transform: uppercase;
+}
+
+summary {
+    font-size: 1.1rem;
+    margin: 2rem 0;
+    padding: 1rem;
+    width: fit-content;
+}
+details {
+    padding: 0 5rem;
+}
+
+details h3 {
+    border-bottom: 1px solid var(--p-primary-color);
+}
+
+details ul {
+    padding-left: 2rem;
+    list-style: disc;
+}

@@ -27,6 +27,7 @@ declare module 'vue' {
     InputIcon: typeof import('primevue/inputicon')['default']
     InputText: typeof import('primevue/inputtext')['default']
     ListeMarches: typeof import('./src/components/ListeMarches.vue')['default']
+    NatureContrats: typeof import('./src/components/dashboard/NatureContrats.vue')['default']
     NotificationsWidget: typeof import('./src/components/dashboard/NotificationsWidget.vue')['default']
     PricingWidget: typeof import('./src/components/landing/PricingWidget.vue')['default']
     Procedure: typeof import('./src/components/dashboard/Procedure.vue')['default']
