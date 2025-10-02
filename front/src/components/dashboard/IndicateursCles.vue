@@ -44,7 +44,7 @@ onMounted(() => {
             <div class="indicateur">
                 <i class="pi pi-calculator"></i>
                 <div class="label">MONTANT TOTAL</div>
-                <div class="value">{{ formatCurrency(indicateurs.montant_total) }}</div>
+                <div class="value">{{ formatCurrency(parseFloat(indicateurs.montant_total)) }}</div>
             </div>
             <div v-if="acheteurUid == null" class="indicateur">
                 <i class="pi pi-users"></i>

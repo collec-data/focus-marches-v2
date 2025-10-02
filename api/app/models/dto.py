@@ -192,7 +192,7 @@ class MarcheProcedureDto(BaseModel):
 
 
 class MarcheNatureDto(BaseModel):
-    mois: date
+    mois: str
     nature: int
     montant: Decimal
     nombre: int

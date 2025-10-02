@@ -38,6 +38,7 @@ onMounted(() => {
 
         <IndicateursCles :acheteurUid="route.params.uid as string" />
         <ListeMarches :acheteurUid="route.params.uid as string" />
+        <NatureContrats :acheteurUid="route.params.uid as string" />
         <Procedure :acheteurUid="route.params.uid as string" />
     </section>
 </template>

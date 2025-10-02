@@ -69,7 +69,7 @@ onMounted(() => {
             <Column field="nb_contrats" header="NB contrats" sortable></Column>
             <Column field="montant" header="Montant contrats" sortable bodyStyle="text-align:right">
                 <template #body="{ data }">
-                    {{ formatCurrency(data.montant) }}
+                    {{ formatCurrency(parseFloat(data.montant)) }}
                 </template></Column
             >
         </DataTable>

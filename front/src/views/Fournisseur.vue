@@ -13,6 +13,7 @@ const route = useRoute();
 
         <IndicateursCles :vendeurUid="route.params.uid as string" />
         <ListeMarches :vendeurUid="route.params.uid as string" />
+        <NatureContrats :vendeurUid="route.params.uid as string" />
         <Procedure :vendeurUid="route.params.uid as string" />
     </section>
 </template>

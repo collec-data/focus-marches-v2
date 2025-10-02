@@ -188,6 +188,28 @@ export type MarcheDepartementDto = {
 };
 
 /**
+ * MarcheNatureDto
+ */
+export type MarcheNatureDto = {
+    /**
+     * Mois
+     */
+    mois: string;
+    /**
+     * Nature
+     */
+    nature: number;
+    /**
+     * Montant
+     */
+    montant: string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
  * MarcheProcedureDto
  */
 export type MarcheProcedureDto = {
@@ -428,6 +450,49 @@ export type GetMarchesParProcedureMarcheProcedureGetResponses = {
 };
 
 export type GetMarchesParProcedureMarcheProcedureGetResponse = GetMarchesParProcedureMarcheProcedureGetResponses[keyof GetMarchesParProcedureMarcheProcedureGetResponses];
+
+export type GetMarchesParNatureMarcheNatureGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: string | null;
+    };
+    url: '/marche/nature';
+};
+
+export type GetMarchesParNatureMarcheNatureGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetMarchesParNatureMarcheNatureGetError = GetMarchesParNatureMarcheNatureGetErrors[keyof GetMarchesParNatureMarcheNatureGetErrors];
+
+export type GetMarchesParNatureMarcheNatureGetResponses = {
+    /**
+     * Response Get Marches Par Nature Marche Nature Get
+     * Successful Response
+     */
+    200: Array<MarcheNatureDto>;
+};
+
+export type GetMarchesParNatureMarcheNatureGetResponse = GetMarchesParNatureMarcheNatureGetResponses[keyof GetMarchesParNatureMarcheNatureGetResponses];
 
 export type GetMarchesParCcagMarcheCcagGetData = {
     body?: never;
