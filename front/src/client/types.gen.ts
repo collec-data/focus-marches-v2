@@ -88,7 +88,7 @@ export type IndicateursDto = {
     /**
      * Montant Total
      */
-    montant_total: string | null;
+    montant_total: string;
     /**
      * Nb Acheteurs
      */

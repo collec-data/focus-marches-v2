@@ -8,7 +8,7 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 <template>
     <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
-            <button class="layout-menu-button layout-topbar-action" @click="toggleMenu">
+            <button class="layout-menu-button layout-topbar-action" type="button" @click="toggleMenu">
                 <i class="pi pi-bars"></i>
             </button>
             <router-link to="/" class="layout-topbar-logo">
@@ -36,6 +36,7 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
             <button
                 v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
                 class="layout-topbar-menu-button layout-topbar-action"
+                type="button"
             >
                 <i class="pi pi-ellipsis-v"></i>
             </button>

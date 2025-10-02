@@ -2,15 +2,22 @@
 import type { IndicateursDto } from '@/client';
 import { getIndicateursMarcheIndicateursGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import type { Ref } from 'vue';
 import { onMounted, ref } from 'vue';
-const props = defineProps({ acheteur_uid: { type: [String, null], default: null }, vendeur_uid: { type: [String, null], default: null } });
+const props = defineProps({ acheteurUid: { type: [String, null], default: null }, vendeurUid: { type: [String, null], default: null } });
 
-const indicateurs: Ref<IndicateursDto> = ref(<IndicateursDto>{});
+const indicateurs = ref({} as IndicateursDto);
 
 onMounted(() => {
-    getIndicateursMarcheIndicateursGet({ query: { date_debut: new Date('2010-01-01'), acheteur_uid: props.acheteur_uid, vendeur_uid: props.vendeur_uid } }).then((data) => {
-        indicateurs.value = data.data;
+    getIndicateursMarcheIndicateursGet({
+        query: {
+            date_debut: new Date('2010-01-01'),
+            acheteur_uid: props.acheteurUid,
+            vendeur_uid: props.vendeurUid
+        }
+    }).then((data) => {
+        if (data.data) {
+            indicateurs.value = data.data;
+        }
     });
 });
 </script>
@@ -39,12 +46,12 @@ onMounted(() => {
                 <div class="label">MONTANT TOTAL</div>
                 <div class="value">{{ formatCurrency(indicateurs.montant_total) }}</div>
             </div>
-            <div v-if="acheteur_uid == null" class="indicateur">
+            <div v-if="acheteurUid == null" class="indicateur">
                 <i class="pi pi-users"></i>
                 <div class="label">NB ACHETEURS</div>
                 <div class="value">{{ indicateurs.nb_acheteurs }}</div>
             </div>
-            <div v-if="vendeur_uid == null" class="indicateur">
+            <div v-if="vendeurUid == null" class="indicateur">
                 <i class="pi pi-users"></i>
                 <div class="label">NB FOURNISSEURS</div>
                 <div class="value">{{ indicateurs.nb_fournisseurs }}</div>
