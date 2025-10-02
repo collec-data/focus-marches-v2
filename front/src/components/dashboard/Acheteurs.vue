@@ -1,29 +1,14 @@
 <script setup lang="ts">
 import { listAcheteursStructureAcheteurGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
+import Plotly from 'plotly.js-dist';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
 
 const listeAcheteurs = ref<Array<StructureAggMarchesDto>>([]);
 
-const graphData = ref({
-    labels: [] as Array<string | null>,
-    datasets: [
-        {
-            data: [] as Array<string>,
-            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(255, 159, 64, 0.2)', 'rgba(255, 205, 86, 0.2)', 'rgba(75, 192, 192, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(201, 203, 207, 0.2)']
-        }
-    ]
-});
-
-const graphOptions = ref({
-    type: 'bar',
-    data: graphData,
-    options: {
-        indexAxis: 'y'
-    }
-});
+const graphId = 'graph';
 
 function transform(input: Array<StructureAggMarchesDto>) {
     let output = {
@@ -44,10 +29,19 @@ onMounted(() => {
         if (response.data) {
             listeAcheteurs.value = response.data;
             let rawData = transform(response.data);
-            graphData.value.labels = rawData.structures;
-            graphData.value.datasets[0].data = rawData.montants;
+            Plotly.newPlot(graphId, [
+                {
+                    x: rawData.structures,
+                    y: rawData.montants,
+                    type: 'bar'
+                }
+            ]);
         }
     });
+});
+
+onBeforeUnmount(() => {
+    Plotly.purge(graphId);
 });
 </script>
 
@@ -64,7 +58,7 @@ onMounted(() => {
                     </tr>
                 </tbody>
             </table>
-            <Chart type="bar" :data="graphData" :options="graphOptions" class="basis-2/3" />
+            <div id="graph"></div>
         </div>
         <div class="flex flex-wrap">
             <RouterLink to="/acheteurs">
