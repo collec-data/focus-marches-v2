@@ -60,7 +60,7 @@ onMounted(() => {
                 <tbody>
                     <tr v-for="line in listeAcheteurs" :key="line.structure.uid">
                         <th>{{ line.structure.nom }}</th>
-                        <td>{{ formatCurrency(line.montant) }}</td>
+                        <td>{{ formatCurrency(parseFloat(line.montant)) }}</td>
                     </tr>
                 </tbody>
             </table>

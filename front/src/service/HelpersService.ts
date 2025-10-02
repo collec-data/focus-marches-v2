@@ -1,5 +1,5 @@
-export const formatCurrency = (value: string) => {
-    return parseFloat(value).toLocaleString('fr-FR', { style: 'currency', currency: 'eur' });
+export const formatCurrency = (value: number) => {
+    return value.toLocaleString('fr-FR', { style: 'currency', currency: 'eur' });
 };
 
 export const formatBoolean = (value: boolean) => {

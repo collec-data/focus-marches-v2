@@ -85,7 +85,7 @@ const countSousTraitants = (value: Array<any>) => {
             >
             <Column field="montant" header="Montant" dataType="numeric" sortable>
                 <template #body="{ data }">
-                    {{ formatCurrency(data.montant) }}
+                    {{ formatCurrency(parseFloat(data.montant)) }}
                 </template>
                 ></Column
             >
