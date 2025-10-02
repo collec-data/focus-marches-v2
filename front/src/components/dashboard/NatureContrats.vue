@@ -3,7 +3,7 @@ import type { MarcheNatureDto } from '@/client';
 import { getMarchesParNatureMarcheNatureGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import Plotly from 'plotly.js-dist';
-import { onMounted, onUnmounted, ref, useId } from 'vue';
+import { onBeforeUnmount, onMounted, ref, useId } from 'vue';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
@@ -68,7 +68,7 @@ onMounted(() => {
     });
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
     Plotly.purge(graphMarcheId);
     Plotly.purge(graphPartenariatId);
     Plotly.purge(graphDefenseId);
