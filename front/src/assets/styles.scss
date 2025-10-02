@@ -8,10 +8,6 @@ section {
     margin: 5rem 0;
 }
 
-* {
-    font-size: 1.1rem;
-}
-
 p {
     text-align: justify;
 }
@@ -19,7 +15,7 @@ p {
 h2 {
     border-top: 5px solid var(--p-primary-color);
     width: fit-content;
-    font-size: 1.8rem;
+    font-size: 1.5rem;
 }
 
 h3 {
@@ -30,7 +26,6 @@ h3 {
 }
 
 summary {
-    font-size: 1.1rem;
     margin: 2rem 0;
     padding: 1rem;
     width: fit-content;

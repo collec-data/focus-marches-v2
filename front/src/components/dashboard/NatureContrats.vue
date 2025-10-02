@@ -3,7 +3,7 @@ import type { MarcheNatureDto } from '@/client';
 import { getMarchesParNatureMarcheNatureGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import Plotly from 'plotly.js-dist';
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, useId } from 'vue';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
@@ -33,10 +33,24 @@ function transform(input: Array<MarcheNatureDto>) {
     return output;
 }
 
-const graphMarcheId = 'graph-marche';
-const graphPartenariatId = 'graph-partenariat';
-const graphDefenseId = 'graph-defense';
+const graphMarcheId = useId();
+const graphPartenariatId = useId();
+const graphDefenseId = useId();
 
+function makeGraph(graphId: string, labels: Array<string | null>, data: Array<number>) {
+    Plotly.newPlot(
+        graphId,
+        [
+            {
+                x: labels,
+                y: data,
+                type: 'bar'
+            }
+        ],
+        { margin: { t: 0, r: 0, b: 20 } },
+        { displayModeBar: false }
+    );
+}
 onMounted(() => {
     getMarchesParNatureMarcheNatureGet({
         query: {
@@ -47,42 +61,9 @@ onMounted(() => {
     }).then((data) => {
         if (data.data) {
             let rawData = transform(data.data);
-            Plotly.newPlot(
-                graphMarcheId,
-                [
-                    {
-                        x: rawData[0].labels,
-                        y: rawData[0].values,
-                        type: 'bar'
-                    }
-                ],
-                {},
-                { displayModeBar: false }
-            );
-            Plotly.newPlot(
-                graphPartenariatId,
-                [
-                    {
-                        x: rawData[1].labels,
-                        y: rawData[1].values,
-                        type: 'bar'
-                    }
-                ],
-                {},
-                { displayModeBar: false }
-            );
-            Plotly.newPlot(
-                graphDefenseId,
-                [
-                    {
-                        x: rawData[2].labels,
-                        y: rawData[2].values,
-                        type: 'bar'
-                    }
-                ],
-                {},
-                { displayModeBar: false }
-            );
+            makeGraph(graphMarcheId, rawData[0].labels, rawData[0].values);
+            makeGraph(graphPartenariatId, rawData[1].labels, rawData[1].values);
+            makeGraph(graphDefenseId, rawData[2].labels, rawData[2].values);
         }
     });
 });
@@ -99,25 +80,25 @@ onUnmounted(() => {
         <h2 class="title">Nature des contrats</h2>
         <p>Répartition des contrats par nature du marché public, en montant et en nombre. La période observée est de XX mois et les marchés sont groupés par mois.</p>
         <div class="flex flex-row gap-5 flex-wrap">
-            <div class="nature basis-1/3">
+            <div class="nature basis-md grow shrink">
                 <h3>Marché</h3>
-                <div id="graph-marche" class="chart"></div>
+                <div :id="graphMarcheId" class="chart"></div>
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[0].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[0].nombre_total }} marchés</li>
                 </ul>
             </div>
-            <div class="nature basis-1/3">
+            <div class="nature basis-md grow shrink">
                 <h3>Marché de partenariat</h3>
-                <div id="graph-partenariat" class="chart"></div>
+                <div :id="graphPartenariatId" class="chart"></div>
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[1].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[1].nombre_total }} marchés</li>
                 </ul>
             </div>
-            <div class="nature basis-1/3">
+            <div class="nature basis-md grow shrink">
                 <h3>Marché de défense ou de sécurité</h3>
-                <div id="graph-defense" class="chart"></div>
+                <div :id="graphDefenseId" class="chart"></div>
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[2].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[2].nombre_total }} marchés</li>
@@ -147,13 +128,7 @@ onUnmounted(() => {
     </section>
 </template>
 
-<style>
-.nature {
-    flex-basis: 0;
-    flex-grow: 1;
-    flex-shrink: 1;
-}
-
+<style scoped>
 .nature h3 {
     margin: 0;
 }

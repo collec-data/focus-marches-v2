@@ -2,8 +2,7 @@ from typing import Annotated, Any
 from decimal import Decimal
 
 from fastapi import APIRouter, Query
-from sqlalchemy import select, Row, Select, func as sfunc
-from sqlalchemy.sql import func, distinct, expression
+from sqlalchemy import select, Row, Select, func, distinct
 from sqlalchemy.orm import aliased
 
 
@@ -88,7 +87,7 @@ def get_marches_par_nature(
         application_filtres(
             select(
                 Marche.nature,
-                sfunc.to_char(Marche.date_notification, "YYYY-MM").label("mois"),
+                func.to_char(Marche.date_notification, "YYYY-MM").label("mois"),
                 func.sum(Marche.montant).label("montant"),
                 func.count(Marche.uid).label("nombre"),
             ),
