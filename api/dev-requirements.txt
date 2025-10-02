@@ -152,7 +152,7 @@ rich-toolkit==0.15.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
-rignore==0.6.4
+rignore==0.7.0
     # via fastapi-cloud-cli
 ruff==0.13.2
     # via focus-marche-v2 (pyproject.toml)
