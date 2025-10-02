@@ -75,16 +75,26 @@ def test_procedure_et_filtres_succes(client):
     ]
 
 
-# ToDo: move to PGSQL
-# def test_nature_succes(client):
-#     response = client.get("/marche/nature")
+def test_nature_succes(client):
+    n1 = enums.NatureMarche.MARCHE.db_value
+    n2 = enums.NatureMarche.PARTENARIAT.db_value
+    MarcheFactory(nature=n1, montant=3, date_notification=date(2025, 12, 1))
+    MarcheFactory(nature=n1, montant=4, date_notification=date(2025, 12, 10))
+    MarcheFactory(nature=n1, montant=5, date_notification=date(2025, 11, 25))
+    MarcheFactory(nature=n2, montant=1, date_notification=date(2025, 12, 1))
 
-#     assert response.status_code == 200
-#     assert response.json() == []
+    response = client.get("/marche/nature")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {"mois": "2025-11", "nature": 1, "montant": "5", "nombre": 1},
+        {"mois": "2025-12", "nature": 1, "montant": "7", "nombre": 2},
+        {"mois": "2025-12", "nature": 2, "montant": "1", "nombre": 1},
+    ]
 
 
 def test_ccag_succes(client):
-    print(MarcheFactory.create_batch(10, ccag=1, montant=1))
+    MarcheFactory.create_batch(10, ccag=1, montant=1)
     MarcheFactory.create_batch(8, ccag=2, montant=2)
 
     response = client.get("/marche/ccag")

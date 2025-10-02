@@ -2,8 +2,8 @@ from typing import Annotated, Any
 from decimal import Decimal
 
 from fastapi import APIRouter, Query
-from sqlalchemy import select, Row, Select
-from sqlalchemy.sql import func, distinct
+from sqlalchemy import select, Row, Select, func as sfunc
+from sqlalchemy.sql import func, distinct, expression
 from sqlalchemy.orm import aliased
 
 
@@ -80,21 +80,25 @@ def get_marches_par_procedure(
     return list(session.execute(stmt).all())
 
 
-# ToDo: move to PGSQL
-# @router.get("/nature", response_model=list[MarcheNatureDto])
-# def get_marches_par_nature(
-#     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-# ) -> list:
-#     stmt = application_filtres(
-#         select(
-#             Marche.nature,
-#             func.sum(Marche.montant).label("montant"),
-#             func.count(Marche.id).label("nombre"),
-#         ),
-#         filtres,
-#     ).group_by(Marche.nature, func.month(Marche.date_notification))
-
-#     return list(session.execute(stmt).all())
+@router.get("/nature", response_model=list[MarcheNatureDto])
+def get_marches_par_nature(
+    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+) -> list[Row[tuple[int | None, Decimal, int]]]:
+    stmt = (
+        application_filtres(
+            select(
+                Marche.nature,
+                sfunc.to_char(Marche.date_notification, "YYYY-MM").label("mois"),
+                func.sum(Marche.montant).label("montant"),
+                func.count(Marche.uid).label("nombre"),
+            ),
+            filtres,
+        )
+        .group_by(Marche.nature, "mois")
+        .order_by(Marche.nature, "mois")
+    )
+    print(stmt)
+    return list(session.execute(stmt).all())
 
 
 @router.get("/ccag", response_model=list[MarcheCcagDto])
