@@ -1,9 +1,10 @@
-from datetime import datetime, date
+from datetime import date, datetime
 from decimal import Decimal
+
 from sqlalchemy import select
 
 from app.importation import ImportateurDecp
-from app.models.db import Marche, ContratConcession, DecpMalForme, Lieu
+from app.models.db import ContratConcession, DecpMalForme, Marche
 from app.models.enums import TypeCodeLieu
 
 from .factories import LieuFactory
@@ -53,20 +54,20 @@ def test_importation_marche_succes(db, mocker):
     assert marche1.acheteur.identifiant == "13579135791357"
     assert marche1.acheteur.type_identifiant == "SIRET"
     assert marche1.acheteur.nom == "UneEntreprise"
-    assert marche1.acheteur.vendeur == False
-    assert marche1.acheteur.acheteur == True
+    assert marche1.acheteur.vendeur is False
+    assert marche1.acheteur.acheteur is True
     assert marche1.nature == 1
     assert marche1.objet == "Lorem ipsum dolor"
     assert marche1.cpv == "12341234"
     assert marche1.techniques_achat == []
     assert marche1.modalites_execution == []
-    assert marche1.marche_innovant == True
+    assert marche1.marche_innovant is True
     assert marche1.ccag == 1
     assert marche1.offres_recues == 5
-    assert marche1.attribution_avance == True
+    assert marche1.attribution_avance is True
     assert marche1.taux_avance == 0.5
-    assert marche1.type_groupement_operateurs == None
-    assert marche1.sous_traitance_declaree == True
+    assert marche1.type_groupement_operateurs is None
+    assert marche1.sous_traitance_declaree is True
     assert marche1.procedure == 5
     assert marche1.lieu.code == "35"
     assert marche1.lieu.type_code == 5
@@ -91,8 +92,8 @@ def test_importation_marche_succes(db, mocker):
     assert marche1.modifications[0].titulaires[0].identifiant == "12345678991230"
     assert marche1.modifications[0].titulaires[0].type_identifiant == "SIRET"
     assert marche1.modifications[0].titulaires[0].nom == "UneEntreprise"
-    assert marche1.modifications[0].titulaires[0].acheteur == False
-    assert marche1.modifications[0].titulaires[0].vendeur == True
+    assert marche1.modifications[0].titulaires[0].acheteur is False
+    assert marche1.modifications[0].titulaires[0].vendeur is True
     assert len(marche1.actes_sous_traitance) == 1
     assert marche1.actes_sous_traitance[0].id == 1010
     assert marche1.actes_sous_traitance[0].sous_traitant.identifiant == "12365478962145"
@@ -134,8 +135,8 @@ def test_importation_concession_succes(db):
     assert concession1.id == "2025S00001"
     assert concession1.autorite_concedante.identifiant == "12345678912345"
     assert concession1.autorite_concedante.type_identifiant == "SIRET"
-    assert concession1.autorite_concedante.acheteur == True
-    assert concession1.autorite_concedante.vendeur == False
+    assert concession1.autorite_concedante.acheteur is True
+    assert concession1.autorite_concedante.vendeur is False
     assert concession1.nature == 2
     assert concession1.objet == "Lorem ipsum dolor"
     assert concession1.procedure == 2
@@ -148,8 +149,8 @@ def test_importation_concession_succes(db):
     assert len(concession1.concessionnaires) == 1
     assert concession1.concessionnaires[0].identifiant == "12398755624565"
     assert concession1.concessionnaires[0].type_identifiant == "SIRET"
-    assert concession1.concessionnaires[0].vendeur == True
-    assert concession1.concessionnaires[0].acheteur == False
+    assert concession1.concessionnaires[0].vendeur is True
+    assert concession1.concessionnaires[0].acheteur is False
     assert concession1.considerations_sociales == []
     assert concession1.considerations_environnementales == []
     assert len(concession1.donnees_execution) == 1

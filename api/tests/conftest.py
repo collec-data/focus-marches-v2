@@ -1,14 +1,21 @@
-from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
-from sqlalchemy import create_engine
-import pytest
 import psycopg
+import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
-from .factories import *
+from app.config import Config, get_config
+from app.dependencies import get_api_entreprise, get_db
 from app.main import app
 from app.models.db import Base
-from app.dependencies import get_db, get_api_entreprise
-from app.config import get_config, Config
+from tests.factories import (
+    AcheteurFactory,
+    ConcessionFactory,
+    LieuFactory,
+    MarcheFactory,
+    StructureFactory,
+    VendeurFactory,
+)
 
 
 @pytest.fixture
@@ -75,7 +82,7 @@ def db_is_responsive():
         conn = psycopg.connect("postgresql://postgres:password@localhost:5454/test")
         conn.close()
         return True
-    except:
+    except Exception:
         return False
 
 

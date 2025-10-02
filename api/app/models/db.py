@@ -1,20 +1,25 @@
-from datetime import date
 import re
+from datetime import date
 from decimal import Decimal
-from typing import Optional
 
-from sqlalchemy import String, Text, ForeignKey, Table, Column
+from sqlalchemy import Column, ForeignKey, String, Table, Text
+from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
+    declared_attr,
     mapped_column,
     relationship,
-    declared_attr,
 )
-from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.types import PickleType
 
-from .enums import *
+from app.models.enums import (
+    ConsiderationsEnvironnementales,
+    ConsiderationsSociales,
+    ModaliteExecution,
+    TechniqueAchat,
+    TypePrix,
+)
 
 
 class Base(DeclarativeBase):
@@ -130,7 +135,7 @@ class Marche(Base):
     modalites_execution: Mapped[list[ModaliteExecution]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
-    accord_cadre: Mapped[Optional["Marche"]] = relationship()  # 1*
+    accord_cadre: Mapped["Marche" | None] = relationship()  # 1*
     uid_accord_cadre: Mapped[None | int] = mapped_column(ForeignKey("marche.uid"))
     marche_innovant: Mapped[bool]
     ccag: Mapped[int | None]

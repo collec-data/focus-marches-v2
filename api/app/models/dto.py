@@ -1,10 +1,19 @@
-from decimal import Decimal
 from datetime import date
-from typing import Optional, Any
+from decimal import Decimal
+from typing import Any
 
-from pydantic import BaseModel, Json, Field
+from pydantic import BaseModel, Field, Json
 
-from .enums import *
+from app.models.enums import (
+    ConsiderationsEnvironnementales,
+    ConsiderationsSociales,
+    FormePrix,
+    ModaliteExecution,
+    NatureMarche,
+    TechniqueAchat,
+    TypeGroupementOperateur,
+    TypePrix,
+)
 
 
 class StructureDto(BaseModel):
@@ -106,7 +115,7 @@ class MarcheDto(BaseModel):
     )
     techniques_achat: list[TechniqueAchat]
     modalites_execution: list[ModaliteExecution]
-    accord_cadre: Optional["MarcheDto"]
+    accord_cadre: "MarcheDto" | None
     marche_innovant: bool
     ccag: int | None = Field(
         description="Cahiers des clauses administratives générales de référence du marché public"

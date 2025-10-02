@@ -1,7 +1,8 @@
-from decimal import Decimal
 from datetime import date
+from decimal import Decimal
 
-from tests.factories import *
+from app.models import enums
+from tests.factories import AcheteurFactory, MarcheFactory, VendeurFactory
 
 
 def test_list_marche(client):
