@@ -5,11 +5,12 @@ import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const acheteurUid = route.params.uid as string;
 
 const acheteur = ref<Partial<StructureEtendueDto>>({});
 
 onMounted(() => {
-    getStructureStructureUidGet({ path: { uid: parseInt(route.params.uid as string) } }).then((response) => {
+    getStructureStructureUidGet({ path: { uid: parseInt(acheteurUid) } }).then((response) => {
         if (response.data) {
             acheteur.value = response.data;
         }
@@ -36,9 +37,10 @@ onMounted(() => {
             </ul>
         </div>
 
-        <IndicateursCles :acheteurUid="route.params.uid as string" />
-        <ListeMarches :acheteurUid="route.params.uid as string" />
-        <NatureContrats :acheteurUid="route.params.uid as string" />
-        <Procedure :acheteurUid="route.params.uid as string" />
+        <IndicateursCles :acheteurUid="acheteurUid" />
+        <ListeMarches :acheteurUid="acheteurUid" />
+        <NatureContrats :acheteurUid="acheteurUid" />
+        <CCAG :acheteurUid="acheteurUid" />
+        <Procedure :acheteurUid="acheteurUid" />
     </section>
 </template>
