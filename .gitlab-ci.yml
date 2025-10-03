@@ -29,6 +29,5 @@ include:
   - /front/.gitlab-ci.yml
 
 stages:
-  - api-quality
-  - build-vue
+  - 🔍 build-quality
   - 🔨 docker-build

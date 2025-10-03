@@ -5,8 +5,8 @@ docker-image-api:
     BUILD_CONTEXT: "api/."
 
 api-quality:
-  stage: 🔨 docker-build
-  image: python:3.13@sha256:0c745292b7b34dcdd6050527907d78c39363dc45ad6afc6d107c454b93cebca1
+  stage: 🔍 build-quality
+  image: python:3.13.7-alpine@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844
   variables:
     FORCE_COLOR: true
   script:

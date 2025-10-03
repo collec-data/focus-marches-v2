@@ -1,6 +1,6 @@
 build app:
   image: node:22
-  stage: build-vue
+  stage: 🔍 build-quality
   script:
     - cd front
     - npm ci
