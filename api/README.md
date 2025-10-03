@@ -20,6 +20,24 @@ pip install pip-tools
 
 Utiliser Visual Studio Code et installer les extensions recommandées (extension Python).
 
+## Importer des données
+
+### Megalis
+
+La commande suivante importe dans le répertoire ./data les [données DECP de Mégalis de 2020 à 2025](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-megalis-bretagne-schema-2024/) depuis la plateforme data.gouv.fr.
+
+```bash
+mkdir data && \
+for url in https://www.data.gouv.fr/api/1/datasets/r/ea387298-b344-45dc-9a19-043f13df1f69 https://www.data.gouv.fr/api/1/datasets/r/3a9073a7-4062-49ff-a4b8-d4721705a462 https://www.data.gouv.fr/api/1/datasets/r/40679992-a5e7-4761-b5ba-9775e77fd133 https://www.data.gouv.fr/api/1/datasets/r/2fbb7b58-4a6b-47ca-b528-4b9dea053477 https://www.data.gouv.fr/api/1/datasets/r/da0339ac-5709-4a6b-87fa-bb9251bb371e https://www.data.gouv.fr/api/1/datasets/r/0e79013c-6764-4af4-9f2e-c757d876a666; \
+do curl -L ${url} -o "data/${url: -36}.json"; done
+```
+
+L'import au sein de Focus Marchés est ensuite réalisé en appelant le script python :
+
+```bash
+python app/importation.py
+```
+
 ## Tâches courantes
 
 ### Lancer l'API en local
