@@ -5,8 +5,8 @@ docker-image-api:
     BUILD_CONTEXT: "api/."
 
 api-quality:
-  stage: 🔨 docker-build
-  image: python:3.13@sha256:0c745292b7b34dcdd6050527907d78c39363dc45ad6afc6d107c454b93cebca1
+  stage: 🔍 build-quality
+  image: python:3.13.7-alpine@sha256:9ba6d8cbebf0fb6546ae71f2a1c14f6ffd2fdab83af7fa5669734ef30ad48844
   variables:
     FORCE_COLOR: true
   script:
@@ -15,7 +15,15 @@ api-quality:
     - cd api
     - pip install --upgrade pip
     - pip install -r dev-requirements.txt
+    - unset DOCKER_AUTH_CONFIG # XXX: On ignore la configuration au sein des tests du à une incompatibilité avec testcontainers
+    - coverage run -m pytest --cov-report xml:cov.xml --cov-report=term
     - ruff format --check . || touch failed
     - ruff check . || touch failed
     - mypy . --strict || touch failed
     - '[ ! -e failed ] || ( echo "Ruff et/ou mypy ont remonté des erreurs, voir les logs précédents"; exit 1 )'
+  coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: api/cov.xml

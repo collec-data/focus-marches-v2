@@ -1,8 +1,8 @@
-import psycopg
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from testcontainers.postgres import PostgresContainer
 
 from app.config import Config, get_config
 from app.dependencies import get_api_entreprise, get_db
@@ -18,14 +18,22 @@ from tests.factories import (
 )
 
 
+class FocusPostgresContainer(PostgresContainer):
+    def __init__(self):
+        self.__image_name = "postgres:latest"
+        return super(FocusPostgresContainer, self).__init__(
+            image=self.__image_name, driver="psycopg"
+        )
+
+
 @pytest.fixture
-def client(db):
+def client(db, db_url):
     def get_session_override():
         return db
 
     def get_config_override():
         return Config(
-            DATABASE_URL="postgresql+psycopg://postgres:password@localhost:5454/test",
+            DATABASE_URL=db_url,
             API_ENTREPRISE_URL="https://api.entreprise",
             API_ENTREPRISE_TOKEN="MySecret",
         )
@@ -39,7 +47,7 @@ def client(db):
 
 
 @pytest.fixture(autouse=True, name="db")
-def db_fixture(db_service):
+def db_fixture(db_url):
     """
     Toutes les écritures en base de donnée lors d'un tests sont stockées dans une
     unique transaction qui n'est jamais exécutée et qui sera rollback à la fin
@@ -48,7 +56,7 @@ def db_fixture(db_service):
     """
 
     engine = create_engine(
-        "postgresql+psycopg://postgres:password@localhost:5454/test",
+        db_url,
         echo=False,
     )
     Base.metadata.create_all(engine)
@@ -77,18 +85,11 @@ def set_factory_db(db):
         my_factory._meta.sqlalchemy_session = db
 
 
-def db_is_responsive():
-    try:
-        conn = psycopg.connect("postgresql://postgres:password@localhost:5454/test")
-        conn.close()
-        return True
-    except Exception:
-        return False
-
-
 @pytest.fixture(scope="session", autouse=True)
-def db_service(docker_services):
+def db_url():
     """Ensure that PG database is up and responsive."""
-    docker_services.wait_until_responsive(
-        timeout=10.0, pause=0.1, check=lambda: db_is_responsive()
-    )
+
+    container = FocusPostgresContainer()
+    container.start()
+    yield container.get_connection_url()
+    container.stop()
