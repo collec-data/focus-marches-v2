@@ -46,6 +46,8 @@ pip install -r dev-requirements.txt
 
 ## Tests
 
+![coverage](https://gitlab.example.com/focus-marches/focusmarchev2/badges/main/coverage.svg?job=api-quality)
+
 Les tests sont situés dans le dossier (`api/tests/`). Il s'agit principalement de tests d'intégration avec des appels au niveau de l'API qui remontent jusqu'à la base de données.
 
 On utilise pour cela [`pytest`](https://docs.pytest.org/en/stable/contents.html), associé à [`pytest-cov`](https://pytest-cov.readthedocs.io/en/latest/) pour mesurer la couverture de test, ainsi qu'à [`factoryboy`](https://factoryboy.readthedocs.io/en/stable/) pour la génération simplifiée de jeux de données de test.
