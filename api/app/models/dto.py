@@ -115,7 +115,7 @@ class MarcheDto(BaseModel):
     )
     techniques_achat: list[TechniqueAchat]
     modalites_execution: list[ModaliteExecution]
-    accord_cadre: "MarcheDto" | None
+    accord_cadre: "MarcheDto | None"
     marche_innovant: bool
     ccag: int | None = Field(
         description="Cahiers des clauses administratives générales de référence du marché public"

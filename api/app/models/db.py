@@ -135,7 +135,7 @@ class Marche(Base):
     modalites_execution: Mapped[list[ModaliteExecution]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
-    accord_cadre: Mapped["Marche" | None] = relationship()  # 1*
+    accord_cadre: Mapped["Marche | None"] = relationship()  # 1*
     uid_accord_cadre: Mapped[None | int] = mapped_column(ForeignKey("marche.uid"))
     marche_innovant: Mapped[bool]
     ccag: Mapped[int | None]
