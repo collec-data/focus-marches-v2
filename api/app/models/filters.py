@@ -1,8 +1,6 @@
 from datetime import date
 
-from pydantic import BaseModel, Field
-
-from .enums import IdentifiantStructure
+from pydantic import BaseModel
 
 
 class FiltreTemporelStructure(BaseModel):

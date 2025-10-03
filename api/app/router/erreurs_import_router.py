@@ -2,9 +2,9 @@ from fastapi import APIRouter
 from sqlalchemy import select
 
 
-from ..models.db import DecpMalForme
-from ..models.dto import DecpMalFormeDto
-from ..dependencies import SessionDep
+from app.models.db import DecpMalForme
+from app.models.dto import DecpMalFormeDto
+from app.dependencies import SessionDep
 
 router = APIRouter()
 

@@ -1,12 +1,11 @@
 from decimal import Decimal
 
 from fastapi import APIRouter, HTTPException
-from sqlalchemy import select, func, desc
+from sqlalchemy import desc, func, select
 
-from app.models.db import Structure, Marche
+from app.dependencies import ApiEntrepriseDep, SessionDep
+from app.models.db import Marche, Structure
 from app.models.dto import StructureAggMarchesDto, StructureEtendueDto
-from app.dependencies import SessionDep, ApiEntrepriseDep
-
 
 router = APIRouter()
 
@@ -23,7 +22,7 @@ def list_acheteurs(
         )
         .join(Structure.marches_acheteurs)
         .group_by(Structure.uid)
-        .where(Structure.acheteur == True)
+        .where(Structure.acheteur.is_(True))
         .order_by(desc("montant"))
     )
 
@@ -48,7 +47,7 @@ def list_vendeurs(
         )
         .join(Structure.marches_vendeur)
         .group_by(Structure.uid)
-        .where(Structure.vendeur == True)
+        .where(Structure.vendeur.is_(True))
         .order_by(desc("montant"))
     )
 

@@ -2,9 +2,9 @@ from fastapi import APIRouter
 from sqlalchemy import select
 
 
-from ..models.db import ContratConcession
-from ..models.dto import ContratConcessionDto
-from ..dependencies import SessionDep
+from app.models.db import ContratConcession
+from app.models.dto import ContratConcessionDto
+from app.dependencies import SessionDep
 
 router = APIRouter()
 

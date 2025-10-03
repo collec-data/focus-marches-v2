@@ -1,4 +1,4 @@
-from ..factories import *
+from tests.factories import ConcessionFactory
 
 
 def test_list_concessions(client):

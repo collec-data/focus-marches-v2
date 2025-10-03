@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 
 sys.path.append(os.getcwd())
 
@@ -47,7 +48,6 @@ from app.config import get_config
 
 
 class CustomValidationError(Exception):
-
     def __init__(
         self, message: str = "", errors: list[dict[str, str | list[str]]] = []
     ):
@@ -59,7 +59,6 @@ class CustomValidationError(Exception):
 
 
 class ImportateurDecp:
-
     def __init__(
         self,
         session: Session,
@@ -418,7 +417,6 @@ class ImportateurDecp:
         return decp
 
     def importer(self) -> "ImportateurDecp":
-
         with open(self._file, "rb") as f:
             liste = ijson.items(f, f"{self._item_path}.item")  # flux objet par objet
             for objet in liste:
@@ -442,7 +440,6 @@ class ImportateurDecp:
 
 
 if __name__ == "__main__":  # pragma: no cover
-
     base_file = "app/test_data/marche.json"
     cleaned_file = "app/test_data/clean-decp.json"
 

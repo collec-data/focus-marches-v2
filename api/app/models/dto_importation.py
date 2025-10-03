@@ -1,6 +1,22 @@
 from pydantic import BaseModel, Field, field_validator
 
-from .enums import *
+from app.models.enums import (
+    CCAG,
+    ConsiderationsEnvironnementales,
+    ConsiderationsSociales,
+    FormePrix,
+    IdentifiantStructure,
+    ModaliteExecution,
+    NatureConcession,
+    NatureMarche,
+    ProcedureConcession,
+    ProcedureMarche,
+    TechniqueAchat,
+    TypeCodeLieu,
+    TypeGroupementOperateur,
+    TypePrix,
+    VariationPrix,
+)
 
 
 class AcheteurSchema(BaseModel):

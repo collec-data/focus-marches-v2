@@ -1,23 +1,22 @@
-from typing import Annotated, Any
 from decimal import Decimal
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Query
-from sqlalchemy import select, Row, Select, func, distinct
+from sqlalchemy import Row, Select, distinct, func, select
 from sqlalchemy.orm import aliased
 
-
-from app.models.filters import FiltreTemporelStructure
-from app.models.db import Marche, Structure, Lieu
-from app.models.enums import TypeCodeLieu
+from app.dependencies import SessionDep
+from app.models.db import Lieu, Marche, Structure
 from app.models.dto import (
-    MarcheAllegeDto,
-    MarcheProcedureDto,
-    MarcheNatureDto,
     IndicateursDto,
+    MarcheAllegeDto,
     MarcheCcagDto,
     MarcheDepartementDto,
+    MarcheNatureDto,
+    MarcheProcedureDto,
 )
-from app.dependencies import SessionDep
+from app.models.enums import TypeCodeLieu
+from app.models.filters import FiltreTemporelStructure
 
 router = APIRouter()
 
@@ -148,7 +147,7 @@ def get_indicateurs(
     nb_sous_traitance = session.execute(
         application_filtres(
             select(func.count(Marche.sous_traitance_declaree)).where(
-                Marche.sous_traitance_declaree == True
+                Marche.sous_traitance_declaree.is_(True)
             ),
             filtres,
         )
@@ -156,7 +155,7 @@ def get_indicateurs(
     nb_innovant = session.execute(
         application_filtres(
             select(func.count(Marche.marche_innovant)).where(
-                Marche.marche_innovant == True
+                Marche.marche_innovant.is_(True)
             ),
             filtres,
         )

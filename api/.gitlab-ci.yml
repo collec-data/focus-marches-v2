@@ -7,10 +7,15 @@ docker-image-api:
 api-quality:
   stage: 🔨 docker-build
   image: python:3.13@sha256:0c745292b7b34dcdd6050527907d78c39363dc45ad6afc6d107c454b93cebca1
+  variables:
+    FORCE_COLOR: true
   script:
     - python3 -m venv .venv
     - source .venv/bin/activate
     - cd api
     - pip install --upgrade pip
     - pip install -r dev-requirements.txt
-    - mypy . --strict
+    - ruff format --check . || touch failed
+    - ruff check . || touch failed
+    - mypy . --strict || touch failed
+    - '[ ! -e failed ] || ( echo "Ruff et/ou mypy ont remonté des erreurs, voir les logs précédents"; exit 1 )'

@@ -1,5 +1,5 @@
-from tests.factories import *
 from app.dependencies import get_api_entreprise
+from tests.factories import AcheteurFactory, MarcheFactory, VendeurFactory
 
 
 def test_list_acheteurs(client):
@@ -88,7 +88,7 @@ def test_get_structure(client, mocker):
 
 
 def test_get_structure_does_not_exists(client):
-    response = client.get(f"/structure/123456")
+    response = client.get("/structure/123456")
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Structure inconnue"
