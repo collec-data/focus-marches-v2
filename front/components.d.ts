@@ -12,6 +12,7 @@ declare module 'vue' {
     Button: typeof import('primevue/button')['default']
     BuyersRanking: typeof import('./src/components/dashboard/BuyersRanking.vue')['default']
     CategoryDistribution: typeof import('./src/components/dashboard/CategoryDistribution.vue')['default']
+    CCAG: typeof import('./src/components/dashboard/CCAG.vue')['default']
     Chart: typeof import('primevue/chart')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
