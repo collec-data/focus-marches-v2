@@ -8,7 +8,7 @@ import type { StructureAggMarchesDto } from '@/client';
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    'structure.identifiant': { value: null, matchMode: FilterMatchMode.IN },
+    'structure.nom': { value: null, matchMode: FilterMatchMode.IN },
     nb_contrats: { value: null, matchMode: FilterMatchMode.EQUALS },
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
@@ -31,8 +31,8 @@ onMounted(() => {
         <DataTable
             v-model:filters="filters"
             :value="acheteurs"
-            :globalFilterFields="['structure.identifiant', 'montant', 'nb_contrats']"
-            sortField="structure.identifiant"
+            :globalFilterFields="['structure.nom', 'montant', 'nb_contrats']"
+            sortField="structure.nom"
             :sortOrder="1"
             removableSort
             stripedRows
