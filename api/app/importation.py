@@ -1,50 +1,50 @@
-import sys
 import os
+import sys
 
 sys.path.append(os.getcwd())
 
-import ijson
 import json
 import time
-from datetime import datetime, date
+from datetime import date, datetime
 from decimal import Decimal
-from typing import Callable, Any
+from typing import Any, Callable
 
+import ijson
+from api_entreprise.api import ApiEntreprise
 from pydantic_core import ValidationError
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from api_entreprise.api import ApiEntreprise
 
-from app.models.dto_importation import (
-    MarcheSchema,
-    ConcessionSchema,
-    ConcessionnaireSchema,
-    DonneeExecutionSchema,
-    TarifSchema,
-    ModificationConcessionSchema,
-    ActeSousTraitanceSchema,
-    ModificationMarcheSchema,
-    ModificationActeSousTraitanceSchema,
-)
-from app.models.db import (
-    Base,
-    Structure,
-    Marche,
-    Lieu,
-    ContratConcession,
-    Erreur,
-    DecpMalForme,
-    DonneeExecution,
-    Tarif,
-    ModificationConcession,
-    ActeSousTraitance,
-    ModificationMarche,
-    ModificationSousTraitance,
-)
-from app.models.enums import TypeCodeLieu
+from app.config import get_config
 from app.db import get_engine
 from app.dependencies import get_api_entreprise
-from app.config import get_config
+from app.models.db import (
+    ActeSousTraitance,
+    Base,
+    ContratConcession,
+    DecpMalForme,
+    DonneeExecution,
+    Erreur,
+    Lieu,
+    Marche,
+    ModificationConcession,
+    ModificationMarche,
+    ModificationSousTraitance,
+    Structure,
+    Tarif,
+)
+from app.models.dto_importation import (
+    ActeSousTraitanceSchema,
+    ConcessionnaireSchema,
+    ConcessionSchema,
+    DonneeExecutionSchema,
+    MarcheSchema,
+    ModificationActeSousTraitanceSchema,
+    ModificationConcessionSchema,
+    ModificationMarcheSchema,
+    TarifSchema,
+)
+from app.models.enums import TypeCodeLieu
 
 
 class CustomValidationError(Exception):
@@ -440,30 +440,31 @@ class ImportateurDecp:
 
 
 if __name__ == "__main__":  # pragma: no cover
-    base_file = "app/test_data/marche.json"
-    cleaned_file = "app/test_data/clean-decp.json"
-
     Base.metadata.drop_all(get_engine())  # ToDo remove after tests
     Base.metadata.create_all(get_engine())
 
-    # clean invalid json
-    f = open(cleaned_file, "w")
-    with open(base_file, "r", errors="ignore") as myFile:
-        for line in myFile:
-            line = line.replace("NaN", "null")
-            f.write(line)
-    f.close()
+    working_path: str = "./data/"
+    for raw_file in os.listdir(working_path):
+        tmp: str = f"{working_path}tmp"
+        # clean invalid json
+        f = open(tmp, "w")
+        print(f"{working_path}{raw_file}")
+        with open(f"{working_path}{raw_file}", "r", errors="ignore") as myFile:
+            for line in myFile:
+                line = line.replace("NaN", "null")
+                f.write(line)
+        f.close()
 
-    with Session(get_engine()) as session:
-        ImportateurDecp(
-            session=session,
-            file=cleaned_file,
-            objet_type="marche",
-            api_entreprise=get_api_entreprise(get_config()),
-        ).importer().print_stats()
-        ImportateurDecp(
-            session=session,
-            file=cleaned_file,
-            objet_type="concession",
-            api_entreprise=get_api_entreprise(get_config()),
-        ).importer().print_stats()
+        with Session(get_engine()) as session:
+            ImportateurDecp(
+                session=session,
+                file=tmp,
+                objet_type="marche",
+                api_entreprise=get_api_entreprise(get_config()),
+            ).importer().print_stats()
+            ImportateurDecp(
+                session=session,
+                file=tmp,
+                objet_type="concession",
+                api_entreprise=get_api_entreprise(get_config()),
+            ).importer().print_stats()
