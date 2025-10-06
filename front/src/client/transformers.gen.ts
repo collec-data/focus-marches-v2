@@ -2,14 +2,14 @@
 
 import type { GetListeMarchesMarcheGetResponse } from './types.gen';
 
-const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
-    data.date_notification = new Date(data.date_notification);
-    return data;
-};
-
 export const getListeMarchesMarcheGetResponseTransformer = async (data: any): Promise<GetListeMarchesMarcheGetResponse> => {
     data = data.map((item: any) => {
         return marcheAllegeDtoSchemaResponseTransformer(item);
     });
+    return data;
+};
+
+const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
+    data.date_notification = new Date(data.date_notification);
     return data;
 };
