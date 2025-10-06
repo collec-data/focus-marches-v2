@@ -9,7 +9,8 @@ const model = ref([
             { label: 'Accueil', icon: 'pi pi-fw pi-home', to: '/' },
             { label: 'Acheteurs', icon: 'pi pi-fw pi-building', to: '/acheteurs' },
             { label: 'Fournisseurs', icon: 'pi pi-fw pi-briefcase', to: '/fournisseurs' },
-            { label: 'Recherche', icon: 'pi pi-fw pi-search', to: '/recherche' }
+            { label: 'Recherche', icon: 'pi pi-fw pi-search', to: '/recherche' },
+            { label: 'Erreurs importation', icon: 'pi pi-fw pi-exclamation-triangle', to: '/erreurs-importation' }
         ]
     },
 
