@@ -13,7 +13,7 @@ anyio==4.11.0
     #   watchfiles
 api-entreprise==3.7.2
     # via focus-marche-v2 (pyproject.toml)
-certifi==2025.8.3
+certifi==2025.10.5
     # via
     #   httpcore
     #   httpx
