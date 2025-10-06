@@ -10,7 +10,7 @@ import ToastService from 'primevue/toastservice';
 
 import '@/assets/styles.scss';
 
-client.setConfig({ baseUrl: 'http://127.0.0.1:8000' });
+client.setConfig({ baseUrl: 'https://api-focus.arnia.do4c.sib.fr' });
 
 const app = createApp(App);
 
