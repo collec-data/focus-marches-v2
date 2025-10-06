@@ -1,5 +1,5 @@
 .build-docker:
-  image: docker:stable-dind
+  image: docker:stable-dind@sha256:4972457c6a8a4309f9796fc3c8fd288923045ba0e214c102d92b70be99e249d1
   stage: 🔨 docker-build
   variables:
     IMAGE: ""
