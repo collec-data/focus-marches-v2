@@ -184,12 +184,14 @@ class ContratConcessionDto(BaseModel):
 
 
 class ErreurDto(BaseModel):
+    uid: int
     type: str
     localisation: str
     message: str
 
 
 class DecpMalFormeDto(BaseModel):
+    uid: int
     decp: Json[dict[str, Any]]
     erreurs: list[ErreurDto]
 

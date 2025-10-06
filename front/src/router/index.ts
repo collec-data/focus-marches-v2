@@ -47,6 +47,11 @@ const router = createRouter({
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/pages/Documentation.vue')
+                },
+                {
+                    path: 'erreurs-importation',
+                    name: "Erreur à l'importation",
+                    component: () => import('@/views/ErreursImportations.vue')
                 }
             ]
         },
