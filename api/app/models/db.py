@@ -3,6 +3,7 @@ from datetime import date
 from decimal import Decimal
 
 from sqlalchemy import Column, ForeignKey, String, Table, Text
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -16,9 +17,15 @@ from sqlalchemy.types import PickleType
 from app.models.enums import (
     ConsiderationsEnvironnementales,
     ConsiderationsSociales,
+    FormePrix,
     ModaliteExecution,
+    NatureMarche,
+    ProcedureMarche,
     TechniqueAchat,
+    TypeCodeLieu,
+    TypeGroupementOperateur,
     TypePrix,
+    VariationPrix,
 )
 
 
@@ -74,6 +81,14 @@ class ActeSousTraitance(Base):
     variation_prix: Mapped[int | None]  # enum VariationPrix
     modifications: Mapped[list[ModificationSousTraitance]] = relationship()
 
+    @hybrid_property
+    def variation_prix_as_str(self) -> VariationPrix | None:
+        return (
+            VariationPrix.from_db_value(self.variation_prix)
+            if self.variation_prix
+            else None
+        )
+
 
 modification_titulaire_table = Table(
     "modification_titulaire_table",
@@ -101,6 +116,10 @@ class Lieu(Base):
     code: Mapped[str]
     type_code: Mapped[int]
 
+    @hybrid_property
+    def type_code_as_str(self) -> TypeCodeLieu:
+        return TypeCodeLieu.from_db_value(self.type_code)
+
 
 class Tarif(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -126,13 +145,13 @@ class Marche(Base):
     id: Mapped[str]
     acheteur: Mapped[Structure] = relationship()  # 1*
     uid_acheteur: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
-    nature: Mapped[int | None]  # enum NatureMarche
+    nature: Mapped[int]  # enum NatureMarche
     objet: Mapped[str] = mapped_column(Text())  # max 1k
     cpv: Mapped[str]
-    techniques_achat: Mapped[list[TechniqueAchat]] = mapped_column(
+    techniques_achat: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
-    modalites_execution: Mapped[list[ModaliteExecution]] = mapped_column(
+    modalites_execution: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
     accord_cadre: Mapped["Marche | None"] = relationship()  # 1*
@@ -152,7 +171,7 @@ class Marche(Base):
     date_notification: Mapped[date]
     date_publication: Mapped[date | None]
     montant: Mapped[Decimal]
-    type_prix: Mapped[list[TypePrix]] = mapped_column(
+    type_prix: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )  # enum TypePrix
     forme_prix: Mapped[int | None]  # enum FormePrix
@@ -161,16 +180,64 @@ class Marche(Base):
     titulaires: Mapped[list[Structure]] = relationship(
         secondary=marche_titulaire_table
     )  # **
-    considerations_sociales: Mapped[list[ConsiderationsSociales]] = mapped_column(
+    considerations_sociales: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
-    considerations_environnementales: Mapped[list[ConsiderationsEnvironnementales]] = (
-        mapped_column(MutableList.as_mutable(PickleType))
+    considerations_environnementales: Mapped[list[int]] = mapped_column(
+        MutableList.as_mutable(PickleType)
     )
     # modifications_actes_sous_traitance: Mapped[list[ModificationSousTraitance]] = (
     #     relationship()
     # )  # *1
     modifications: Mapped[list[ModificationMarche]] = relationship()  # *1
+
+    @hybrid_property
+    def nature_as_str(self) -> NatureMarche:
+        return NatureMarche.from_db_value(self.nature)
+
+    @hybrid_property
+    def procedure_as_str(self) -> ProcedureMarche | None:
+        return ProcedureMarche.from_db_value(self.procedure) if self.procedure else None
+
+    @hybrid_property
+    def forme_prix_as_str(self) -> FormePrix | None:
+        return FormePrix.from_db_value(self.forme_prix) if self.forme_prix else None
+
+    @hybrid_property
+    def type_prix_as_str(self) -> list[TypePrix]:
+        return [TypePrix.from_db_value(v) for v in self.type_prix]
+
+    @hybrid_property
+    def considerations_sociales_as_str(self) -> list[ConsiderationsSociales]:
+        return [
+            ConsiderationsSociales.from_db_value(v)
+            for v in self.considerations_sociales
+        ]
+
+    @hybrid_property
+    def considerations_environnementales_as_str(
+        self,
+    ) -> list[ConsiderationsEnvironnementales]:
+        return [
+            ConsiderationsEnvironnementales.from_db_value(v)
+            for v in self.considerations_environnementales
+        ]
+
+    @hybrid_property
+    def type_groupement_operateurs_as_str(self) -> TypeGroupementOperateur | None:
+        return (
+            TypeGroupementOperateur.from_db_value(self.type_groupement_operateurs)
+            if self.type_groupement_operateurs
+            else None
+        )
+
+    @hybrid_property
+    def techniques_achat_as_str(self) -> list[TechniqueAchat]:
+        return [TechniqueAchat.from_db_value(v) for v in self.techniques_achat]
+
+    @hybrid_property
+    def modalites_execution_as_str(self) -> list[ModaliteExecution]:
+        return [ModaliteExecution.from_db_value(v) for v in self.modalites_execution]
 
 
 class ModificationConcession(Base):
