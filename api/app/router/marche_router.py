@@ -96,7 +96,6 @@ def get_marches_par_nature(
         .group_by(Marche.nature, "mois")
         .order_by(Marche.nature, "mois")
     )
-    print(stmt)
     return list(session.execute(stmt).all())
 
 
@@ -165,7 +164,7 @@ def get_indicateurs(
     return IndicateursDto(
         periode=periode,
         nb_contrats=nb_contrats,
-        montant_total=montant_total,
+        montant_total=montant_total if montant_total else Decimal("0"),
         nb_acheteurs=nb_acheteurs,
         nb_fournisseurs=nb_fournisseurs,
         nb_sous_traitance=nb_sous_traitance,
