@@ -12,7 +12,59 @@ export type ActeSousTraitanceDto = {
      * Uid
      */
     uid: number;
+    /**
+     * Id
+     */
+    id: number;
+    sous_traitant: StructureDto;
+    /**
+     * Duree Mois
+     */
+    duree_mois: number | null;
+    /**
+     * Date Notification
+     */
+    date_notification: Date;
+    /**
+     * Date Publication
+     */
+    date_publication: Date;
+    /**
+     * Montant
+     */
+    montant: string;
+    variation_prix: VariationPrix;
 };
+
+/**
+ * ConsiderationsEnvironnementales
+ */
+export const ConsiderationsEnvironnementales = {
+    'CRITÈRE_ENVIRONNEMENTAL': 'Critère environnemental',
+    CLAUSE_ENVIRONNEMENTALE: 'Clause environnementale',
+    'PAS_DE_CONSIDÉRATION_ENVIRONNEMENTALE': 'Pas de considération environnementale'
+} as const;
+
+/**
+ * ConsiderationsEnvironnementales
+ */
+export type ConsiderationsEnvironnementales = typeof ConsiderationsEnvironnementales[keyof typeof ConsiderationsEnvironnementales];
+
+/**
+ * ConsiderationsSociales
+ */
+export const ConsiderationsSociales = {
+    'CRITÈRE_SOCIAL': 'Critère social',
+    CLAUSE_SOCIALE: 'Clause sociale',
+    'MARCHÉ_RÉSERVÉ': 'Marché réservé',
+    'CONCESSION_RÉSERVÉ': 'Concession réservé',
+    'PAS_DE_CONSIDÉRATION_SOCIALE': 'Pas de considération sociale'
+} as const;
+
+/**
+ * ConsiderationsSociales
+ */
+export type ConsiderationsSociales = typeof ConsiderationsSociales[keyof typeof ConsiderationsSociales];
 
 /**
  * ContratConcessionDto
@@ -76,6 +128,20 @@ export type ErreurDto = {
 };
 
 /**
+ * FormePrix
+ */
+export const FormePrix = {
+    UNITAIRE: 'Unitaire',
+    FORFAITAIRE: 'Forfaitaire',
+    MIXTE: 'Mixte'
+} as const;
+
+/**
+ * FormePrix
+ */
+export type FormePrix = typeof FormePrix[keyof typeof FormePrix];
+
+/**
  * HTTPValidationError
  */
 export type HttpValidationError = {
@@ -100,7 +166,7 @@ export type IndicateursDto = {
     /**
      * Montant Total
      */
-    montant_total: string;
+    montant_total?: string;
     /**
      * Nb Acheteurs
      */
@@ -117,6 +183,21 @@ export type IndicateursDto = {
      * Nb Innovant
      */
     nb_innovant: number;
+};
+
+/**
+ * LieuDto
+ */
+export type LieuDto = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Code
+     */
+    code: string;
+    type_code: TypeCodeLieu;
 };
 
 /**
@@ -200,6 +281,120 @@ export type MarcheDepartementDto = {
 };
 
 /**
+ * MarcheDto
+ */
+export type MarcheDto = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Id
+     */
+    id: string;
+    acheteur: StructureDto;
+    nature: NatureMarche;
+    /**
+     * Objet
+     */
+    objet: string;
+    /**
+     * Cpv
+     * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
+     */
+    cpv: string;
+    /**
+     * Techniques Achat
+     */
+    techniques_achat: Array<TechniqueAchat>;
+    /**
+     * Modalites Execution
+     */
+    modalites_execution: Array<ModaliteExecution>;
+    accord_cadre: MarcheDto | null;
+    /**
+     * Marche Innovant
+     */
+    marche_innovant: boolean;
+    /**
+     * Ccag
+     * Cahiers des clauses administratives générales de référence du marché public
+     */
+    ccag: number | null;
+    /**
+     * Offres Recues
+     * Nombre d'offres reçues par l'acheteur de la part des soumissionnaires. Comprend aussi les offres irrégulières, inacceptables, inappropriées et anormalement basses.
+     */
+    offres_recues: number;
+    /**
+     * Attribution Avance
+     * Une avance a été attribuée au titulaire principal du marché public
+     */
+    attribution_avance: boolean;
+    /**
+     * Taux Avance
+     * Taux de l'avance attribuée au titulaire principal du marché public par rapport au montant du marché (O.1 = 10 % du montant du marché). En fonction de la valeur de attributionAvance, une valeur égale à 0 signifie soit qu'aucune avance n'a été accordée (si attributionAvance=false), soit que le taux de l'avance n'est pas connu (si attributionAvance=true).
+     */
+    taux_avance: string;
+    type_groupement_operateurs: TypeGroupementOperateur | null;
+    /**
+     * Sous Traitance Declaree
+     */
+    sous_traitance_declaree: boolean;
+    /**
+     * Actes Sous Traitance
+     */
+    actes_sous_traitance: Array<ActeSousTraitanceDto>;
+    procedure: ProcedureMarche | null;
+    lieu: LieuDto;
+    /**
+     * Duree Mois
+     */
+    duree_mois: number;
+    /**
+     * Date Notification
+     */
+    date_notification: Date;
+    /**
+     * Date Publication
+     */
+    date_publication: Date | null;
+    /**
+     * Montant
+     */
+    montant: string;
+    /**
+     * Type Prix
+     */
+    type_prix: Array<TypePrix> | null;
+    forme_prix: FormePrix | null;
+    /**
+     * Origine Ue
+     */
+    origine_ue: string | null;
+    /**
+     * Origine France
+     */
+    origine_france: string | null;
+    /**
+     * Titulaires
+     */
+    titulaires: Array<StructureDto>;
+    /**
+     * Considerations Sociales
+     */
+    considerations_sociales: Array<ConsiderationsSociales>;
+    /**
+     * Considerations Environnementales
+     */
+    considerations_environnementales: Array<ConsiderationsEnvironnementales>;
+    /**
+     * Modifications
+     */
+    modifications: Array<ModificationMarcheDto>;
+};
+
+/**
  * MarcheNatureDto
  */
 export type MarcheNatureDto = {
@@ -238,6 +433,86 @@ export type MarcheProcedureDto = {
      */
     nombre: number;
 };
+
+/**
+ * ModaliteExecution
+ */
+export const ModaliteExecution = {
+    TRANCHES: 'Tranches',
+    BONS_DE_COMMANDE: 'Bons de commande',
+    'MARCHÉS_SUBSÉQUENTS': 'Marchés subséquents',
+    SANS_OBJET: 'Sans objet'
+} as const;
+
+/**
+ * ModaliteExecution
+ */
+export type ModaliteExecution = typeof ModaliteExecution[keyof typeof ModaliteExecution];
+
+/**
+ * ModificationMarcheDto
+ */
+export type ModificationMarcheDto = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Duree Mois
+     */
+    duree_mois: number | null;
+    /**
+     * Date Notification
+     */
+    date_notification: Date;
+    /**
+     * Date Publication
+     */
+    date_publication: Date;
+    /**
+     * Montant
+     */
+    montant: string | null;
+    /**
+     * Titulaires
+     */
+    titulaires: Array<StructureDto>;
+};
+
+/**
+ * NatureMarche
+ */
+export const NatureMarche = {
+    'MARCHÉ': 'Marché',
+    'MARCHÉ_DE_PARTENARIAT': 'Marché de partenariat',
+    'MARCHÉ_DE_DÉFENSE_OU_DE_SÉCURITÉ': 'Marché de défense ou de sécurité'
+} as const;
+
+/**
+ * NatureMarche
+ */
+export type NatureMarche = typeof NatureMarche[keyof typeof NatureMarche];
+
+/**
+ * ProcedureMarche
+ */
+export const ProcedureMarche = {
+    'PROCÉDURE_ADAPTÉE': 'Procédure adaptée',
+    'APPEL_D_OFFRES_OUVERT': "Appel d'offres ouvert",
+    'APPEL_D_OFFRES_RESTREINT': "Appel d'offres restreint",
+    'MARCHÉ_PASSÉ_SANS_PUBLICITÉ_NI_MISE_EN_CONCURRENCE_PRÉALABLE': 'Marché passé sans publicité ni mise en concurrence préalable',
+    'DIALOGUE_COMPÉTITIF': 'Dialogue compétitif',
+    'PROCÉDURE_AVEC_NÉGOCIATION': 'Procédure avec négociation'
+} as const;
+
+/**
+ * ProcedureMarche
+ */
+export type ProcedureMarche = typeof ProcedureMarche[keyof typeof ProcedureMarche];
 
 /**
  * StructureAggMarchesDto
@@ -343,6 +618,71 @@ export type StructureEtendueDto = {
 };
 
 /**
+ * TechniqueAchat
+ */
+export const TechniqueAchat = {
+    ACCORD_CADRE: 'Accord-cadre',
+    CONCOURS: 'Concours',
+    'SYSTÈME_DE_QUALIFICATION': 'Système de qualification',
+    'SYSTÈME_D_ACQUISITION_DYNAMIQUE': "Système d'acquisition dynamique",
+    'CATALOGUE_ÉLECTRONIQUE': 'Catalogue électronique',
+    'ENCHÈRE_ÉLECTRONIQUE': 'Enchère électronique',
+    SANS_OBJET: 'Sans objet'
+} as const;
+
+/**
+ * TechniqueAchat
+ */
+export type TechniqueAchat = typeof TechniqueAchat[keyof typeof TechniqueAchat];
+
+/**
+ * TypeCodeLieu
+ */
+export const TypeCodeLieu = {
+    CODE_POSTAL: 'Code postal',
+    CODE_COMMUNE: 'Code commune',
+    CODE_ARRONDISSEMENT: 'Code arrondissement',
+    CODE_CANTON: 'Code canton',
+    'CODE_DÉPARTEMENT': 'Code département',
+    'CODE_RÉGION': 'Code région',
+    CODE_PAYS: 'Code pays'
+} as const;
+
+/**
+ * TypeCodeLieu
+ */
+export type TypeCodeLieu = typeof TypeCodeLieu[keyof typeof TypeCodeLieu];
+
+/**
+ * TypeGroupementOperateur
+ */
+export const TypeGroupementOperateur = {
+    CONJOINT: 'Conjoint',
+    SOLIDAIRE: 'Solidaire',
+    PAS_DE_GROUPEMENT: 'Pas de groupement'
+} as const;
+
+/**
+ * TypeGroupementOperateur
+ */
+export type TypeGroupementOperateur = typeof TypeGroupementOperateur[keyof typeof TypeGroupementOperateur];
+
+/**
+ * TypePrix
+ */
+export const TypePrix = {
+    'DÉFINITIF_FERME': 'Définitif ferme',
+    'DÉFINITIF_ACTUALISABLE': 'Définitif actualisable',
+    'DÉFINITIF_RÉVISABLE': 'Définitif révisable',
+    PROVISOIRE: 'Provisoire'
+} as const;
+
+/**
+ * TypePrix
+ */
+export type TypePrix = typeof TypePrix[keyof typeof TypePrix];
+
+/**
  * ValidationError
  */
 export type ValidationError = {
@@ -359,6 +699,21 @@ export type ValidationError = {
      */
     type: string;
 };
+
+/**
+ * VariationPrix
+ */
+export const VariationPrix = {
+    FERME: 'Ferme',
+    ACTUALISABLE: 'Actualisable',
+    'RÉVISABLE': 'Révisable',
+    NC: 'NC'
+} as const;
+
+/**
+ * VariationPrix
+ */
+export type VariationPrix = typeof VariationPrix[keyof typeof VariationPrix];
 
 export type GetErreursImportErreursImportGetData = {
     body?: never;
@@ -625,6 +980,36 @@ export type GetMarchesParDepartementMarcheDepartementGetResponses = {
 };
 
 export type GetMarchesParDepartementMarcheDepartementGetResponse = GetMarchesParDepartementMarcheDepartementGetResponses[keyof GetMarchesParDepartementMarcheDepartementGetResponses];
+
+export type GetMarcheMarcheUidGetData = {
+    body?: never;
+    path: {
+        /**
+         * Uid
+         */
+        uid: number;
+    };
+    query?: never;
+    url: '/marche/{uid}';
+};
+
+export type GetMarcheMarcheUidGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetMarcheMarcheUidGetError = GetMarcheMarcheUidGetErrors[keyof GetMarcheMarcheUidGetErrors];
+
+export type GetMarcheMarcheUidGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: MarcheDto;
+};
+
+export type GetMarcheMarcheUidGetResponse = GetMarcheMarcheUidGetResponses[keyof GetMarcheMarcheUidGetResponses];
 
 export type GetListeConcessionsContratConcessionGetData = {
     body?: never;
