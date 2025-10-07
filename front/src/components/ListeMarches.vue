@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import type { MarcheAllegeDto } from '@/client';
-import { getListeMarchesMarcheGet } from '@/client';
+import { getListeMarchesMarcheGet, getMarcheMarcheUidGet } from '@/client';
+import { getNomDepartement } from '@/service/Departements';
 import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+
+import type { MarcheAllegeDto, MarcheDto } from '@/client';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
@@ -36,6 +38,21 @@ onMounted(() => {
 const countSousTraitants = (value: Array<any>) => {
     return value.length ? value.length : '';
 };
+
+const marcheDetaille = ref<Partial<MarcheDto>>();
+const showModale = computed(() => marcheDetaille.value != null);
+
+function openMarcheModal(uid: number) {
+    getMarcheMarcheUidGet({ path: { uid: uid } }).then((response) => {
+        if (response.data) {
+            marcheDetaille.value = response.data;
+        }
+    });
+}
+
+function hideMarcheModal() {
+    marcheDetaille.value = undefined;
+}
 </script>
 
 <template>
@@ -59,7 +76,7 @@ const countSousTraitants = (value: Array<any>) => {
                 </div>
             </template>
             <Column header="Détails" sortable>
-                <template #body=""> <Button label="Voir" aria-label="Voir" disabled /> </template
+                <template #body="{ data }"> <Button label="Voir" aria-label="Voir les détails du marché" @click="openMarcheModal(data.uid)" /> </template
             ></Column>
             <Column field="cpv" header="CPV" sortable></Column>
             <Column field="objet" header="Objet" sortable></Column>
@@ -92,4 +109,123 @@ const countSousTraitants = (value: Array<any>) => {
             <Column field="" header="Montant max si accord cadre" sortable></Column>
         </DataTable>
     </section>
+
+    <Dialog :visible="showModale" modal :header="'Détails du contrat ' + marcheDetaille?.id" class="max-w-full" @update:visible="hideMarcheModal">
+        <div class="flex flex-row flex-wrap">
+            <div class="bg-neutral-200 basis-10rem pl-3 pr-3">
+                <div class="key">Montant</div>
+                <div class="value text-xl">{{ marcheDetaille?.montant ? formatCurrency(parseFloat(marcheDetaille.montant)) : '' }}</div>
+
+                <div class="key">Durée</div>
+                <div class="value">{{ marcheDetaille?.duree_mois }} mois</div>
+
+                <div class="key">Lieu d'éxécution</div>
+                <div class="value">
+                    {{ marcheDetaille?.lieu?.type_code == 'Code département' ? getNomDepartement(marcheDetaille.lieu.code) + ' (' + marcheDetaille.lieu.code + ')' : marcheDetaille?.lieu?.type_code + ' - ' + marcheDetaille?.lieu?.code }}
+                </div>
+
+                <div class="key">Date de notification</div>
+                <div class="value">{{ marcheDetaille?.date_notification ? formatDate(marcheDetaille.date_notification) : '' }}</div>
+
+                <div class="key">Type de marché</div>
+                <div class="value">{{ marcheDetaille?.nature }}</div>
+
+                <div class="key">Procédure</div>
+                <div class="value">{{ marcheDetaille?.procedure }}</div>
+
+                <div class="key">Forme de prix</div>
+                <div class="value">{{ marcheDetaille?.forme_prix }}</div>
+
+                <div class="key">Marché innovant</div>
+                <div class="value">{{ marcheDetaille?.marche_innovant ? formatBoolean(marcheDetaille?.marche_innovant) : '' }}</div>
+
+                <div class="key">Nombre d'offres reçues</div>
+                <div class="value">{{ marcheDetaille?.offres_recues }}</div>
+
+                <div class="key">Part de produits issus ou fabriqués</div>
+                <div class="value">🇫🇷 {{ marcheDetaille?.origine_france }}% | 🇪🇺 {{ marcheDetaille?.origine_ue }}%</div>
+
+                <div class="key">Considération environnementale</div>
+                <div class="value">{{ marcheDetaille?.considerations_environnementales ? marcheDetaille.considerations_environnementales.join(', ') : '' }}</div>
+
+                <div class="key">Considération sociale</div>
+                <div class="value">{{ marcheDetaille?.considerations_sociales ? marcheDetaille.considerations_sociales.join(', ') : '' }}</div>
+            </div>
+            <div class="basis-auto p-3 shrink-0.5 max-w-3xl">
+                <div class="flex flex-row flex-wrap">
+                    <div class="basis-1/2">
+                        <div class="key">Acheteur</div>
+                        <div>{{ marcheDetaille?.acheteur?.nom }}</div>
+                        <div class="text-sm">{{ marcheDetaille?.acheteur?.type_identifiant }} - {{ marcheDetaille?.acheteur?.identifiant }}</div>
+                        <RouterLink v-if="marcheDetaille?.acheteur" :to="'/acheteur/' + marcheDetaille.acheteur.uid">
+                            <Button icon="pi pi-fw pi-link" label="Page de l'acheteur" aria-label="Voir la page de l'acheteur" severity="secondary" size="small"></Button>
+                        </RouterLink>
+                    </div>
+                    <div class="basis-1/2">
+                        <div class="key">Titulaire</div>
+                        <div v-for="titulaire in marcheDetaille?.titulaires" :key="titulaire.uid">
+                            <div>{{ titulaire.nom }}</div>
+                            <div class="text-sm">{{ titulaire.type_identifiant }} - {{ titulaire.identifiant }}</div>
+                            <RouterLink :to="'/fournisseur/' + titulaire.uid">
+                                <Button icon="pi pi-fw pi-link" label="Page du titulaire" aria-label="Voir la page du titulaire" severity="secondary" size="small"></Button>
+                            </RouterLink>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="mt-5">
+                    <div class="key">Code CPV</div>
+                    <div class="value">{{ marcheDetaille?.cpv }}</div>
+                </div>
+                <hr />
+                <div>
+                    <div class="key">Objet</div>
+                    <p>{{ marcheDetaille?.objet }}</p>
+                </div>
+                <div v-if="marcheDetaille?.accord_cadre">
+                    <hr />
+                    <div class="key">Accord-cadre</div>
+                </div>
+                <div v-if="marcheDetaille?.sous_traitance_declaree">
+                    <hr />
+                    <div class="key">Sous-traitance</div>
+                    <DataTable :value="marcheDetaille.actes_sous_traitance">
+                        <Column field="sous_traitant.nom" header="Fournisseur">
+                            <template #body="{ data }">
+                                <RouterLink :to="'/fournisseur/' + data.uid">
+                                    <Button icon="pi pi-fw pi-link" aria-label="Voir la page du fournisseur" severity="secondary" size="small"></Button>
+                                    {{ data.sous_traitant.nom ? data.sous_traitant.nom : data.sous_traitant.type_identifiant + ' ' + data.sous_traitant.identifiant }}
+                                </RouterLink>
+                            </template>
+                        </Column>
+                        <Column field="" header="Cat. entreprise"></Column>
+                        <Column field="date_notification" header="Date de notif">
+                            <template #body="{ data }">{{ formatDate(data.date_notification) }}</template>
+                        </Column>
+                        <Column field="montant" header="Montant">
+                            <template #body="{ data }">
+                                {{ formatCurrency(parseFloat(data.montant)) }}
+                            </template>
+                        </Column>
+                        <Column header="Part montant total">
+                            <template #body="{ data }"> {{ marcheDetaille?.montant ? ((data.montant * 100) / parseFloat(marcheDetaille.montant)).toFixed(2) : '' }}% </template></Column
+                        >
+                    </DataTable>
+                </div>
+            </div>
+        </div>
+    </Dialog>
 </template>
+
+<style scoped>
+.key {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+    margin-top: 1rem;
+}
+
+.value {
+    margin-bottom: 1rem;
+}
+</style>
