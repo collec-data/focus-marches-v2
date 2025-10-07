@@ -175,3 +175,19 @@ def test_departements(client):
         {"code": "35", "montant": "50", "nombre": 5},
         {"code": "29", "montant": "66", "nombre": 2},
     ]
+
+
+def test_get_marche_succes(client):
+    marche = MarcheFactory()
+
+    response = client.get(f"/marche/{marche.uid}")
+
+    assert response.status_code == 200
+    assert response.json()["uid"] == marche.uid
+    assert response.json()["id"] == marche.id
+
+
+def test_get_marche_inconnu(client):
+    response = client.get("/marche/1111")
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Marche inconnu"
