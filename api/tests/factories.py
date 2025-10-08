@@ -77,3 +77,22 @@ class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
     montant_subvention_publique = 0.0
     considerations_sociales: list[enums.ConsiderationsSociales] = []
     considerations_environnementales: list[enums.ConsiderationsEnvironnementales] = []
+
+
+class ErreurFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = db.Erreur
+
+    type = "Erreur générique"
+    localisation = "."
+    message = "Lorem ipsum dolor"
+
+
+class DecpMalFormeFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = db.DecpMalForme
+
+    decp = factory.declarations.LazyFunction(list)
+    erreurs = factory.declarations.List(
+        [factory.declarations.SubFactory(ErreurFactory) for _ in range(2)]
+    )
