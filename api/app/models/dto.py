@@ -10,9 +10,12 @@ from app.models.enums import (
     FormePrix,
     ModaliteExecution,
     NatureMarche,
+    ProcedureMarche,
     TechniqueAchat,
+    TypeCodeLieu,
     TypeGroupementOperateur,
     TypePrix,
+    VariationPrix,
 )
 
 
@@ -37,13 +40,13 @@ class StructureEtendueDto(StructureDto):
 
 class ActeSousTraitanceDto(BaseModel):
     uid: int
-    # id: int
-    # sous_traitant: StructureDto
-    # duree_mois: int | None
-    # date_notification: date
-    # date_publication: date
-    # montant: Decimal
-    # variation_prix: VariationPrix
+    id: int
+    sous_traitant: StructureDto
+    duree_mois: int | None
+    date_notification: date
+    date_publication: date
+    montant: Decimal
+    variation_prix_as_str: VariationPrix = Field(serialization_alias="variation_prix")
 
 
 class ModificationMarcheDto(BaseModel):
@@ -68,7 +71,7 @@ class ModificationSousTraitanceDto(BaseModel):
 class LieuDto(BaseModel):
     uid: int
     code: str
-    type_code: str
+    type_code_as_str: TypeCodeLieu = Field(serialization_alias="type_code")
 
 
 class TarifDto(BaseModel):
@@ -108,13 +111,17 @@ class MarcheDto(BaseModel):
     uid: int
     id: str
     acheteur: StructureDto
-    nature: NatureMarche
+    nature_as_str: NatureMarche = Field(serialization_alias="nature")
     objet: str
     cpv: str = Field(
         description="Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))"
     )
-    techniques_achat: list[TechniqueAchat]
-    modalites_execution: list[ModaliteExecution]
+    techniques_achat_as_str: list[TechniqueAchat] = Field(
+        serialization_alias="techniques_achat"
+    )
+    modalites_execution_as_str: list[ModaliteExecution] = Field(
+        serialization_alias="modalites_execution"
+    )
     accord_cadre: "MarcheDto | None"
     marche_innovant: bool
     ccag: int | None = Field(
@@ -129,29 +136,30 @@ class MarcheDto(BaseModel):
     taux_avance: Decimal = Field(
         description="Taux de l'avance attribuée au titulaire principal du marché public par rapport au montant du marché (O.1 = 10 % du montant du marché). En fonction de la valeur de attributionAvance, une valeur égale à 0 signifie soit qu'aucune avance n'a été accordée (si attributionAvance=false), soit que le taux de l'avance n'est pas connu (si attributionAvance=true)."
     )
-    type_groupement_operateurs: TypeGroupementOperateur | None
+    type_groupement_operateurs_as_str: TypeGroupementOperateur | None = Field(
+        serialization_alias="type_groupement_operateurs"
+    )
     sous_traitance_declaree: bool
     actes_sous_traitance: list[ActeSousTraitanceDto]
-    # procedure: ProcedureMarche | None
+    procedure_as_str: ProcedureMarche | None = Field(serialization_alias="procedure")
     lieu: LieuDto
     duree_mois: int
     date_notification: date
     date_publication: date | None
     montant: Decimal
-    type_prix: list[TypePrix] | None
-    forme_prix: FormePrix | None
+    type_prix_as_str: list[TypePrix] | None = Field(serialization_alias="type_prix")
+    forme_prix_as_str: FormePrix | None = Field(serialization_alias="forme_prix")
     origine_ue: Decimal | None
     origine_france: Decimal | None
     titulaires: list[StructureDto]
-    considerations_sociales: list[ConsiderationsSociales]
-    considerations_environnementales: list[ConsiderationsEnvironnementales]
+    considerations_sociales_as_str: list[ConsiderationsSociales] = Field(
+        serialization_alias="considerations_sociales"
+    )
+    considerations_environnementales_as_str: list[ConsiderationsEnvironnementales] = (
+        Field(serialization_alias="considerations_environnementales")
+    )
     # modifications_actes_sous_traitance: list[ModificationSousTraitanceDto]
     modifications: list[ModificationMarcheDto]
-
-    # @field_validator("procedure", mode="before")
-    # @classmethod
-    # def transform(cls, i: int) -> ProcedureMarche:
-    #     return int(x), int(y)
 
 
 class ModificationConcessionDto(BaseModel):

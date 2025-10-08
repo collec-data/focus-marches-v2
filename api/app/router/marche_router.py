@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Annotated, Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import Row, Select, distinct, func, select
 from sqlalchemy.orm import aliased
 
@@ -12,6 +12,7 @@ from app.models.dto import (
     MarcheAllegeDto,
     MarcheCcagDto,
     MarcheDepartementDto,
+    MarcheDto,
     MarcheNatureDto,
     MarcheProcedureDto,
 )
@@ -95,7 +96,6 @@ def get_marches_par_nature(
         .group_by(Marche.nature, "mois")
         .order_by(Marche.nature, "mois")
     )
-    print(stmt)
     return list(session.execute(stmt).all())
 
 
@@ -164,7 +164,7 @@ def get_indicateurs(
     return IndicateursDto(
         periode=periode,
         nb_contrats=nb_contrats,
-        montant_total=montant_total,
+        montant_total=montant_total if montant_total else Decimal("0"),
         nb_acheteurs=nb_acheteurs,
         nb_fournisseurs=nb_fournisseurs,
         nb_sous_traitance=nb_sous_traitance,
@@ -191,3 +191,14 @@ def get_marches_par_departement(
     )
 
     return list(session.execute(stmt).all())
+
+
+@router.get("/{uid}", response_model=MarcheDto)
+def get_marche(uid: int, session: SessionDep) -> Marche:
+    stmt = select(Marche).where(Marche.uid == uid)
+    marche = session.execute(stmt).scalar()
+
+    if not marche:
+        raise HTTPException(status_code=404, detail="Marche inconnu")
+
+    return marche

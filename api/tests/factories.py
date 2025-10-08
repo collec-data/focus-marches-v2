@@ -36,7 +36,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = db.Marche
 
     uid = factory.Sequence(lambda n: n)
-    id = factory.Sequence(lambda n: n)
+    id = factory.Sequence(lambda n: str(n))
     acheteur = factory.SubFactory(AcheteurFactory)
     nature = enums.NatureMarche.MARCHE.db_value
     objet = "Lorem ipsum dolor"
@@ -52,7 +52,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     procedure = enums.ProcedureMarche.ADAPTE.db_value
     lieu = factory.SubFactory(LieuFactory)
     duree_mois = 1
-    date_notification = factory.Faker("date_time")
+    date_notification = factory.Faker("date")
     montant = factory.Faker("pyint")
     type_prix: list[enums.TypePrix] = []
     titulaires: list[VendeurFactory] = []

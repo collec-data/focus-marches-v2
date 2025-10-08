@@ -1,4 +1,5 @@
 from enum import StrEnum
+from typing import Self
 
 
 class CustomStrEnum(StrEnum):
@@ -10,6 +11,13 @@ class CustomStrEnum(StrEnum):
         obj._value_ = value
         obj.db_value = db_value
         return obj
+
+    @classmethod
+    def from_db_value(cls, db_value: int) -> Self:
+        for item in cls:
+            if item.db_value == db_value:
+                return item
+        raise ValueError()
 
 
 class NatureMarche(CustomStrEnum):
