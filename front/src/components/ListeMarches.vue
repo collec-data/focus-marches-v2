@@ -143,7 +143,7 @@ function hideMarcheModal() {
                 <div class="value">{{ marcheDetaille?.offres_recues }}</div>
 
                 <div class="key">Part de produits issus ou fabriqués</div>
-                <div class="value">🇫🇷 {{ marcheDetaille?.origine_france }}% | 🇪🇺 {{ marcheDetaille?.origine_ue }}%</div>
+                <div class="value" aria-label="Pourcentage d'origine France et pourcentage d'origine de l'Union Européenne">🇫🇷 {{ marcheDetaille?.origine_france }}% | 🇪🇺 {{ marcheDetaille?.origine_ue }}%</div>
 
                 <div class="key">Considération environnementale</div>
                 <div class="value">{{ marcheDetaille?.considerations_environnementales ? marcheDetaille.considerations_environnementales.join(', ') : '' }}</div>
