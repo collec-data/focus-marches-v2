@@ -81,7 +81,11 @@ function hideMarcheModal() {
             <Column field="cpv" header="CPV" sortable></Column>
             <Column field="objet" header="Objet" sortable></Column>
             <Column v-if="acheteurUid == null" field="acheteur.nom" header="Acheteur" sortable></Column>
-            <Column field="" header="Fournisseur" sortable></Column>
+            <Column field="" header="Fournisseur" sortable>
+                <template #body="{ data }">
+                    <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ titulaire.nom ? titulaire.nom : titulaire.type_identifiant + ' ' + titulaire.identifiant }}</div>
+                </template>
+            </Column>
             <Column field="" header="Cat entreprise" sortable></Column>
             <Column field="sous_traitance_declaree" header="Sous-traitance" sortable>
                 <template #body="{ data }">
@@ -93,8 +97,16 @@ function hideMarcheModal() {
                     {{ countSousTraitants(data.actes_sous_traitance) }}
                 </template></Column
             >
-            <Column field="" header="Considérations environnementales" sortable></Column>
-            <Column field="" header="Considérations sociales" sortable></Column>
+            <Column field="considerations_environnementales" header="Considérations environnementales" sortable>
+                <template #body="{ data }">
+                    {{ formatBoolean(data.considerations_environnementales?.length > 0) }}
+                </template>
+            </Column>
+            <Column field="considerations_sociales" header="Considérations sociales" sortable>
+                <template #body="{ data }">
+                    {{ formatBoolean(data.considerations_sociales?.length > 0) }}
+                </template>
+            </Column>
             <Column field="date_notification" header="Date de notification" sortable>
                 <template #body="{ data }">
                     {{ formatDate(data.date_notification) }}
