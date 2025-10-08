@@ -26,7 +26,7 @@ def test_procedure_et_filtres_succes(client):
     )
     MarcheFactory.create_batch(
         2,
-        procedure=1,
+        procedure=enums.ProcedureMarche.ADAPTE.db_value,
         montant=Decimal(3),
         acheteur=acheteur,
         date_notification=date(2025, 1, 1),
@@ -34,7 +34,7 @@ def test_procedure_et_filtres_succes(client):
     )
     MarcheFactory.create_batch(
         3,
-        procedure=2,
+        procedure=enums.ProcedureMarche.AO_OUVERT.db_value,
         montant=Decimal(4),
         acheteur=acheteur,
         date_notification=date(2025, 1, 1),
@@ -70,8 +70,8 @@ def test_procedure_et_filtres_succes(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"procedure": 1, "montant": "6", "nombre": 2},
-        {"procedure": 2, "montant": "12", "nombre": 3},
+        {"procedure": "Procédure adaptée", "montant": "6", "nombre": 2},
+        {"procedure": "Appel d'offres ouvert", "montant": "12", "nombre": 3},
         {"procedure": None, "montant": "5", "nombre": 0},
     ]
 
@@ -95,15 +95,15 @@ def test_nature_succes(client):
 
 
 def test_ccag_succes(client):
-    MarcheFactory.create_batch(10, ccag=1, montant=1)
-    MarcheFactory.create_batch(8, ccag=2, montant=2)
+    MarcheFactory.create_batch(10, ccag=enums.CCAG.TRAVAUX.db_value, montant=1)
+    MarcheFactory.create_batch(8, ccag=enums.CCAG.MO.db_value, montant=2)
 
     response = client.get("/marche/ccag")
 
     assert response.status_code == 200
     assert response.json() == [
-        {"ccag": 1, "montant": "10", "nombre": 10},
-        {"ccag": 2, "montant": "16", "nombre": 8},
+        {"ccag": "Travaux", "montant": "10", "nombre": 10},
+        {"ccag": "Maitrise d'œuvre", "montant": "16", "nombre": 8},
     ]
 
 
