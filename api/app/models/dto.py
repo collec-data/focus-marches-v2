@@ -204,6 +204,12 @@ class DecpMalFormeDto(BaseModel):
     erreurs: list[ErreurDto]
 
 
+class StatsErreursDto(BaseModel):
+    erreur: str
+    nombre: int
+    localisation: str
+
+
 class MarcheProcedureDto(BaseModel):
     procedure: int | None
     montant: Decimal

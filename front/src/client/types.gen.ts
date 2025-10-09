@@ -166,7 +166,7 @@ export type IndicateursDto = {
     /**
      * Montant Total
      */
-    montant_total?: string;
+    montant_total: string;
     /**
      * Nb Acheteurs
      */
@@ -515,6 +515,24 @@ export const ProcedureMarche = {
 export type ProcedureMarche = typeof ProcedureMarche[keyof typeof ProcedureMarche];
 
 /**
+ * StatsErreursDto
+ */
+export type StatsErreursDto = {
+    /**
+     * Erreur
+     */
+    erreur: string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+    /**
+     * Localisation
+     */
+    localisation: string;
+};
+
+/**
  * StructureAggMarchesDto
  */
 export type StructureAggMarchesDto = {
@@ -749,6 +767,23 @@ export type GetErreursImportErreursImportGetResponses = {
 };
 
 export type GetErreursImportErreursImportGetResponse = GetErreursImportErreursImportGetResponses[keyof GetErreursImportErreursImportGetResponses];
+
+export type GetStatsErreursErreursImportStatsGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/erreurs-import/stats';
+};
+
+export type GetStatsErreursErreursImportStatsGetResponses = {
+    /**
+     * Response Get Stats Erreurs Erreurs Import Stats Get
+     * Successful Response
+     */
+    200: Array<StatsErreursDto>;
+};
+
+export type GetStatsErreursErreursImportStatsGetResponse = GetStatsErreursErreursImportStatsGetResponses[keyof GetStatsErreursErreursImportStatsGetResponses];
 
 export type GetListeMarchesMarcheGetData = {
     body?: never;
