@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { getMarchesParCcagMarcheCcagGet } from '@/client';
 import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted, useId } from 'vue';
+import { onBeforeUnmount, onMounted, useId, watch } from 'vue';
 
 import type { MarcheCcagDto } from '@/client';
 
 const props = defineProps({
-    acheteurUid: { type: [String, null], default: null }
+    acheteurUid: { type: [String, null], default: null },
+    dateMin: { type: [Date, null], default: null },
+    dateMax: { type: [Date, null], default: null }
 });
 
 const graphMontantId = useId();
@@ -45,9 +47,13 @@ function makeGraph(graphId: string, labels: Array<string | null>, data: Array<nu
     );
 }
 
-onMounted(() => {
+function fetchData() {
     getMarchesParCcagMarcheCcagGet({
-        query: { acheteur_uid: props.acheteurUid }
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: props.acheteurUid
+        }
     }).then((response) => {
         if (response.data) {
             let data = transform(response.data);
@@ -55,11 +61,24 @@ onMounted(() => {
             makeGraph(graphNombreId, data.ccags, data.nombres);
         }
     });
+}
+
+function purgeGraphs() {
+    Plotly.purge(graphMontantId);
+    Plotly.purge(graphNombreId);
+}
+
+onMounted(() => {
+    fetchData();
+});
+
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () => {
+    purgeGraphs();
+    fetchData();
 });
 
 onBeforeUnmount(() => {
-    Plotly.purge(graphMontantId);
-    Plotly.purge(graphNombreId);
+    purgeGraphs();
 });
 </script>
 

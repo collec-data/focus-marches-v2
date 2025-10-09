@@ -3,11 +3,13 @@ import { getMarchesParProcedureMarcheProcedureGet } from '@/client';
 
 import type { MarcheProcedureDto } from '@/client';
 import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted } from 'vue';
+import { onBeforeUnmount, onMounted, watch } from 'vue';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null }
+    vendeurUid: { type: [String, null], default: null },
+    dateMin: { type: [Date, null], default: null },
+    dateMax: { type: [Date, null], default: null }
 });
 
 const graphMontantsId = 'graph-montants';
@@ -38,10 +40,11 @@ function makeGraph(graphId: string, labels: Array<number | null>, data: Array<nu
     ]);
 }
 
-onMounted(() => {
+function fetchData() {
     getMarchesParProcedureMarcheProcedureGet({
         query: {
-            date_debut: new Date('2010-01-01'),
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
             acheteur_uid: props.acheteurUid,
             vendeur_uid: props.vendeurUid
         }
@@ -52,11 +55,24 @@ onMounted(() => {
             makeGraph(graphNombresId, raw_data.procedure, raw_data.nombre);
         }
     });
+}
+
+function purgeGraphs() {
+    Plotly.purge(graphMontantsId);
+    Plotly.purge(graphNombresId);
+}
+
+onMounted(() => {
+    fetchData();
+});
+
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+    purgeGraphs();
+    fetchData();
 });
 
 onBeforeUnmount(() => {
-    Plotly.purge(graphMontantsId);
-    Plotly.purge(graphNombresId);
+    purgeGraphs();
 });
 </script>
 

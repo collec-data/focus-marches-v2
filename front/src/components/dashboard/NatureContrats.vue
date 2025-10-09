@@ -3,11 +3,13 @@ import type { MarcheNatureDto } from '@/client';
 import { getMarchesParNatureMarcheNatureGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted, ref, useId } from 'vue';
+import { onBeforeUnmount, onMounted, ref, useId, watch } from 'vue';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null }
+    vendeurUid: { type: [String, null], default: null },
+    dateMin: { type: [Date, null], default: null },
+    dateMax: { type: [Date, null], default: null }
 });
 
 const stats = ref([
@@ -51,10 +53,12 @@ function makeGraph(graphId: string, labels: Array<string | null>, data: Array<nu
         { displayModeBar: false }
     );
 }
-onMounted(() => {
+
+function fetchData() {
     getMarchesParNatureMarcheNatureGet({
         query: {
-            date_debut: new Date('2010-01-01'),
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
             acheteur_uid: props.acheteurUid,
             vendeur_uid: props.vendeurUid
         }
@@ -66,12 +70,25 @@ onMounted(() => {
             makeGraph(graphDefenseId, rawData[2].labels, rawData[2].values);
         }
     });
-});
+}
 
-onBeforeUnmount(() => {
+function purgeGraphs() {
     Plotly.purge(graphMarcheId);
     Plotly.purge(graphPartenariatId);
     Plotly.purge(graphDefenseId);
+}
+
+onMounted(() => {
+    fetchData();
+});
+
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+    purgeGraphs();
+    fetchData();
+});
+
+onBeforeUnmount(() => {
+    purgeGraphs();
 });
 </script>
 
