@@ -6,6 +6,7 @@ build app:
     - npm ci
     - npm run format-check
     - npm run lint-check
+    - npm run test
     - npm run build
     - >
       if [[ "$CI_COMMIT_TAG" == "" ]]; then
@@ -19,11 +20,15 @@ build app:
     # mise à jour du fichier git-version.json avec la version du commit
     #- sed -i "s/dev/${VERSION}/g" public/git-version.json
     - npm run build
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
   artifacts:
     expire_in: 15 mins
     paths:
       - front/dist/
-
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: front/coverage/cobertura-coverage.xml
 
 docker-image-front:
   extends: .build-docker

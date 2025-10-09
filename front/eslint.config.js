@@ -7,7 +7,7 @@ import pluginVueA11y from 'eslint-plugin-vuejs-accessibility';
 
 export default [
     {
-        ignores: ['dist/', 'postcss.config.js', 'src/client/', '**/*.d.ts', '*.config.ts', '*.config.mjs']
+        ignores: ['dist/', 'tests/', 'postcss.config.js', 'src/client/', '**/*.d.ts', '*.config.ts', '*.config.mjs']
     },
     {
         files: ['**/*.{js,mjs,cjs,ts,vue}']

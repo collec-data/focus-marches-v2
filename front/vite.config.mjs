@@ -24,5 +24,17 @@ export default defineConfig({
                 api: 'modern'
             }
         }
+    },
+    test: {
+        environment: 'happy-dom',
+        setupFiles: 'tests/setup.ts',
+        coverage: {
+            enabled: true,
+            include: ['src/*'],
+            exclude: ['src/client/', 'src/assets/'],
+            reporter: ['cobertura', 'text'],
+            provider: 'istanbul',
+            reportsDirectory: './coverage'
+        }
     }
 });
