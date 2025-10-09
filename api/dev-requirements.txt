@@ -38,7 +38,7 @@ email-validator==2.3.0
     #   pydantic
 factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
-faker==37.8.0
+faker==37.11.0
     # via factory-boy
 fastapi[standard]==0.118.0
     # via focus-marche-v2 (pyproject.toml)
@@ -154,9 +154,9 @@ rich-toolkit==0.15.1
     #   fastapi-cloud-cli
 rignore==0.7.0
     # via fastapi-cloud-cli
-ruff==0.13.3
+ruff==0.14.0
     # via focus-marche-v2 (pyproject.toml)
-sentry-sdk==2.39.0
+sentry-sdk==2.40.0
     # via fastapi-cloud-cli
 shellingham==1.5.4
     # via typer
