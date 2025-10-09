@@ -12,32 +12,6 @@ const model = ref([
             { label: 'Recherche', icon: 'pi pi-fw pi-search', to: '/recherche' },
             { label: 'Erreurs importation', icon: 'pi pi-fw pi-exclamation-triangle', to: '/erreurs-importation' }
         ]
-    },
-
-    {
-        label: 'Exemples',
-        items: [
-            {
-                label: 'Pages',
-                items: [
-                    {
-                        label: 'Landing',
-                        icon: 'pi pi-fw pi-globe',
-                        to: '/landing'
-                    },
-                    {
-                        label: 'Not Found',
-                        icon: 'pi pi-fw pi-exclamation-circle',
-                        to: '/pages/notfound'
-                    },
-                    {
-                        label: 'Empty',
-                        icon: 'pi pi-fw pi-circle-off',
-                        to: '/pages/empty'
-                    }
-                ]
-            }
-        ]
     }
 ]);
 </script>

@@ -39,16 +39,6 @@ const router = createRouter({
                     component: () => import('@/views/Recherche.vue')
                 },
                 {
-                    path: '/pages/empty',
-                    name: 'empty',
-                    component: () => import('@/views/pages/Empty.vue')
-                },
-                {
-                    path: '/documentation',
-                    name: 'documentation',
-                    component: () => import('@/views/pages/Documentation.vue')
-                },
-                {
                     path: 'erreurs-importation',
                     name: "Erreur à l'importation",
                     component: () => import('@/views/ErreursImportations.vue')
