@@ -3,6 +3,7 @@ import prettierConfig from 'eslint-config-prettier/flat';
 import pluginVue from 'eslint-plugin-vue';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import pluginVueA11y from 'eslint-plugin-vuejs-accessibility';
 
 export default [
     {
@@ -17,6 +18,7 @@ export default [
     pluginJs.configs.recommended,
     ...tseslint.configs.recommended,
     ...pluginVue.configs['flat/recommended'],
+    ...pluginVueA11y.configs['flat/recommended'],
     {
         rules: {
             // https://typescript-eslint.io/troubleshooting/faqs/eslint/#i-get-errors-from-the-no-undef-rule-about-global-variables-not-being-defined-even-though-there-are-no-typescript-errors
