@@ -1,0 +1,51 @@
+import { render } from '@testing-library/vue';
+import { axe, toHaveNoViolations } from 'jest-axe';
+import { expect, it, vi } from 'vitest';
+import Accueil from '../src/views/Accueil.vue';
+import Acheteur from '../src/views/Acheteur.vue';
+import Acheteurs from '../src/views/Acheteurs.vue';
+import ErreursImportations from '../src/views/ErreursImportations.vue';
+import Fournisseur from '../src/views/Fournisseur.vue';
+import Fournisseurs from '../src/views/Fournisseurs.vue';
+import Recherche from '../src/views/Recherche.vue';
+
+expect.extend(toHaveNoViolations);
+
+it('other views has no accessibility violations', async () => {
+    const views = [
+        { view: Accueil, config: {} },
+        { view: Acheteurs, config: {} },
+        { view: Fournisseurs, config: {} },
+        { view: Recherche, config: {} },
+        { view: ErreursImportations, config: {} }
+    ];
+    for (let i = 0; i < views.length; ++i) {
+        const { container } = render(views[i].view, views[i].config);
+        const results = await axe(container);
+        expect(results).toHaveNoViolations();
+    }
+});
+
+vi.mock('vue-router');
+async function mockRouter(params): Promise<void> {
+    const VueRouter = await import('vue-router');
+    VueRouter.useRoute.mockReturnValueOnce({
+        params: params
+    });
+}
+
+it('acheteur has no accessibility violations', async () => {
+    await mockRouter({ uid: '42' });
+
+    const { container } = render(Acheteur);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+});
+
+it('vendeur has no accessibility violations', async () => {
+    await mockRouter({ uid: '42' });
+
+    const { container } = render(Fournisseur);
+    const results = await axe(container);
+    expect(results).toHaveNoViolations();
+});

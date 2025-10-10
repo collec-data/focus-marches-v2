@@ -36,7 +36,6 @@ onMounted(() => {
             :sortOrder="1"
             removableSort
             stripedRows
-            filterDisplay="row"
             paginator
             :rows="25"
             :rowsPerPageOptions="[10, 25, 50]"
