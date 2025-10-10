@@ -8,7 +8,7 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 <template>
     <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
-            <button class="layout-menu-button layout-topbar-action" type="button" @click="toggleMenu">
+            <button class="layout-menu-button layout-topbar-action" type="button" aria-hidden="true" @click="toggleMenu">
                 <i class="pi pi-bars"></i>
             </button>
             <router-link to="/" class="layout-topbar-logo">
@@ -18,12 +18,13 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
-                <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
+                <button type="button" aria-hidden="true" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
                 <div class="relative">
                     <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
+                        aria-hidden="true"
                         type="button"
                         class="layout-topbar-action layout-topbar-action-highlight"
                     >
