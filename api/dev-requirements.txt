@@ -66,7 +66,7 @@ idna==3.10
     #   email-validator
     #   httpx
     #   requests
-ijson==3.4.0
+ijson==3.4.0.post0
     # via focus-marche-v2 (pyproject.toml)
 iniconfig==2.1.0
     # via pytest
@@ -162,7 +162,7 @@ shellingham==1.5.4
     # via typer
 sniffio==1.3.1
     # via anyio
-sqlalchemy==2.0.43
+sqlalchemy==2.0.44
     # via focus-marche-v2 (pyproject.toml)
 starlette==0.48.0
     # via fastapi
