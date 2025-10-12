@@ -46,13 +46,13 @@ h11==0.16.0
     #   uvicorn
 httpcore==1.0.9
     # via httpx
-httptools==0.6.4
+httptools==0.7.1
     # via uvicorn
 httpx==0.28.1
     # via
     #   fastapi
     #   fastapi-cloud-cli
-idna==3.10
+idna==3.11
     # via
     #   anyio
     #   email-validator
@@ -108,7 +108,7 @@ redis==4.6.0
     # via api-entreprise
 requests==2.32.5
     # via api-entreprise
-rich==14.1.0
+rich==14.2.0
     # via
     #   rich-toolkit
     #   typer
@@ -118,7 +118,7 @@ rich-toolkit==0.15.1
     #   fastapi-cloud-cli
 rignore==0.7.0
     # via fastapi-cloud-cli
-sentry-sdk==2.40.0
+sentry-sdk==2.41.0
     # via fastapi-cloud-cli
 shellingham==1.5.4
     # via typer
