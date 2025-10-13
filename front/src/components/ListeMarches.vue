@@ -3,13 +3,15 @@ import { getListeMarchesMarcheGet, getMarcheMarcheUidGet } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import type { MarcheAllegeDto, MarcheDto } from '@/client';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null }
+    vendeurUid: { type: [String, null], default: null },
+    dateMin: { type: [Date, null], default: null },
+    dateMax: { type: [Date, null], default: null }
 });
 
 const filters = ref({
@@ -22,9 +24,11 @@ const filters = ref({
 
 const listeMarches = ref<Array<MarcheAllegeDto>>([]);
 
-onMounted(() => {
+function fetchData() {
     getListeMarchesMarcheGet({
         query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
             acheteur_uid: props.acheteurUid,
             vendeur_uid: props.vendeurUid
         }
@@ -33,6 +37,14 @@ onMounted(() => {
             listeMarches.value = response.data;
         }
     });
+}
+
+onMounted(() => {
+    fetchData();
+});
+
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+    fetchData();
 });
 
 const countSousTraitants = (value: Array<any>) => {

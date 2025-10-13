@@ -1,27 +1,24 @@
 <script setup lang="ts">
 import { getMarchesParDepartementMarcheDepartementGet } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
-import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted, useId } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import type { MarcheDepartementDto } from '@/client';
+import type { Layout, PlotData } from 'plotly.js-dist';
 
-const graphMontantId = useId();
-const graphNombreId = useId();
+const montaData = ref<Partial<PlotData>[]>();
+const nombreData = ref<Partial<PlotData>[]>();
+const layout = { margin: { l: 150, t: 0, b: 20, r: 0 } } as Partial<Layout>;
 
-function makeGraph(graphId: string, labels: Array<string | null>, data: Array<number>) {
-    Plotly.newPlot(
-        graphId,
-        [
-            {
-                y: labels,
-                x: data,
-                type: 'bar',
-                orientation: 'h'
-            }
-        ],
-        { margin: { l: 150, t: 0, b: 20, r: 0 } }
-    );
+function makeGraph(labels: Array<string | null>, data: Array<number>): Array<Partial<PlotData>> {
+    return [
+        {
+            y: labels,
+            x: data,
+            type: 'bar',
+            orientation: 'h'
+        }
+    ];
 }
 
 function transform(input: Array<MarcheDepartementDto>) {
@@ -42,15 +39,10 @@ onMounted(() => {
     getMarchesParDepartementMarcheDepartementGet().then((response) => {
         if (response.data) {
             let data = transform(response.data);
-            makeGraph(graphMontantId, data.departements, data.montants);
-            makeGraph(graphNombreId, data.departements, data.nombres);
+            montaData.value = makeGraph(data.departements, data.montants);
+            nombreData.value = makeGraph(data.departements, data.nombres);
         }
     });
-});
-
-onBeforeUnmount(() => {
-    Plotly.purge(graphMontantId);
-    Plotly.purge(graphNombreId);
 });
 </script>
 
@@ -60,11 +52,11 @@ onBeforeUnmount(() => {
         <div class="grid grid-cols-12 gap-8">
             <div class="col-span-12 xl:col-span-6">
                 <h3>Montant des contrats par département</h3>
-                <div :id="graphMontantId" class="aspect-4/3"></div>
+                <Graph :data="montaData" :layout />
             </div>
             <div class="col-span-12 xl:col-span-6">
                 <h3>Nombre de contrats par département</h3>
-                <div :id="graphNombreId" class="aspect-4/3"></div>
+                <Graph :data="nombreData" :layout />
             </div>
         </div>
     </section>

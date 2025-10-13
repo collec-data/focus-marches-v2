@@ -1,17 +1,21 @@
 <script setup lang="ts">
 import { getMarchesParProcedureMarcheProcedureGet } from '@/client';
+import { onMounted, ref, watch } from 'vue';
+import Graph from '../Graph.vue';
 
 import type { MarcheProcedureDto } from '@/client';
-import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted } from 'vue';
+import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null }
+    vendeurUid: { type: [String, null], default: null },
+    dateMin: { type: [Date, null], default: null },
+    dateMax: { type: [Date, null], default: null }
 });
 
-const graphMontantsId = 'graph-montants';
-const graphNombresId = 'graph-nombre';
+const montantData = ref<Partial<PlotData>[]>();
+const nombreData = ref<Partial<PlotData>[]>();
+const layout = { margin: { t: 0, r: 0 } } as Layout;
 
 function transform(input: Array<MarcheProcedureDto>) {
     let output = {
@@ -27,36 +31,40 @@ function transform(input: Array<MarcheProcedureDto>) {
     return output;
 }
 
-function makeGraph(graphId: string, labels: Array<number | null>, data: Array<number>) {
-    Plotly.newPlot(graphId, [
+function makeGraph(labels: Array<number | null>, data: Array<number>): Partial<PlotData>[] {
+    return [
         {
             y: labels,
             x: data,
             type: 'bar',
             orientation: 'h'
         }
-    ]);
+    ];
 }
 
-onMounted(() => {
+function fetchData() {
     getMarchesParProcedureMarcheProcedureGet({
         query: {
-            date_debut: new Date('2010-01-01'),
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
             acheteur_uid: props.acheteurUid,
             vendeur_uid: props.vendeurUid
         }
     }).then((data) => {
         if (data.data) {
             let raw_data = transform(data.data);
-            makeGraph(graphMontantsId, raw_data.procedure, raw_data.montant);
-            makeGraph(graphNombresId, raw_data.procedure, raw_data.nombre);
+            montantData.value = makeGraph(raw_data.procedure, raw_data.montant);
+            nombreData.value = makeGraph(raw_data.procedure, raw_data.nombre);
         }
     });
+}
+
+onMounted(() => {
+    fetchData();
 });
 
-onBeforeUnmount(() => {
-    Plotly.purge(graphMontantsId);
-    Plotly.purge(graphNombresId);
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+    fetchData();
 });
 </script>
 
@@ -68,11 +76,11 @@ onBeforeUnmount(() => {
         </div>
         <div class="col-span-12 xl:col-span-6">
             <h3>Montant des contrats par procédure</h3>
-            <div id="graph-montants"></div>
+            <Graph :data="montantData" :layout />
         </div>
         <div class="col-span-12 xl:col-span-6">
             <h3>Nombre des contrats par procédure</h3>
-            <div id="graph-nombre"></div>
+            <Graph :data="nombreData" :layout />
         </div>
     </Fluid>
 </template>

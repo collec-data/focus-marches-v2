@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { listAcheteursStructureAcheteurGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
+import type { Layout, PlotData } from 'plotly.js-dist';
 
 const listeAcheteurs = ref<Array<StructureAggMarchesDto>>([]);
 
-const graphId = 'graph';
+const data = ref<Partial<PlotData>[]>();
+const layout = { margin: { t: 0 } } as Partial<Layout>;
 
 function transform(input: Array<StructureAggMarchesDto>) {
     let output = {
@@ -29,19 +30,15 @@ onMounted(() => {
         if (response.data) {
             listeAcheteurs.value = response.data;
             let rawData = transform(response.data);
-            Plotly.newPlot(graphId, [
+            data.value = [
                 {
                     x: rawData.structures,
                     y: rawData.montants,
                     type: 'bar'
                 }
-            ]);
+            ];
         }
     });
-});
-
-onBeforeUnmount(() => {
-    Plotly.purge(graphId);
 });
 </script>
 
@@ -58,7 +55,7 @@ onBeforeUnmount(() => {
                     </tr>
                 </tbody>
             </table>
-            <div id="graph"></div>
+            <Graph :data :layout />
         </div>
         <div class="flex flex-wrap">
             <RouterLink to="/acheteurs">

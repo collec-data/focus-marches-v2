@@ -2,15 +2,21 @@
 import type { IndicateursDto } from '@/client';
 import { getIndicateursMarcheIndicateursGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
-const props = defineProps({ acheteurUid: { type: [String, null], default: null }, vendeurUid: { type: [String, null], default: null } });
+import { onMounted, ref, watch } from 'vue';
+const props = defineProps({
+    acheteurUid: { type: [String, null], default: null },
+    vendeurUid: { type: [String, null], default: null },
+    dateMin: { type: [Date, null], default: null },
+    dateMax: { type: [Date, null], default: null }
+});
 
 const indicateurs = ref({} as IndicateursDto);
 
-onMounted(() => {
+function fetchData() {
     getIndicateursMarcheIndicateursGet({
         query: {
-            date_debut: new Date('2010-01-01'),
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
             acheteur_uid: props.acheteurUid,
             vendeur_uid: props.vendeurUid
         }
@@ -19,6 +25,14 @@ onMounted(() => {
             indicateurs.value = data.data;
         }
     });
+}
+
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+    fetchData();
+});
+
+onMounted(() => {
+    fetchData();
 });
 </script>
 

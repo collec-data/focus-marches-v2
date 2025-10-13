@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import type { MarcheNatureDto } from '@/client';
 import { getMarchesParNatureMarcheNatureGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
-import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted, ref, useId } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+
+import type { MarcheNatureDto } from '@/client';
+import type Plotly from 'plotly.js-dist';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null }
+    vendeurUid: { type: [String, null], default: null },
+    dateMin: { type: [Date, null], default: null },
+    dateMax: { type: [Date, null], default: null }
 });
 
 const stats = ref([
@@ -33,45 +36,46 @@ function transform(input: Array<MarcheNatureDto>) {
     return output;
 }
 
-const graphMarcheId = useId();
-const graphPartenariatId = useId();
-const graphDefenseId = useId();
+const marcheData = ref<Partial<Plotly.PlotData>[]>();
+const partenariatData = ref<Partial<Plotly.Data>[]>();
+const defenseData = ref<Partial<Plotly.Data>[]>();
+const layout = { margin: { t: 0, r: 0, b: 20 } } as Partial<Plotly.Layout>;
+const config = { displayModeBar: false } as Partial<Plotly.Config>;
 
-function makeGraph(graphId: string, labels: Array<string | null>, data: Array<number>) {
-    Plotly.newPlot(
-        graphId,
-        [
-            {
-                x: labels,
-                y: data,
-                type: 'bar'
-            }
-        ],
-        { margin: { t: 0, r: 0, b: 20 } },
-        { displayModeBar: false }
-    );
+function makeGraph(labels: Array<string | null>, data: Array<number>): Array<Partial<Plotly.PlotData>> {
+    return [
+        {
+            x: labels,
+            y: data,
+            type: 'bar'
+        }
+    ];
 }
-onMounted(() => {
+
+function fetchData() {
     getMarchesParNatureMarcheNatureGet({
         query: {
-            date_debut: new Date('2010-01-01'),
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
             acheteur_uid: props.acheteurUid,
             vendeur_uid: props.vendeurUid
         }
     }).then((data) => {
         if (data.data) {
             let rawData = transform(data.data);
-            makeGraph(graphMarcheId, rawData[0].labels, rawData[0].values);
-            makeGraph(graphPartenariatId, rawData[1].labels, rawData[1].values);
-            makeGraph(graphDefenseId, rawData[2].labels, rawData[2].values);
+            marcheData.value = makeGraph(rawData[0].labels, rawData[0].values);
+            partenariatData.value = makeGraph(rawData[1].labels, rawData[1].values);
+            defenseData.value = makeGraph(rawData[2].labels, rawData[2].values);
         }
     });
+}
+
+onMounted(() => {
+    fetchData();
 });
 
-onBeforeUnmount(() => {
-    Plotly.purge(graphMarcheId);
-    Plotly.purge(graphPartenariatId);
-    Plotly.purge(graphDefenseId);
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+    fetchData();
 });
 </script>
 
@@ -82,7 +86,7 @@ onBeforeUnmount(() => {
         <div class="flex flex-row gap-5 flex-wrap">
             <div class="nature basis-md grow shrink">
                 <h3>Marché</h3>
-                <div :id="graphMarcheId" class="chart"></div>
+                <Graph :data="marcheData" :layout :config />
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[0].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[0].nombre_total }} marchés</li>
@@ -90,7 +94,7 @@ onBeforeUnmount(() => {
             </div>
             <div class="nature basis-md grow shrink">
                 <h3>Marché de partenariat</h3>
-                <div :id="graphPartenariatId" class="chart"></div>
+                <Graph :data="partenariatData" :layout :config />
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[1].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[1].nombre_total }} marchés</li>
@@ -98,7 +102,7 @@ onBeforeUnmount(() => {
             </div>
             <div class="nature basis-md grow shrink">
                 <h3>Marché de défense ou de sécurité</h3>
-                <div :id="graphDefenseId" class="chart"></div>
+                <Graph :data="defenseData" :layout :config />
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[2].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[2].nombre_total }} marchés</li>

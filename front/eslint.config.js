@@ -44,7 +44,8 @@ export default [
             'vue/attributes-order': 'error',
 
             '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports', fixStyle: 'separate-type-imports' }],
-            '@typescript-eslint/no-explicit-any': 'off'
+            '@typescript-eslint/no-explicit-any': 'off',
+            'vuejs-accessibility/label-has-for': ['error', { required: { some: ['nesting', 'id'] } }]
         }
     },
     {
