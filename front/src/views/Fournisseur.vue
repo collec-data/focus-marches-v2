@@ -17,7 +17,7 @@ watch([() => vendeurUid, () => route.query?.dateMin, () => route.query?.dateMax]
 </script>
 
 <template>
-    <section className="card">
+    <main className="card">
         <h1>Tableau de bord du fournisseur :</h1>
         <p>Cette page vous présente les données essentielles des profils d'acheteurs ayant attribué des contrats au fournisseur "", enrichies avec des données complémentaires.</p>
 
@@ -28,5 +28,5 @@ watch([() => vendeurUid, () => route.query?.dateMin, () => route.query?.dateMax]
         <ListeMarches :vendeurUid :dateMin="dates.min" :dateMax="dates.max" />
         <NatureContrats :vendeurUid :dateMin="dates.min" :dateMax="dates.max" />
         <Procedure :vendeurUid :dateMin="dates.min" :dateMax="dates.max" />
-    </section>
+    </main>
 </template>

@@ -22,10 +22,10 @@ onMounted(() => {
 </script>
 
 <template>
-    <section className="card">
-        <h2>Erreurs lors de l'importation</h2>
+    <main className="card">
+        <h1>Erreurs lors de l'importation</h1>
         <div>
-            <h3>Statistiques</h3>
+            <h2>Statistiques</h2>
             <DataTable :value="stats" scrollable scrollHeight="30rem" sortField="nombre" :sortOrder="-1">
                 <Column field="localisation" header="Champs" sortable></Column>
                 <Column field="erreur" header="Erreur" sortable></Column>
@@ -33,7 +33,7 @@ onMounted(() => {
             </DataTable>
         </div>
         <div class="mt-10">
-            <h3>DECPs en erreur</h3>
+            <h2>DECPs en erreur</h2>
             <Panel v-for="decp in listDecpMalFormes" :key="decp.uid">
                 <ul>
                     <li v-for="erreur in decp.erreurs" :key="erreur.uid">
@@ -47,5 +47,5 @@ onMounted(() => {
                     </pre>
             </Panel>
         </div>
-    </section>
+    </main>
 </template>

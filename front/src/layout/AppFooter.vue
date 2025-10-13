@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-    <div class="layout-footer card">
+    <footer class="layout-footer card">
         <div>
             <h2 class="text-center">A propos de cet outil</h2>
             <div class="columns-2">
@@ -11,5 +11,5 @@
                 <p>Notre page Mentions légales contient des informations concernant la protection de la vie privée et vous permet de configurer le suivi ou pas par notre outil d'analyse de visites.</p>
             </div>
         </div>
-    </div>
+    </footer>
 </template>

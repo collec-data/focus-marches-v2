@@ -35,7 +35,7 @@ const dates = ref({
 </script>
 
 <template>
-    <section className="card">
+    <main className="card">
         <h1>Tableau de bord de l'acheteur : {{ acheteur.nom }}</h1>
         <p>Cette page vous présente les données essentielles du profil d'acheteur de {{ acheteur.nom }} , enrichies avec des données complémentaires.</p>
 
@@ -58,5 +58,5 @@ const dates = ref({
         <NatureContrats :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
         <CCAG :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
         <Procedure :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
-    </section>
+    </main>
 </template>
