@@ -20,16 +20,20 @@ export const formatDate = (value: Date) => {
  * @param length La longueur à partir de laquelle on coupe les labels
  * @returns La liste modifiée
  */
-export function longLabelsBreaker(labels: Array<string | null>, length: number = 13): Array<string | null> {
+export function longLabelsBreaker(labels: Array<string | null>, length: number = 15): Array<string | null> {
+    function getLastElement(a: Array<string>): string {
+        return a[a.length - 1];
+    }
+
     function addLineBreak(e: string, length: number): string {
-        if (e && e.length > length) {
-            const index = e.indexOf(' ', length);
-            if (index > 1) {
-                e = e.substring(0, index) + '<br>' + addLineBreak(e.substring(index), length);
-            }
-            return e;
+        const result = [e];
+        while (getLastElement(result).length > length && getLastElement(result).indexOf(' ') != -1) {
+            const lastElement = getLastElement(result);
+            const index = lastElement.lastIndexOf(' ', length);
+            result[result.length - 1] = lastElement.substring(0, index);
+            result.push(lastElement.substring(index + 1));
         }
-        return e;
+        return result.join('<br>');
     }
     return labels.map((e) => {
         return e ? addLineBreak(e, length) : e;

@@ -37,7 +37,7 @@ function transform(input: Array<MarcheCcagDto>) {
 function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<PlotData>[] {
     return [
         {
-            y: longLabelsBreaker(labels, 11),
+            y: longLabelsBreaker(labels),
             x: data,
             type: 'bar',
             orientation: 'h'
