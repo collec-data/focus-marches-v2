@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { getMarchesParCcagMarcheCcagGet } from '@/client';
-import Plotly from 'plotly.js-dist';
-import { onBeforeUnmount, onMounted, useId, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import type { MarcheCcagDto } from '@/client';
+import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
@@ -11,8 +11,9 @@ const props = defineProps({
     dateMax: { type: [Date, null], default: null }
 });
 
-const graphMontantId = useId();
-const graphNombreId = useId();
+const montantData = ref<Partial<PlotData>[]>();
+const nombreData = ref<Partial<PlotData>[]>();
+const layout = { margin: { l: 10, t: 0, b: 20, r: 0 } } as Layout;
 
 function transform(input: Array<MarcheCcagDto>) {
     let output = {
@@ -32,19 +33,15 @@ function transform(input: Array<MarcheCcagDto>) {
     return output;
 }
 
-function makeGraph(graphId: string, labels: Array<string | null>, data: Array<number>) {
-    Plotly.newPlot(
-        graphId,
-        [
-            {
-                y: labels,
-                x: data,
-                type: 'bar',
-                orientation: 'h'
-            }
-        ],
-        { margin: { l: 10, t: 0, b: 20, r: 0 } }
-    );
+function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<PlotData>[] {
+    return [
+        {
+            y: labels,
+            x: data,
+            type: 'bar',
+            orientation: 'h'
+        }
+    ];
 }
 
 function fetchData() {
@@ -57,15 +54,10 @@ function fetchData() {
     }).then((response) => {
         if (response.data) {
             let data = transform(response.data);
-            makeGraph(graphMontantId, data.ccags, data.montants);
-            makeGraph(graphNombreId, data.ccags, data.nombres);
+            montantData.value = makeGraph(data.ccags, data.montants);
+            nombreData.value = makeGraph(data.ccags, data.nombres);
         }
     });
-}
-
-function purgeGraphs() {
-    Plotly.purge(graphMontantId);
-    Plotly.purge(graphNombreId);
 }
 
 onMounted(() => {
@@ -73,12 +65,7 @@ onMounted(() => {
 });
 
 watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () => {
-    purgeGraphs();
     fetchData();
-});
-
-onBeforeUnmount(() => {
-    purgeGraphs();
 });
 </script>
 
@@ -88,11 +75,11 @@ onBeforeUnmount(() => {
         <div class="grid grid-cols-12 gap-8">
             <div class="col-span-12 xl:col-span-6">
                 <h3>Montant des contrats par CCAG</h3>
-                <div :id="graphMontantId" class="aspect-4/3"></div>
+                <Graph :data="montantData" :layout />
             </div>
             <div class="col-span-12 xl:col-span-6">
                 <h3>Nombre de contrats par CCAG</h3>
-                <div :id="graphNombreId" class="aspect-4/3"></div>
+                <Graph :data="nombreData" :layout />
             </div>
         </div>
     </section>
