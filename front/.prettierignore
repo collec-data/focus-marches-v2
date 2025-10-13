@@ -3,3 +3,4 @@
 /src/client
 .gitlab-ci.yml
 *.min.css
+components.d.ts
