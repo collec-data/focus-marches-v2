@@ -2,9 +2,10 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
-from pydantic import BaseModel, Field, Json
+from pydantic import BaseModel, Field, Json, field_validator
 
 from app.models.enums import (
+    CCAG,
     ConsiderationsEnvironnementales,
     ConsiderationsSociales,
     FormePrix,
@@ -211,9 +212,14 @@ class StatsErreursDto(BaseModel):
 
 
 class MarcheProcedureDto(BaseModel):
-    procedure: int | None
+    procedure: ProcedureMarche | None
     montant: Decimal
     nombre: int
+
+    @field_validator("procedure", mode="before")
+    @classmethod
+    def transform(cls, v: int | None) -> ProcedureMarche | None:
+        return ProcedureMarche.from_db_value(v) if v else None
 
 
 class MarcheNatureDto(BaseModel):
@@ -224,9 +230,14 @@ class MarcheNatureDto(BaseModel):
 
 
 class MarcheCcagDto(BaseModel):
-    ccag: int | None
+    ccag: CCAG | None
     montant: Decimal
     nombre: int
+
+    @field_validator("ccag", mode="before")
+    @classmethod
+    def transform(cls, v: int) -> CCAG:
+        return CCAG.from_db_value(v)
 
 
 class IndicateursDto(BaseModel):

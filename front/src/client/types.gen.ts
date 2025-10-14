@@ -37,6 +37,24 @@ export type ActeSousTraitanceDto = {
 };
 
 /**
+ * CCAG
+ */
+export const Ccag = {
+    TRAVAUX: 'Travaux',
+    'MAITRISE_D_ŒUVRE': "Maitrise d'œuvre",
+    FOURNITURES_COURANTES_ET_SERVICES: 'Fournitures courantes et services',
+    'MARCHÉS_INDUSTRIELS': 'Marchés industriels',
+    PRESTATIONS_INTELLECTUELLES: 'Prestations intellectuelles',
+    'TECHNIQUES_DE_L_INFORMATION_ET_DE_LA_COMMUNICATION': "Techniques de l'information et de la communication",
+    PAS_DE_CCAG: 'Pas de CCAG'
+} as const;
+
+/**
+ * CCAG
+ */
+export type Ccag = typeof Ccag[keyof typeof Ccag];
+
+/**
  * ConsiderationsEnvironnementales
  */
 export const ConsiderationsEnvironnementales = {
@@ -248,10 +266,7 @@ export type MarcheAllegeDto = {
  * MarcheCcagDto
  */
 export type MarcheCcagDto = {
-    /**
-     * Ccag
-     */
-    ccag: number | null;
+    ccag: Ccag | null;
     /**
      * Montant
      */
@@ -420,10 +435,7 @@ export type MarcheNatureDto = {
  * MarcheProcedureDto
  */
 export type MarcheProcedureDto = {
-    /**
-     * Procedure
-     */
-    procedure: number | null;
+    procedure: ProcedureMarche | null;
     /**
      * Montant
      */

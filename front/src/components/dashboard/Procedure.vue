@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getMarchesParProcedureMarcheProcedureGet } from '@/client';
+import { longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 import Graph from '../Graph.vue';
 
@@ -15,11 +16,11 @@ const props = defineProps({
 
 const montantData = ref<Partial<PlotData>[]>();
 const nombreData = ref<Partial<PlotData>[]>();
-const layout = { margin: { t: 0, r: 0 } } as Layout;
+const layout = { margin: { l: 130, t: 0, b: 20, r: 0 } } as Layout;
 
 function transform(input: Array<MarcheProcedureDto>) {
     let output = {
-        procedure: [] as Array<number | null>,
+        procedure: [] as Array<string | null>,
         montant: [] as Array<number>,
         nombre: [] as Array<number>
     };
@@ -31,10 +32,10 @@ function transform(input: Array<MarcheProcedureDto>) {
     return output;
 }
 
-function makeGraph(labels: Array<number | null>, data: Array<number>): Partial<PlotData>[] {
+function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<PlotData>[] {
     return [
         {
-            y: labels,
+            y: longLabelsBreaker(labels),
             x: data,
             type: 'bar',
             orientation: 'h'

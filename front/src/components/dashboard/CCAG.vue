@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getMarchesParCcagMarcheCcagGet } from '@/client';
+import { longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { MarcheCcagDto } from '@/client';
@@ -13,7 +14,7 @@ const props = defineProps({
 
 const montantData = ref<Partial<PlotData>[]>();
 const nombreData = ref<Partial<PlotData>[]>();
-const layout = { margin: { l: 10, t: 0, b: 20, r: 0 } } as Layout;
+const layout = { margin: { l: 150, t: 0, b: 20, r: 0 } } as Layout;
 
 function transform(input: Array<MarcheCcagDto>) {
     let output = {
@@ -23,7 +24,7 @@ function transform(input: Array<MarcheCcagDto>) {
     };
     for (var line of input) {
         if (line.ccag) {
-            output.ccags.push(line.ccag.toString());
+            output.ccags.push(line.ccag);
         } else {
             output.ccags.push('Sans CCAG');
         }
@@ -36,7 +37,7 @@ function transform(input: Array<MarcheCcagDto>) {
 function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<PlotData>[] {
     return [
         {
-            y: labels,
+            y: longLabelsBreaker(labels),
             x: data,
             type: 'bar',
             orientation: 'h'
