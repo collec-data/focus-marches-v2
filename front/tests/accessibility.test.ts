@@ -10,6 +10,8 @@ import Fournisseurs from '../src/views/Fournisseurs.vue';
 import Recherche from '../src/views/Recherche.vue';
 
 expect.extend(toHaveNoViolations);
+// ne pas oublier de démonter chaque composant testé,
+// au risque d'avoir des erreurs de multiple élément main
 
 it('other views has no accessibility violations', async () => {
     const views = [
@@ -20,9 +22,10 @@ it('other views has no accessibility violations', async () => {
         { view: ErreursImportations, config: {} }
     ];
     for (let i = 0; i < views.length; ++i) {
-        const { container } = render(views[i].view, views[i].config);
+        const { container, unmount } = render(views[i].view, views[i].config);
         const results = await axe(container);
         expect(results).toHaveNoViolations();
+        unmount();
     }
 });
 
@@ -37,15 +40,17 @@ async function mockRouter(params): Promise<void> {
 it('acheteur has no accessibility violations', async () => {
     await mockRouter({ uid: '42' });
 
-    const { container } = render(Acheteur);
+    const { container, unmount } = render(Acheteur);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+    unmount();
 });
 
 it('vendeur has no accessibility violations', async () => {
     await mockRouter({ uid: '42' });
 
-    const { container } = render(Fournisseur);
+    const { container, unmount } = render(Fournisseur);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
+    unmount();
 });

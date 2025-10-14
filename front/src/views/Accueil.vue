@@ -7,7 +7,7 @@ import Procedure from '@/components/dashboard/Procedure.vue';
 </script>
 
 <template>
-    <div className="card">
+    <main className="card">
         <h1>Données essentielles des marchés publics de la plateforme Mégalis Bretagne</h1>
         <p>
             Cet outil exploite les données essentielles des marchés publics passés en Bretagne sous réserves que l'organisme qui passe le marché public soit adhérent au service proposé par Mégalis Bretagne et qu'il ait bien complété toutes les
@@ -18,5 +18,5 @@ import Procedure from '@/components/dashboard/Procedure.vue';
         <NatureContrats />
         <Procedure />
         <Departements />
-    </div>
+    </main>
 </template>
