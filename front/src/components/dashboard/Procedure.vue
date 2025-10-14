@@ -83,5 +83,8 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             <h3>Nombre des contrats par procédure</h3>
             <Graph :data="nombreData" :layout />
         </div>
+        <div class="col-span-12">
+            <BoutonIframe v-if="acheteurUid" :acheteurUid path="procedure-marches" name="La répartition des marchés publics par procédure suivie, sous forme de graphique" />
+        </div>
     </Fluid>
 </template>

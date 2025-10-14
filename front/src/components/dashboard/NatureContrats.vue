@@ -129,6 +129,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
                 </div>
             </div>
         </details>
+        <BoutonIframe v-if="acheteurUid" :acheteurUid path="nature-marches" name="La répartition des marchés publics par nature, sous forme de graphique" />
     </section>
 </template>
 

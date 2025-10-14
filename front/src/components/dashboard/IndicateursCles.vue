@@ -96,6 +96,7 @@ onMounted(() => {
                 <div class="value">{{ indicateurs.nb_innovant }}</div>
             </div>
         </div>
+        <BoutonIframe v-if="acheteurUid" :acheteurUid path="indicateurs" name="Des indicateurs sur les marchés publics passés" />
     </section>
 </template>
 

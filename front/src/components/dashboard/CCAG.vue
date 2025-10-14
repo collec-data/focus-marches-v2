@@ -83,5 +83,6 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
                 <Graph :data="nombreData" :layout />
             </div>
         </div>
+        <BoutonIframe v-if="acheteurUid" :acheteurUid path="ccag-marches" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
     </section>
 </template>

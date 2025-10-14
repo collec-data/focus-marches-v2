@@ -1,16 +1,27 @@
 <script setup lang="ts">
-import type { StructureEtendueDto } from '@/client';
-import { ref, watchEffect } from 'vue';
+import { getStructureStructureUidGet, type StructureEtendueDto } from '@/client';
+import { onMounted, ref, watchEffect } from 'vue';
 
 import type { PropType } from 'vue';
 
 const props = defineProps({
-    acheteur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) }
+    acheteur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) },
+    acheteurUid: { type: [String, null], default: null }
 });
 
 const acheteur = ref<Partial<StructureEtendueDto>>(props.acheteur);
 watchEffect(() => {
     acheteur.value = props.acheteur;
+});
+
+onMounted(() => {
+    if (props.acheteurUid !== null) {
+        getStructureStructureUidGet({ path: { uid: parseInt(props.acheteurUid) } }).then((response) => {
+            if (response.data) {
+                acheteur.value = response.data;
+            }
+        });
+    }
 });
 </script>
 
@@ -55,6 +66,7 @@ watchEffect(() => {
                 </tbody>
             </table>
         </div>
+        <BoutonIframe :path="'acheteur/' + acheteur.uid" :name="'Localisation et données administratives de ' + acheteur.nom" />
     </section>
 </template>
 
