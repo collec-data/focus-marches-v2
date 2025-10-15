@@ -3,7 +3,7 @@ import { getMarchesParDepartementMarcheDepartementGet } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { onMounted, ref } from 'vue';
 
-import type { MarcheDepartementDto } from '@/client';
+import type { MarcheDepartementDtoOutput } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const montaData = ref<Partial<PlotData>[]>();
@@ -21,7 +21,7 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Array<Par
     ];
 }
 
-function transform(input: Array<MarcheDepartementDto>) {
+function transform(input: Array<MarcheDepartementDtoOutput>) {
     let output = {
         departements: [] as Array<string>,
         montants: [] as Array<number>,

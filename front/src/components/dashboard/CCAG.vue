@@ -3,7 +3,7 @@ import { getMarchesParCcagMarcheCcagGet } from '@/client';
 import { longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
-import type { MarcheCcagDto } from '@/client';
+import type { MarcheCcagDtoOutput } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
@@ -16,7 +16,7 @@ const montantData = ref<Partial<PlotData>[]>();
 const nombreData = ref<Partial<PlotData>[]>();
 const layout = { margin: { l: 150, t: 0, b: 20, r: 0 } } as Layout;
 
-function transform(input: Array<MarcheCcagDto>) {
+function transform(input: Array<MarcheCcagDtoOutput>) {
     let output = {
         ccags: [] as Array<string>,
         montants: [] as Array<number>,

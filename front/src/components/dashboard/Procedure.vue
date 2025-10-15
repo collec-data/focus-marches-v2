@@ -4,7 +4,7 @@ import { longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 import Graph from '../Graph.vue';
 
-import type { MarcheProcedureDto } from '@/client';
+import type { MarcheProcedureDtoOutput } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
@@ -18,7 +18,7 @@ const montantData = ref<Partial<PlotData>[]>();
 const nombreData = ref<Partial<PlotData>[]>();
 const layout = { margin: { l: 130, t: 0, b: 20, r: 0 } } as Layout;
 
-function transform(input: Array<MarcheProcedureDto>) {
+function transform(input: Array<MarcheProcedureDtoOutput>) {
     let output = {
         procedure: [] as Array<string | null>,
         montant: [] as Array<number>,
