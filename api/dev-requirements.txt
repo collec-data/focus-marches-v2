@@ -79,6 +79,7 @@ markupsafe==3.0.3
 marshmallow==3.26.1
     # via
     #   api-entreprise
+    #   focus-marche-v2 (pyproject.toml)
     #   marshmallow-dataclass
 marshmallow-dataclass==8.7.1
     # via api-entreprise
@@ -119,7 +120,9 @@ pygments==2.19.2
     #   pytest
     #   rich
 pyrate-limiter==2.10.0
-    # via api-entreprise
+    # via
+    #   api-entreprise
+    #   focus-marche-v2 (pyproject.toml)
 pytest==8.4.2
     # via
     #   focus-marche-v2 (pyproject.toml)
@@ -139,7 +142,9 @@ python-multipart==0.0.20
 pyyaml==6.0.3
     # via uvicorn
 redis==4.6.0
-    # via api-entreprise
+    # via
+    #   api-entreprise
+    #   focus-marche-v2 (pyproject.toml)
 requests==2.32.5
     # via
     #   api-entreprise
