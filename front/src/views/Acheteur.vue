@@ -54,6 +54,7 @@ const dates = ref({
         </div>
         <FiltreDates :dateMin="dates.min" :dateMax="dates.max" />
         <IndicateursCles :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
+        <DistributionTemporelleMarches :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
         <ListeMarches :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
         <NatureContrats :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
         <CCAG :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />

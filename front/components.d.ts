@@ -16,6 +16,7 @@ declare module 'vue' {
     DatePicker: typeof import('primevue/datepicker')['default']
     Departements: typeof import('./src/components/dashboard/Departements.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
+    DistributionTemporelleMarches: typeof import('./src/components/dashboard/DistributionTemporelleMarches.vue')['default']
     FiltreDates: typeof import('./src/components/FiltreDates.vue')['default']
     FloatingConfigurator: typeof import('./src/components/FloatingConfigurator.vue')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']

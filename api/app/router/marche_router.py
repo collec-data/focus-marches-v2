@@ -55,7 +55,7 @@ def get_liste_marches(
         .join(titulaires, Marche.titulaires, isouter=True)
         .join(Marche.actes_sous_traitance, isouter=True),
         filtres,
-    )
+    ).order_by(Marche.date_notification)
     return list(session.execute(stmt).scalars())
 
 
