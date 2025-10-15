@@ -22,6 +22,7 @@ dev = [
     "mypy<2.0.0,>=1.17.1",
     "factory-boy",
     "testcontainers[postgres] ~=4.9",
+    "types-requests",
 ]
 
 [tool.ruff]

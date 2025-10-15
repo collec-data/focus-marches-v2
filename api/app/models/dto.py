@@ -37,6 +37,8 @@ class StructureEtendueDto(StructureDto):
     naf: str | None = None
     effectifs: str | None = None
     date_effectifs: int | None = None
+    lon: float | None = None
+    lat: float | None = None
 
 
 class ActeSousTraitanceDto(BaseModel):
