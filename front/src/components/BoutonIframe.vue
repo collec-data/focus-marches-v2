@@ -11,17 +11,13 @@ const props = defineProps({
 const route = useRoute();
 const show = !route.path.includes('widget');
 
-let query = '?';
-if (props.acheteurUid) {
-    query = query + 'acheteurUid=' + props.acheteurUid + '&';
-}
-for (const [k, v] of Object.entries(route.query)) {
-    query = query + k + '=' + v + '&';
-}
-
 const label = ref('Intégrer le widget');
 async function genUrl() {
-    let url = '<iframe src="' + window.origin + '/widget/' + props.path + query + '" referrerpolicy="strict-origin-when-cross-origin" style="border: 0; overflow: hidden;" title="' + props.name + '" width="100%" height="600px"></iframe>';
+    const query = new URLSearchParams({
+        ...(props.acheteurUid ? { acheteurUid: props.acheteurUid } : null),
+        ...route.query
+    }).toString();
+    let url = '<iframe src="' + window.origin + '/widget/' + props.path + '?' + query + '" referrerpolicy="strict-origin-when-cross-origin" style="border: 0; overflow: hidden;" title="' + props.name + '" width="100%" height="600px"></iframe>';
     await navigator.clipboard.writeText(url);
     label.value = 'Copié dans le presse-papier !';
 }
