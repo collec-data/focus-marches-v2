@@ -1,4 +1,5 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import WidgetLayout from '@/layout/WidgetLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -42,6 +43,79 @@ const router = createRouter({
                     path: 'erreurs-importation',
                     name: "Erreur à l'importation",
                     component: () => import('@/views/ErreursImportations.vue')
+                }
+            ]
+        },
+        {
+            path: '/widget/',
+            component: WidgetLayout,
+            props: { boutonWidget: false },
+            children: [
+                {
+                    path: 'acheteur/:uid',
+                    component: () => import('@/components/DetailsAcheteur.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.params.uid
+                    })
+                },
+                {
+                    path: 'indicateurs',
+                    component: () => import('@/components/dashboard/IndicateursCles.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.query.acheteurUid,
+                        vendeurUid: route.query.vendeurUid,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
+                    path: 'marches',
+                    component: () => import('@/components/ListeMarches.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.query.acheteurUid,
+                        vendeurUid: route.query.vendeurUid,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
+                    path: 'distribution-marches',
+                    component: () => import('@/components/dashboard/DistributionTemporelleMarches.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.query.acheteurUid,
+                        vendeurUid: route.query.vendeurUid,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
+                    path: 'nature-marches',
+                    component: () => import('@/components/dashboard/NatureContrats.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.query.acheteurUid,
+                        vendeurUid: route.query.vendeurUid,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
+                    path: 'procedure-marches',
+                    component: () => import('@/components/dashboard/Procedure.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.query.acheteurUid,
+                        vendeurUid: route.query.vendeurUid,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
+                    path: 'ccag-marches',
+                    component: () => import('@/components/dashboard/CCAG.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.query.acheteurUid,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
                 }
             ]
         },

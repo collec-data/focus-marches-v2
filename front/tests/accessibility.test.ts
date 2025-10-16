@@ -32,8 +32,10 @@ it('other views has no accessibility violations', async () => {
 vi.mock('vue-router');
 async function mockRouter(params): Promise<void> {
     const VueRouter = await import('vue-router');
-    VueRouter.useRoute.mockReturnValueOnce({
-        params: params
+    VueRouter.useRoute.mockReturnValue({
+        params: params,
+        path: '/lorem/ipsum/dolor',
+        query: {}
     });
 }
 

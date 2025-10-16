@@ -132,6 +132,7 @@ function hideMarcheModal() {
             >
             <Column field="" header="Montant max si accord cadre" sortable></Column>
         </DataTable>
+        <BoutonIframe v-if="acheteurUid" :acheteurUid path="marches" name="La liste des marchés publics passés" />
     </section>
 
     <Dialog :visible="showModale" modal :header="'Détails du contrat ' + marcheDetaille?.id" class="max-w-full" @update:visible="hideMarcheModal">

@@ -83,5 +83,6 @@ onMounted(() => {
                 </div>
             </div>
         </details>
+        <BoutonIframe v-if="acheteurUid" :acheteurUid path="distribution-marches" name="La distribution des marchés dans le temps, sous forme de graphique" />
     </section>
 </template>
