@@ -4,20 +4,20 @@ import type { GetListeMarchesMarcheGetResponse, GetMarcheMarcheUidGetResponse } 
 
 export const getListeMarchesMarcheGetResponseTransformer = async (data: any): Promise<GetListeMarchesMarcheGetResponse> => {
     data = data.map((item: any) => {
-        return marcheAllegeDtoSchemaResponseTransformer(item);
+        return marcheAllegeDtoOutputSchemaResponseTransformer(item);
     });
     return data;
 };
 
-const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
+const marcheAllegeDtoOutputSchemaResponseTransformer = (data: any) => {
     data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => {
-        return acteSousTraitanceDtoSchemaResponseTransformer(item);
+        return acteSousTraitanceDtoOutputSchemaResponseTransformer(item);
     });
     data.date_notification = new Date(data.date_notification);
     return data;
 };
 
-const acteSousTraitanceDtoSchemaResponseTransformer = (data: any) => {
+const acteSousTraitanceDtoOutputSchemaResponseTransformer = (data: any) => {
     data.date_notification = new Date(data.date_notification);
     data.date_publication = new Date(data.date_publication);
     return data;
@@ -33,19 +33,19 @@ const marcheDtoSchemaResponseTransformer = (data: any) => {
         data.accord_cadre = marcheDtoSchemaResponseTransformer(data.accord_cadre);
     }
     data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => {
-        return acteSousTraitanceDtoSchemaResponseTransformer(item);
+        return acteSousTraitanceDtoOutputSchemaResponseTransformer(item);
     });
     data.date_notification = new Date(data.date_notification);
     if (data.date_publication) {
         data.date_publication = new Date(data.date_publication);
     }
     data.modifications = data.modifications.map((item: any) => {
-        return modificationMarcheDtoSchemaResponseTransformer(item);
+        return modificationMarcheDtoOutputSchemaResponseTransformer(item);
     });
     return data;
 };
 
-const modificationMarcheDtoSchemaResponseTransformer = (data: any) => {
+const modificationMarcheDtoOutputSchemaResponseTransformer = (data: any) => {
     data.date_notification = new Date(data.date_notification);
     data.date_publication = new Date(data.date_publication);
     return data;

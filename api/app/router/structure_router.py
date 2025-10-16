@@ -3,7 +3,7 @@ from decimal import Decimal
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import desc, func, select
 
-from app.dependencies import ApiEntrepriseDep, SessionDep
+from app.dependencies import ApiEntrepriseDep, OpenDataSoftDep, SessionDep
 from app.models.db import Marche, Structure
 from app.models.dto import StructureAggMarchesDto, StructureEtendueDto
 
@@ -62,32 +62,37 @@ def list_vendeurs(
 
 @router.get("/{uid}", response_model=StructureEtendueDto)
 def get_structure(
-    uid: int, session: SessionDep, api_entreprise: ApiEntrepriseDep
-) -> Structure:
+    uid: int,
+    session: SessionDep,
+    api_entreprise: ApiEntrepriseDep,
+    opendatasoft: OpenDataSoftDep,
+) -> StructureEtendueDto:
     stmt = select(Structure).where(Structure.uid == uid)
     structure = session.execute(stmt).scalar()
 
     if not structure:
         raise HTTPException(status_code=404, detail="Structure inconnue")
 
+    structure_dto = StructureEtendueDto.model_validate(structure.__dict__)
+
     if structure.type_identifiant == "SIRET":
         details = api_entreprise.donnees_etablissement(structure.identifiant)
         if details:
-            dict_structure = structure.__dict__
-            dict_structure["denomination"] = (
+            structure_dto.denomination = (
                 details.unite_legale.personne_morale_attributs.raison_sociale
             )
-            dict_structure["sigle"] = (
-                details.unite_legale.personne_morale_attributs.sigle
-            )
-            dict_structure["adresse"] = details.adresse_postale_legere
-            dict_structure["cat_juridique"] = details.unite_legale.forme_juridique.code
-            dict_structure["naf"] = details.unite_legale.activite_principale.code
-            dict_structure["effectifs"] = (
+            structure_dto.sigle = details.unite_legale.personne_morale_attributs.sigle
+            structure_dto.adresse = details.adresse_postale_legere
+            structure_dto.cat_juridique = details.unite_legale.forme_juridique.code
+            structure_dto.naf = details.unite_legale.activite_principale.code
+            structure_dto.effectifs = (
                 details.unite_legale.tranche_effectif_salarie.intitule
             )
-            dict_structure["date_effectifs"] = (
-                details.unite_legale.tranche_effectif_salarie.date_reference
+            structure_dto.date_effectifs = int(
+                details.unite_legale.tranche_effectif_salarie.date_reference or "0"
             )
+            geoloc = opendatasoft.getCoordonnees(structure.identifiant)
+            structure_dto.lon = geoloc["lon"]
+            structure_dto.lat = geoloc["lat"]
 
-    return structure
+    return structure_dto

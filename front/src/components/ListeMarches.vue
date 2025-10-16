@@ -5,7 +5,7 @@ import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersServ
 import { FilterMatchMode } from '@primevue/core/api';
 import { computed, onMounted, ref, watch } from 'vue';
 
-import type { MarcheAllegeDto, MarcheDto } from '@/client';
+import type { MarcheAllegeDtoOutput, MarcheDto } from '@/client';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
@@ -22,7 +22,7 @@ const filters = ref({
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
-const listeMarches = ref<Array<MarcheAllegeDto>>([]);
+const listeMarches = ref<Array<MarcheAllegeDtoOutput>>([]);
 
 function fetchData() {
     getListeMarchesMarcheGet({

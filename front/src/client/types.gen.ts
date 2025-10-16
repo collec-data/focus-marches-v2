@@ -7,7 +7,39 @@ export type ClientOptions = {
 /**
  * ActeSousTraitanceDto
  */
-export type ActeSousTraitanceDto = {
+export type ActeSousTraitanceDtoInput = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Id
+     */
+    id: number;
+    sous_traitant: StructureDto;
+    /**
+     * Duree Mois
+     */
+    duree_mois: number | null;
+    /**
+     * Date Notification
+     */
+    date_notification: Date;
+    /**
+     * Date Publication
+     */
+    date_publication: Date;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    variation_prix_as_str: VariationPrix;
+};
+
+/**
+ * ActeSousTraitanceDto
+ */
+export type ActeSousTraitanceDtoOutput = {
     /**
      * Uid
      */
@@ -106,7 +138,25 @@ export type ContratConcessionDto = {
 /**
  * DecpMalFormeDto
  */
-export type DecpMalFormeDto = {
+export type DecpMalFormeDtoInput = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Decp
+     */
+    decp: string;
+    /**
+     * Erreurs
+     */
+    erreurs: Array<ErreurDto>;
+};
+
+/**
+ * DecpMalFormeDto
+ */
+export type DecpMalFormeDtoOutput = {
     /**
      * Uid
      */
@@ -206,7 +256,22 @@ export type IndicateursDto = {
 /**
  * LieuDto
  */
-export type LieuDto = {
+export type LieuDtoInput = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Code
+     */
+    code: string;
+    type_code_as_str: TypeCodeLieu;
+};
+
+/**
+ * LieuDto
+ */
+export type LieuDtoOutput = {
     /**
      * Uid
      */
@@ -221,7 +286,7 @@ export type LieuDto = {
 /**
  * MarcheAllegeDto
  */
-export type MarcheAllegeDto = {
+export type MarcheAllegeDtoInput = {
     /**
      * Uid
      */
@@ -247,7 +312,51 @@ export type MarcheAllegeDto = {
     /**
      * Actes Sous Traitance
      */
-    actes_sous_traitance: Array<ActeSousTraitanceDto>;
+    actes_sous_traitance: Array<ActeSousTraitanceDtoInput>;
+    /**
+     * Date Notification
+     */
+    date_notification: Date;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    /**
+     * Titulaires
+     */
+    titulaires: Array<StructureDto>;
+};
+
+/**
+ * MarcheAllegeDto
+ */
+export type MarcheAllegeDtoOutput = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Id
+     */
+    id: string;
+    acheteur: StructureDto;
+    /**
+     * Objet
+     */
+    objet: string;
+    /**
+     * Cpv
+     * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
+     */
+    cpv: string;
+    /**
+     * Sous Traitance Declaree
+     */
+    sous_traitance_declaree: boolean;
+    /**
+     * Actes Sous Traitance
+     */
+    actes_sous_traitance: Array<ActeSousTraitanceDtoOutput>;
     /**
      * Date Notification
      */
@@ -265,7 +374,22 @@ export type MarcheAllegeDto = {
 /**
  * MarcheCcagDto
  */
-export type MarcheCcagDto = {
+export type MarcheCcagDtoInput = {
+    ccag: Ccag | null;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
+ * MarcheCcagDto
+ */
+export type MarcheCcagDtoOutput = {
     ccag: Ccag | null;
     /**
      * Montant
@@ -280,7 +404,25 @@ export type MarcheCcagDto = {
 /**
  * MarcheDepartementDto
  */
-export type MarcheDepartementDto = {
+export type MarcheDepartementDtoInput = {
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
+ * MarcheDepartementDto
+ */
+export type MarcheDepartementDtoOutput = {
     /**
      * Code
      */
@@ -359,9 +501,9 @@ export type MarcheDto = {
     /**
      * Actes Sous Traitance
      */
-    actes_sous_traitance: Array<ActeSousTraitanceDto>;
+    actes_sous_traitance: Array<ActeSousTraitanceDtoOutput>;
     procedure: ProcedureMarche | null;
-    lieu: LieuDto;
+    lieu: LieuDtoOutput;
     /**
      * Duree Mois
      */
@@ -406,13 +548,35 @@ export type MarcheDto = {
     /**
      * Modifications
      */
-    modifications: Array<ModificationMarcheDto>;
+    modifications: Array<ModificationMarcheDtoOutput>;
 };
 
 /**
  * MarcheNatureDto
  */
-export type MarcheNatureDto = {
+export type MarcheNatureDtoInput = {
+    /**
+     * Mois
+     */
+    mois: string;
+    /**
+     * Nature
+     */
+    nature: number;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
+ * MarcheNatureDto
+ */
+export type MarcheNatureDtoOutput = {
     /**
      * Mois
      */
@@ -434,7 +598,22 @@ export type MarcheNatureDto = {
 /**
  * MarcheProcedureDto
  */
-export type MarcheProcedureDto = {
+export type MarcheProcedureDtoInput = {
+    procedure: ProcedureMarche | null;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
+ * MarcheProcedureDto
+ */
+export type MarcheProcedureDtoOutput = {
     procedure: ProcedureMarche | null;
     /**
      * Montant
@@ -464,7 +643,41 @@ export type ModaliteExecution = typeof ModaliteExecution[keyof typeof ModaliteEx
 /**
  * ModificationMarcheDto
  */
-export type ModificationMarcheDto = {
+export type ModificationMarcheDtoInput = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Duree Mois
+     */
+    duree_mois: number | null;
+    /**
+     * Date Notification
+     */
+    date_notification: Date;
+    /**
+     * Date Publication
+     */
+    date_publication: Date;
+    /**
+     * Montant
+     */
+    montant: number | string | null;
+    /**
+     * Titulaires
+     */
+    titulaires: Array<StructureDto>;
+};
+
+/**
+ * ModificationMarcheDto
+ */
+export type ModificationMarcheDtoOutput = {
     /**
      * Uid
      */
@@ -547,7 +760,22 @@ export type StatsErreursDto = {
 /**
  * StructureAggMarchesDto
  */
-export type StructureAggMarchesDto = {
+export type StructureAggMarchesDtoInput = {
+    structure: StructureDto;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    /**
+     * Nb Contrats
+     */
+    nb_contrats: number;
+};
+
+/**
+ * StructureAggMarchesDto
+ */
+export type StructureAggMarchesDtoOutput = {
     structure: StructureDto;
     /**
      * Montant
@@ -645,6 +873,14 @@ export type StructureEtendueDto = {
      * Date Effectifs
      */
     date_effectifs?: number | null;
+    /**
+     * Lon
+     */
+    lon?: number | null;
+    /**
+     * Lat
+     */
+    lat?: number | null;
 };
 
 /**
@@ -775,7 +1011,7 @@ export type GetErreursImportErreursImportGetResponses = {
      * Response Get Erreurs Import Erreurs Import  Get
      * Successful Response
      */
-    200: Array<DecpMalFormeDto>;
+    200: Array<DecpMalFormeDtoOutput>;
 };
 
 export type GetErreursImportErreursImportGetResponse = GetErreursImportErreursImportGetResponses[keyof GetErreursImportErreursImportGetResponses];
@@ -835,7 +1071,7 @@ export type GetListeMarchesMarcheGetResponses = {
      * Response Get Liste Marches Marche  Get
      * Successful Response
      */
-    200: Array<MarcheAllegeDto>;
+    200: Array<MarcheAllegeDtoOutput>;
 };
 
 export type GetListeMarchesMarcheGetResponse = GetListeMarchesMarcheGetResponses[keyof GetListeMarchesMarcheGetResponses];
@@ -878,7 +1114,7 @@ export type GetMarchesParProcedureMarcheProcedureGetResponses = {
      * Response Get Marches Par Procedure Marche Procedure Get
      * Successful Response
      */
-    200: Array<MarcheProcedureDto>;
+    200: Array<MarcheProcedureDtoOutput>;
 };
 
 export type GetMarchesParProcedureMarcheProcedureGetResponse = GetMarchesParProcedureMarcheProcedureGetResponses[keyof GetMarchesParProcedureMarcheProcedureGetResponses];
@@ -921,7 +1157,7 @@ export type GetMarchesParNatureMarcheNatureGetResponses = {
      * Response Get Marches Par Nature Marche Nature Get
      * Successful Response
      */
-    200: Array<MarcheNatureDto>;
+    200: Array<MarcheNatureDtoOutput>;
 };
 
 export type GetMarchesParNatureMarcheNatureGetResponse = GetMarchesParNatureMarcheNatureGetResponses[keyof GetMarchesParNatureMarcheNatureGetResponses];
@@ -964,7 +1200,7 @@ export type GetMarchesParCcagMarcheCcagGetResponses = {
      * Response Get Marches Par Ccag Marche Ccag Get
      * Successful Response
      */
-    200: Array<MarcheCcagDto>;
+    200: Array<MarcheCcagDtoOutput>;
 };
 
 export type GetMarchesParCcagMarcheCcagGetResponse = GetMarchesParCcagMarcheCcagGetResponses[keyof GetMarchesParCcagMarcheCcagGetResponses];
@@ -1023,7 +1259,7 @@ export type GetMarchesParDepartementMarcheDepartementGetResponses = {
      * Response Get Marches Par Departement Marche Departement Get
      * Successful Response
      */
-    200: Array<MarcheDepartementDto>;
+    200: Array<MarcheDepartementDtoOutput>;
 };
 
 export type GetMarchesParDepartementMarcheDepartementGetResponse = GetMarchesParDepartementMarcheDepartementGetResponses[keyof GetMarchesParDepartementMarcheDepartementGetResponses];
@@ -1119,7 +1355,7 @@ export type ListAcheteursStructureAcheteurGetResponses = {
      * Response List Acheteurs Structure Acheteur Get
      * Successful Response
      */
-    200: Array<StructureAggMarchesDto>;
+    200: Array<StructureAggMarchesDtoOutput>;
 };
 
 export type ListAcheteursStructureAcheteurGetResponse = ListAcheteursStructureAcheteurGetResponses[keyof ListAcheteursStructureAcheteurGetResponses];
@@ -1150,7 +1386,7 @@ export type ListVendeursStructureVendeurGetResponses = {
      * Response List Vendeurs Structure Vendeur Get
      * Successful Response
      */
-    200: Array<StructureAggMarchesDto>;
+    200: Array<StructureAggMarchesDtoOutput>;
 };
 
 export type ListVendeursStructureVendeurGetResponse = ListVendeursStructureVendeurGetResponses[keyof ListVendeursStructureVendeurGetResponses];

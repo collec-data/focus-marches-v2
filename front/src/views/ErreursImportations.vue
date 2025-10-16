@@ -2,10 +2,10 @@
 import { getErreursImportErreursImportGet, getStatsErreursErreursImportStatsGet } from '@/client';
 import { onMounted, ref } from 'vue';
 
-import type { DecpMalFormeDto, StatsErreursDto } from '@/client';
+import type { DecpMalFormeDtoOutput, StatsErreursDto } from '@/client';
 
 const stats = ref<Array<StatsErreursDto>>([]);
-const listDecpMalFormes = ref<Array<DecpMalFormeDto>>([]);
+const listDecpMalFormes = ref<Array<DecpMalFormeDtoOutput>>([]);
 
 onMounted(() => {
     getErreursImportErreursImportGet({ query: { limit: 50 } }).then((response) => {

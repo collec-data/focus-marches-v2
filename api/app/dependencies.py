@@ -1,14 +1,16 @@
-from typing import Annotated, Generator
+from collections.abc import Generator
+from typing import Annotated
 
-from fastapi import Depends
-from sqlalchemy.orm import Session
 from api_entreprise.api import ApiEntreprise
 from api_entreprise.models.config import Config as APIEntrepriseConfig
 from api_entreprise.models.context_info import ContextInfo
+from fastapi import Depends
 from pyrate_limiter import Limiter, RequestRate
+from sqlalchemy.orm import Session
 
-from .config import get_config, Config
-from .db import get_engine
+from app.config import Config, get_config
+from app.db import get_engine
+from app.helpers.opendatasoft import OpenDataSoft, get_opendatasoft
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -32,3 +34,4 @@ def get_api_entreprise(config: ConfigDep) -> ApiEntreprise:
 
 
 ApiEntrepriseDep = Annotated[ApiEntreprise, Depends(get_api_entreprise)]
+OpenDataSoftDep = Annotated[OpenDataSoft, Depends(get_opendatasoft)]

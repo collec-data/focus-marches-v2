@@ -3,15 +3,15 @@ import { listAcheteursStructureAcheteurGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
-import type { StructureAggMarchesDto } from '@/client';
+import type { StructureAggMarchesDtoOutput } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
-const listeAcheteurs = ref<Array<StructureAggMarchesDto>>([]);
+const listeAcheteurs = ref<Array<StructureAggMarchesDtoOutput>>([]);
 
 const data = ref<Partial<PlotData>[]>();
 const layout = { margin: { t: 0 } } as Partial<Layout>;
 
-function transform(input: Array<StructureAggMarchesDto>) {
+function transform(input: Array<StructureAggMarchesDtoOutput>) {
     let output = {
         structures: [] as Array<string | null>,
         montants: [] as Array<string>
