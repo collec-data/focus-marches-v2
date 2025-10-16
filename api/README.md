@@ -62,9 +62,7 @@ pip-compile pyproject.toml -o requirements.txt  && \
 pip install -r dev-requirements.txt
 ```
 
-## Tests
-
-![coverage](https://gitlab.csm.ovh/focus-marches/focusmarchev2/badges/main/coverage.svg?job=api-quality)
+## Tests ![coverage](https://gitlab.csm.ovh/focus-marches/focusmarchev2/badges/main/coverage.svg?job=api-quality)
 
 Les tests sont situés dans le dossier (`api/tests/`). Il s'agit principalement de tests d'intégration avec des appels au niveau de l'API qui remontent jusqu'à la base de données.
 
@@ -72,4 +70,4 @@ On utilise pour cela [`pytest`](https://docs.pytest.org/en/stable/contents.html)
 
 Côté base de donnée, une instance docker de PostgreSQL est démarrée et gérée automatiquement par `pytest` ([`pytest-docker`](https://pypi.org/project/pytest-docker/)). Pour accélérer la vitesse d'exécution des tests, chaque test est exécuté dans une transaction et n'est jamais réellement envoyé dans le PostgreSQL (voir `tests/conftest.py::db_fixture`).
 
-On peut les lancer manuellement à l'aide de la commande `pytest` ou via VSCode (en faisant attention d'avoir ouvert le dossier `/api` en tant que projet et non le _repository_ entier).
+On peut les lancer manuellement à l'aide de la commande `pytest` ou avec VSCode.
