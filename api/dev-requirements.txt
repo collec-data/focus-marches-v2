@@ -179,6 +179,7 @@ typer==0.19.2
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
+    #   focus-marche-v2 (pyproject.toml)
 types-requests==2.32.4.20250913
     # via focus-marche-v2 (pyproject.toml)
 typing-extensions==4.15.0

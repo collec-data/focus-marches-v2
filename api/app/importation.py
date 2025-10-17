@@ -4,15 +4,22 @@ import sys
 sys.path.append(os.getcwd())
 
 import json
+import logging
 import time
+from collections.abc import Callable
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Any, Callable
+from typing import Any
 
 import ijson
+import rich
+import rich.progress
+import typer
 from api_entreprise.api import ApiEntreprise
 from pydantic_core import ValidationError
-from sqlalchemy import select
+from rich.logging import RichHandler
+from rich.progress import track
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from app.config import get_config
@@ -32,6 +39,9 @@ from app.models.db import (
     ModificationSousTraitance,
     Structure,
     Tarif,
+    concession_structure_table,
+    marche_titulaire_table,
+    modification_titulaire_table,
 )
 from app.models.dto_importation import (
     ActeSousTraitanceSchema,
@@ -45,6 +55,12 @@ from app.models.dto_importation import (
     TarifSchema,
 )
 from app.models.enums import TypeCodeLieu
+
+app = typer.Typer()
+logging.basicConfig(
+    level="INFO", format="%(message)s", datefmt="[%X]", handlers=[RichHandler()]
+)
+log = logging.getLogger("rich")
 
 
 class CustomValidationError(Exception):
@@ -417,7 +433,7 @@ class ImportateurDecp:
         return decp
 
     def importer(self) -> "ImportateurDecp":
-        with open(self._file, "rb") as f:
+        with rich.progress.open(self._file, "rb") as f:
             liste = ijson.items(f, f"{self._item_path}.item")  # flux objet par objet
             for objet in liste:
                 try:
@@ -434,21 +450,54 @@ class ImportateurDecp:
 
     def print_stats(self) -> None:
         if self._valid_objects + self._invalid_objects:
-            print(
-                f"Import de {self._item_path}\n> Terminé en {round(self._finished_at - self._started_at, 2)}s\n> Objets valides : {self._valid_objects}\n> Objets invalides : {self._invalid_objects} ({round(self._invalid_objects * 100 / (self._valid_objects + self._invalid_objects))}%)"
+            log.info(f"Terminé en {round(self._finished_at - self._started_at, 2)}s")
+            log.info(f"Objets valides : {self._valid_objects}")
+            log.info(
+                f"Objets invalides : {self._invalid_objects} ({round(self._invalid_objects * 100 / (self._valid_objects + self._invalid_objects))}%)"
             )
 
 
-if __name__ == "__main__":  # pragma: no cover
-    Base.metadata.drop_all(get_engine())  # ToDo remove after tests
-    Base.metadata.create_all(get_engine())
+@app.command()
+def importer(import_de_0: bool = False) -> None:  # pragma: no cover
+    if import_de_0:
+        log.info(
+            "Nettoyage totale de la base de données (suppression de toutes les tables et recréation)"
+        )
+        Base.metadata.drop_all(get_engine())  # ToDo remove after tests
+        get_engine()
+    else:
+        log.info("Suppression partielle de la base de données")
+        with get_engine().connect() as connexion:
+            tables: list[str] = [
+                marche_titulaire_table.name,
+                modification_titulaire_table.name,
+                concession_structure_table.name,
+                str(ModificationSousTraitance.__tablename__),
+                str(ActeSousTraitance.__tablename__),
+                str(ModificationMarche.__tablename__),
+                str(Tarif.__tablename__),
+                str(DonneeExecution.__tablename__),
+                str(Marche.__tablename__),
+                str(ModificationConcession.__tablename__),
+                str(ContratConcession.__tablename__),
+                str(Erreur.__tablename__),
+                str(DecpMalForme.__tablename__),
+            ]
+
+            connexion.execute(
+                text(f"TRUNCATE TABLE {', '.join(tables)} RESTART IDENTITY")
+            )
 
     working_path: str = "./data/"
-    for raw_file in os.listdir(working_path):
+    for raw_file in track(os.listdir(working_path)):
+        if raw_file == "tmp":
+            continue
+
+        log.info(f"Détection de {working_path}{raw_file}")
+
+        log.info("Nettoyage du JSON")
         tmp: str = f"{working_path}tmp"
-        # clean invalid json
         f = open(tmp, "w")
-        print(f"{working_path}{raw_file}")
         with open(f"{working_path}{raw_file}", "r", errors="ignore") as myFile:
             for line in myFile:
                 line = line.replace("NaN", "null")
@@ -456,15 +505,22 @@ if __name__ == "__main__":  # pragma: no cover
         f.close()
 
         with Session(get_engine()) as session:
+            log.info("Import des marchés")
             ImportateurDecp(
                 session=session,
                 file=tmp,
                 objet_type="marche",
                 api_entreprise=get_api_entreprise(get_config()),
             ).importer().print_stats()
+
+            log.info("Import des concessions")
             ImportateurDecp(
                 session=session,
                 file=tmp,
                 objet_type="concession",
                 api_entreprise=get_api_entreprise(get_config()),
             ).importer().print_stats()
+
+
+if __name__ == "__main__":
+    app()
