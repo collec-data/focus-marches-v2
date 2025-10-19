@@ -123,7 +123,7 @@ rich-toolkit==0.15.1
     #   fastapi-cloud-cli
 rignore==0.7.1
     # via fastapi-cloud-cli
-sentry-sdk==2.41.0
+sentry-sdk==2.42.0
     # via fastapi-cloud-cli
 shellingham==1.5.4
     # via typer
@@ -160,12 +160,12 @@ urllib3==2.5.0
     # via
     #   requests
     #   sentry-sdk
-uvicorn[standard]==0.37.0
+uvicorn[standard]==0.38.0
     # via
     #   fastapi
     #   fastapi-cli
     #   fastapi-cloud-cli
-uvloop==0.21.0
+uvloop==0.22.1
     # via uvicorn
 watchfiles==1.1.1
     # via uvicorn
