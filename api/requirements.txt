@@ -79,11 +79,11 @@ mypy-extensions==1.1.0
     # via typing-inspect
 packaging==25.0
     # via marshmallow
-psycopg[binary]==3.2.10
+psycopg[binary]==3.2.11
     # via focus-marche-v2 (pyproject.toml)
-psycopg-binary==3.2.10
+psycopg-binary==3.2.11
     # via psycopg
-pydantic[email]==2.12.2
+pydantic[email]==2.12.3
     # via
     #   fastapi
     #   fastapi-cloud-cli
@@ -121,7 +121,7 @@ rich-toolkit==0.15.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
-rignore==0.7.0
+rignore==0.7.1
     # via fastapi-cloud-cli
 sentry-sdk==2.41.0
     # via fastapi-cloud-cli
