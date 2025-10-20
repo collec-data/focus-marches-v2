@@ -302,6 +302,7 @@ export type MarcheAllegeDtoInput = {
     objet: string;
     /**
      * Cpv
+     *
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
     cpv: string;
@@ -346,6 +347,7 @@ export type MarcheAllegeDtoOutput = {
     objet: string;
     /**
      * Cpv
+     *
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
     cpv: string;
@@ -457,6 +459,7 @@ export type MarcheDto = {
     objet: string;
     /**
      * Cpv
+     *
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
     cpv: string;
@@ -475,21 +478,25 @@ export type MarcheDto = {
     marche_innovant: boolean;
     /**
      * Ccag
+     *
      * Cahiers des clauses administratives générales de référence du marché public
      */
     ccag: number | null;
     /**
      * Offres Recues
+     *
      * Nombre d'offres reçues par l'acheteur de la part des soumissionnaires. Comprend aussi les offres irrégulières, inacceptables, inappropriées et anormalement basses.
      */
     offres_recues: number;
     /**
      * Attribution Avance
+     *
      * Une avance a été attribuée au titulaire principal du marché public
      */
     attribution_avance: boolean;
     /**
      * Taux Avance
+     *
      * Taux de l'avance attribuée au titulaire principal du marché public par rapport au montant du marché (O.1 = 10 % du montant du marché). En fonction de la valeur de attributionAvance, une valeur égale à 0 signifie soit qu'aucune avance n'a été accordée (si attributionAvance=false), soit que le taux de l'avance n'est pas connu (si attributionAvance=true).
      */
     taux_avance: string;
@@ -1009,6 +1016,7 @@ export type GetErreursImportErreursImportGetError = GetErreursImportErreursImpor
 export type GetErreursImportErreursImportGetResponses = {
     /**
      * Response Get Erreurs Import Erreurs Import  Get
+     *
      * Successful Response
      */
     200: Array<DecpMalFormeDtoOutput>;
@@ -1026,6 +1034,7 @@ export type GetStatsErreursErreursImportStatsGetData = {
 export type GetStatsErreursErreursImportStatsGetResponses = {
     /**
      * Response Get Stats Erreurs Erreurs Import Stats Get
+     *
      * Successful Response
      */
     200: Array<StatsErreursDto>;
@@ -1069,6 +1078,7 @@ export type GetListeMarchesMarcheGetError = GetListeMarchesMarcheGetErrors[keyof
 export type GetListeMarchesMarcheGetResponses = {
     /**
      * Response Get Liste Marches Marche  Get
+     *
      * Successful Response
      */
     200: Array<MarcheAllegeDtoOutput>;
@@ -1112,6 +1122,7 @@ export type GetMarchesParProcedureMarcheProcedureGetError = GetMarchesParProcedu
 export type GetMarchesParProcedureMarcheProcedureGetResponses = {
     /**
      * Response Get Marches Par Procedure Marche Procedure Get
+     *
      * Successful Response
      */
     200: Array<MarcheProcedureDtoOutput>;
@@ -1155,6 +1166,7 @@ export type GetMarchesParNatureMarcheNatureGetError = GetMarchesParNatureMarcheN
 export type GetMarchesParNatureMarcheNatureGetResponses = {
     /**
      * Response Get Marches Par Nature Marche Nature Get
+     *
      * Successful Response
      */
     200: Array<MarcheNatureDtoOutput>;
@@ -1198,6 +1210,7 @@ export type GetMarchesParCcagMarcheCcagGetError = GetMarchesParCcagMarcheCcagGet
 export type GetMarchesParCcagMarcheCcagGetResponses = {
     /**
      * Response Get Marches Par Ccag Marche Ccag Get
+     *
      * Successful Response
      */
     200: Array<MarcheCcagDtoOutput>;
@@ -1257,6 +1270,7 @@ export type GetMarchesParDepartementMarcheDepartementGetData = {
 export type GetMarchesParDepartementMarcheDepartementGetResponses = {
     /**
      * Response Get Marches Par Departement Marche Departement Get
+     *
      * Successful Response
      */
     200: Array<MarcheDepartementDtoOutput>;
@@ -1322,6 +1336,7 @@ export type GetListeConcessionsContratConcessionGetError = GetListeConcessionsCo
 export type GetListeConcessionsContratConcessionGetResponses = {
     /**
      * Response Get Liste Concessions Contrat Concession  Get
+     *
      * Successful Response
      */
     200: Array<ContratConcessionDto>;
@@ -1353,6 +1368,7 @@ export type ListAcheteursStructureAcheteurGetError = ListAcheteursStructureAchet
 export type ListAcheteursStructureAcheteurGetResponses = {
     /**
      * Response List Acheteurs Structure Acheteur Get
+     *
      * Successful Response
      */
     200: Array<StructureAggMarchesDtoOutput>;
@@ -1384,6 +1400,7 @@ export type ListVendeursStructureVendeurGetError = ListVendeursStructureVendeurG
 export type ListVendeursStructureVendeurGetResponses = {
     /**
      * Response List Vendeurs Structure Vendeur Get
+     *
      * Successful Response
      */
     200: Array<StructureAggMarchesDtoOutput>;
