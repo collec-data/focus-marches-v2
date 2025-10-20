@@ -9,17 +9,17 @@ import time
 from collections.abc import Callable
 from datetime import date, datetime
 from decimal import Decimal
+from functools import cache
 from typing import Any
 
 import ijson
 import rich
 import rich.progress
 import typer
-from api_entreprise.api import ApiEntreprise
 from pydantic_core import ValidationError
 from rich.logging import RichHandler
 from rich.progress import track
-from sqlalchemy import select, text
+from sqlalchemy import desc, select, text
 from sqlalchemy.orm import Session
 
 from app.config import get_config
@@ -54,9 +54,10 @@ from app.models.dto_importation import (
     ModificationMarcheSchema,
     TarifSchema,
 )
-from app.models.enums import TypeCodeLieu
+from app.models.enums import TechniqueAchat, TypeCodeLieu
 
 app = typer.Typer()
+
 logging.basicConfig(
     level="INFO", format="%(message)s", datefmt="[%X]", handlers=[RichHandler()]
 )
@@ -75,118 +76,107 @@ class CustomValidationError(Exception):
 
 
 class ImportateurDecp:
-    def __init__(
-        self,
-        session: Session,
-        file: str,
-        objet_type: str,
-        api_entreprise: ApiEntreprise | None = None,
-    ):
+    def __init__(self, session: Session, preload_db: bool = True):
         self._cache_lieux: dict[str, Lieu] = {}
         self._cache_structures: dict[str, Structure] = {}
+        self._cache_accords_cadre: dict[str, Marche] = {}
+
+        self._session: Session = session
 
         self._valid_objects: int = 0
         self._invalid_objects: int = 0
-
-        self._started_at: float = time.time()
+        self._started_at: float
         self._finished_at: float
 
-        self._session: Session = session
-        self._api_entreprise: ApiEntreprise | None = api_entreprise
-        self._file: str = file
-
-        self._item_path: str
-        self._schema: type[MarcheSchema] | type[ConcessionSchema]
-        self._transformer: (
-            Callable[[ConcessionSchema], Any] | Callable[[MarcheSchema], Any]
-        )
-        if objet_type == "marche":
-            self._item_path = "marches.marche"
-            self._schema = MarcheSchema
-            self._transformer = self.marche_transformer
-        elif objet_type == "concession":
-            self._item_path = "marches.contrat-concession"
-            self._schema = ConcessionSchema
-            self._transformer = self.concession_transformer
-        else:
-            raise ValueError
+        if preload_db:
+            self.load_structures()
+            self.load_lieux()
+            # pas de chargement des accords cadres car
+            # on vide cette table avant chaque ré-import
 
     def cast_jour(self, data: str) -> date:
-        date_format_jour = "%Y-%m-%d"  # eg 2020-05-15
-        return datetime.strptime(data, date_format_jour)
+        return datetime.fromisoformat(data)
 
+    def load_structures(self) -> None:
+        structures = self._session.execute(select(Structure)).scalars()
+        for structure in structures:
+            self._cache_structures[
+                structure.identifiant + structure.type_identifiant
+            ] = structure
+
+    def load_lieux(self) -> None:
+        lieux = self._session.execute(select(Lieu)).scalars()
+        for lieu in lieux:
+            self._cache_lieux[lieu.code + str(lieu.type_code)] = lieu
+
+    def set_acheteur(self, structure: Structure) -> Structure:
+        structure.acheteur = True
+        return structure
+
+    def set_vendeur(self, structure: Structure) -> Structure:
+        structure.vendeur = True
+        return structure
+
+    @cache
     def get_or_create_structure(
         self,
         id: str,
         type_id: str = "SIRET",
-        set_is_acheteur: bool = False,
-        set_is_vendeur: bool = False,
     ) -> Structure:
-        if id + type_id in self._cache_structures.keys():
+        """
+        Récupère la structure ou la créé si elle n'existe pas.
+
+        La méthode va, dans l'ordre d'exécution, rechercher dans :
+         - son @cache
+         - self._cache_structures qui a été chargé depuis la BDD à
+           l'initialisation de l'importateur
+        Si aucun des cas ci-dessus n'a trouvé la structure, alors on la créé.
+        """
+        if (id + type_id) in self._cache_structures.keys():
             return self._cache_structures[id + type_id]
 
-        structure: Structure | None = self._session.execute(
-            select(Structure)
-            .where(Structure.identifiant == id)
-            .where(Structure.type_identifiant == type_id)
-        ).scalar()
-
-        if not structure:
-            structure = Structure(identifiant=id, type_identifiant=type_id)
-
-            if type_id == "SIRET" and self._api_entreprise:
-                data = self._api_entreprise.donnees_etablissement(id)
-
-                if (
-                    data
-                    and data.unite_legale
-                    and data.unite_legale.personne_morale_attributs
-                ):
-                    structure.nom = (
-                        data.unite_legale.personne_morale_attributs.raison_sociale
-                    )
-
-        if set_is_acheteur:
-            structure.acheteur = True
-        if set_is_vendeur:
-            structure.vendeur = True
-
-        self._cache_structures[id + type_id] = structure
+        structure = Structure(identifiant=id, type_identifiant=type_id)
+        self._session.add(
+            structure
+        )  # le cascade ne s'applique pas automatiquement en ManyToMany
 
         return structure
 
+    @cache
     def get_or_create_lieu(self, code: str, type_code: TypeCodeLieu) -> Lieu:
+        """
+        Récupère le lieu ou le créé si il n'existe pas.
+
+        La méthode va, dans l'ordre d'exécution, rechercher dans :
+         - son @cache
+         - self._cache_lieux qui a été chargé depuis la BDD à
+           l'initialisation de l'importateur
+        Si aucun des cas ci-dessus n'a trouvé le lieu, alors on le créé.
+        """
         if code + str(type_code.db_value) in self._cache_lieux:
             return self._cache_lieux[code + str(type_code.db_value)]
 
-        lieu = self._session.execute(
-            select(Lieu)
-            .where(Lieu.code == code)
-            .where(Lieu.type_code == type_code.db_value)
-        ).scalar()
-        if not lieu:
-            lieu = Lieu(
-                code=code,
-                type_code=type_code.db_value,
-            )
-        self._cache_lieux[code + str(type_code.db_value)] = lieu
-        return lieu
+        return Lieu(
+            code=code,
+            type_code=type_code.db_value,
+        )
+
+    @cache
+    def get_accord_cadre(self, id: str) -> Marche | None:
+        if id in self._cache_accords_cadre:
+            return self._cache_accords_cadre[id]
+        return None
 
     def marche_transformer(
         self,
         data: MarcheSchema,
     ) -> None:
-        accord_cadre: Marche | None = None
-        # if data.idAccordCadre:
-        #     accord_cadre = self._session.execute(
-        #         select(Marche).where(Marche.id == data.idAccordCadre)
-        #     ).one_or_none()
-
         marche = Marche(
             id=data.id,
-            acheteur=self.get_or_create_structure(
-                id=data.acheteur.id,
-                set_is_acheteur=True,
+            acheteur=self.set_acheteur(
+                self.get_or_create_structure(
+                    id=data.acheteur.id,
+                )
             ),
             nature=data.nature.db_value,
             objet=data.objet,
@@ -199,7 +189,9 @@ class ImportateurDecp:
                 for mod in data.modalitesExecution["modaliteExecution"]
                 if mod.db_value
             ],
-            accord_cadre=accord_cadre,
+            accord_cadre=self.get_accord_cadre(data.idAccordCadre)
+            if data.idAccordCadre
+            else None,
             marche_innovant=data.marcheInnovant if data.marcheInnovant else False,
             ccag=data.ccag.db_value if data.ccag else None,
             offres_recues=data.offresRecues,
@@ -237,10 +229,11 @@ class ImportateurDecp:
             ],
             forme_prix=data.formePrix.db_value if data.formePrix else None,
             titulaires=[
-                self.get_or_create_structure(
-                    t["titulaire"].id,
-                    t["titulaire"].typeIdentifiant,
-                    set_is_vendeur=True,
+                self.set_vendeur(
+                    self.get_or_create_structure(
+                        t["titulaire"].id,
+                        t["titulaire"].typeIdentifiant,
+                    )
                 )
                 for t in data.titulaires
             ],
@@ -260,15 +253,19 @@ class ImportateurDecp:
             ],
         )
 
+        if TechniqueAchat.AC.db_value in marche.techniques_achat:
+            self._cache_accords_cadre[marche.id] = marche
+
         index_actes_sous_traitance: dict[int, ActeSousTraitance] = {}
         for tmp in data.actesSousTraitance:
             dacte: ActeSousTraitanceSchema = tmp["acteSousTraitance"]
             acte = ActeSousTraitance(
                 id=dacte.id,
-                sous_traitant=self.get_or_create_structure(
-                    type_id=dacte.sousTraitant.typeIdentifiant,
-                    id=dacte.sousTraitant.id,
-                    set_is_vendeur=True,
+                sous_traitant=self.set_vendeur(
+                    self.get_or_create_structure(
+                        type_id=dacte.sousTraitant.typeIdentifiant,
+                        id=dacte.sousTraitant.id,
+                    )
                 ),
                 duree_mois=dacte.dureeMois,
                 date_notification=self.cast_jour(dacte.dateNotification),
@@ -313,10 +310,11 @@ class ImportateurDecp:
             titulaires: list[Structure] = []
             if modif.titulaires:
                 titulaires = [
-                    self.get_or_create_structure(
-                        id=titulaire["titulaire"].id,
-                        type_id=titulaire["titulaire"].typeIdentifiant,
-                        set_is_vendeur=True,
+                    self.set_vendeur(
+                        self.get_or_create_structure(
+                            id=titulaire["titulaire"].id,
+                            type_id=titulaire["titulaire"].typeIdentifiant,
+                        )
                     )
                     for titulaire in modif.titulaires
                 ]
@@ -344,9 +342,10 @@ class ImportateurDecp:
     ) -> None:
         concession = ContratConcession(
             id=data.id,
-            autorite_concedante=self.get_or_create_structure(
-                id=data.autoriteConcedante.id,
-                set_is_acheteur=True,
+            autorite_concedante=self.set_acheteur(
+                self.get_or_create_structure(
+                    id=data.autoriteConcedante.id,
+                )
             ),
             nature=data.nature.db_value,
             objet=data.objet,
@@ -385,10 +384,11 @@ class ImportateurDecp:
         for tmp_dc in data.concessionnaires:
             data_concessionnaire: ConcessionnaireSchema = tmp_dc["concessionnaire"]
             concession.concessionnaires.append(
-                self.get_or_create_structure(
-                    id=data_concessionnaire.id,
-                    type_id=data_concessionnaire.typeIdentifiant,
-                    set_is_vendeur=True,
+                self.set_vendeur(
+                    self.get_or_create_structure(
+                        id=data_concessionnaire.id,
+                        type_id=data_concessionnaire.typeIdentifiant,
+                    )
                 )
             )
 
@@ -408,7 +408,6 @@ class ImportateurDecp:
                 )
             )
         self._session.add(concession)
-        self._session.commit()
 
     def build_entite_erreur(
         self, e: ValidationError | CustomValidationError, o: dict[str, Any]
@@ -420,9 +419,6 @@ class ImportateurDecp:
 
         decp = DecpMalForme(decp=json.dumps(o, default=decimal_serializer))
         for erreur in e.errors():
-            # print(
-            #     f"> {erreur["type"]} - {".".join(str(v) for v in erreur["loc"])} - {erreur["msg"]}"
-            # )
             decp.erreurs.append(
                 Erreur(
                     type=erreur["type"],
@@ -432,41 +428,86 @@ class ImportateurDecp:
             )
         return decp
 
-    def importer(self) -> "ImportateurDecp":
-        with rich.progress.open(self._file, "rb") as f:
-            liste = ijson.items(f, f"{self._item_path}.item")  # flux objet par objet
+    def _importer(
+        self,
+        file: str,
+        item_path: str,
+        schema: type[MarcheSchema] | type[ConcessionSchema],
+        transformer: Callable[[ConcessionSchema], Any] | Callable[[MarcheSchema], Any],
+        batch_commit_size: int = 50_000,
+    ) -> None:
+        # (ré)Initialisation des valeurs de suivi
+        self._valid_objects = 0
+        self._invalid_objects = 0
+        self._started_at = time.time()
+
+        # Import
+        batch_size: int = 0
+        with rich.progress.open(file, "rb") as f:
+            liste = ijson.items(f, f"{item_path}.item")  # flux objet par objet
             for objet in liste:
                 try:
-                    self._transformer(
-                        self._schema.model_validate(objet)  # type: ignore
+                    transformer(
+                        schema.model_validate(objet)  # type: ignore
                     )
                     self._valid_objects += 1
                 except (ValidationError, CustomValidationError) as e:
                     self._session.add(self.build_entite_erreur(e, objet))
                     self._invalid_objects += 1
+
+                batch_size += 1
+                if batch_size >= batch_commit_size:
+                    log.info(f"💾 Commit de {batch_size} objets")
+                    self._session.commit()
+                    batch_size = 0
+
         self._session.commit()
         self._finished_at = time.time()
-        return self
 
-    def print_stats(self) -> None:
         if self._valid_objects + self._invalid_objects:
-            log.info(f"Terminé en {round(self._finished_at - self._started_at, 2)}s")
-            log.info(f"Objets valides : {self._valid_objects}")
+            log.info(f"⌚ Terminé en {round(self._finished_at - self._started_at, 2)}s")
+            log.info(f"✅ Objets valides : {self._valid_objects}")
             log.info(
-                f"Objets invalides : {self._invalid_objects} ({round(self._invalid_objects * 100 / (self._valid_objects + self._invalid_objects))}%)"
+                f"❌ Objets invalides : {self._invalid_objects} ({round(self._invalid_objects * 100 / (self._valid_objects + self._invalid_objects))}%)"
             )
+
+    def importer_marches(
+        self,
+        file: str,
+        batch_commit_size: int = 100_000,
+    ) -> None:
+        self._importer(
+            file=file,
+            item_path="marches.marche",
+            schema=MarcheSchema,
+            transformer=self.marche_transformer,
+            batch_commit_size=batch_commit_size,
+        )
+
+    def importer_concessions(
+        self,
+        file: str,
+        batch_commit_size: int = 100_000,
+    ) -> None:
+        self._importer(
+            file=file,
+            item_path="marches.contrat-concession",
+            schema=ConcessionSchema,
+            transformer=self.concession_transformer,
+            batch_commit_size=batch_commit_size,
+        )
 
 
 @app.command()
-def importer(import_de_0: bool = False) -> None:  # pragma: no cover
+def decps(import_de_0: bool = False) -> None:  # pragma: no cover
     if import_de_0:
-        log.info(
-            "Nettoyage totale de la base de données (suppression de toutes les tables et recréation)"
-        )
-        Base.metadata.drop_all(get_engine())  # ToDo remove after tests
+        log.info("🧹 Suppression totale de la base de données")
+        Base.metadata.drop_all(get_engine())
         get_engine()
     else:
-        log.info("Suppression partielle de la base de données")
+        log.info(
+            "🧹 Suppression partielle de la base de données (lieux et structures conservés)"
+        )
         with get_engine().connect() as connexion:
             tables: list[str] = [
                 marche_titulaire_table.name,
@@ -483,43 +524,71 @@ def importer(import_de_0: bool = False) -> None:  # pragma: no cover
                 str(Erreur.__tablename__),
                 str(DecpMalForme.__tablename__),
             ]
-
             connexion.execute(
                 text(f"TRUNCATE TABLE {', '.join(tables)} RESTART IDENTITY")
             )
+            connexion.commit()
 
-    working_path: str = "./data/"
-    for raw_file in track(os.listdir(working_path)):
-        if raw_file == "tmp":
-            continue
+    WORKING_PATH: str = "./data/"
 
-        log.info(f"Détection de {working_path}{raw_file}")
+    with Session(get_engine()) as session:
+        importateur = ImportateurDecp(session=session)
 
-        log.info("Nettoyage du JSON")
-        tmp: str = f"{working_path}tmp"
-        f = open(tmp, "w")
-        with open(f"{working_path}{raw_file}", "r", errors="ignore") as myFile:
-            for line in myFile:
-                line = line.replace("NaN", "null")
-                f.write(line)
-        f.close()
+        for raw_file in track(os.listdir(WORKING_PATH)):
+            if raw_file == "tmp":
+                continue
 
-        with Session(get_engine()) as session:
-            log.info("Import des marchés")
-            ImportateurDecp(
-                session=session,
-                file=tmp,
-                objet_type="marche",
-                api_entreprise=get_api_entreprise(get_config()),
-            ).importer().print_stats()
+            log.info(f"📂 Détection de {WORKING_PATH}{raw_file}")
 
-            log.info("Import des concessions")
-            ImportateurDecp(
-                session=session,
-                file=tmp,
-                objet_type="concession",
-                api_entreprise=get_api_entreprise(get_config()),
-            ).importer().print_stats()
+            log.info("✨ Nettoyage du JSON")
+            tmp: str = f"{WORKING_PATH}tmp"
+            f = open(tmp, "w")
+            with open(f"{WORKING_PATH}{raw_file}", "r", errors="ignore") as myFile:
+                for line in myFile:
+                    line = line.replace("NaN", "null")
+                    f.write(line)
+            f.close()
+
+            log.info("🔄 Import des marchés")
+            importateur.importer_marches(file=tmp)
+
+            log.info("🔄 Import des concessions")
+            importateur.importer_concessions(file=tmp)
+
+
+@app.command()
+def noms_structures() -> None:
+    api = get_api_entreprise(get_config())
+    with Session(get_engine()) as session:
+        structures = list(
+            session.execute(
+                select(Structure)
+                .where(Structure.nom.is_(None), Structure.type_identifiant == "SIRET")
+                .order_by(desc(Structure.uid))
+            ).scalars()
+        )
+        log.info(f"{len(structures)} structures sans nom détectées")
+
+        nb: int = 0
+        for structure in track(structures):
+            data = api.donnees_etablissement(structure.identifiant)
+            if (
+                data
+                and data.unite_legale
+                and data.unite_legale.personne_morale_attributs
+            ):
+                structure.nom = (
+                    data.unite_legale.personne_morale_attributs.raison_sociale
+                )
+                session.add(structure)
+                log.debug(structure.nom)
+                nb += 1
+                if nb > 500:
+                    log.info("💾 Commit de 500 objets")
+                    nb = 0
+                    session.commit()
+
+        session.commit()
 
 
 if __name__ == "__main__":

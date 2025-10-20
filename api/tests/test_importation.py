@@ -6,46 +6,35 @@ from sqlalchemy import select
 from app.importation import ImportateurDecp
 from app.models.db import ContratConcession, DecpMalForme, Marche
 from app.models.enums import TypeCodeLieu
-
-from .factories import LieuFactory
+from tests.factories import LieuFactory
 
 
 def test_cast_jour():
-    i = ImportateurDecp(None, None, "marche")
+    i = ImportateurDecp(None, preload_db=False)
     assert i.cast_jour("2020-05-15") == datetime(2020, 5, 15)
 
 
 def test_get_or_create_lieu(db):
-    i = ImportateurDecp(db, None, objet_type="marche")
+    existing_lieu = LieuFactory.create(type_code=TypeCodeLieu.COMMUNE.db_value)
 
-    existing_lieu = LieuFactory.create(type_code=TypeCodeLieu.DEP.db_value)
+    i = ImportateurDecp(db)
 
-    i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # nouveau lieu créé
-    i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # cache utilisé
-    i.get_or_create_lieu(existing_lieu.code, TypeCodeLieu.DEP)  # existant en bdd
+    lieu1 = i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # nouveau lieu créé
+    lieu2 = i.get_or_create_lieu("35", TypeCodeLieu.DEP)  # @cache utilisé
+    assert lieu1 == lieu2
 
-    assert len(i._cache_lieux) == 2
+    lieu3 = i.get_or_create_lieu(
+        existing_lieu.code, TypeCodeLieu.COMMUNE
+    )  # pré-chargé dans le cache
+    assert lieu3 == existing_lieu
 
 
-def test_importation_marche_succes(db, mocker):
-    data_mock = mocker.Mock()
-    data_mock.unite_legale.personne_morale_attributs.raison_sociale = "UneEntreprise"
-
-    api_entreprise_mock = mocker.Mock()
-    api_entreprise_mock.donnees_etablissement.return_value = data_mock
-
-    i = ImportateurDecp(
-        session=db,
-        file="tests/files/liste_marches_valides.json",
-        objet_type="marche",
-        api_entreprise=api_entreprise_mock,
-    )
-    i.importer()
+def test_importation_marche_succes(db):
+    i = ImportateurDecp(session=db)
+    i.importer_marches(file="tests/files/liste_marches_valides.json")
 
     marches_crees = list(db.execute(select(Marche)).scalars())
     assert len(marches_crees) == 3
-
-    assert api_entreprise_mock.donnees_etablissement.called
 
     # `marche1` est un exemple avec tous les champs existants remplis
     # On s'assure que toutes les données sont bien utilisées et retrouvées ensuite dans la BDD
@@ -53,7 +42,6 @@ def test_importation_marche_succes(db, mocker):
     assert marche1.id == "2021T00000"
     assert marche1.acheteur.identifiant == "13579135791357"
     assert marche1.acheteur.type_identifiant == "SIRET"
-    assert marche1.acheteur.nom == "UneEntreprise"
     assert marche1.acheteur.vendeur is False
     assert marche1.acheteur.acheteur is True
     assert marche1.nature == 1
@@ -80,7 +68,6 @@ def test_importation_marche_succes(db, mocker):
     assert len(marche1.titulaires) == 1
     assert marche1.titulaires[0].identifiant == "12345678991230"
     assert marche1.titulaires[0].type_identifiant == "SIRET"
-    assert marche1.titulaires[0].nom == "UneEntreprise"
     assert marche1.considerations_sociales == []
     assert marche1.considerations_environnementales == []
     assert len(marche1.modifications) == 2
@@ -91,14 +78,12 @@ def test_importation_marche_succes(db, mocker):
     assert len(marche1.modifications[0].titulaires) == 1
     assert marche1.modifications[0].titulaires[0].identifiant == "12345678991230"
     assert marche1.modifications[0].titulaires[0].type_identifiant == "SIRET"
-    assert marche1.modifications[0].titulaires[0].nom == "UneEntreprise"
     assert marche1.modifications[0].titulaires[0].acheteur is False
     assert marche1.modifications[0].titulaires[0].vendeur is True
     assert len(marche1.actes_sous_traitance) == 1
     assert marche1.actes_sous_traitance[0].id == 1010
     assert marche1.actes_sous_traitance[0].sous_traitant.identifiant == "12365478962145"
     assert marche1.actes_sous_traitance[0].sous_traitant.type_identifiant == "SIRET"
-    assert marche1.actes_sous_traitance[0].sous_traitant.nom == "UneEntreprise"
     assert marche1.actes_sous_traitance[0].date_notification == date(2025, 6, 1)
     assert marche1.actes_sous_traitance[0].date_publication == date(2025, 6, 3)
     assert marche1.actes_sous_traitance[0].montant == Decimal("5.66E7")
@@ -119,12 +104,8 @@ def test_importation_marche_succes(db, mocker):
 
 
 def test_importation_concession_succes(db):
-    i = ImportateurDecp(
-        session=db,
-        file="tests/files/liste_concessions_valides.json",
-        objet_type="concession",
-    )
-    i.importer()
+    i = ImportateurDecp(session=db)
+    i.importer_concessions(file="tests/files/liste_concessions_valides.json")
 
     concessions_crees = list(db.execute(select(ContratConcession)).scalars())
     assert len(concessions_crees) == 2
@@ -167,12 +148,8 @@ def test_importation_concession_succes(db):
 
 
 def test_importation_erreur(db):
-    i = ImportateurDecp(
-        session=db,
-        file="tests/files/liste_pour_erreurs.json",
-        objet_type="marche",
-    )
-    i.importer()
+    i = ImportateurDecp(session=db)
+    i.importer_marches(file="tests/files/liste_pour_erreurs.json")
 
     decp_mal_formes = list(db.execute(select(DecpMalForme)).scalars())
     assert len(decp_mal_formes) == 1

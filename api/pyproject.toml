@@ -7,7 +7,7 @@ dependencies = [
     "pydantic",
     "pydantic-settings",
     "fastapi[standard]",
-    "psycopg[binary]",
+    "psycopg2-binary",
     "sqlalchemy",
     "ijson",
     "api-entreprise>=3",
