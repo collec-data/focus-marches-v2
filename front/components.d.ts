@@ -17,6 +17,7 @@ declare module 'vue' {
     DatePicker: typeof import('primevue/datepicker')['default']
     Departements: typeof import('./src/components/dashboard/Departements.vue')['default']
     DetailsAcheteur: typeof import('./src/components/DetailsAcheteur.vue')['default']
+    DetailsFournisseur: typeof import('./src/components/DetailsFournisseur.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
     DistributionTemporelleMarches: typeof import('./src/components/dashboard/DistributionTemporelleMarches.vue')['default']
     FiltreDates: typeof import('./src/components/FiltreDates.vue')['default']
@@ -30,15 +31,16 @@ declare module 'vue' {
     InputText: typeof import('primevue/inputtext')['default']
     LeafletMap: typeof import('./src/components/LeafletMap.vue')['default']
     ListeMarches: typeof import('./src/components/ListeMarches.vue')['default']
+    Message: typeof import('primevue/message')['default']
     NatureContrats: typeof import('./src/components/dashboard/NatureContrats.vue')['default']
     Panel: typeof import('primevue/panel')['default']
     Procedure: typeof import('./src/components/dashboard/Procedure.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SelectButton: typeof import('primevue/selectbutton')['default']
-    Toast: typeof import('primevue/toast')['default']
-  }
-  export interface GlobalDirectives {
-    StyleClass: typeof import('primevue/styleclass')['default']
+    Tab: typeof import('primevue/tab')['default']
+    TabList: typeof import('primevue/tablist')['default']
+    TabPanel: typeof import('primevue/tabpanel')['default']
+    TabPanels: typeof import('primevue/tabpanels')['default']
+    Tabs: typeof import('primevue/tabs')['default']
   }
 }

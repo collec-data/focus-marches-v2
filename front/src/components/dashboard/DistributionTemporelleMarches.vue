@@ -42,7 +42,8 @@ function fetchData() {
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,
-            acheteur_uid: props.acheteurUid
+            acheteur_uid: props.acheteurUid,
+            vendeur_uid: props.vendeurUid
         }
     }).then((response) => {
         if (response.data) {
