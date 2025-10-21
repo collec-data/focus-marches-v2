@@ -5,6 +5,7 @@ import { onMounted, ref, watch } from 'vue';
 import Graph from '../Graph.vue';
 
 import type { MarcheProcedureDtoOutput } from '@/client';
+import { okabe_ito } from '@/service/GraphColorsService';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
@@ -38,7 +39,8 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<P
             y: longLabelsBreaker(labels),
             x: data,
             type: 'bar',
-            orientation: 'h'
+            orientation: 'h',
+            marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
         }
     ];
 }

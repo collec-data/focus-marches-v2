@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getMarchesParCcagMarcheCcagGet } from '@/client';
+import { okabe_ito } from '@/service/GraphColorsService';
 import { longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
@@ -40,7 +41,8 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<P
             y: longLabelsBreaker(labels),
             x: data,
             type: 'bar',
-            orientation: 'h'
+            orientation: 'h',
+            marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
         }
     ];
 }
