@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { listAcheteursStructureAcheteurGet } from '@/client';
-import { formatCurrency } from '@/service/HelpersService';
+import { formatCurrency, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 import type { StructureAggMarchesDtoOutput } from '@/client';
@@ -17,7 +17,7 @@ function transform(input: Array<StructureAggMarchesDtoOutput>) {
         montants: [] as Array<string>
     };
     for (var line of input) {
-        output.structures.push(line.structure.nom);
+        output.structures.push(structureName(line.structure));
         output.montants.push(line.montant);
     }
     return output;
@@ -50,7 +50,7 @@ onMounted(() => {
             <table class="basis-1/3 border-collapse text-right">
                 <tbody>
                     <tr v-for="line in listeAcheteurs" :key="line.structure.uid">
-                        <th>{{ line.structure.nom }}</th>
+                        <th>{{ structureName(line.structure) }}</th>
                         <td>{{ formatCurrency(parseFloat(line.montant)) }}</td>
                     </tr>
                 </tbody>
