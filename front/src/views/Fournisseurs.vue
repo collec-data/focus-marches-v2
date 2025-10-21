@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { listVendeursStructureVendeurGet } from '@/client';
-import { formatCurrency } from '@/service/HelpersService';
+import { formatCurrency, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
 
@@ -62,7 +62,7 @@ onMounted(() => {
             </Column>
             <Column field="structure" header="Nom" sortable>
                 <template #body="slotProps">
-                    <RouterLink :to="'/fournisseur/' + slotProps.data.structure.uid">{{ slotProps.data.structure.nom }} {{ slotProps.data.structure.identifiant }} </RouterLink>
+                    <RouterLink :to="'/fournisseur/' + slotProps.data.structure.uid">{{ structureName(slotProps.data.structure) }} </RouterLink>
                 </template>
             </Column>
             <Column field="nb_contrats" header="NB contrats" sortable></Column>

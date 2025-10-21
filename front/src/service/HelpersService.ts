@@ -1,3 +1,5 @@
+import type { StructureDto, StructureEtendueDto } from '@/client';
+
 export const formatCurrency = (value: number) => {
     return value.toLocaleString('fr-FR', { style: 'currency', currency: 'eur' });
 };
@@ -38,4 +40,8 @@ export function longLabelsBreaker(labels: Array<string | null>, length: number =
     return labels.map((e) => {
         return e ? addLineBreak(e, length) : e;
     });
+}
+
+export function structureName(structure: StructureDto | StructureEtendueDto): string {
+    return structure.nom ? structure.nom : structure.type_identifiant + ':' + structure.identifiant;
 }
