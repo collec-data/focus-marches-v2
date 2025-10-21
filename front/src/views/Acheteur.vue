@@ -41,6 +41,7 @@ onMounted(() => {
         <FiltreDates :dateMin :dateMax />
         <IndicateursCles :acheteurUid :dateMin :dateMax />
         <CategoriePrincipaleDAchat :acheteurUid :dateMin :dateMax />
+        <Top12 type="fournisseurs" :acheteurUid :dateMin :dateMax />
         <DistributionTemporelleMarches :acheteurUid :dateMin :dateMax />
         <ListeMarches :acheteurUid :dateMin :dateMax />
         <NatureContrats :acheteurUid :dateMin :dateMax />

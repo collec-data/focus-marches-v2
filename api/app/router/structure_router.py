@@ -3,6 +3,7 @@ from decimal import Decimal
 
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import desc, func, select
+from sqlalchemy.orm import aliased
 
 from app.dependencies import ApiEntrepriseDep, OpenDataSoftDep, SessionDep
 from app.models.db import Marche, Structure
@@ -34,7 +35,11 @@ def list_structures(
 
 @router.get("/acheteur", response_model=list[StructureAggMarchesDto])
 def list_acheteurs(
-    session: SessionDep, limit: int | None = None
+    session: SessionDep,
+    limit: int | None = None,
+    date_debut: date | None = None,
+    date_fin: date | None = None,
+    vendeur_uid: int | None = None,
 ) -> list[dict[str, Decimal | Structure]]:
     stmt = (
         select(
@@ -43,10 +48,22 @@ def list_acheteurs(
             func.count(Marche.id).label("nb_contrats"),
         )
         .join(Structure.marches_acheteurs)
-        .group_by(Structure.uid)
         .where(Structure.acheteur.is_(True))
-        .order_by(desc("montant"))
     )
+
+    if vendeur_uid:
+        titulaires = aliased(Structure)
+        stmt = stmt.outerjoin(titulaires, Marche.titulaires).where(
+            titulaires.uid == vendeur_uid
+        )
+
+    if date_debut:
+        stmt = stmt.where(Marche.date_notification >= date_debut)
+
+    if date_fin:
+        stmt = stmt.where(Marche.date_notification <= date_fin)
+
+    stmt = stmt.group_by(Structure.uid).order_by(desc("montant"))
 
     if limit:
         stmt = stmt.limit(limit)
@@ -59,7 +76,11 @@ def list_acheteurs(
 
 @router.get("/vendeur", response_model=list[StructureAggMarchesDto])
 def list_vendeurs(
-    session: SessionDep, limit: int | None = None
+    session: SessionDep,
+    limit: int | None = None,
+    acheteur_uid: int | None = None,
+    date_debut: date | None = None,
+    date_fin: date | None = None,
 ) -> list[dict[str, Structure | Decimal | int]]:
     stmt = (
         select(
@@ -68,10 +89,18 @@ def list_vendeurs(
             func.count(Marche.id).label("nb_contrats"),
         )
         .join(Structure.marches_vendeur)
-        .group_by(Structure.uid)
         .where(Structure.vendeur.is_(True))
-        .order_by(desc("montant"))
     )
+    if acheteur_uid:
+        stmt = stmt.where(Marche.uid_acheteur == acheteur_uid)
+
+    if date_debut:
+        stmt = stmt.where(Marche.date_notification >= date_debut)
+
+    if date_fin:
+        stmt = stmt.where(Marche.date_notification <= date_fin)
+
+    stmt = stmt.group_by(Structure.uid).order_by(desc("montant"))
 
     if limit:
         stmt = stmt.limit(limit)
