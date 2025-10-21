@@ -39,6 +39,7 @@ class StructureEtendueDto(StructureDto):
     date_effectifs: int | None = None
     lon: float | None = None
     lat: float | None = None
+    date_creation: date | None = None
 
 
 class ActeSousTraitanceDto(BaseModel):

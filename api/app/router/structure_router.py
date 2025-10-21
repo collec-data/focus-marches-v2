@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 
 from fastapi import APIRouter, HTTPException
@@ -94,5 +95,10 @@ def get_structure(
             geoloc = opendatasoft.getCoordonnees(structure.identifiant)
             structure_dto.lon = geoloc["lon"]
             structure_dto.lat = geoloc["lat"]
+            structure_dto.date_creation = (
+                date.fromtimestamp(float(details.date_creation))
+                if details.date_creation
+                else None
+            )
 
     return structure_dto
