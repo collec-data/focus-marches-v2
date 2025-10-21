@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getStructureStructureUidGet, type StructureEtendueDto } from '@/client';
+import { formatDate } from '@/service/HelpersService';
 import { onMounted, ref, watchEffect } from 'vue';
 
 import type { PropType } from 'vue';
@@ -38,7 +39,7 @@ onMounted(() => {
                     </tr>
                     <tr>
                         <th>Date création</th>
-                        <td></td>
+                        <td>{{ acheteur.date_creation ? formatDate(acheteur.date_creation) : '' }}</td>
                     </tr>
                     <tr>
                         <th>Sigle</th>
