@@ -1,36 +1,35 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
 import { getStructureStructureUidGet } from '@/client';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const acheteurUid = route.params.uid as string;
+const acheteurUid = ref(route.params.uid as string);
 
 const acheteur = ref<Partial<StructureEtendueDto>>({});
 
+const dateMin = computed(() => {
+    return route.query.dateMin ? new Date(route.query.dateMin as string) : null;
+});
+const dateMax = computed(() => {
+    return route.query.dateMax ? new Date(route.query.dateMax as string) : null;
+});
+
 function fetchData() {
-    getStructureStructureUidGet({ path: { uid: parseInt(acheteurUid) } }).then((response) => {
+    getStructureStructureUidGet({ path: { uid: parseInt(acheteurUid.value) } }).then((response) => {
         if (response.data) {
             acheteur.value = response.data;
         }
     });
 }
 
-watch([() => acheteurUid, () => route.query?.dateMin, () => route.query?.dateMax], () => {
-    dates.value.max = route.query?.dateMax ? new Date(route.query.dateMax as string) : null;
-    dates.value.min = route.query?.dateMin ? new Date(route.query.dateMin as string) : null;
-
+watch(acheteurUid, () => {
     fetchData();
 });
 
 onMounted(() => {
     fetchData();
-});
-
-const dates = ref({
-    min: route.query?.dateMin ? new Date(route.query.dateMin as string) : null,
-    max: route.query?.dateMax ? new Date(route.query.dateMax as string) : null
 });
 </script>
 
@@ -39,12 +38,12 @@ const dates = ref({
         <h1>Tableau de bord de l'acheteur : {{ acheteur.nom }}</h1>
         <p>Cette page vous présente les données essentielles du profil d'acheteur de {{ acheteur.nom }} , enrichies avec des données complémentaires.</p>
         <DetailsAcheteur :acheteur />
-        <FiltreDates :dateMin="dates.min" :dateMax="dates.max" />
-        <IndicateursCles :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
-        <DistributionTemporelleMarches :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
-        <ListeMarches :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
-        <NatureContrats :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
-        <CCAG :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
-        <Procedure :acheteurUid :dateMin="dates.min" :dateMax="dates.max" />
+        <FiltreDates :dateMin :dateMax />
+        <IndicateursCles :acheteurUid :dateMin :dateMax />
+        <DistributionTemporelleMarches :acheteurUid :dateMin :dateMax />
+        <ListeMarches :acheteurUid :dateMin :dateMax />
+        <NatureContrats :acheteurUid :dateMin :dateMax />
+        <CCAG :acheteurUid :dateMin :dateMax />
+        <Procedure :acheteurUid :dateMin :dateMax />
     </main>
 </template>

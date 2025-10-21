@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import { getListeMarchesMarcheGetResponseTransformer, getMarcheMarcheUidGetResponseTransformer } from './transformers.gen';
+import { getListeMarchesMarcheGetResponseTransformer, getMarcheMarcheUidGetResponseTransformer, getStructureStructureUidGetResponseTransformer } from './transformers.gen';
 import type { GetErreursImportErreursImportGetData, GetErreursImportErreursImportGetErrors, GetErreursImportErreursImportGetResponses, GetIndicateursMarcheIndicateursGetData, GetIndicateursMarcheIndicateursGetErrors, GetIndicateursMarcheIndicateursGetResponses, GetListeConcessionsContratConcessionGetData, GetListeConcessionsContratConcessionGetErrors, GetListeConcessionsContratConcessionGetResponses, GetListeMarchesMarcheGetData, GetListeMarchesMarcheGetErrors, GetListeMarchesMarcheGetResponses, GetMarcheMarcheUidGetData, GetMarcheMarcheUidGetErrors, GetMarcheMarcheUidGetResponses, GetMarchesParCcagMarcheCcagGetData, GetMarchesParCcagMarcheCcagGetErrors, GetMarchesParCcagMarcheCcagGetResponses, GetMarchesParDepartementMarcheDepartementGetData, GetMarchesParDepartementMarcheDepartementGetResponses, GetMarchesParNatureMarcheNatureGetData, GetMarchesParNatureMarcheNatureGetErrors, GetMarchesParNatureMarcheNatureGetResponses, GetMarchesParProcedureMarcheProcedureGetData, GetMarchesParProcedureMarcheProcedureGetErrors, GetMarchesParProcedureMarcheProcedureGetResponses, GetStatsErreursErreursImportStatsGetData, GetStatsErreursErreursImportStatsGetResponses, GetStructureStructureUidGetData, GetStructureStructureUidGetErrors, GetStructureStructureUidGetResponses, ListAcheteursStructureAcheteurGetData, ListAcheteursStructureAcheteurGetErrors, ListAcheteursStructureAcheteurGetResponses, ListVendeursStructureVendeurGetData, ListVendeursStructureVendeurGetErrors, ListVendeursStructureVendeurGetResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
@@ -146,6 +146,7 @@ export const listVendeursStructureVendeurGet = <ThrowOnError extends boolean = f
  */
 export const getStructureStructureUidGet = <ThrowOnError extends boolean = false>(options: Options<GetStructureStructureUidGetData, ThrowOnError>) => {
     return (options.client ?? client).get<GetStructureStructureUidGetResponses, GetStructureStructureUidGetErrors, ThrowOnError>({
+        responseTransformer: getStructureStructureUidGetResponseTransformer,
         url: '/structure/{uid}',
         ...options
     });

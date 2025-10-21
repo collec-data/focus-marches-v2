@@ -75,6 +75,7 @@ def test_get_structure(client, mocker):
     data_mock.unite_legale.activite_principale.code = "00.00Z"
     data_mock.unite_legale.tranche_effectif_salarie.intitule = "20 à 40"
     data_mock.unite_legale.tranche_effectif_salarie.date_reference = "2025"
+    data_mock.date_creation = "123456"
 
     api_entreprise_mock = mocker.Mock()
     api_entreprise_mock.donnees_etablissement.return_value = data_mock
