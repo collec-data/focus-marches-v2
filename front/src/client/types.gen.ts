@@ -888,6 +888,10 @@ export type StructureEtendueDto = {
      * Lat
      */
     lat?: number | null;
+    /**
+     * Date Creation
+     */
+    date_creation?: Date | null;
 };
 
 /**
