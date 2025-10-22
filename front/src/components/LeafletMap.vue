@@ -2,9 +2,9 @@
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Should be called after leaflet.css
-import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
-
+// Should be called after leaflet
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility';
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css';
 import { onMounted, ref, toRaw, useId, watchEffect } from 'vue';
 
 const props = defineProps({
