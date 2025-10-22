@@ -17,7 +17,7 @@ async function genUrl() {
         ...(props.acheteurUid ? { acheteurUid: props.acheteurUid } : null),
         ...route.query
     }).toString();
-    let url = '<iframe src="' + window.origin + '/widget/' + props.path + '?' + query + '" referrerpolicy="strict-origin-when-cross-origin" style="border: 0; overflow: hidden;" title="' + props.name + '" width="100%" height="600px"></iframe>';
+    let url = '<iframe src="' + window.origin + '/widget/' + props.path + '?' + query + '" referrerpolicy="strict-origin-when-cross-origin" style="border: 0; overflow: hidden;" title="' + props.name + '"></iframe>';
     await navigator.clipboard.writeText(url);
     label.value = 'Copié dans le presse-papier !';
 }
