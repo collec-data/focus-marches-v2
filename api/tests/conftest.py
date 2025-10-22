@@ -24,7 +24,7 @@ class FocusPostgresContainer(PostgresContainer):
     def __init__(self):
         self.__image_name = "postgres:latest"
         return super(FocusPostgresContainer, self).__init__(
-            image=self.__image_name, driver="psycopg"
+            image=self.__image_name, driver="psycopg2"
         )
 
 

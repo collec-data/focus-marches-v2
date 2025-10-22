@@ -7,13 +7,14 @@ dependencies = [
     "pydantic",
     "pydantic-settings",
     "fastapi[standard]",
-    "psycopg[binary]",
+    "psycopg2-binary",
     "sqlalchemy",
     "ijson",
     "api-entreprise>=3",
     "redis~=4.3",
     "pyrate-limiter~=2.10",
     "marshmallow~=3.19",
+    "typer~=0.19",
 ]
 
 [project.optional-dependencies]

@@ -101,10 +101,8 @@ pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
-psycopg[binary]==3.2.11
+psycopg2-binary==2.9.11
     # via focus-marche-v2 (pyproject.toml)
-psycopg-binary==3.2.11
-    # via psycopg
 pydantic[email]==2.12.3
     # via
     #   fastapi
@@ -179,6 +177,7 @@ typer==0.19.2
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
+    #   focus-marche-v2 (pyproject.toml)
 types-requests==2.32.4.20250913
     # via focus-marche-v2 (pyproject.toml)
 typing-extensions==4.15.0
