@@ -71,7 +71,18 @@ function hideMarcheModal() {
     <section>
         <h2 class="title">Tous les marchés de ...</h2>
         <p>Ce tableau affiche les principales informations des marchés de ... . Cliquez sur "Voir" pour accéder au détail de chaque marché.</p>
-        <DataTable v-model:filters="filters" :value="listeMarches" sortField="date_notification" :sortOrder="-1" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]">
+        <DataTable
+            v-model:filters="filters"
+            :value="listeMarches"
+            sortField="date_notification"
+            :sortOrder="-1"
+            size="small"
+            stripedRows
+            paginator
+            :rows="10"
+            :rowsPerPageOptions="[10, 25, 50]"
+            :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
+        >
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2">
@@ -87,13 +98,13 @@ function hideMarcheModal() {
                     </div>
                 </div>
             </template>
-            <Column header="Détails" sortable>
+            <Column header="Détails">
                 <template #body="{ data }"> <Button label="Voir" aria-label="Voir les détails du marché" @click="openMarcheModal(data.uid)" /> </template
             ></Column>
             <Column field="cpv" header="CPV" sortable></Column>
-            <Column field="objet" header="Objet" sortable></Column>
+            <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
             <Column v-if="acheteurUid == null" field="acheteur.nom" header="Acheteur" sortable></Column>
-            <Column field="" header="Fournisseur" sortable>
+            <Column header="Fournisseur">
                 <template #body="{ data }">
                     <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ titulaire.nom ? titulaire.nom : titulaire.type_identifiant + ' ' + titulaire.identifiant }}</div>
                 </template>
@@ -109,7 +120,7 @@ function hideMarcheModal() {
                     {{ countSousTraitants(data.actes_sous_traitance) }}
                 </template></Column
             >
-            <Column field="considerations_environnementales" header="Considérations environnementales" sortable>
+            <Column field="considerations_environnementales" header="Considérations environnement" sortable>
                 <template #body="{ data }">
                     {{ formatBoolean(data.considerations_environnementales?.length > 0) }}
                 </template>

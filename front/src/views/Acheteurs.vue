@@ -58,7 +58,7 @@ onMounted(() => {
             <Column field="structure.nom" header="Nom" sortable>
                 <template #body="slotProps">
                     <RouterLink :to="'/acheteur/' + slotProps.data.structure.uid">
-                        {{ structureName(slotProps.data.structure) }}
+                        <Button :label="structureName(slotProps.data.structure)" as="a" variant="link" />
                     </RouterLink>
                 </template>
             </Column>
