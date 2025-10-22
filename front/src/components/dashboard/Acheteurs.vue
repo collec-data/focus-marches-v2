@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { listAcheteursStructureAcheteurGet } from '@/client';
+import { okabe_ito } from '@/service/GraphColorsService';
 import { formatCurrency, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
@@ -34,7 +35,8 @@ onMounted(() => {
                 {
                     x: rawData.structures,
                     y: rawData.montants,
-                    type: 'bar'
+                    type: 'bar',
+                    marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
                 }
             ];
         }

@@ -4,6 +4,7 @@ import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { MarcheNatureDtoOutput } from '@/client';
+import { okabe_ito } from '@/service/GraphColorsService';
 import type Plotly from 'plotly.js-dist';
 
 const props = defineProps({
@@ -42,12 +43,13 @@ const defenseData = ref<Partial<Plotly.Data>[]>();
 const layout = { margin: { t: 0, r: 0, b: 20 } } as Partial<Plotly.Layout>;
 const config = { displayModeBar: false } as Partial<Plotly.Config>;
 
-function makeGraph(labels: Array<string | null>, data: Array<number>): Array<Partial<Plotly.PlotData>> {
+function makeGraph(labels: Array<string | null>, data: Array<number>, color: string): Array<Partial<Plotly.PlotData>> {
     return [
         {
             x: labels,
             y: data,
-            type: 'bar'
+            type: 'bar',
+            marker: { color: color, line: { color: color, width: 1 } }
         }
     ];
 }
@@ -63,9 +65,9 @@ function fetchData() {
     }).then((data) => {
         if (data.data) {
             let rawData = transform(data.data);
-            marcheData.value = makeGraph(rawData[0].labels, rawData[0].values);
-            partenariatData.value = makeGraph(rawData[1].labels, rawData[1].values);
-            defenseData.value = makeGraph(rawData[2].labels, rawData[2].values);
+            marcheData.value = makeGraph(rawData[0].labels, rawData[0].values, okabe_ito[0]);
+            partenariatData.value = makeGraph(rawData[1].labels, rawData[1].values, okabe_ito[1]);
+            defenseData.value = makeGraph(rawData[2].labels, rawData[2].values, okabe_ito[2]);
         }
     });
 }

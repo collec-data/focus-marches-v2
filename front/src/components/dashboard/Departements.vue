@@ -4,6 +4,7 @@ import { getNomDepartement } from '@/service/Departements';
 import { onMounted, ref } from 'vue';
 
 import type { MarcheDepartementDtoOutput } from '@/client';
+import { okabe_ito } from '@/service/GraphColorsService';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const montaData = ref<Partial<PlotData>[]>();
@@ -16,7 +17,8 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Array<Par
             y: labels,
             x: data,
             type: 'bar',
-            orientation: 'h'
+            orientation: 'h',
+            marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
         }
     ];
 }
