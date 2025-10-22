@@ -31,7 +31,7 @@ onMounted(() => {
     watchEffect(() => {
         removeChart();
         if (props.data) {
-            Plotly.newPlot(chartId, props.data, props.layout, props.config).then(() => {
+            Plotly.newPlot(chartId, props.data, props.layout, { ...props.config, ...{ responsive: true } }).then(() => {
                 chartRendered = true;
             });
         }
