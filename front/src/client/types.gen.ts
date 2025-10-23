@@ -410,6 +410,7 @@ export type MarcheAllegeDtoOutput = {
  */
 export type MarcheCcagDtoInput = {
     ccag: Ccag | null;
+    categorie: CategorieMarche;
     /**
      * Montant
      */
@@ -425,6 +426,7 @@ export type MarcheCcagDtoInput = {
  */
 export type MarcheCcagDtoOutput = {
     ccag: Ccag | null;
+    categorie: CategorieMarche;
     /**
      * Montant
      */
