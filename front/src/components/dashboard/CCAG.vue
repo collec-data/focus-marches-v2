@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { getMarchesParCcagMarcheCcagGet } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { longLabelsBreaker } from '@/service/HelpersService';
+import { breakLongLabel } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { MarcheCcagDtoOutput } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
+import { TabList } from 'primevue';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
@@ -13,38 +14,43 @@ const props = defineProps({
     dateMax: { type: [Date, null], default: null }
 });
 
-const montantData = ref<Partial<PlotData>[]>();
-const nombreData = ref<Partial<PlotData>[]>();
-const layout = { margin: { l: 150, t: 0, b: 20, r: 0 } } as Layout;
-
-function transform(input: Array<MarcheCcagDtoOutput>) {
-    let output = {
-        ccags: [] as Array<string>,
-        montants: [] as Array<number>,
-        nombres: [] as Array<number>
-    };
-    for (var line of input) {
-        if (line.ccag) {
-            output.ccags.push(line.ccag);
-        } else {
-            output.ccags.push('Sans CCAG');
-        }
-        output.montants.push(parseFloat(line.montant));
-        output.nombres.push(line.nombre);
-    }
-    return output;
+interface icategorie {
+    montants: Partial<PlotData>[];
+    nombres: Partial<PlotData>[];
+}
+interface idatas {
+    travaux: icategorie;
+    services: icategorie;
+    fournitures: icategorie;
 }
 
-function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<PlotData>[] {
-    return [
-        {
-            y: longLabelsBreaker(labels),
-            x: data,
-            type: 'bar',
-            orientation: 'h',
-            marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
+const datas = ref<Partial<idatas>>({});
+const layout = { margin: { l: 150, t: 0, b: 20, r: 0 } } as Layout;
+
+function transform(input: Array<MarcheCcagDtoOutput>): idatas {
+    const common = {
+        type: 'bar',
+        orientation: 'h',
+        marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
+    };
+    let output = <idatas>{
+        travaux: { montants: [{ x: [], y: [], ...common }], nombres: [{ x: [], y: [], ...common }] },
+        services: { montants: [{ x: [], y: [], ...common }], nombres: [{ x: [], y: [], ...common }] },
+        fournitures: { montants: [{ x: [], y: [], ...common }], nombres: [{ x: [], y: [], ...common }] }
+    };
+    for (var line of input) {
+        const key = line.categorie.toLowerCase();
+        if (line.ccag) {
+            output[key].montants[0].y.push(breakLongLabel(line.ccag));
+            output[key].nombres[0].y.push(breakLongLabel(line.ccag));
+        } else {
+            output[key].montants[0].y.push('Sans CCAG');
+            output[key].nombres[0].y.push('Sans CCAG');
         }
-    ];
+        output[key].montants[0].x.push(parseFloat(line.montant));
+        output[key].nombres[0].x.push(line.nombre);
+    }
+    return output;
 }
 
 function fetchData() {
@@ -56,9 +62,7 @@ function fetchData() {
         }
     }).then((response) => {
         if (response.data) {
-            let data = transform(response.data);
-            montantData.value = makeGraph(data.ccags, data.montants);
-            nombreData.value = makeGraph(data.ccags, data.nombres);
+            datas.value = transform(response.data);
         }
     });
 }
@@ -75,16 +79,51 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
 <template>
     <section>
         <h2 class="title">Cahier des clauses administratives et générales utilisés</h2>
-        <div class="grid grid-cols-12 gap-8">
-            <div class="col-span-12 xl:col-span-6">
-                <h3>Montant des contrats par CCAG</h3>
-                <Graph :data="montantData" :layout />
-            </div>
-            <div class="col-span-12 xl:col-span-6">
-                <h3>Nombre de contrats par CCAG</h3>
-                <Graph :data="nombreData" :layout />
-            </div>
-        </div>
+        <Tabs value="services">
+            <TabList>
+                <Tab value="services">Services</Tab>
+                <Tab value="travaux">Travaux</Tab>
+                <Tab value="fournitures">Fournitures</Tab>
+            </TabList>
+            <TabPanels>
+                <TabPanel value="services">
+                    <div class="grid grid-cols-12 gap-8">
+                        <div class="col-span-12 xl:col-span-6">
+                            <h3>Montant des contrats par CCAG</h3>
+                            <Graph :data="datas.services?.montants" :layout />
+                        </div>
+                        <div class="col-span-12 xl:col-span-6">
+                            <h3>Nombre de contrats par CCAG</h3>
+                            <Graph :data="datas.services?.nombres" :layout />
+                        </div>
+                    </div>
+                </TabPanel>
+                <TabPanel value="travaux">
+                    <div class="grid grid-cols-12 gap-8">
+                        <div class="col-span-12 xl:col-span-6">
+                            <h3>Montant des contrats par CCAG</h3>
+                            <Graph :data="datas.travaux?.montants" :layout />
+                        </div>
+                        <div class="col-span-12 xl:col-span-6">
+                            <h3>Nombre de contrats par CCAG</h3>
+                            <Graph :data="datas.travaux?.nombres" :layout />
+                        </div>
+                    </div>
+                </TabPanel>
+                <TabPanel value="fournitures">
+                    <div class="grid grid-cols-12 gap-8">
+                        <div class="col-span-12 xl:col-span-6">
+                            <h3>Montant des contrats par CCAG</h3>
+                            <Graph :data="datas.fournitures?.montants" :layout />
+                        </div>
+                        <div class="col-span-12 xl:col-span-6">
+                            <h3>Nombre de contrats par CCAG</h3>
+                            <Graph :data="datas.fournitures?.nombres" :layout />
+                        </div>
+                    </div>
+                </TabPanel>
+            </TabPanels>
+        </Tabs>
         <BoutonIframe v-if="acheteurUid" :acheteurUid path="ccag-marches" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
     </section>
 </template>

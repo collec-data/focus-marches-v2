@@ -1,4 +1,5 @@
 import {
+    CategorieMarche,
     Ccag,
     type DecpMalFormeDtoOutput,
     type IndicateursDto,
@@ -57,4 +58,4 @@ export const erreurs: DecpMalFormeDtoOutput[] = [
 
 export const erreursStats: StatsErreursDto[] = [{ erreur: 'Field required', nombre: 1263, localisation: 'offresRecues' }];
 
-export const ccag: MarcheCcagDtoOutput[] = [{ ccag: Ccag.TRAVAUX, montant: '10000', nombre: 123 }];
+export const ccag: MarcheCcagDtoOutput[] = [{ ccag: Ccag.TRAVAUX, montant: '10000', nombre: 123, categorie: CategorieMarche.TRAVAUX }];

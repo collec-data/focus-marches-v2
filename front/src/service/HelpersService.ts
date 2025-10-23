@@ -16,6 +16,21 @@ export const formatDate = (value: Date) => {
     });
 };
 
+function getLastElement(a: Array<string>): string {
+    return a[a.length - 1];
+}
+
+export function breakLongLabel(label: string, max_lenght: number = 15): string {
+    const result = [label];
+    while (getLastElement(result).length > max_lenght && getLastElement(result).indexOf(' ') != -1) {
+        const lastElement = getLastElement(result);
+        const index = lastElement.lastIndexOf(' ', max_lenght);
+        result[result.length - 1] = lastElement.substring(0, index);
+        result.push(lastElement.substring(index + 1));
+    }
+    return result.join('<br>');
+}
+
 /**
  * Insère des retours à la ligne quand les labels sont trop longs
  * @param labels La liste de labels à modifier
@@ -23,22 +38,8 @@ export const formatDate = (value: Date) => {
  * @returns La liste modifiée
  */
 export function longLabelsBreaker(labels: Array<string | null>, length: number = 15): Array<string | null> {
-    function getLastElement(a: Array<string>): string {
-        return a[a.length - 1];
-    }
-
-    function addLineBreak(e: string, length: number): string {
-        const result = [e];
-        while (getLastElement(result).length > length && getLastElement(result).indexOf(' ') != -1) {
-            const lastElement = getLastElement(result);
-            const index = lastElement.lastIndexOf(' ', length);
-            result[result.length - 1] = lastElement.substring(0, index);
-            result.push(lastElement.substring(index + 1));
-        }
-        return result.join('<br>');
-    }
     return labels.map((e) => {
-        return e ? addLineBreak(e, length) : e;
+        return e ? breakLongLabel(e, length) : e;
     });
 }
 

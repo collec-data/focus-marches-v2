@@ -241,13 +241,19 @@ class MarcheNatureDto(BaseModel):
 
 class MarcheCcagDto(BaseModel):
     ccag: CCAG | None
+    categorie: CategorieMarche
     montant: Decimal
     nombre: int
 
     @field_validator("ccag", mode="before")
     @classmethod
-    def transform(cls, v: int) -> CCAG:
+    def transform_ccag(cls, v: int) -> CCAG:
         return CCAG.from_db_value(v)
+
+    @field_validator("categorie", mode="before")
+    @classmethod
+    def transform_cat(cls, v: int) -> CategorieMarche:
+        return CategorieMarche.from_db_value(v)
 
 
 class IndicateursDto(BaseModel):
