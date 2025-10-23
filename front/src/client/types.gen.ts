@@ -87,6 +87,20 @@ export const Ccag = {
 export type Ccag = typeof Ccag[keyof typeof Ccag];
 
 /**
+ * CategorieMarche
+ */
+export const CategorieMarche = {
+    TRAVAUX: 'Travaux',
+    FOURNITURES: 'Fournitures',
+    SERVICES: 'Services'
+} as const;
+
+/**
+ * CategorieMarche
+ */
+export type CategorieMarche = typeof CategorieMarche[keyof typeof CategorieMarche];
+
+/**
  * ConsiderationsEnvironnementales
  */
 export const ConsiderationsEnvironnementales = {
@@ -306,6 +320,7 @@ export type MarcheAllegeDtoInput = {
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
     cpv: string;
+    categorie_as_str: CategorieMarche;
     /**
      * Sous Traitance Declaree
      */
@@ -326,6 +341,14 @@ export type MarcheAllegeDtoInput = {
      * Titulaires
      */
     titulaires: Array<StructureDto>;
+    /**
+     * Considerations Sociales As Str
+     */
+    considerations_sociales_as_str: Array<ConsiderationsSociales>;
+    /**
+     * Considerations Environnementales As Str
+     */
+    considerations_environnementales_as_str: Array<ConsiderationsEnvironnementales>;
 };
 
 /**
@@ -351,6 +374,7 @@ export type MarcheAllegeDtoOutput = {
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
     cpv: string;
+    categorie: CategorieMarche;
     /**
      * Sous Traitance Declaree
      */
@@ -371,6 +395,14 @@ export type MarcheAllegeDtoOutput = {
      * Titulaires
      */
     titulaires: Array<StructureDto>;
+    /**
+     * Considerations Sociales
+     */
+    considerations_sociales: Array<ConsiderationsSociales>;
+    /**
+     * Considerations Environnementales
+     */
+    considerations_environnementales: Array<ConsiderationsEnvironnementales>;
 };
 
 /**
@@ -463,6 +495,7 @@ export type MarcheDto = {
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
     cpv: string;
+    categorie: CategorieMarche;
     /**
      * Techniques Achat
      */
