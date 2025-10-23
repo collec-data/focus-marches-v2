@@ -25,6 +25,7 @@ from sqlalchemy.orm import Session
 from app.config import get_config
 from app.db import get_engine
 from app.dependencies import get_api_entreprise
+from app.helpers import categorisation
 from app.models.db import (
     ActeSousTraitance,
     Base,
@@ -181,6 +182,7 @@ class ImportateurDecp:
             nature=data.nature.db_value,
             objet=data.objet,
             cpv=data.codeCPV,
+            categorie=categorisation.CPV2categorie(data.codeCPV).db_value,
             techniques_achat=[
                 tech.db_value for tech in data.techniques["technique"] if tech.db_value
             ],

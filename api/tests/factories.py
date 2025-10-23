@@ -41,6 +41,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     nature = enums.NatureMarche.MARCHE.db_value
     objet = "Lorem ipsum dolor"
     cpv = "1234"
+    categorie = enums.CategorieMarche.SERVICES.db_value
     techniques_achat: list[enums.TechniqueAchat] = []
     modalites_execution: list[enums.ModaliteExecution] = []
     marche_innovant = False

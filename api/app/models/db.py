@@ -15,6 +15,7 @@ from sqlalchemy.orm import (
 from sqlalchemy.types import PickleType
 
 from app.models.enums import (
+    CategorieMarche,
     ConsiderationsEnvironnementales,
     ConsiderationsSociales,
     FormePrix,
@@ -148,6 +149,7 @@ class Marche(Base):
     nature: Mapped[int]  # enum NatureMarche
     objet: Mapped[str] = mapped_column(Text())  # max 1k
     cpv: Mapped[str]
+    categorie: Mapped[int]  # enum CategorieMarche
     techniques_achat: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
@@ -194,6 +196,10 @@ class Marche(Base):
     @hybrid_property
     def nature_as_str(self) -> NatureMarche:
         return NatureMarche.from_db_value(self.nature)
+
+    @hybrid_property
+    def categorie_as_str(self) -> CategorieMarche:
+        return CategorieMarche.from_db_value(self.categorie)
 
     @hybrid_property
     def procedure_as_str(self) -> ProcedureMarche | None:
