@@ -97,13 +97,29 @@ def test_nature_succes(client):
 def test_ccag_succes(client):
     MarcheFactory.create_batch(10, ccag=enums.CCAG.TRAVAUX.db_value, montant=1)
     MarcheFactory.create_batch(8, ccag=enums.CCAG.MO.db_value, montant=2)
+    MarcheFactory(
+        ccag=enums.CCAG.MO.db_value,
+        montant=9,
+        categorie=enums.CategorieMarche.TRAVAUX.db_value,
+    )
 
     response = client.get("/marche/ccag")
 
     assert response.status_code == 200
     assert response.json() == [
-        {"ccag": "Travaux", "montant": "10", "nombre": 10},
-        {"ccag": "Maitrise d'œuvre", "montant": "16", "nombre": 8},
+        {
+            "ccag": "Maitrise d'œuvre",
+            "montant": "16",
+            "nombre": 8,
+            "categorie": "Services",
+        },
+        {"ccag": "Travaux", "montant": "10", "nombre": 10, "categorie": "Services"},
+        {
+            "ccag": "Maitrise d'œuvre",
+            "montant": "9",
+            "nombre": 1,
+            "categorie": "Travaux",
+        },
     ]
 
 

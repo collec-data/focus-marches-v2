@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query
-from sqlalchemy import Row, Select, distinct, func, select
+from sqlalchemy import Row, Select, desc, distinct, func, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import SessionDep
@@ -107,13 +107,15 @@ def get_marches_par_ccag(
         application_filtres(
             select(
                 Marche.ccag,
+                Marche.categorie,
                 func.sum(Marche.montant).label("montant"),
                 func.count(Marche.ccag).label("nombre"),
             ),
             filtres,
         )
         .group_by(Marche.ccag)
-        .order_by(Marche.ccag)
+        .group_by(Marche.categorie)
+        .order_by(desc("montant"))
     )
 
     return list(session.execute(stmt).all())
