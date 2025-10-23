@@ -26,6 +26,12 @@ class NatureMarche(CustomStrEnum):
     DEFSEC = "Marché de défense ou de sécurité", 3
 
 
+class CategorieMarche(CustomStrEnum):
+    TRAVAUX = "Travaux", 1
+    FOURNITURES = "Fournitures", 2
+    SERVICES = "Services", 3
+
+
 class ProcedureMarche(CustomStrEnum):
     ADAPTE = "Procédure adaptée", 1
     AO_OUVERT = "Appel d'offres ouvert", 2

@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field, Json, field_validator
 
 from app.models.enums import (
     CCAG,
+    CategorieMarche,
     ConsiderationsEnvironnementales,
     ConsiderationsSociales,
     FormePrix,
@@ -102,13 +103,18 @@ class MarcheAllegeDto(BaseModel):
     cpv: str = Field(
         description="Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))"
     )
+    categorie_as_str: CategorieMarche = Field(serialization_alias="categorie")
     sous_traitance_declaree: bool
     actes_sous_traitance: list[ActeSousTraitanceDto]
     date_notification: date
     montant: Decimal
     titulaires: list[StructureDto]
-    # considerations_sociales: list[ConsiderationsSociales]
-    # considerations_environnementales: list[ConsiderationsEnvironnementales]
+    considerations_sociales_as_str: list[ConsiderationsSociales] = Field(
+        serialization_alias="considerations_sociales"
+    )
+    considerations_environnementales_as_str: list[ConsiderationsEnvironnementales] = (
+        Field(serialization_alias="considerations_environnementales")
+    )
 
 
 class MarcheDto(BaseModel):
@@ -120,6 +126,7 @@ class MarcheDto(BaseModel):
     cpv: str = Field(
         description="Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))"
     )
+    categorie_as_str: CategorieMarche = Field(serialization_alias="categorie")
     techniques_achat_as_str: list[TechniqueAchat] = Field(
         serialization_alias="techniques_achat"
     )

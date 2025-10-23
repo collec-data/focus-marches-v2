@@ -14,28 +14,62 @@ const props = defineProps({
 });
 
 const data = ref<Partial<PlotData>[]>();
-const layout = { margin: { t: 0, r: 0, l: 20, b: 50 }, xaxis: { dtick: 24 } };
+const layout = { margin: { t: 0, r: 0, l: 60, b: 50 }, xaxis: { dtick: 24, title: { text: 'DATE' } }, yaxis: { title: { text: 'MONTANT (€)' } } };
 
 function transform(data: Array<MarcheAllegeDtoOutput>): Partial<PlotData>[] {
-    const x = [] as string[];
-    const y = [] as number[];
-    const text = [] as string[];
-    for (var marche of data) {
-        x.push(formatDate(marche.date_notification));
-        y.push(parseFloat(marche.montant));
-        text.push(marche.objet.substring(0, 100));
-    }
-    return [
+    const common_data = { mode: 'markers' as PlotData['mode'] };
+    const common_marker = {
+        line: {
+            color: 'rgb(255, 255, 255)',
+            width: 1
+        },
+        opacity: 0.7
+    };
+    const traces = [
         {
-            x: x,
-            y: y,
-            text: text,
-            mode: 'markers',
-            type: 'scatter',
-            name: 'Marchés',
-            marker: { size: 5 }
+            x: [] as string[],
+            y: [] as number[],
+            text: [] as string[],
+            name: 'Travaux',
+            marker: {
+                size: 10,
+                symbol: 'star-diamond',
+                ...common_marker
+            },
+            ...common_data
+        },
+        {
+            x: [] as string[],
+            y: [] as number[],
+            text: [] as string[],
+            name: 'Fournitures',
+            marker: {
+                size: 10,
+                ...common_marker
+            },
+            ...common_data
+        },
+        {
+            x: [] as string[],
+            y: [] as number[],
+            text: [] as string[],
+            name: 'Services',
+            marker: {
+                size: 10,
+                symbol: 'square',
+                ...common_marker
+            },
+            ...common_data
         }
     ];
+    const keys = ['Travaux', 'Fournitures', 'Services'];
+    for (var marche of data) {
+        const key = keys.indexOf(marche.categorie);
+        traces[key].x.push(formatDate(marche.date_notification));
+        traces[key].y.push(parseFloat(marche.montant));
+        traces[key].text.push(marche.objet.substring(0, 100));
+    }
+    return traces;
 }
 function fetchData() {
     getListeMarchesMarcheGet({
@@ -77,8 +111,8 @@ onMounted(() => {
                 <div class="basis-1/2">
                     <p>Pour faciliter l'interprétation, les marchés ont été divisés en 3 catégories que vous pouvez identifier par leur couleur :</p>
                     <ul>
-                        <li>🟢 Vert pour les services</li>
-                        <li>🔵 Bleu pour les travaux</li>
+                        <li>🟩 Vert pour les services</li>
+                        <li>🔷 Bleu pour les travaux</li>
                         <li>🟠 Orange pour les fournitures</li>
                     </ul>
                 </div>
