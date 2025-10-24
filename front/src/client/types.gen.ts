@@ -406,6 +406,36 @@ export type MarcheAllegeDtoOutput = {
 };
 
 /**
+ * MarcheCategorieDepartementDto
+ */
+export type MarcheCategorieDepartementDtoInput = {
+    categorie: CategorieMarche;
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Montant
+     */
+    montant: number | string;
+};
+
+/**
+ * MarcheCategorieDepartementDto
+ */
+export type MarcheCategorieDepartementDtoOutput = {
+    categorie: CategorieMarche;
+    /**
+     * Code
+     */
+    code: string;
+    /**
+     * Montant
+     */
+    montant: string;
+};
+
+/**
  * MarcheCcagDto
  */
 export type MarcheCcagDtoInput = {
@@ -1316,6 +1346,24 @@ export type GetMarchesParDepartementMarcheDepartementGetResponses = {
 };
 
 export type GetMarchesParDepartementMarcheDepartementGetResponse = GetMarchesParDepartementMarcheDepartementGetResponses[keyof GetMarchesParDepartementMarcheDepartementGetResponses];
+
+export type GetCategorieDepartementMarcheCategorieDepartementGetData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/marche/categorie-departement';
+};
+
+export type GetCategorieDepartementMarcheCategorieDepartementGetResponses = {
+    /**
+     * Response Get Categorie Departement Marche Categorie Departement Get
+     *
+     * Successful Response
+     */
+    200: Array<MarcheCategorieDepartementDtoOutput>;
+};
+
+export type GetCategorieDepartementMarcheCategorieDepartementGetResponse = GetCategorieDepartementMarcheCategorieDepartementGetResponses[keyof GetCategorieDepartementMarcheCategorieDepartementGetResponses];
 
 export type GetMarcheMarcheUidGetData = {
     body?: never;
