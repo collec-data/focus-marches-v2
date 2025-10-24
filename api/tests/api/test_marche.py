@@ -232,6 +232,38 @@ def test_marche_departement_categorie(client):
     ]
 
 
+def test_categories(client):
+    MarcheFactory.create(
+        categorie=enums.CategorieMarche.TRAVAUX.db_value,
+        date_notification=date(2025, 1, 1),
+        montant=10,
+    )
+    MarcheFactory.create(
+        categorie=enums.CategorieMarche.TRAVAUX.db_value,
+        date_notification=date(2025, 2, 1),
+        montant=1,
+    )
+    MarcheFactory.create(
+        categorie=enums.CategorieMarche.TRAVAUX.db_value,
+        date_notification=date(2025, 2, 1),
+        montant=2,
+    )
+    MarcheFactory.create(
+        categorie=enums.CategorieMarche.FOURNITURES.db_value,
+        date_notification=date(2025, 2, 1),
+        montant=4,
+    )
+    response = client.get("/marche/categorie")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data == [
+        {"categorie": "Travaux", "mois": "2025-01", "montant": "10", "nombre": 1},
+        {"categorie": "Travaux", "mois": "2025-02", "montant": "3", "nombre": 2},
+        {"categorie": "Fournitures", "mois": "2025-02", "montant": "4", "nombre": 1},
+    ]
+
+
 def test_get_marche_succes(client):
     marche = MarcheFactory()
 

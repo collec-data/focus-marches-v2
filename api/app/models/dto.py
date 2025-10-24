@@ -287,3 +287,15 @@ class StructureAggMarchesDto(BaseModel):
     structure: StructureDto
     montant: Decimal
     nb_contrats: int
+
+
+class CategoriesDto(BaseModel):
+    categorie: CategorieMarche
+    mois: str
+    montant: Decimal
+    nombre: int
+
+    @field_validator("categorie", mode="before")
+    @classmethod
+    def transform_cat(cls, v: int) -> CategorieMarche:
+        return CategorieMarche.from_db_value(v)
