@@ -193,6 +193,45 @@ def test_departements(client):
     ]
 
 
+def test_marche_departement_categorie(client):
+    MarcheFactory(
+        montant=1000,
+        categorie=enums.CategorieMarche.TRAVAUX.db_value,
+        lieu__code="35",
+        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+    )
+
+    MarcheFactory(
+        montant=2000,
+        categorie=enums.CategorieMarche.TRAVAUX.db_value,
+        lieu__code="35",
+        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+    )
+
+    MarcheFactory(
+        montant=5000,
+        categorie=enums.CategorieMarche.TRAVAUX.db_value,
+        lieu__code="44",
+        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+    )
+
+    MarcheFactory(
+        montant=6000,
+        categorie=enums.CategorieMarche.FOURNITURES.db_value,
+        lieu__code="35",
+        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+    )
+
+    response = client.get("marche/categorie-departement")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {"categorie": "Travaux", "code": "35", "montant": "3000"},
+        {"categorie": "Travaux", "code": "44", "montant": "5000"},
+        {"categorie": "Fournitures", "code": "35", "montant": "6000"},
+    ]
+
+
 def test_get_marche_succes(client):
     marche = MarcheFactory()
 

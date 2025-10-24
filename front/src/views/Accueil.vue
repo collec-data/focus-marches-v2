@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Acheteurs from '@/components/dashboard/Acheteurs.vue';
 import Departements from '@/components/dashboard/Departements.vue';
+import DistributionAchatsParDepartement from '@/components/dashboard/DistributionAchatsParDepartement.vue';
 import IndicateursCles from '@/components/dashboard/IndicateursCles.vue';
 import NatureContrats from '@/components/dashboard/NatureContrats.vue';
 import Procedure from '@/components/dashboard/Procedure.vue';
@@ -18,5 +19,6 @@ import Procedure from '@/components/dashboard/Procedure.vue';
         <NatureContrats />
         <Procedure />
         <Departements />
+        <DistributionAchatsParDepartement />
     </main>
 </template>

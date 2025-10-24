@@ -3,7 +3,7 @@
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import { getListeMarchesMarcheGetResponseTransformer, getMarcheMarcheUidGetResponseTransformer, getStructureStructureUidGetResponseTransformer } from './transformers.gen';
-import type { GetErreursImportErreursImportGetData, GetErreursImportErreursImportGetErrors, GetErreursImportErreursImportGetResponses, GetIndicateursMarcheIndicateursGetData, GetIndicateursMarcheIndicateursGetErrors, GetIndicateursMarcheIndicateursGetResponses, GetListeConcessionsContratConcessionGetData, GetListeConcessionsContratConcessionGetErrors, GetListeConcessionsContratConcessionGetResponses, GetListeMarchesMarcheGetData, GetListeMarchesMarcheGetErrors, GetListeMarchesMarcheGetResponses, GetMarcheMarcheUidGetData, GetMarcheMarcheUidGetErrors, GetMarcheMarcheUidGetResponses, GetMarchesParCcagMarcheCcagGetData, GetMarchesParCcagMarcheCcagGetErrors, GetMarchesParCcagMarcheCcagGetResponses, GetMarchesParDepartementMarcheDepartementGetData, GetMarchesParDepartementMarcheDepartementGetResponses, GetMarchesParNatureMarcheNatureGetData, GetMarchesParNatureMarcheNatureGetErrors, GetMarchesParNatureMarcheNatureGetResponses, GetMarchesParProcedureMarcheProcedureGetData, GetMarchesParProcedureMarcheProcedureGetErrors, GetMarchesParProcedureMarcheProcedureGetResponses, GetStatsErreursErreursImportStatsGetData, GetStatsErreursErreursImportStatsGetResponses, GetStructureStructureUidGetData, GetStructureStructureUidGetErrors, GetStructureStructureUidGetResponses, ListAcheteursStructureAcheteurGetData, ListAcheteursStructureAcheteurGetErrors, ListAcheteursStructureAcheteurGetResponses, ListVendeursStructureVendeurGetData, ListVendeursStructureVendeurGetErrors, ListVendeursStructureVendeurGetResponses } from './types.gen';
+import type { GetCategorieDepartementMarcheCategorieDepartementGetData, GetCategorieDepartementMarcheCategorieDepartementGetResponses, GetErreursImportErreursImportGetData, GetErreursImportErreursImportGetErrors, GetErreursImportErreursImportGetResponses, GetIndicateursMarcheIndicateursGetData, GetIndicateursMarcheIndicateursGetErrors, GetIndicateursMarcheIndicateursGetResponses, GetListeConcessionsContratConcessionGetData, GetListeConcessionsContratConcessionGetErrors, GetListeConcessionsContratConcessionGetResponses, GetListeMarchesMarcheGetData, GetListeMarchesMarcheGetErrors, GetListeMarchesMarcheGetResponses, GetMarcheMarcheUidGetData, GetMarcheMarcheUidGetErrors, GetMarcheMarcheUidGetResponses, GetMarchesParCcagMarcheCcagGetData, GetMarchesParCcagMarcheCcagGetErrors, GetMarchesParCcagMarcheCcagGetResponses, GetMarchesParDepartementMarcheDepartementGetData, GetMarchesParDepartementMarcheDepartementGetResponses, GetMarchesParNatureMarcheNatureGetData, GetMarchesParNatureMarcheNatureGetErrors, GetMarchesParNatureMarcheNatureGetResponses, GetMarchesParProcedureMarcheProcedureGetData, GetMarchesParProcedureMarcheProcedureGetErrors, GetMarchesParProcedureMarcheProcedureGetResponses, GetStatsErreursErreursImportStatsGetData, GetStatsErreursErreursImportStatsGetResponses, GetStructureStructureUidGetData, GetStructureStructureUidGetErrors, GetStructureStructureUidGetResponses, ListAcheteursStructureAcheteurGetData, ListAcheteursStructureAcheteurGetErrors, ListAcheteursStructureAcheteurGetResponses, ListVendeursStructureVendeurGetData, ListVendeursStructureVendeurGetErrors, ListVendeursStructureVendeurGetResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -96,6 +96,16 @@ export const getIndicateursMarcheIndicateursGet = <ThrowOnError extends boolean 
 export const getMarchesParDepartementMarcheDepartementGet = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParDepartementMarcheDepartementGetData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetMarchesParDepartementMarcheDepartementGetResponses, unknown, ThrowOnError>({
         url: '/marche/departement',
+        ...options
+    });
+};
+
+/**
+ * Get Categorie Departement
+ */
+export const getCategorieDepartementMarcheCategorieDepartementGet = <ThrowOnError extends boolean = false>(options?: Options<GetCategorieDepartementMarcheCategorieDepartementGetData, ThrowOnError>) => {
+    return (options?.client ?? client).get<GetCategorieDepartementMarcheCategorieDepartementGetResponses, unknown, ThrowOnError>({
+        url: '/marche/categorie-departement',
         ...options
     });
 };

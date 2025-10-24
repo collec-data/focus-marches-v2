@@ -5,6 +5,7 @@ import {
     type IndicateursDto,
     type MarcheAllegeDtoOutput,
     type MarcheCcagDtoOutput,
+    type MarcheCategorieDepartementDtoOutput,
     type MarcheDepartementDtoOutput,
     type MarcheNatureDtoOutput,
     type MarcheProcedureDtoOutput,
@@ -46,6 +47,14 @@ export const procedures: MarcheProcedureDtoOutput[] = [
 export const departements: MarcheDepartementDtoOutput[] = [
     { code: '35', montant: '100', nombre: 2 },
     { code: '44', montant: '200', nombre: 1 }
+];
+
+export const categories_departements: MarcheCategorieDepartementDtoOutput[] = [
+    { categorie: 'Fournitures', code: '35', montant: '1000' },
+    { categorie: 'Fournitures', code: '44', montant: '5000' },
+    { categorie: 'Services', code: '35', montant: '6000' },
+    { categorie: 'Fournitures', code: '35', montant: '900.0' },
+    { categorie: 'Fournitures', code: '44', montant: '1000.0' }
 ];
 
 export const erreurs: DecpMalFormeDtoOutput[] = [

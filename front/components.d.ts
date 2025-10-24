@@ -19,6 +19,7 @@ declare module 'vue' {
     DetailsAcheteur: typeof import('./src/components/DetailsAcheteur.vue')['default']
     DetailsFournisseur: typeof import('./src/components/DetailsFournisseur.vue')['default']
     Dialog: typeof import('primevue/dialog')['default']
+    DistributionAchatsParDepartement: typeof import('./src/components/dashboard/DistributionAchatsParDepartement.vue')['default']
     DistributionTemporelleMarches: typeof import('./src/components/dashboard/DistributionTemporelleMarches.vue')['default']
     FiltreDates: typeof import('./src/components/FiltreDates.vue')['default']
     FloatingConfigurator: typeof import('./src/components/FloatingConfigurator.vue')['default']

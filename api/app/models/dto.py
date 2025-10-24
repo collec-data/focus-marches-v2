@@ -272,6 +272,17 @@ class MarcheDepartementDto(BaseModel):
     nombre: int
 
 
+class MarcheCategorieDepartementDto(BaseModel):
+    categorie: CategorieMarche
+    code: str
+    montant: Decimal
+
+    @field_validator("categorie", mode="before")
+    @classmethod
+    def transform_cat(cls, v: int) -> CategorieMarche:
+        return CategorieMarche.from_db_value(v)
+
+
 class StructureAggMarchesDto(BaseModel):
     structure: StructureDto
     montant: Decimal
