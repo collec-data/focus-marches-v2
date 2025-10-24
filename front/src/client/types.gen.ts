@@ -101,6 +101,44 @@ export const CategorieMarche = {
 export type CategorieMarche = typeof CategorieMarche[keyof typeof CategorieMarche];
 
 /**
+ * CategoriesDto
+ */
+export type CategoriesDtoInput = {
+    categorie: CategorieMarche;
+    /**
+     * Mois
+     */
+    mois: string;
+    /**
+     * Montant
+     */
+    montant: number | string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
+ * CategoriesDto
+ */
+export type CategoriesDtoOutput = {
+    categorie: CategorieMarche;
+    /**
+     * Mois
+     */
+    mois: string;
+    /**
+     * Montant
+     */
+    montant: string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
  * ConsiderationsEnvironnementales
  */
 export const ConsiderationsEnvironnementales = {
@@ -1364,6 +1402,50 @@ export type GetCategorieDepartementMarcheCategorieDepartementGetResponses = {
 };
 
 export type GetCategorieDepartementMarcheCategorieDepartementGetResponse = GetCategorieDepartementMarcheCategorieDepartementGetResponses[keyof GetCategorieDepartementMarcheCategorieDepartementGetResponses];
+
+export type GetCategoriesMarcheCategorieGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: string | null;
+    };
+    url: '/marche/categorie';
+};
+
+export type GetCategoriesMarcheCategorieGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetCategoriesMarcheCategorieGetError = GetCategoriesMarcheCategorieGetErrors[keyof GetCategoriesMarcheCategorieGetErrors];
+
+export type GetCategoriesMarcheCategorieGetResponses = {
+    /**
+     * Response Get Categories Marche Categorie Get
+     *
+     * Successful Response
+     */
+    200: Array<CategoriesDtoOutput>;
+};
+
+export type GetCategoriesMarcheCategorieGetResponse = GetCategoriesMarcheCategorieGetResponses[keyof GetCategoriesMarcheCategorieGetResponses];
 
 export type GetMarcheMarcheUidGetData = {
     body?: never;
