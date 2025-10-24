@@ -10,6 +10,7 @@ from app.models.db import Lieu, Marche, Structure
 from app.models.dto import (
     IndicateursDto,
     MarcheAllegeDto,
+    MarcheCategorieDepartementDto,
     MarcheCcagDto,
     MarcheDepartementDto,
     MarcheDto,
@@ -188,6 +189,30 @@ def get_marches_par_departement(
             .join(Marche.lieu)
             .where(Lieu.type_code == TypeCodeLieu.DEP.db_value)
         )
+        .group_by(Lieu.code)
+        .order_by("montant")
+    )
+
+    return list(session.execute(stmt).all())
+
+
+@router.get(
+    "/categorie-departement", response_model=list[MarcheCategorieDepartementDto]
+)
+def get_categorie_departement(
+    session: SessionDep,
+) -> list[Row[tuple[str, int, Decimal]]]:
+    stmt = (
+        (
+            select(
+                Lieu.code,
+                Marche.categorie,
+                func.sum(Marche.montant).label("montant"),
+            )
+            .join(Marche.lieu)
+            .where(Lieu.type_code == TypeCodeLieu.DEP.db_value)
+        )
+        .group_by(Marche.categorie)
         .group_by(Lieu.code)
         .order_by("montant")
     )
