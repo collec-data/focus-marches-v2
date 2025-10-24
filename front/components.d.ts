@@ -11,6 +11,7 @@ declare module 'vue' {
     Acheteurs: typeof import('./src/components/dashboard/Acheteurs.vue')['default']
     BoutonIframe: typeof import('./src/components/BoutonIframe.vue')['default']
     Button: typeof import('primevue/button')['default']
+    CategoriePrincipaleDAchat: typeof import('./src/components/dashboard/CategoriePrincipaleDAchat.vue')['default']
     CCAG: typeof import('./src/components/dashboard/CCAG.vue')['default']
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']

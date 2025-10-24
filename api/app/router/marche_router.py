@@ -8,6 +8,7 @@ from sqlalchemy.orm import aliased
 from app.dependencies import SessionDep
 from app.models.db import Lieu, Marche, Structure
 from app.models.dto import (
+    CategoriesDto,
     IndicateursDto,
     MarcheAllegeDto,
     MarcheCategorieDepartementDto,
@@ -215,6 +216,27 @@ def get_categorie_departement(
         .group_by(Marche.categorie)
         .group_by(Lieu.code)
         .order_by("montant")
+    )
+    return list(session.execute(stmt).all())
+
+
+@router.get("/categorie", response_model=list[CategoriesDto])
+def get_categories(
+    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+) -> list[Row[tuple[str]]]:
+    stmt = (
+        application_filtres(
+            select(
+                Marche.categorie,
+                func.sum(Marche.montant).label("montant"),
+                func.count(Marche.id).label("nombre"),
+                func.to_char(Marche.date_notification, "YYYY-MM").label("mois"),
+            ),
+            filtres,
+        )
+        .group_by(Marche.categorie)
+        .group_by("mois")
+        .order_by("mois")
     )
 
     return list(session.execute(stmt).all())

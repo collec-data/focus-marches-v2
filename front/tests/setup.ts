@@ -3,7 +3,7 @@ import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { defaultOptions } from 'primevue/config';
 import { afterAll, afterEach, beforeAll } from 'vitest';
-import { ccag, departements, erreurs, erreursStats, indicateurs, marche, nature, procedures, structure, categories_departements } from './api_test_data';
+import { ccag, departements, erreurs, erreursStats, indicateurs, marche, nature, procedures, structure, categories_departements, categories } from './api_test_data';
 
 config.global.mocks['$primevue'] = {
     config: defaultOptions
@@ -44,6 +44,9 @@ export const restHandlers = [
     }),
     http.get(baseUrl + 'marche/ccag', () => {
         return HttpResponse.json(ccag);
+    }),
+    http.get(baseUrl + 'marche/categorie', () => {
+        return HttpResponse.json(categories);
     }),
     http.get(baseUrl + 'erreurs-import', () => {
         return HttpResponse.json(erreurs);
