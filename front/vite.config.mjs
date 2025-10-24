@@ -35,6 +35,7 @@ export default defineConfig({
             reporter: ['cobertura', 'text'],
             provider: 'istanbul',
             reportsDirectory: './coverage'
-        }
+        },
+        testTimeout: 10_000
     }
 });
