@@ -116,6 +116,15 @@ const router = createRouter({
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
+                },
+                {
+                    path: 'categorie-marches',
+                    component: () => import('@/components/dashboard/CategoriePrincipaleDAchat.vue'),
+                    props: (route) => ({
+                        acheteurUid: route.query.acheteurUid,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
                 }
             ]
         },

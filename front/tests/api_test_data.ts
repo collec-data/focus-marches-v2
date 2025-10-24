@@ -9,6 +9,7 @@ import {
     type MarcheDepartementDtoOutput,
     type MarcheNatureDtoOutput,
     type MarcheProcedureDtoOutput,
+    type CategoriesDto,
     ProcedureMarche,
     StatsErreursDto,
     type StructureAggMarchesDtoOutput
@@ -68,3 +69,10 @@ export const erreurs: DecpMalFormeDtoOutput[] = [
 export const erreursStats: StatsErreursDto[] = [{ erreur: 'Field required', nombre: 1263, localisation: 'offresRecues' }];
 
 export const ccag: MarcheCcagDtoOutput[] = [{ ccag: Ccag.TRAVAUX, montant: '10000', nombre: 123, categorie: CategorieMarche.TRAVAUX }];
+
+export const categories: CategoriesDto[] = [
+    { categorie: 'Services', mois: '2020-11', montant: '123456.0', nombre: 2 },
+    { categorie: 'Travaux', mois: '2020-12', montant: '654321.2', nombre: 1 },
+    { categorie: 'Services', mois: '2021-01', montant: '789456.0', nombre: 2 },
+    { categorie: 'Fournitures', mois: '2021-01', montant: '654789.2', nombre: 1 }
+];
