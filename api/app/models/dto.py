@@ -106,6 +106,7 @@ class MarcheAllegeDto(BaseModel):
     categorie_as_str: CategorieMarche = Field(serialization_alias="categorie")
     sous_traitance_declaree: bool
     actes_sous_traitance: list[ActeSousTraitanceDto]
+    duree_mois: int
     date_notification: date
     montant: Decimal
     titulaires: list[StructureDto]
