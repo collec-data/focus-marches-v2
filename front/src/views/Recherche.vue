@@ -4,7 +4,7 @@ import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
 import { formatCurrency, formatDate } from '@/service/HelpersService';
 import { ref } from 'vue';
 
-import type { GetListeMarchesMarcheGetData, MarcheAllegeDtoOutput, StructureDto } from '@/client';
+import type { MarcheAllegeDtoOutput, StructureDto } from '@/client';
 import type { AutoCompleteCompleteEvent } from 'primevue';
 
 const marches = ref<MarcheAllegeDtoOutput[]>([]);
@@ -57,30 +57,28 @@ const filtres = ref({
     date_max: null
 });
 
-function fetchData(limit: number = 50, offset: number = 0) {
-    const query_params = <Pick<GetListeMarchesMarcheGetData, 'query'> & Partial<GetListeMarchesMarcheGetData>>{
-        query: {
-            acheteur_uid: filtres.value.acheteur?.uid,
-            vendeur_uid: filtres.value.fournisseur?.uid,
-            objet: filtres.value.objet,
-            cpv: filtres.value.cpv,
-            type_marche: filtres.value.type_marche,
-            forme_prix: filtres.value.forme_prix,
-            procedure: filtres.value.procedure,
-            technique_achat: filtres.value.technique_achat,
-            montant_min: filtres.value.montant_min,
-            montant_max: filtres.value.montant_max,
-            duree_min: filtres.value.duree_min,
-            duree_max: filtres.value.duree_max,
-            date_debut: filtres.value.date_min,
-            date_fin: filtres.value.date_max
-        }
+const query = ref({});
+
+function fetchData() {
+    query.value = {
+        acheteur_uid: filtres.value.acheteur?.uid,
+        vendeur_uid: filtres.value.fournisseur?.uid,
+        objet: filtres.value.objet,
+        cpv: filtres.value.cpv,
+        type_marche: filtres.value.type_marche,
+        forme_prix: filtres.value.forme_prix,
+        procedure: filtres.value.procedure,
+        technique_achat: filtres.value.technique_achat,
+        montant_min: filtres.value.montant_min,
+        montant_max: filtres.value.montant_max,
+        duree_min: filtres.value.duree_min,
+        duree_max: filtres.value.duree_max,
+        date_debut: filtres.value.date_min,
+        date_fin: filtres.value.date_max
     };
     getListeMarchesMarcheGet({
         query: {
-            limit: limit,
-            offset: offset,
-            ...query_params.query
+            ...query.value
         }
     }).then((response) => {
         if (response.data) {
@@ -241,6 +239,8 @@ const recherche_avancee = ref(false);
         </Panel>
 
         <hr />
+        <IndicateursCles v-if="marches.length" :query />
+        <DistributionTemporelleMarches v-if="marches.length" :query />
 
         <DataTable v-if="marches.length" :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
             <Column field="cpv" header="CPV" sortable></Column>
