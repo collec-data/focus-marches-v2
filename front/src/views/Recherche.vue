@@ -93,6 +93,7 @@ function search(event: SubmitEvent) {
 }
 
 const recherche_avancee = ref(false);
+const marcheUid = ref(null);
 </script>
 
 <template>
@@ -243,6 +244,11 @@ const recherche_avancee = ref(false);
         <DistributionTemporelleMarches v-if="marches.length" :query />
 
         <DataTable v-if="marches.length" :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+            <Column header="Détails">
+                <template #body="{ data }">
+                    <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" />
+                </template>
+            </Column>
             <Column field="cpv" header="CPV" sortable></Column>
             <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
             <Column field="acheteur.nom" header="Acheteur" sortable></Column>
@@ -265,6 +271,8 @@ const recherche_avancee = ref(false);
                 ></Column
             >
         </DataTable>
+
+        <ModaleMarche :marcheUid />
     </main>
 </template>
 

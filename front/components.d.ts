@@ -36,6 +36,7 @@ declare module 'vue' {
     LeafletMap: typeof import('./src/components/LeafletMap.vue')['default']
     ListeMarches: typeof import('./src/components/ListeMarches.vue')['default']
     Message: typeof import('primevue/message')['default']
+    ModaleMarche: typeof import('./src/components/ModaleMarche.vue')['default']
     MultiSelect: typeof import('primevue/multiselect')['default']
     NatureContrats: typeof import('./src/components/dashboard/NatureContrats.vue')['default']
     Panel: typeof import('primevue/panel')['default']
