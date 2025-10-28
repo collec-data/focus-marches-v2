@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Acheteurs: typeof import('./src/components/dashboard/Acheteurs.vue')['default']
+    AutoComplete: typeof import('primevue/autocomplete')['default']
     BoutonIframe: typeof import('./src/components/BoutonIframe.vue')['default']
     Button: typeof import('primevue/button')['default']
     CategoriePrincipaleDAchat: typeof import('./src/components/dashboard/CategoriePrincipaleDAchat.vue')['default']
@@ -30,19 +31,23 @@ declare module 'vue' {
     IconField: typeof import('primevue/iconfield')['default']
     IndicateursCles: typeof import('./src/components/dashboard/IndicateursCles.vue')['default']
     InputIcon: typeof import('primevue/inputicon')['default']
+    InputNumber: typeof import('primevue/inputnumber')['default']
     InputText: typeof import('primevue/inputtext')['default']
     LeafletMap: typeof import('./src/components/LeafletMap.vue')['default']
     ListeMarches: typeof import('./src/components/ListeMarches.vue')['default']
     Message: typeof import('primevue/message')['default']
+    MultiSelect: typeof import('primevue/multiselect')['default']
     NatureContrats: typeof import('./src/components/dashboard/NatureContrats.vue')['default']
     Panel: typeof import('primevue/panel')['default']
     Procedure: typeof import('./src/components/dashboard/Procedure.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Select: typeof import('primevue/select')['default']
     Tab: typeof import('primevue/tab')['default']
     TabList: typeof import('primevue/tablist')['default']
     TabPanel: typeof import('primevue/tabpanel')['default']
     TabPanels: typeof import('primevue/tabpanels')['default']
     Tabs: typeof import('primevue/tabs')['default']
+    ToggleButton: typeof import('primevue/togglebutton')['default']
   }
 }

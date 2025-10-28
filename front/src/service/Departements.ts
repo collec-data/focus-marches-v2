@@ -105,3 +105,11 @@ const listeDepartements = {
 export function getNomDepartement(code: string): string {
     return listeDepartements[code];
 }
+
+export function getDepartementAvecNumeroAsListe() {
+    const result = <string[]>[];
+    for (const [k, v] of Object.entries(listeDepartements)) {
+        result.push('(' + k + ') ' + v);
+    }
+    return result;
+}
