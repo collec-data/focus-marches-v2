@@ -243,35 +243,38 @@ const marcheUid = ref(null);
         <IndicateursCles v-if="marches.length" :query />
         <DistributionTemporelleMarches v-if="marches.length" :query />
 
-        <DataTable v-if="marches.length" :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
-            <Column header="Détails">
-                <template #body="{ data }">
-                    <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" />
-                </template>
-            </Column>
-            <Column field="cpv" header="CPV" sortable></Column>
-            <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
-            <Column field="acheteur.nom" header="Acheteur" sortable></Column>
-            <Column header="Fournisseur">
-                <template #body="{ data }">
-                    <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ titulaire.nom ? titulaire.nom : titulaire.type_identifiant + ' ' + titulaire.identifiant }}</div>
-                </template>
-            </Column>
-            <Column field="date_notification" header="Date" sortable>
-                <template #body="{ data }">
-                    {{ formatDate(data.date_notification) }}
-                    <br />
-                    ({{ data.duree_mois }} mois)
-                </template></Column
-            >
-            <Column field="montant" header="Montant" dataType="numeric" sortable>
-                <template #body="{ data }">
-                    {{ formatCurrency(parseFloat(data.montant)) }}
-                </template>
-                ></Column
-            >
-        </DataTable>
-
+        <section>
+            <h2 class="title">Toutes les données de votre recherche</h2>
+            <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
+            <DataTable v-if="marches.length" :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+                <Column header="Détails">
+                    <template #body="{ data }">
+                        <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" />
+                    </template>
+                </Column>
+                <Column field="cpv" header="CPV" sortable></Column>
+                <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
+                <Column field="acheteur.nom" header="Acheteur" sortable></Column>
+                <Column header="Fournisseur">
+                    <template #body="{ data }">
+                        <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ titulaire.nom ? titulaire.nom : titulaire.type_identifiant + ' ' + titulaire.identifiant }}</div>
+                    </template>
+                </Column>
+                <Column field="date_notification" header="Date" sortable>
+                    <template #body="{ data }">
+                        {{ formatDate(data.date_notification) }}
+                        <br />
+                        ({{ data.duree_mois }} mois)
+                    </template></Column
+                >
+                <Column field="montant" header="Montant" dataType="numeric" sortable>
+                    <template #body="{ data }">
+                        {{ formatCurrency(parseFloat(data.montant)) }}
+                    </template>
+                    ></Column
+                >
+            </DataTable>
+        </section>
         <ModaleMarche :marcheUid />
     </main>
 </template>
