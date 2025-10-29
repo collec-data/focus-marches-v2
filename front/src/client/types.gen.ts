@@ -368,6 +368,10 @@ export type MarcheAllegeDtoInput = {
      */
     actes_sous_traitance: Array<ActeSousTraitanceDtoInput>;
     /**
+     * Duree Mois
+     */
+    duree_mois: number;
+    /**
      * Date Notification
      */
     date_notification: Date;
@@ -421,6 +425,10 @@ export type MarcheAllegeDtoOutput = {
      * Actes Sous Traitance
      */
     actes_sous_traitance: Array<ActeSousTraitanceDtoOutput>;
+    /**
+     * Duree Mois
+     */
+    duree_mois: number;
     /**
      * Date Notification
      */
@@ -1169,6 +1177,58 @@ export type GetListeMarchesMarcheGetData = {
          * Vendeur Uid
          */
         vendeur_uid?: string | null;
+        /**
+         * Objet
+         */
+        objet?: string | null;
+        /**
+         * Cpv
+         */
+        cpv?: string | null;
+        /**
+         * Code Lieu
+         */
+        code_lieu?: number | null;
+        /**
+         * Forme Prix
+         */
+        forme_prix?: FormePrix | null;
+        /**
+         * Type Marche
+         */
+        type_marche?: NatureMarche | null;
+        /**
+         * Procedure
+         */
+        procedure?: ProcedureMarche | null;
+        /**
+         * Technique Achat
+         */
+        technique_achat?: TechniqueAchat | null;
+        /**
+         * Montant Max
+         */
+        montant_max?: number | null;
+        /**
+         * Montant Min
+         */
+        montant_min?: number | null;
+        /**
+         * Duree Max
+         */
+        duree_max?: number | null;
+        /**
+         * Duree Min
+         */
+        duree_min?: number | null;
+        /**
+         * Limit
+         */
+        limit?: number | null;
+        /**
+         * Offset
+         */
+        offset?: number | null;
     };
     url: '/marche/';
 };
@@ -1345,6 +1405,50 @@ export type GetIndicateursMarcheIndicateursGetData = {
          * Vendeur Uid
          */
         vendeur_uid?: string | null;
+        /**
+         * Objet
+         */
+        objet?: string | null;
+        /**
+         * Cpv
+         */
+        cpv?: string | null;
+        /**
+         * Code Lieu
+         */
+        code_lieu?: number | null;
+        /**
+         * Forme Prix
+         */
+        forme_prix?: FormePrix | null;
+        /**
+         * Type Marche
+         */
+        type_marche?: NatureMarche | null;
+        /**
+         * Procedure
+         */
+        procedure?: ProcedureMarche | null;
+        /**
+         * Technique Achat
+         */
+        technique_achat?: TechniqueAchat | null;
+        /**
+         * Montant Max
+         */
+        montant_max?: number | null;
+        /**
+         * Montant Min
+         */
+        montant_min?: number | null;
+        /**
+         * Duree Max
+         */
+        duree_max?: number | null;
+        /**
+         * Duree Min
+         */
+        duree_min?: number | null;
     };
     url: '/marche/indicateurs';
 };
@@ -1512,6 +1616,46 @@ export type GetListeConcessionsContratConcessionGetResponses = {
 };
 
 export type GetListeConcessionsContratConcessionGetResponse = GetListeConcessionsContratConcessionGetResponses[keyof GetListeConcessionsContratConcessionGetResponses];
+
+export type ListStructuresStructureGetData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Nom
+         */
+        nom?: string | null;
+        /**
+         * Is Acheteur
+         */
+        is_acheteur?: boolean;
+        /**
+         * Is Vendeur
+         */
+        is_vendeur?: boolean;
+    };
+    url: '/structure/';
+};
+
+export type ListStructuresStructureGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ListStructuresStructureGetError = ListStructuresStructureGetErrors[keyof ListStructuresStructureGetErrors];
+
+export type ListStructuresStructureGetResponses = {
+    /**
+     * Response List Structures Structure  Get
+     *
+     * Successful Response
+     */
+    200: Array<StructureDto>;
+};
+
+export type ListStructuresStructureGetResponse = ListStructuresStructureGetResponses[keyof ListStructuresStructureGetResponses];
 
 export type ListAcheteursStructureAcheteurGetData = {
     body?: never;

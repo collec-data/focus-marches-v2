@@ -3,6 +3,32 @@ from app.helpers.opendatasoft import get_opendatasoft
 from tests.factories import AcheteurFactory, MarcheFactory, VendeurFactory
 
 
+def test_list_structures(client):
+    AcheteurFactory.create_batch(9)
+    AcheteurFactory(nom="COMMUNAUTE DE COMMUNE DE ")
+    VendeurFactory.create_batch(20, nom="COMMUNE DE")
+
+    response = client.get("/structure/")
+
+    assert response.status_code == 200
+    assert len(response.json()) == 30
+
+    response = client.get("/structure/", params={"is_acheteur": True})
+
+    assert response.status_code == 200
+    assert len(response.json()) == 10
+
+    response = client.get("/structure/", params={"is_vendeur": True})
+
+    assert response.status_code == 200
+    assert len(response.json()) == 20
+
+    response = client.get("/structure/", params={"nom": "COMMUNE"})
+
+    assert response.status_code == 200
+    assert len(response.json()) == 21
+
+
 def test_list_acheteurs(client):
     acheteurs = AcheteurFactory.create_batch(3)
     MarcheFactory.create_batch(2, acheteur=acheteurs[0], montant=5)

@@ -7,10 +7,43 @@ from tests.factories import AcheteurFactory, MarcheFactory, VendeurFactory
 
 def test_list_marche(client):
     MarcheFactory.create_batch(30)
+    marche_recherche = MarcheFactory(
+        objet="Achat d'ordinateurs",
+        cpv="456",
+        lieu__code="123",
+        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+        forme_prix=enums.FormePrix.FORFAITAIRE.db_value,
+        nature=enums.NatureMarche.DEFSEC.db_value,
+        procedure=enums.ProcedureMarche.COMPETITIF.db_value,
+        montant=42,
+        duree_mois=6,
+    )
+
     response = client.get("/marche")
 
     assert response.status_code == 200
-    assert len(response.json()) == 30
+    assert len(response.json()) == 31
+
+    response = client.get(
+        "/marche",
+        params={
+            "objet": "ordinateur",
+            "cpv": 45,
+            "code_lieu": marche_recherche.lieu.code,
+            "forme_prix": enums.FormePrix.FORFAITAIRE.value,
+            "type_marche": enums.NatureMarche.DEFSEC.value,
+            "procedure": enums.ProcedureMarche.COMPETITIF.value,
+            "montant_max": 42,
+            "montant_min": 42,
+            "duree_max": 6,
+            "duree_min": 6,
+            "offset": 0,
+            "limit": 100,
+        },
+    )
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["uid"] == marche_recherche.uid
 
 
 def test_procedure_et_filtres_succes(client):

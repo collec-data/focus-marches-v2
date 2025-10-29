@@ -19,7 +19,11 @@ from app.models.dto import (
     MarcheProcedureDto,
 )
 from app.models.enums import TypeCodeLieu
-from app.models.filters import FiltreTemporelStructure
+from app.models.filters import (
+    FiltreMarchesEtendus,
+    FiltresListeMarches,
+    FiltreTemporelStructure,
+)
 
 router = APIRouter()
 
@@ -45,19 +49,74 @@ def application_filtres(stmt: Select[Any], f: FiltreTemporelStructure) -> Select
     return stmt
 
 
+def application_filtres_etendus(
+    stmt: Select[Any], f: FiltreMarchesEtendus
+) -> Select[Any]:
+    stmt = application_filtres(stmt=stmt, f=f)
+
+    if f.objet:
+        stmt = stmt.where(Marche.objet.contains(f.objet))
+
+    if f.cpv:
+        stmt = stmt.where(Marche.cpv.startswith(f.cpv))
+
+    if f.code_lieu:
+        stmt = (
+            stmt.join(Marche.lieu)
+            .where(Lieu.code == str(f.code_lieu))
+            .where(Lieu.type_code == TypeCodeLieu.DEP.db_value)
+        )
+
+    if f.forme_prix:
+        stmt = stmt.where(Marche.forme_prix == f.forme_prix.db_value)
+
+    if f.type_marche:
+        stmt = stmt.where(Marche.nature == f.type_marche.db_value)
+
+    if f.procedure:
+        stmt = stmt.where(Marche.procedure == f.procedure.db_value)
+
+    # ToDo : technique achat
+
+    # ToDo : achat durable
+
+    if f.montant_max:
+        stmt = stmt.where(Marche.montant <= f.montant_max)
+
+    if f.montant_min:
+        stmt = stmt.where(Marche.montant >= f.montant_min)
+
+    if f.duree_max:
+        stmt = stmt.where(Marche.duree_mois <= f.duree_max)
+
+    if f.duree_min:
+        stmt = stmt.where(Marche.duree_mois >= f.duree_min)
+
+    return stmt
+
+
 @router.get("/", response_model=list[MarcheAllegeDto])
 def get_liste_marches(
-    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+    session: SessionDep,
+    filtres: Annotated[FiltresListeMarches, Query()],
 ) -> list[Marche]:
     acheteur = aliased(Structure)
     titulaires = aliased(Structure)
-    stmt = application_filtres(
+
+    stmt = application_filtres_etendus(
         select(Marche)
         .join(acheteur, Marche.acheteur, isouter=True)
         .join(titulaires, Marche.titulaires, isouter=True)
         .join(Marche.actes_sous_traitance, isouter=True),
         filtres,
     ).order_by(Marche.date_notification)
+
+    if filtres.offset is not None:
+        stmt = stmt.offset(filtres.offset)
+
+    if filtres.limit is not None:
+        stmt = stmt.limit(filtres.limit)
+
     return list(session.execute(stmt).scalars())
 
 
@@ -125,7 +184,7 @@ def get_marches_par_ccag(
 
 @router.get("/indicateurs", response_model=IndicateursDto)
 def get_indicateurs(
-    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+    session: SessionDep, filtres: Annotated[FiltreMarchesEtendus, Query()]
 ) -> IndicateursDto:
     if filtres.date_debut and filtres.date_fin:
         delta = filtres.date_fin - filtres.date_debut
@@ -133,23 +192,23 @@ def get_indicateurs(
     else:
         periode = None
     nb_contrats = session.execute(
-        application_filtres(select(func.count(Marche.id)), filtres)
+        application_filtres_etendus(select(func.count(Marche.id)), filtres)
     ).one()[0]
     montant_total = session.execute(
-        application_filtres(select(func.sum(Marche.montant)), filtres)
+        application_filtres_etendus(select(func.sum(Marche.montant)), filtres)
     ).one()[0]
     nb_acheteurs = session.execute(
-        application_filtres(
+        application_filtres_etendus(
             select(func.count(distinct(Structure.uid))).join(Marche.acheteur), filtres
         )
     ).one()[0]
     nb_fournisseurs = session.execute(
-        application_filtres(
+        application_filtres_etendus(
             select(func.count(distinct(Structure.uid))).join(Marche.titulaires), filtres
         )
     ).one()[0]
     nb_sous_traitance = session.execute(
-        application_filtres(
+        application_filtres_etendus(
             select(func.count(Marche.sous_traitance_declaree)).where(
                 Marche.sous_traitance_declaree.is_(True)
             ),
@@ -157,7 +216,7 @@ def get_indicateurs(
         )
     ).one()[0]
     nb_innovant = session.execute(
-        application_filtres(
+        application_filtres_etendus(
             select(func.count(Marche.marche_innovant)).where(
                 Marche.marche_innovant.is_(True)
             ),

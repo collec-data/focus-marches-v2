@@ -10,7 +10,13 @@ const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
     vendeurUid: { type: [String, null], default: null },
     dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    dateMax: { type: [Date, null], default: null },
+    query: {
+        type: Object,
+        default: () => {
+            return {};
+        }
+    }
 });
 
 const data = ref<Partial<PlotData>[]>();
@@ -77,7 +83,8 @@ function fetchData() {
             date_debut: props.dateMin,
             date_fin: props.dateMax,
             acheteur_uid: props.acheteurUid,
-            vendeur_uid: props.vendeurUid
+            vendeur_uid: props.vendeurUid,
+            ...props.query
         }
     }).then((response) => {
         if (response.data) {
@@ -86,7 +93,7 @@ function fetchData() {
     });
 }
 
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid, () => props.query], () => {
     fetchData();
 });
 

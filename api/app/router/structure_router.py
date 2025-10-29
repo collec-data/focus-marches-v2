@@ -6,9 +6,30 @@ from sqlalchemy import desc, func, select
 
 from app.dependencies import ApiEntrepriseDep, OpenDataSoftDep, SessionDep
 from app.models.db import Marche, Structure
-from app.models.dto import StructureAggMarchesDto, StructureEtendueDto
+from app.models.dto import StructureAggMarchesDto, StructureDto, StructureEtendueDto
 
 router = APIRouter()
+
+
+@router.get("/", response_model=list[StructureDto])
+def list_structures(
+    session: SessionDep,
+    nom: str | None = None,
+    is_acheteur: bool = False,
+    is_vendeur: bool = False,
+) -> list[Structure]:
+    stmt = select(Structure)
+
+    if is_acheteur is True:
+        stmt = stmt.where(Structure.acheteur)
+
+    if is_vendeur is True:
+        stmt = stmt.where(Structure.vendeur)
+
+    if nom:
+        stmt = stmt.where(Structure.nom.contains(nom))
+
+    return list(session.execute(stmt).scalars())
 
 
 @router.get("/acheteur", response_model=list[StructureAggMarchesDto])
