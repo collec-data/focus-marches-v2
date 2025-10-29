@@ -138,3 +138,16 @@ function hideMarcheModal() {
         </div>
     </Dialog>
 </template>
+
+<style scoped>
+.key {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    margin-bottom: 0.2rem;
+    margin-top: 1rem;
+}
+
+.value {
+    margin-bottom: 1rem;
+}
+</style>
