@@ -107,9 +107,7 @@ export function getNomDepartement(code: string): string {
 }
 
 export function getDepartementAvecNumeroAsListe() {
-    const result = <string[]>[];
-    for (const [k, v] of Object.entries(listeDepartements)) {
-        result.push('(' + k + ') ' + v);
-    }
-    return result;
+    return Object.entries(listeDepartements).map(([k, v]) => {
+        return { value: `(${k}) ${v}`, code: parseInt(k) };
+    });
 }

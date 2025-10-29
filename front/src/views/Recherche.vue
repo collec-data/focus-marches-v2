@@ -45,6 +45,7 @@ const filtres = ref({
     fournisseur: null as null | StructureDto,
     objet: null,
     cpv: null,
+    code_lieu: null,
     forme_prix: null,
     type_marche: null,
     procedure: null,
@@ -65,6 +66,7 @@ function fetchData() {
         vendeur_uid: filtres.value.fournisseur?.uid,
         objet: filtres.value.objet,
         cpv: filtres.value.cpv,
+        code_lieu: filtres.value.code_lieu,
         type_marche: filtres.value.type_marche,
         forme_prix: filtres.value.forme_prix,
         procedure: filtres.value.procedure,
@@ -107,7 +109,7 @@ const marcheUid = ref(null);
             <div class="flex flex-row gap-10">
                 <div class="basis-1/3">
                     <h3><i class="pi pi-history"></i> Quel est l'historique d'achat d'une collectivité ?</h3>
-                    <p>Commencez à écrire le nom de la collectivité dans la boîte «&nbsp;acheteur&nbsp;». Au fur et mesure, des propositions vont appraître.</p>
+                    <p>Commencez à écrire le nom de la collectivité dans la boîte «&nbsp;acheteur&nbsp;». Au fur et mesure, des propositions vont apparaître.</p>
                     <p>Dès que vous allez répérer la collectivité qui vous intéresse, cliquez sur celle-ci, puis sur le bouton «&nbsp;Chercher&nbsp;». L'historique de ses achat s'affichera sur le tableau en bas de page.</p>
                 </div>
 
@@ -163,11 +165,22 @@ const marcheUid = ref(null);
                     </div>
                     <div class="basis-1/3">
                         <label for="libelle_cpv">Libellé CPV</label>
-                        <InputText inputId="libelle_cpv" name="libelle_cpv" placeholder="Ex: ordinateur, tablette" fluid disabled="true"></InputText>
+                        <InputText inputId="libelle_cpv" name="libelle_cpv" placeholder="Ex: ordinateur, tablette" fluid disabled></InputText>
                     </div>
                     <div class="basis-1/3">
                         <label for="lieu">Lieu</label>
-                        <Select :options="getDepartementAvecNumeroAsListe()" inputId="lieu" name="lieu" aria-label="Sélecteur de département" placeholder="Tous les départements" showClear fluid />
+                        <Select
+                            v-model="filtres.code_lieu"
+                            :options="getDepartementAvecNumeroAsListe()"
+                            optionLabel="value"
+                            optionValue="code"
+                            inputId="lieu"
+                            name="lieu"
+                            aria-label="Sélecteur de département"
+                            placeholder="Tous les départements"
+                            showClear
+                            fluid
+                        />
                     </div>
                 </div>
                 <div v-if="recherche_avancee" class="flex flex-row gap-5 mb-5">
