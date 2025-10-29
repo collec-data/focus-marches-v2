@@ -64,7 +64,8 @@ function hideMarcheModal() {
 
                 <div class="key">Part de produits issus ou fabriqués</div>
                 <div class="value" aria-label="Pourcentage d'origine France et pourcentage d'origine de l'Union Européenne">
-                    <span class="fi fi-fr"></span> {{ marcheDetaille?.origine_france }}% | <span class="fi fi-eu"></span> {{ marcheDetaille?.origine_ue }}%
+                    <img src="@/assets/images/flag-fr.svg" alt="le drapeau français" class="flag" /> {{ marcheDetaille?.origine_france }}% | <img src="@/assets/images/flag-eu.svg" alt="le drapeau européen" class="flag" />
+                    {{ marcheDetaille?.origine_ue }}%
                 </div>
 
                 <div class="key">Considération environnementale</div>
@@ -149,5 +150,11 @@ function hideMarcheModal() {
 
 .value {
     margin-bottom: 1rem;
+}
+
+.flag {
+    display: inline-block;
+    width: 1.2rem;
+    border-radius: 20%;
 }
 </style>

@@ -16,7 +16,6 @@
     "dependencies": {
         "@primeuix/themes": "^1.0.0",
         "@tailwindcss/postcss": "^4.1.14",
-        "flag-icons": "^7.5.0",
         "leaflet": "^1.9.4",
         "plotly.js-dist": "^3.1.1",
         "primeicons": "^7.0.0",
