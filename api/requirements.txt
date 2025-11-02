@@ -34,7 +34,7 @@ email-validator==2.3.0
     #   pydantic
 fastapi[standard]==0.119.0
     # via focus-marche-v2 (pyproject.toml)
-fastapi-cli[standard]==0.0.13
+fastapi-cli[standard]==0.0.14
     # via fastapi
 fastapi-cloud-cli==0.3.1
     # via fastapi-cli
@@ -119,7 +119,7 @@ rich-toolkit==0.15.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
-rignore==0.7.1
+rignore==0.7.3
     # via fastapi-cloud-cli
 sentry-sdk==2.42.0
     # via fastapi-cloud-cli
