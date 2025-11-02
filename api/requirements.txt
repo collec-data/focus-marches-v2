@@ -97,7 +97,7 @@ pyrate-limiter==2.10.0
     # via
     #   api-entreprise
     #   focus-marche-v2 (pyproject.toml)
-python-dotenv==1.1.1
+python-dotenv==1.2.1
     # via
     #   pydantic-settings
     #   uvicorn
