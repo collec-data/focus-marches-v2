@@ -3,7 +3,7 @@ import { getMarchesParDepartementMarcheDepartementGet } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { onMounted, ref } from 'vue';
 
-import type { MarcheDepartementDtoOutput } from '@/client';
+import type { MarcheDepartementDto } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
@@ -23,7 +23,7 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Array<Par
     ];
 }
 
-function transform(input: Array<MarcheDepartementDtoOutput>) {
+function transform(input: Array<MarcheDepartementDto>) {
     let output = {
         departements: [] as Array<string>,
         montants: [] as Array<number>,

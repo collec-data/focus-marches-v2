@@ -4,15 +4,15 @@ import { okabe_ito } from '@/service/GraphColorsService';
 import { formatCurrency, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
-import type { StructureAggMarchesDtoOutput } from '@/client';
+import type { StructureAggMarchesDto } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
-const listeAcheteurs = ref<Array<StructureAggMarchesDtoOutput>>([]);
+const listeAcheteurs = ref<Array<StructureAggMarchesDto>>([]);
 
 const data = ref<Partial<PlotData>[]>();
 const layout = { margin: { t: 0 } } as Partial<Layout>;
 
-function transform(input: Array<StructureAggMarchesDtoOutput>) {
+function transform(input: Array<StructureAggMarchesDto>) {
     let output = {
         structures: [] as Array<string | null>,
         montants: [] as Array<string>

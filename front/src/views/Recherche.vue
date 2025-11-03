@@ -4,10 +4,10 @@ import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
 import { formatCurrency, formatDate } from '@/service/HelpersService';
 import { ref } from 'vue';
 
-import type { MarcheAllegeDtoOutput, StructureDto } from '@/client';
+import type { MarcheAllegeDto, StructureDto } from '@/client';
 import type { AutoCompleteCompleteEvent } from 'primevue';
 
-const marches = ref<MarcheAllegeDtoOutput[]>([]);
+const marches = ref<MarcheAllegeDto[]>([]);
 
 const acheteurs = ref<StructureDto[]>([]);
 const fournisseurs = ref<StructureDto[]>([]);

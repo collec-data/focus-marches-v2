@@ -1,21 +1,21 @@
 import {
     CategorieMarche,
-    Ccag,
-    type DecpMalFormeDtoOutput,
-    type IndicateursDto,
-    type MarcheAllegeDtoOutput,
-    type MarcheCcagDtoOutput,
-    type MarcheCategorieDepartementDtoOutput,
-    type MarcheDepartementDtoOutput,
-    type MarcheNatureDtoOutput,
-    type MarcheProcedureDtoOutput,
     type CategoriesDto,
+    Ccag,
+    type DecpMalFormeDto,
+    type IndicateursDto,
+    type MarcheAllegeDto,
+    type MarcheCategorieDepartementDto,
+    type MarcheCcagDto,
+    type MarcheDepartementDto,
+    type MarcheNatureDto,
+    type MarcheProcedureDto,
     ProcedureMarche,
     StatsErreursDto,
-    type StructureAggMarchesDtoOutput
+    type StructureAggMarchesDto
 } from '../src/client/types.gen.ts';
 
-export const marche: MarcheAllegeDtoOutput = {
+export const marche: MarcheAllegeDto = {
     uid: 1234,
     id: '00001234',
     acheteur: { uid: 42, identifiant: '000000', type_identifiant: 'SIRET', nom: 'Acheteur', vendeur: false, acheteur: true },
@@ -33,24 +33,24 @@ export const marche: MarcheAllegeDtoOutput = {
 
 export const indicateurs: IndicateursDto = { periode: null, nb_contrats: 456, montant_total: '10000000000.00', nb_acheteurs: 2, nb_fournisseurs: 3, nb_sous_traitance: 4, nb_innovant: 5 };
 
-export const structure: StructureAggMarchesDtoOutput = { structure: { uid: 42, identifiant: '0000000', type_identifiant: 'SIRET', nom: 'Une structure', vendeur: false, acheteur: true }, montant: '10000000', nb_contrats: 500 };
+export const structure: StructureAggMarchesDto = { structure: { uid: 42, identifiant: '0000000', type_identifiant: 'SIRET', nom: 'Une structure', vendeur: false, acheteur: true }, montant: '10000000', nb_contrats: 500 };
 
-export const nature: MarcheNatureDtoOutput[] = [
+export const nature: MarcheNatureDto[] = [
     { mois: '2025-01', nature: 1, montant: '100', nombre: 2 },
     { mois: '2025-02', nature: 1, montant: '200', nombre: 1 }
 ];
 
-export const procedures: MarcheProcedureDtoOutput[] = [
+export const procedures: MarcheProcedureDto[] = [
     { procedure: ProcedureMarche.APPEL_D_OFFRES_OUVERT, montant: '100.00', nombre: 1 },
     { procedure: ProcedureMarche.APPEL_D_OFFRES_RESTREINT, montant: '200.00', nombre: 3 }
 ];
 
-export const departements: MarcheDepartementDtoOutput[] = [
+export const departements: MarcheDepartementDto[] = [
     { code: '35', montant: '100', nombre: 2 },
     { code: '44', montant: '200', nombre: 1 }
 ];
 
-export const categories_departements: MarcheCategorieDepartementDtoOutput[] = [
+export const categories_departements: MarcheCategorieDepartementDto[] = [
     { categorie: 'Fournitures', code: '35', montant: '1000' },
     { categorie: 'Fournitures', code: '44', montant: '5000' },
     { categorie: 'Services', code: '35', montant: '6000' },
@@ -58,7 +58,7 @@ export const categories_departements: MarcheCategorieDepartementDtoOutput[] = [
     { categorie: 'Fournitures', code: '44', montant: '1000.0' }
 ];
 
-export const erreurs: DecpMalFormeDtoOutput[] = [
+export const erreurs: DecpMalFormeDto[] = [
     {
         uid: 123,
         decp: {},
@@ -68,7 +68,7 @@ export const erreurs: DecpMalFormeDtoOutput[] = [
 
 export const erreursStats: StatsErreursDto[] = [{ erreur: 'Field required', nombre: 1263, localisation: 'offresRecues' }];
 
-export const ccag: MarcheCcagDtoOutput[] = [{ ccag: Ccag.TRAVAUX, montant: '10000', nombre: 123, categorie: CategorieMarche.TRAVAUX }];
+export const ccag: MarcheCcagDto[] = [{ ccag: Ccag.TRAVAUX, montant: '10000', nombre: 123, categorie: CategorieMarche.TRAVAUX }];
 
 export const categories: CategoriesDto[] = [
     { categorie: 'Services', mois: '2020-11', montant: '123456.0', nombre: 2 },

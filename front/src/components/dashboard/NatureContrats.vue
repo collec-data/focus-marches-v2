@@ -3,7 +3,7 @@ import { getMarchesParNatureMarcheNatureGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
-import type { MarcheNatureDtoOutput } from '@/client';
+import type { MarcheNatureDto } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
 import type Plotly from 'plotly.js-dist';
 
@@ -20,7 +20,7 @@ const stats = ref([
     { montant_total: 0, nombre_total: 0 }
 ]);
 
-function transform(input: Array<MarcheNatureDtoOutput>) {
+function transform(input: Array<MarcheNatureDto>) {
     let output = [
         { labels: [] as Array<string>, values: [] as Array<number> },
         { labels: [] as Array<string>, values: [] as Array<number> },
