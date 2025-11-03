@@ -3,7 +3,7 @@ import { getListeMarchesMarcheGet } from '@/client';
 import { formatDate } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
-import type { MarcheAllegeDtoOutput } from '@/client';
+import type { MarcheAllegeDto } from '@/client';
 import type { PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
@@ -22,7 +22,7 @@ const props = defineProps({
 const data = ref<Partial<PlotData>[]>();
 const layout = { margin: { t: 0, r: 0, l: 60, b: 50 }, xaxis: { dtick: 24, title: { text: 'DATE' } }, yaxis: { title: { text: 'MONTANT (€)' } } };
 
-function transform(data: Array<MarcheAllegeDtoOutput>): Partial<PlotData>[] {
+function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     const common_data = { mode: 'markers' as PlotData['mode'] };
     const common_marker = {
         line: {

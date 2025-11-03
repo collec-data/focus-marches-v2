@@ -4,7 +4,7 @@ import { formatCurrency, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
 
-import type { StructureAggMarchesDtoOutput } from '@/client';
+import type { StructureAggMarchesDto } from '@/client';
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -13,7 +13,7 @@ const filters = ref({
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
-const acheteurs = ref<Array<StructureAggMarchesDtoOutput>>([]);
+const acheteurs = ref<Array<StructureAggMarchesDto>>([]);
 
 onMounted(() => {
     listAcheteursStructureAcheteurGet().then((response) => {

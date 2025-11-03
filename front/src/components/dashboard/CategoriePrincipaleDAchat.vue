@@ -3,7 +3,7 @@ import { getCategoriesMarcheCategorieGet } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
-import type { CategoriesDtoOutput } from '@/client';
+import type { CategoriesDto } from '@/client';
 import { bright_okabe_ito } from '@/service/GraphColorsService';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
@@ -30,7 +30,7 @@ const stats = ref({
     services: { montant_total: 0, nombre_total: 0 }
 });
 
-function transform(input: CategoriesDtoOutput[]): idatas {
+function transform(input: CategoriesDto[]): idatas {
     const output = <idatas>{
         services: [{ x: [], y: [], type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: bright_okabe_ito[3] }, fillcolor: bright_okabe_ito[3] }],
         travaux: [{ x: [], y: [], type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: bright_okabe_ito[0] }, fillcolor: bright_okabe_ito[0] }],
