@@ -40,7 +40,7 @@ factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
 faker==37.11.0
     # via factory-boy
-fastapi[standard]==0.119.0
+fastapi[standard]==0.120.4
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard]==0.0.13
     # via fastapi
