@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Acheteurs from '@/components/dashboard/Acheteurs.vue';
 import CategoriePrincipaleDAchat from '@/components/dashboard/CategoriePrincipaleDAchat.vue';
 import Departements from '@/components/dashboard/Departements.vue';
 import DistributionAchatsParDepartement from '@/components/dashboard/DistributionAchatsParDepartement.vue';
 import IndicateursCles from '@/components/dashboard/IndicateursCles.vue';
 import NatureContrats from '@/components/dashboard/NatureContrats.vue';
 import Procedure from '@/components/dashboard/Procedure.vue';
+import Top12 from '@/components/dashboard/Top12.vue';
 </script>
 
 <template>
@@ -17,7 +17,8 @@ import Procedure from '@/components/dashboard/Procedure.vue';
         </p>
         <IndicateursCles />
         <CategoriePrincipaleDAchat />
-        <Acheteurs />
+        <Top12 type="acheteurs" />
+        <Top12 type="fournisseurs" />
         <NatureContrats />
         <Procedure />
         <Departements />

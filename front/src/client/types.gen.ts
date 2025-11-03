@@ -1388,6 +1388,18 @@ export type ListAcheteursStructureAcheteurGetData = {
          * Limit
          */
         limit?: number | null;
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: number | null;
     };
     url: '/structure/acheteur';
 };
@@ -1420,6 +1432,18 @@ export type ListVendeursStructureVendeurGetData = {
          * Limit
          */
         limit?: number | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: number | null;
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
     };
     url: '/structure/vendeur';
 };

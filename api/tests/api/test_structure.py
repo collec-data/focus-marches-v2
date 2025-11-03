@@ -30,10 +30,14 @@ def test_list_structures(client):
 
 
 def test_list_acheteurs(client):
+    titulaire1 = VendeurFactory()
+    titulaire2 = VendeurFactory()
     acheteurs = AcheteurFactory.create_batch(3)
-    MarcheFactory.create_batch(2, acheteur=acheteurs[0], montant=5)
-    MarcheFactory(acheteur=acheteurs[1], montant=20)
-    MarcheFactory(acheteur=acheteurs[2], montant=1)
+    MarcheFactory.create_batch(
+        2, acheteur=acheteurs[0], montant=5, titulaires=[titulaire1, titulaire2]
+    )
+    marche = MarcheFactory(acheteur=acheteurs[1], montant=20, titulaires=[titulaire1])
+    MarcheFactory(acheteur=acheteurs[2], montant=1, titulaires=[titulaire2])
 
     response = client.get("/structure/acheteur", params={"limit": 2})
     assert response.status_code == 200
@@ -65,11 +69,33 @@ def test_list_acheteurs(client):
         },
     ]
 
+    response = client.get("/structure/acheteur", params={"vendeur_uid": titulaire2.uid})
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert {
+        response.json()[0]["structure"]["uid"],
+        response.json()[1]["structure"]["uid"],
+    } == {acheteurs[0].uid, acheteurs[2].uid}
+
+    response = client.get(
+        "/structure/acheteur",
+        params={
+            "date_debut": marche.date_notification,
+            "date_fin": marche.date_notification,
+            "limit": 10,
+        },
+    )
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+
 
 def test_list_vendeurs(client):
     vendeurs = VendeurFactory.create_batch(3)
-    MarcheFactory.create_batch(2, titulaires=[vendeurs[0]], montant=5)
-    MarcheFactory(titulaires=[vendeurs[1]], montant=2)
+    acheteur = AcheteurFactory()
+    MarcheFactory.create_batch(
+        2, titulaires=[vendeurs[0]], montant=5, acheteur=acheteur
+    )
+    marche = MarcheFactory(titulaires=[vendeurs[1]], montant=2, acheteur=acheteur)
     MarcheFactory(titulaires=vendeurs, montant=3)
 
     response = client.get("/structure/vendeur")
@@ -90,6 +116,26 @@ def test_list_vendeurs(client):
     assert data[2]["structure"]["identifiant"] == vendeurs[2].identifiant
     assert data[2]["nb_contrats"] == 1
     assert data[2]["montant"] == "3"
+
+    response = client.get("/structure/vendeur", params={"acheteur_uid": acheteur.uid})
+    assert response.status_code == 200
+    assert len(response.json()) == 2
+    assert {
+        response.json()[0]["structure"]["uid"],
+        response.json()[1]["structure"]["uid"],
+    } == {vendeurs[0].uid, vendeurs[1].uid}
+
+    response = client.get(
+        "/structure/vendeur",
+        params={
+            "date_debut": marche.date_notification,
+            "date_fin": marche.date_notification,
+            "limit": 10,
+        },
+    )
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["structure"]["uid"] == vendeurs[1].uid
 
 
 def test_get_structure(client, mocker):
