@@ -42,7 +42,7 @@ faker==37.11.0
     # via factory-boy
 fastapi[standard]==0.120.4
     # via focus-marche-v2 (pyproject.toml)
-fastapi-cli[standard]==0.0.13
+fastapi-cli[standard]==0.0.14
     # via fastapi
 fastapi-cloud-cli==0.3.1
     # via fastapi-cli
@@ -155,9 +155,9 @@ rich-toolkit==0.15.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
-rignore==0.7.1
+rignore==0.7.3
     # via fastapi-cloud-cli
-ruff==0.14.1
+ruff==0.14.3
     # via focus-marche-v2 (pyproject.toml)
 sentry-sdk==2.42.0
     # via fastapi-cloud-cli
