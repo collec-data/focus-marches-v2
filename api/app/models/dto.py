@@ -220,6 +220,7 @@ class StatsErreursDto(BaseModel):
     erreur: str
     nombre: int
     localisation: str
+    type: str
 
 
 class MarcheProcedureDto(BaseModel):

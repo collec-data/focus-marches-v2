@@ -8,17 +8,21 @@ const stats = ref<Array<StatsErreursDto>>([]);
 const listDecpMalFormes = ref<Array<DecpMalFormeDto>>([]);
 
 onMounted(() => {
-    getErreursImportErreursImportGet({ query: { limit: 50 } }).then((response) => {
-        if (response.data) {
-            listDecpMalFormes.value = response.data;
-        }
-    });
     getStatsErreursErreursImportStatsGet().then((response) => {
         if (response.data) {
             stats.value = response.data;
         }
     });
 });
+
+function loadDecps(localisation: string, type: string) {
+    console.log(type);
+    getErreursImportErreursImportGet({ query: { localisation: localisation, type: type } }).then((response) => {
+        if (response.data) {
+            listDecpMalFormes.value = response.data;
+        }
+    });
+}
 </script>
 
 <template>
@@ -27,6 +31,11 @@ onMounted(() => {
         <div>
             <h2>Statistiques</h2>
             <DataTable :value="stats" scrollable scrollHeight="30rem" sortField="nombre" :sortOrder="-1">
+                <Column header="DECPs">
+                    <template #body="{ data }">
+                        <Button icon="pi pi-search" severity="secondary" aria-label="Voir les DECPs concernés par cette erreur" @click="loadDecps(data.localisation, data.type)" />
+                    </template>
+                </Column>
                 <Column field="localisation" header="Champs" sortable></Column>
                 <Column field="erreur" header="Erreur" sortable></Column>
                 <Column field="nombre" header="Nombre" sortable></Column>
@@ -34,6 +43,7 @@ onMounted(() => {
         </div>
         <div class="mt-10">
             <h2>DECPs en erreur</h2>
+            <p v-if="!listDecpMalFormes.length">Clique sur la loupe d'une erreur dans le tableau ci-dessus pour afficher les DECPs concernés</p>
             <Panel v-for="decp in listDecpMalFormes" :key="decp.uid">
                 <ul>
                     <li v-for="erreur in decp.erreurs" :key="erreur.uid">

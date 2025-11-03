@@ -2,13 +2,23 @@ from tests.factories import DecpMalFormeFactory
 
 
 def test_list_erreurs(client):
-    DecpMalFormeFactory.create_batch(2)
+    localisation = "lorem.ipsum.dolor"
+    DecpMalFormeFactory(erreurs__0__localisation=localisation)
+    DecpMalFormeFactory.create_batch(3)
 
-    response = client.get("/erreurs-import")
+    response = client.get("/erreurs-import", params={"limit": 2, "offset": 1})
 
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert len(response.json()[0]["erreurs"])
+
+    response = client.get(
+        "/erreurs-import",
+        params={"localisation": localisation, "type": "Erreur générique"},
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
 
 
 def test_get_stats_aucune_erreur(client):
@@ -42,9 +52,34 @@ def test_get_stats(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"erreur": "Lorem ipsum dolor", "localisation": "montant", "nombre": 6},
-        {"erreur": "Erreur Une", "localisation": ".", "nombre": 5},
-        {"erreur": "Erreur Trois", "localisation": ".", "nombre": 3},
-        {"erreur": "Lorem ipsum dolor", "localisation": "durée", "nombre": 3},
-        {"erreur": "Erreur Deux", "localisation": ".", "nombre": 1},
+        {
+            "erreur": "Lorem ipsum dolor",
+            "localisation": "montant",
+            "nombre": 6,
+            "type": "Erreur générique",
+        },
+        {
+            "erreur": "Erreur Une",
+            "localisation": ".",
+            "nombre": 5,
+            "type": "Erreur générique",
+        },
+        {
+            "erreur": "Erreur Trois",
+            "localisation": ".",
+            "nombre": 3,
+            "type": "Erreur générique",
+        },
+        {
+            "erreur": "Lorem ipsum dolor",
+            "localisation": "durée",
+            "nombre": 3,
+            "type": "Erreur générique",
+        },
+        {
+            "erreur": "Erreur Deux",
+            "localisation": ".",
+            "nombre": 1,
+            "type": "Erreur générique",
+        },
     ]
