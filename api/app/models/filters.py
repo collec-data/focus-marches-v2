@@ -29,3 +29,12 @@ class FiltreMarchesEtendus(FiltreTemporelStructure):
 class FiltresListeMarches(FiltreMarchesEtendus):
     limit: int | None = Field(default=None, gt=0)
     offset: int | None = Field(default=None, ge=0)
+
+
+class FiltreListesConcessions(BaseModel):
+    limit: int | None = Field(default=None, gt=0)
+    offset: int | None = Field(default=None, ge=0)
+    date_debut: date | None = None
+    date_fin: date | None = None
+    autorite_concedante_uid: str | None = None
+    concessionnaire_uid: str | None = None

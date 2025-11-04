@@ -33,7 +33,7 @@ export type ActeSousTraitanceDto = {
      * Montant
      */
     montant: string;
-    variation_prix: VariationPrix;
+    variation_prix: VariationPrix | null;
 };
 
 /**
@@ -128,12 +128,54 @@ export type ContratConcessionDto = {
     /**
      * Id
      */
-    id: number;
+    id: string;
     autorite_concedante: StructureDto;
+    nature: NatureConcession | null;
     /**
      * Objet
      */
     objet: string;
+    procedure: ProcedureConcession | null;
+    /**
+     * Duree Mois
+     */
+    duree_mois: number;
+    /**
+     * Date Signature
+     */
+    date_signature: Date;
+    /**
+     * Date Publication
+     */
+    date_publication: Date;
+    /**
+     * Date Debut Execution
+     */
+    date_debut_execution: Date;
+    /**
+     * Valeur Globale
+     */
+    valeur_globale: string;
+    /**
+     * Montant Subvention Publique
+     */
+    montant_subvention_publique: string;
+    /**
+     * Donnees Execution
+     */
+    donnees_execution?: Array<DonneeExecutionDto>;
+    /**
+     * Concessionnaires
+     */
+    concessionnaires: Array<StructureDto>;
+    /**
+     * Considerations Sociales
+     */
+    considerations_sociales: Array<ConsiderationsSociales>;
+    /**
+     * Considerations Environnementales
+     */
+    considerations_environnementales: Array<ConsiderationsEnvironnementales>;
 };
 
 /**
@@ -154,6 +196,32 @@ export type DecpMalFormeDto = {
      * Erreurs
      */
     erreurs: Array<ErreurDto>;
+};
+
+/**
+ * DonneeExecutionDto
+ */
+export type DonneeExecutionDto = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Id
+     */
+    id: number;
+    /**
+     * Date Publication
+     */
+    date_publication: Date;
+    /**
+     * Depenses Investissement
+     */
+    depenses_investissement: string;
+    /**
+     * Tarifs
+     */
+    tarifs: Array<TarifDto>;
 };
 
 /**
@@ -565,6 +633,21 @@ export type ModificationMarcheDto = {
 };
 
 /**
+ * NatureConcession
+ */
+export const NatureConcession = {
+    CONCESSION_DE_TRAVAUX: 'Concession de travaux',
+    CONCESSION_DE_SERVICE: 'Concession de service',
+    CONCESSION_DE_SERVICE_PUBLIC: 'Concession de service public',
+    'DÉLÉGATION_DE_SERVICE_PUBLIC': 'Délégation de service public'
+} as const;
+
+/**
+ * NatureConcession
+ */
+export type NatureConcession = typeof NatureConcession[keyof typeof NatureConcession];
+
+/**
  * NatureMarche
  */
 export const NatureMarche = {
@@ -577,6 +660,21 @@ export const NatureMarche = {
  * NatureMarche
  */
 export type NatureMarche = typeof NatureMarche[keyof typeof NatureMarche];
+
+/**
+ * ProcedureConcession
+ */
+export const ProcedureConcession = {
+    'PROCÉDURE_NÉGOCIÉE_OUVERTE': 'Procédure négociée ouverte',
+    'PROCÉDURE_NON_NÉGOCIÉE_OUVERTE': 'Procédure non négociée ouverte',
+    'PROCÉDURE_NÉGOCIÉE_RESTREINTE': 'Procédure négociée restreinte',
+    'PROCÉDURE_NON_NÉGOCIÉE_RESTREINTE': 'Procédure non négociée restreinte'
+} as const;
+
+/**
+ * ProcedureConcession
+ */
+export type ProcedureConcession = typeof ProcedureConcession[keyof typeof ProcedureConcession];
 
 /**
  * ProcedureMarche
@@ -730,6 +828,24 @@ export type StructureEtendueDto = {
      * Date Creation
      */
     date_creation?: Date | null;
+};
+
+/**
+ * TarifDto
+ */
+export type TarifDto = {
+    /**
+     * Uid
+     */
+    uid: number;
+    /**
+     * Intitule
+     */
+    intitule: string;
+    /**
+     * Tarif
+     */
+    tarif: string;
 };
 
 /**
@@ -1323,11 +1439,27 @@ export type GetListeConcessionsContratConcessionGetData = {
         /**
          * Limit
          */
-        limit?: number;
+        limit?: number | null;
         /**
          * Offset
          */
-        offset?: number;
+        offset?: number | null;
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Autorite Concedante Uid
+         */
+        autorite_concedante_uid?: string | null;
+        /**
+         * Concessionnaire Uid
+         */
+        concessionnaire_uid?: string | null;
     };
     url: '/contrat-concession/';
 };
@@ -1351,6 +1483,36 @@ export type GetListeConcessionsContratConcessionGetResponses = {
 };
 
 export type GetListeConcessionsContratConcessionGetResponse = GetListeConcessionsContratConcessionGetResponses[keyof GetListeConcessionsContratConcessionGetResponses];
+
+export type GetConcessionContratConcessionUidGetData = {
+    body?: never;
+    path: {
+        /**
+         * Uid
+         */
+        uid: number;
+    };
+    query?: never;
+    url: '/contrat-concession/{uid}';
+};
+
+export type GetConcessionContratConcessionUidGetErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetConcessionContratConcessionUidGetError = GetConcessionContratConcessionUidGetErrors[keyof GetConcessionContratConcessionUidGetErrors];
+
+export type GetConcessionContratConcessionUidGetResponses = {
+    /**
+     * Successful Response
+     */
+    200: ContratConcessionDto;
+};
+
+export type GetConcessionContratConcessionUidGetResponse = GetConcessionContratConcessionUidGetResponses[keyof GetConcessionContratConcessionUidGetResponses];
 
 export type ListStructuresStructureGetData = {
     body?: never;

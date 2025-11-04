@@ -11,7 +11,9 @@ from app.models.enums import (
     ConsiderationsSociales,
     FormePrix,
     ModaliteExecution,
+    NatureConcession,
     NatureMarche,
+    ProcedureConcession,
     ProcedureMarche,
     TechniqueAchat,
     TypeCodeLieu,
@@ -81,7 +83,6 @@ class LieuDto(BaseModel):
 
 class TarifDto(BaseModel):
     uid: int
-    uid_donnee_execution: int
     intitule: str
     tarif: Decimal
 
@@ -89,7 +90,6 @@ class TarifDto(BaseModel):
 class DonneeExecutionDto(BaseModel):
     uid: int
     id: int
-    uid_contrat_concession: int
     date_publication: date
     depenses_investissement: Decimal
     tarifs: list[TarifDto]
@@ -185,21 +185,27 @@ class ModificationConcessionDto(BaseModel):
 
 class ContratConcessionDto(BaseModel):
     uid: int
-    id: int
+    id: str
     autorite_concedante: StructureDto
-    # nature: NatureConcession | None
+    nature_as_str: NatureConcession | None = Field(serialization_alias="nature")
     objet: str
-    # procedure: ProcedureConcession | None
-    # duree_mois: int
-    # date_signature: date
-    # date_publication: date
-    # date_debut_execution: date
-    # valeur_globale: Decimal
-    # montant_subvention_publique: Decimal
-    # donnees_execution: list[DonneeExecutionDto]
-    # concessionnaires: list[StructureDto]
-    # considerations_sociales: list[ConsiderationsSociales]
-    # considerations_environnementales: list[ConsiderationsEnvironnementales]
+    procedure_as_str: ProcedureConcession | None = Field(
+        serialization_alias="procedure"
+    )
+    duree_mois: int
+    date_signature: date
+    date_publication: date
+    date_debut_execution: date
+    valeur_globale: Decimal
+    montant_subvention_publique: Decimal
+    donnees_execution: list[DonneeExecutionDto] = Field(default_factory=list)
+    concessionnaires: list[StructureDto]
+    considerations_sociales_as_str: list[ConsiderationsSociales] = Field(
+        serialization_alias="considerations_sociales"
+    )
+    considerations_environnementales_as_str: list[ConsiderationsEnvironnementales] = (
+        Field(serialization_alias="considerations_environnementales")
+    )
     # modifications: list[ModificationConcessionDto]
 
 

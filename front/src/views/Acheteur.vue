@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
 import { getStructureStructureUidGet } from '@/client';
+import ListeConcessions from '@/components/ListeConcessions.vue';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -47,5 +48,6 @@ onMounted(() => {
         <NatureContrats :acheteurUid :dateMin :dateMax />
         <CCAG :acheteurUid :dateMin :dateMax />
         <Procedure :acheteurUid :dateMin :dateMax />
+        <ListeConcessions :autoriteConcedanteUid="acheteurUid" :dateMin :dateMax />
     </main>
 </template>

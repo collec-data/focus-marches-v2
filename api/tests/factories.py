@@ -66,18 +66,19 @@ class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
         model = db.ContratConcession
 
     uid = factory.declarations.Sequence(lambda n: n)
-    id = factory.declarations.Sequence(lambda n: n)
+    id = factory.declarations.Sequence(lambda n: str(n))
     autorite_concedante = factory.declarations.SubFactory(AcheteurFactory)
     objet = "Lorem ipsum dolor"
     procedure = enums.ProcedureConcession.NEGO_OUVERTE.db_value
     duree_mois = 1
-    date_signature = factory.faker.Faker("date_time")
-    date_publication = factory.faker.Faker("date_time")
-    date_debut_execution = factory.faker.Faker("date_time")
+    date_signature = factory.faker.Faker("date")
+    date_publication = factory.faker.Faker("date")
+    date_debut_execution = factory.faker.Faker("date")
     valeur_globale = factory.faker.Faker("pyint")
     montant_subvention_publique = 0.0
     considerations_sociales: list[enums.ConsiderationsSociales] = []
     considerations_environnementales: list[enums.ConsiderationsEnvironnementales] = []
+    concessionnaires: list[VendeurFactory] = []
 
 
 class ErreurFactory(factory.alchemy.SQLAlchemyModelFactory):

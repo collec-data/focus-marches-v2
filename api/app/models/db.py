@@ -20,7 +20,9 @@ from app.models.enums import (
     ConsiderationsSociales,
     FormePrix,
     ModaliteExecution,
+    NatureConcession,
     NatureMarche,
+    ProcedureConcession,
     ProcedureMarche,
     TechniqueAchat,
     TypeCodeLieu,
@@ -282,13 +284,41 @@ class ContratConcession(Base):
     concessionnaires: Mapped[list[Structure]] = relationship(
         secondary=concession_structure_table
     )  # **
-    considerations_sociales: Mapped[list[ConsiderationsSociales]] = mapped_column(
+    considerations_sociales: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
-    considerations_environnementales: Mapped[list[ConsiderationsEnvironnementales]] = (
-        mapped_column(MutableList.as_mutable(PickleType))
+    considerations_environnementales: Mapped[list[int]] = mapped_column(
+        MutableList.as_mutable(PickleType)
     )
     modifications: Mapped[list[ModificationConcession]] = relationship()  # *1
+
+    @hybrid_property
+    def nature_as_str(self) -> NatureConcession | None:
+        return NatureConcession.from_db_value(self.nature) if self.nature else None
+
+    @hybrid_property
+    def procedure_as_str(self) -> ProcedureConcession | None:
+        return (
+            ProcedureConcession.from_db_value(self.procedure)
+            if self.procedure
+            else None
+        )
+
+    @hybrid_property
+    def considerations_sociales_as_str(self) -> list[ConsiderationsSociales]:
+        return [
+            ConsiderationsSociales.from_db_value(v)
+            for v in self.considerations_sociales
+        ]
+
+    @hybrid_property
+    def considerations_environnementales_as_str(
+        self,
+    ) -> list[ConsiderationsEnvironnementales]:
+        return [
+            ConsiderationsEnvironnementales.from_db_value(v)
+            for v in self.considerations_environnementales
+        ]
 
 
 class Erreur(Base):
