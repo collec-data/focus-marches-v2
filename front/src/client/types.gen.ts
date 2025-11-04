@@ -611,6 +611,10 @@ export type StatsErreursDto = {
      * Localisation
      */
     localisation: string;
+    /**
+     * Type
+     */
+    type: string;
 };
 
 /**
@@ -833,11 +837,19 @@ export type GetErreursImportErreursImportGetData = {
         /**
          * Limit
          */
-        limit?: number;
+        limit?: number | null;
         /**
          * Offset
          */
-        offset?: number;
+        offset?: number | null;
+        /**
+         * Localisation
+         */
+        localisation?: string | null;
+        /**
+         * Type
+         */
+        type?: string | null;
     };
     url: '/erreurs-import/';
 };

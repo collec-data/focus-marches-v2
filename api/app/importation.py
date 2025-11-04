@@ -424,7 +424,9 @@ class ImportateurDecp:
             decp.erreurs.append(
                 Erreur(
                     type=erreur["type"],
-                    localisation=".".join(str(v) for v in erreur["loc"]),
+                    localisation=".".join(
+                        str(v) for v in erreur["loc"] if type(v) is not int
+                    ),
                     message=erreur["msg"],
                 )
             )
