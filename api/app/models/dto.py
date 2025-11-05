@@ -271,14 +271,14 @@ class IndicateursDto(BaseModel):
 
 
 class MarcheDepartementDto(BaseModel):
-    code: str
+    subcode: str = Field(serialization_alias="code")
     montant: Decimal
     nombre: int
 
 
 class MarcheCategorieDepartementDto(BaseModel):
     categorie: CategorieMarche
-    code: str
+    subcode: str = Field(serialization_alias="code")
     montant: Decimal
 
     @field_validator("categorie", mode="before")

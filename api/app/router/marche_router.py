@@ -2,7 +2,7 @@ from decimal import Decimal
 from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query
-from sqlalchemy import Row, Select, desc, distinct, func, select
+from sqlalchemy import Row, Select, asc, desc, distinct, func, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import SessionDep
@@ -242,15 +242,19 @@ def get_marches_par_departement(
     stmt = (
         (
             select(
-                Lieu.code,
+                func.substr(Lieu.code, 1, 2).label("subcode"),
                 func.sum(Marche.montant).label("montant"),
                 func.count(Marche.id).label("nombre"),
             )
             .join(Marche.lieu)
-            .where(Lieu.type_code == TypeCodeLieu.DEP.db_value)
+            .where(
+                Lieu.type_code.in_(
+                    [TypeCodeLieu.DEP.db_value, TypeCodeLieu.POSTAL.db_value]
+                )
+            )
         )
-        .group_by(Lieu.code)
-        .order_by("montant")
+        .group_by("subcode")
+        .order_by(asc("montant"))
     )
 
     return list(session.execute(stmt).all())
@@ -265,15 +269,19 @@ def get_categorie_departement(
     stmt = (
         (
             select(
-                Lieu.code,
+                func.substr(Lieu.code, 1, 2).label("subcode"),
                 Marche.categorie,
                 func.sum(Marche.montant).label("montant"),
             )
             .join(Marche.lieu)
-            .where(Lieu.type_code == TypeCodeLieu.DEP.db_value)
+            .where(
+                Lieu.type_code.in_(
+                    [TypeCodeLieu.DEP.db_value, TypeCodeLieu.POSTAL.db_value]
+                )
+            )
         )
         .group_by(Marche.categorie)
-        .group_by(Lieu.code)
+        .group_by("subcode")
         .order_by("montant")
     )
     return list(session.execute(stmt).all())

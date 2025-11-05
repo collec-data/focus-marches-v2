@@ -30,9 +30,12 @@ function transform(input: Array<MarcheDepartementDto>) {
         nombres: [] as Array<number>
     };
     for (var line of input) {
-        output.departements.push('(' + line.code + ') ' + getNomDepartement(line.code));
-        output.montants.push(parseFloat(line.montant));
-        output.nombres.push(line.nombre);
+        const nom_departement = getNomDepartement(line.code);
+        if (nom_departement) {
+            output.departements.push('(' + line.code + ') ' + nom_departement);
+            output.montants.push(parseFloat(line.montant));
+            output.nombres.push(line.nombre);
+        }
     }
     return output;
 }
