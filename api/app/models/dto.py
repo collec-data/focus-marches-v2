@@ -51,7 +51,9 @@ class ActeSousTraitanceDto(BaseModel):
     date_notification: date
     date_publication: date
     montant: Decimal
-    variation_prix_as_str: VariationPrix = Field(serialization_alias="variation_prix")
+    variation_prix_as_str: VariationPrix | None = Field(
+        serialization_alias="variation_prix"
+    )
 
 
 class ModificationMarcheDto(BaseModel):
@@ -139,7 +141,7 @@ class MarcheDto(BaseModel):
     ccag: int | None = Field(
         description="Cahiers des clauses administratives générales de référence du marché public"
     )
-    offres_recues: int = Field(
+    offres_recues: int | None = Field(
         description="Nombre d'offres reçues par l'acheteur de la part des soumissionnaires. Comprend aussi les offres irrégulières, inacceptables, inappropriées et anormalement basses."
     )
     attribution_avance: bool = Field(
@@ -269,14 +271,14 @@ class IndicateursDto(BaseModel):
 
 
 class MarcheDepartementDto(BaseModel):
-    code: str
+    subcode: str = Field(serialization_alias="code")
     montant: Decimal
     nombre: int
 
 
 class MarcheCategorieDepartementDto(BaseModel):
     categorie: CategorieMarche
-    code: str
+    subcode: str = Field(serialization_alias="code")
     montant: Decimal
 
     @field_validator("categorie", mode="before")

@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get("/", response_model=list[DecpMalFormeDto])
 def get_erreurs_import(
     session: SessionDep,
-    limit: int | None = None,
+    limit: int | None = 500,
     offset: int | None = None,
     localisation: str | None = None,
     type: str | None = None,
