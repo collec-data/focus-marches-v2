@@ -2,8 +2,8 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import { getListeMarchesMarcheGetResponseTransformer, getMarcheMarcheUidGetResponseTransformer, getStructureStructureUidGetResponseTransformer } from './transformers.gen';
-import type { GetCategorieDepartementMarcheCategorieDepartementGetData, GetCategorieDepartementMarcheCategorieDepartementGetResponses, GetCategoriesMarcheCategorieGetData, GetCategoriesMarcheCategorieGetErrors, GetCategoriesMarcheCategorieGetResponses, GetErreursImportErreursImportGetData, GetErreursImportErreursImportGetErrors, GetErreursImportErreursImportGetResponses, GetIndicateursMarcheIndicateursGetData, GetIndicateursMarcheIndicateursGetErrors, GetIndicateursMarcheIndicateursGetResponses, GetListeConcessionsContratConcessionGetData, GetListeConcessionsContratConcessionGetErrors, GetListeConcessionsContratConcessionGetResponses, GetListeMarchesMarcheGetData, GetListeMarchesMarcheGetErrors, GetListeMarchesMarcheGetResponses, GetMarcheMarcheUidGetData, GetMarcheMarcheUidGetErrors, GetMarcheMarcheUidGetResponses, GetMarchesParCcagMarcheCcagGetData, GetMarchesParCcagMarcheCcagGetErrors, GetMarchesParCcagMarcheCcagGetResponses, GetMarchesParDepartementMarcheDepartementGetData, GetMarchesParDepartementMarcheDepartementGetResponses, GetMarchesParNatureMarcheNatureGetData, GetMarchesParNatureMarcheNatureGetErrors, GetMarchesParNatureMarcheNatureGetResponses, GetMarchesParProcedureMarcheProcedureGetData, GetMarchesParProcedureMarcheProcedureGetErrors, GetMarchesParProcedureMarcheProcedureGetResponses, GetStatsErreursErreursImportStatsGetData, GetStatsErreursErreursImportStatsGetResponses, GetStructureStructureUidGetData, GetStructureStructureUidGetErrors, GetStructureStructureUidGetResponses, ListAcheteursStructureAcheteurGetData, ListAcheteursStructureAcheteurGetErrors, ListAcheteursStructureAcheteurGetResponses, ListStructuresStructureGetData, ListStructuresStructureGetErrors, ListStructuresStructureGetResponses, ListVendeursStructureVendeurGetData, ListVendeursStructureVendeurGetErrors, ListVendeursStructureVendeurGetResponses } from './types.gen';
+import { getConcessionContratConcessionUidGetResponseTransformer, getListeConcessionsContratConcessionGetResponseTransformer, getListeMarchesMarcheGetResponseTransformer, getMarcheMarcheUidGetResponseTransformer, getStructureStructureUidGetResponseTransformer } from './transformers.gen';
+import type { GetCategorieDepartementMarcheCategorieDepartementGetData, GetCategorieDepartementMarcheCategorieDepartementGetResponses, GetCategoriesMarcheCategorieGetData, GetCategoriesMarcheCategorieGetErrors, GetCategoriesMarcheCategorieGetResponses, GetConcessionContratConcessionUidGetData, GetConcessionContratConcessionUidGetErrors, GetConcessionContratConcessionUidGetResponses, GetErreursImportErreursImportGetData, GetErreursImportErreursImportGetErrors, GetErreursImportErreursImportGetResponses, GetIndicateursMarcheIndicateursGetData, GetIndicateursMarcheIndicateursGetErrors, GetIndicateursMarcheIndicateursGetResponses, GetListeConcessionsContratConcessionGetData, GetListeConcessionsContratConcessionGetErrors, GetListeConcessionsContratConcessionGetResponses, GetListeMarchesMarcheGetData, GetListeMarchesMarcheGetErrors, GetListeMarchesMarcheGetResponses, GetMarcheMarcheUidGetData, GetMarcheMarcheUidGetErrors, GetMarcheMarcheUidGetResponses, GetMarchesParCcagMarcheCcagGetData, GetMarchesParCcagMarcheCcagGetErrors, GetMarchesParCcagMarcheCcagGetResponses, GetMarchesParDepartementMarcheDepartementGetData, GetMarchesParDepartementMarcheDepartementGetResponses, GetMarchesParNatureMarcheNatureGetData, GetMarchesParNatureMarcheNatureGetErrors, GetMarchesParNatureMarcheNatureGetResponses, GetMarchesParProcedureMarcheProcedureGetData, GetMarchesParProcedureMarcheProcedureGetErrors, GetMarchesParProcedureMarcheProcedureGetResponses, GetStatsErreursErreursImportStatsGetData, GetStatsErreursErreursImportStatsGetResponses, GetStructureStructureUidGetData, GetStructureStructureUidGetErrors, GetStructureStructureUidGetResponses, ListAcheteursStructureAcheteurGetData, ListAcheteursStructureAcheteurGetErrors, ListAcheteursStructureAcheteurGetResponses, ListStructuresStructureGetData, ListStructuresStructureGetErrors, ListStructuresStructureGetResponses, ListVendeursStructureVendeurGetData, ListVendeursStructureVendeurGetErrors, ListVendeursStructureVendeurGetResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -136,7 +136,19 @@ export const getMarcheMarcheUidGet = <ThrowOnError extends boolean = false>(opti
  */
 export const getListeConcessionsContratConcessionGet = <ThrowOnError extends boolean = false>(options?: Options<GetListeConcessionsContratConcessionGetData, ThrowOnError>) => {
     return (options?.client ?? client).get<GetListeConcessionsContratConcessionGetResponses, GetListeConcessionsContratConcessionGetErrors, ThrowOnError>({
+        responseTransformer: getListeConcessionsContratConcessionGetResponseTransformer,
         url: '/contrat-concession/',
+        ...options
+    });
+};
+
+/**
+ * Get Concession
+ */
+export const getConcessionContratConcessionUidGet = <ThrowOnError extends boolean = false>(options: Options<GetConcessionContratConcessionUidGetData, ThrowOnError>) => {
+    return (options.client ?? client).get<GetConcessionContratConcessionUidGetResponses, GetConcessionContratConcessionUidGetErrors, ThrowOnError>({
+        responseTransformer: getConcessionContratConcessionUidGetResponseTransformer,
+        url: '/contrat-concession/{uid}',
         ...options
     });
 };

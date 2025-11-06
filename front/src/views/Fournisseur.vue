@@ -46,5 +46,6 @@ onMounted(() => {
         <ListeMarches :vendeurUid :dateMin :dateMax />
         <NatureContrats :vendeurUid :dateMin :dateMax />
         <Procedure :vendeurUid :dateMin :dateMax />
+        <ListeConcessions :concessionnaireUid="vendeurUid" :dateMin :dateMax />
     </main>
 </template>

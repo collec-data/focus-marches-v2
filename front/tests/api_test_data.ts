@@ -12,7 +12,8 @@ import {
     type MarcheProcedureDto,
     ProcedureMarche,
     StatsErreursDto,
-    type StructureAggMarchesDto
+    type StructureAggMarchesDto,
+    type ContratConcessionDto
 } from '../src/client/types.gen.ts';
 
 export const marche: MarcheAllegeDto = {
@@ -75,4 +76,25 @@ export const categories: CategoriesDto[] = [
     { categorie: 'Travaux', mois: '2020-12', montant: '654321.2', nombre: 1 },
     { categorie: 'Services', mois: '2021-01', montant: '789456.0', nombre: 2 },
     { categorie: 'Fournitures', mois: '2021-01', montant: '654789.2', nombre: 1 }
+];
+
+export const concession: ContratConcessionDto = [
+    {
+        uid: 10,
+        id: '2025S123456',
+        autorite_concedante: { uid: 42, identifiant: '123456789', type_identifiant: 'SIRET', nom: 'Autorité', vendeur: false, acheteur: true },
+        nature: 'Délégation de service public',
+        objet: 'Lorem ipsum dolor',
+        procedure: 'Procédure négociée ouverte',
+        duree_mois: 42,
+        date_signature: '2025-01-01',
+        date_publication: '2025-01-10',
+        date_debut_execution: '2025-01-30',
+        valeur_globale: '1000000.00',
+        montant_subvention_publique: '10.0',
+        donnees_execution: [],
+        concessionnaires: [{ uid: 24, identifiant: '987654321', type_identifiant: 'SIRET', nom: 'Concessionnaire', vendeur: true, acheteur: false }],
+        considerations_sociales: [],
+        considerations_environnementales: []
+    }
 ];
