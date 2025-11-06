@@ -3,7 +3,7 @@ import { computed, ref } from 'vue';
 
 import { getMarcheMarcheUidGet, type MarcheDto } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
-import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
+import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { watch } from 'vue';
 
 const props = defineProps({ marcheUid: { type: [Number, null], default: null } });
@@ -117,7 +117,7 @@ function hideMarcheModal() {
                             <template #body="{ data }">
                                 <RouterLink :to="'/fournisseur/' + data.uid">
                                     <Button icon="pi pi-fw pi-link" aria-label="Voir la page du fournisseur" severity="secondary" size="small"></Button>
-                                    {{ data.sous_traitant.nom ? data.sous_traitant.nom : data.sous_traitant.type_identifiant + ' ' + data.sous_traitant.identifiant }}
+                                    {{ structureName(data.sous_traitant) }}
                                 </RouterLink>
                             </template>
                         </Column>

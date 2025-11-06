@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getStructureStructureUidGet, type StructureEtendueDto } from '@/client';
-import { formatDate } from '@/service/HelpersService';
+import { formatDate, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watchEffect } from 'vue';
 
 import type { PropType } from 'vue';
@@ -30,7 +30,7 @@ onMounted(() => {
     <section class="mb-10">
         <h2>Localisation et contexte</h2>
         <div class="grid grid-cols-12 gap-5">
-            <LeafletMap :lon="acheteur.lon" :lat="acheteur.lat" :label="acheteur.nom + '<br>' + acheteur.adresse" class="col-span-12 xl:col-span-6" />
+            <LeafletMap :lon="acheteur.lon" :lat="acheteur.lat" :label="structureName(acheteur) + '<br>' + acheteur.adresse" class="col-span-12 xl:col-span-6" />
             <table class="col-span-12 xl:col-span-6">
                 <tbody>
                     <tr>

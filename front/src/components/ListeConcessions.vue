@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type ContratConcessionDto, getListeConcessionsContratConcessionGet } from '@/client';
-import { formatCurrency, formatDate } from '@/service/HelpersService';
+import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps({
@@ -45,10 +45,12 @@ const concessionUid = ref(null);
             <Column header="Détails">
                 <template #body="{ data }"> <Button label="Voir" aria-label="Voir les détails de la concessions" @click="concessionUid = data.uid" /> </template
             ></Column>
-            <Column v-if="!autoriteConcedanteUid" field="autorite_concedante.nom" header="Autorité" sortable></Column>
+            <Column v-if="!autoriteConcedanteUid" field="autorite_concedante.nom" header="Autorité" sortable>
+                <template #body="{ data }">{{ structureName(data.autorite_concedante) }}</template>
+            </Column>
             <Column header="Concessionnaires">
                 <template #body="{ data }">
-                    <div v-for="concessionnaire in data.concessionnaires" :key="concessionnaire.uid">{{ concessionnaire.nom ? concessionnaire.nom : concessionnaire.type_identifiant + ' ' + concessionnaire.identifiant }}</div>
+                    <div v-for="concessionnaire in data.concessionnaires" :key="concessionnaire.uid">{{ structureName(concessionnaire) }}</div>
                 </template>
             </Column>
             <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
