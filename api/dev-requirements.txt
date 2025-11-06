@@ -103,13 +103,13 @@ pluggy==1.6.0
     #   pytest-cov
 psycopg2-binary==2.9.11
     # via focus-marche-v2 (pyproject.toml)
-pydantic[email]==2.12.3
+pydantic[email]==2.12.4
     # via
     #   fastapi
     #   fastapi-cloud-cli
     #   focus-marche-v2 (pyproject.toml)
     #   pydantic-settings
-pydantic-core==2.41.4
+pydantic-core==2.41.5
     # via pydantic
 pydantic-settings==2.11.0
     # via focus-marche-v2 (pyproject.toml)
@@ -155,7 +155,7 @@ rich-toolkit==0.15.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
-rignore==0.7.3
+rignore==0.7.6
     # via fastapi-cloud-cli
 ruff==0.14.3
     # via focus-marche-v2 (pyproject.toml)
