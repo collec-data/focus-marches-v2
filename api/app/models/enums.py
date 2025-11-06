@@ -81,7 +81,7 @@ class ConsiderationsSociales(CustomStrEnum):
     CRITERE = "Critère social", 1
     CLAUSE = "Clause sociale", 2
     MARCHE_RESERVE = "Marché réservé", 3
-    CONCESSION_RESERVE = "Concession réservé", 4
+    CONCESSION_RESERVE = "Concession réservée", 4
     AUCUNE = "Pas de considération sociale", None
 
 
