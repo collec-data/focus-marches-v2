@@ -129,7 +129,7 @@ sniffio==1.3.1
     # via anyio
 sqlalchemy==2.0.44
     # via focus-marche-v2 (pyproject.toml)
-starlette==0.48.0
+starlette==0.49.0
     # via fastapi
 typeguard==4.4.4
     # via marshmallow-dataclass
