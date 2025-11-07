@@ -108,7 +108,7 @@ export const ConsiderationsSociales = {
     'CRITÈRE_SOCIAL': 'Critère social',
     CLAUSE_SOCIALE: 'Clause sociale',
     'MARCHÉ_RÉSERVÉ': 'Marché réservé',
-    'CONCESSION_RÉSERVÉ': 'Concession réservé',
+    'CONCESSION_RÉSERVÉE': 'Concession réservée',
     'PAS_DE_CONSIDÉRATION_SOCIALE': 'Pas de considération sociale'
 } as const;
 
@@ -475,7 +475,7 @@ export type MarcheDto = {
      *
      * Nombre d'offres reçues par l'acheteur de la part des soumissionnaires. Comprend aussi les offres irrégulières, inacceptables, inappropriées et anormalement basses.
      */
-    offres_recues: number;
+    offres_recues: number | null;
     /**
      * Attribution Avance
      *
@@ -1574,6 +1574,10 @@ export type ListAcheteursStructureAcheteurGetData = {
          * Vendeur Uid
          */
         vendeur_uid?: number | null;
+        /**
+         * Categorie
+         */
+        categorie?: CategorieMarche | null;
     };
     url: '/structure/acheteur';
 };
@@ -1618,6 +1622,10 @@ export type ListVendeursStructureVendeurGetData = {
          * Date Fin
          */
         date_fin?: Date | null;
+        /**
+         * Categorie
+         */
+        categorie?: CategorieMarche | null;
     };
     url: '/structure/vendeur';
 };
