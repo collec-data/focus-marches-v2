@@ -22,18 +22,23 @@ const listeStructures = ref({
     fournitures: [] as StructureAggMarchesDto[]
 });
 
+const listeExhaustiveStructures = ref<StructureAggMarchesDto[]>([]);
+
 let title = '';
 let description = '';
 let btn_label = '';
+let link_path = '';
 
 if (props.type == 'acheteurs') {
     title = 'Qui achète ?';
     description = 'Top 12 des acheteurs classés par montant total des contrats conclus au cours des 56 derniers mois. Survolez les noms les acheteurs pour les afficher en entier.';
     btn_label = 'Liste complète des organismes acheteurs';
+    link_path = '/acheteur/';
 } else {
     title = 'Qui réalise ?';
     description = 'Top 12 des fournisseurs classés par montant total des contrats remportés au cours des 56 derniers mois. Survolez les noms des fournisseurs pour les afficher en entier.';
     btn_label = 'Liste complète des fournisseurs';
+    link_path = '/fournisseur/';
 }
 
 const data = ref({
@@ -56,10 +61,10 @@ function transform(input: Array<StructureAggMarchesDto>) {
     return output;
 }
 
-function fetchData(categorie: CategorieMarche | undefined = undefined) {
+function fetchData(categorie: CategorieMarche | undefined = undefined, exhaustif: boolean = false) {
     (props.type == 'acheteurs' ? listAcheteursStructureAcheteurGet : listVendeursStructureVendeurGet)({
         query: {
-            limit: 12,
+            limit: exhaustif ? null : 12,
             acheteur_uid: props.acheteurUid ? parseInt(props.acheteurUid) : null,
             vendeur_uid: props.vendeurUid ? parseInt(props.vendeurUid) : null,
             date_debut: props.dateMin,
@@ -68,16 +73,20 @@ function fetchData(categorie: CategorieMarche | undefined = undefined) {
         }
     }).then((response) => {
         if (response.data) {
-            listeStructures.value[categorie ? categorie.toLowerCase() : 'tout'] = response.data;
-            let rawData = transform(response.data);
-            data.value[categorie ? categorie.toLowerCase() : 'tout'] = [
-                {
-                    x: rawData.structures,
-                    y: rawData.montants,
-                    type: 'bar',
-                    marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
-                }
-            ];
+            if (exhaustif) {
+                listeExhaustiveStructures.value = response.data;
+            } else {
+                listeStructures.value[categorie ? categorie.toLowerCase() : 'tout'] = response.data;
+                let rawData = transform(response.data);
+                data.value[categorie ? categorie.toLowerCase() : 'tout'] = [
+                    {
+                        x: rawData.structures,
+                        y: rawData.montants,
+                        type: 'bar',
+                        marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
+                    }
+                ];
+            }
         }
     });
 }
@@ -89,6 +98,15 @@ onMounted(() => {
 function change(categorie: string | number) {
     if (categorie != 'tout' && typeof categorie === 'string' && !data.value[categorie.toLowerCase()].length) {
         fetchData(categorie as CategorieMarche);
+    }
+}
+
+const showModale = ref(false);
+
+function openModale() {
+    showModale.value = true;
+    if (!listeExhaustiveStructures.value.length) {
+        fetchData(undefined, true);
     }
 }
 </script>
@@ -160,9 +178,24 @@ function change(categorie: string | number) {
             </TabPanels>
         </Tabs>
         <div class="flex flex-wrap">
-            <RouterLink to="/acheteurs">
-                <Button :label="btn_label" variant="text" severity="secondary" icon="pi pi-list" />
-            </RouterLink>
+            <Button :label="btn_label" variant="text" severity="secondary" icon="pi pi-list" aria-label="Voir la liste des structures" @click="openModale" />
         </div>
     </section>
+    <Dialog :visible="showModale" modal :header="btn_label" class="max-w-full" @update:visible="showModale = false">
+        <DataTable :value="listeExhaustiveStructures" sortField="structure.nom" :sortOrder="1" removableSort stripedRows paginator :rows="10">
+            <Column field="structure.nom" header="Nom" sortable>
+                <template #body="slotProps">
+                    <RouterLink :to="link_path + slotProps.data.structure.uid">
+                        <Button :label="structureName(slotProps.data.structure)" as="a" variant="link" />
+                    </RouterLink>
+                </template>
+            </Column>
+            <Column field="nb_contrats" header="NB contrats" sortable></Column>
+            <Column field="montant" header="Montant contrats" sortable bodyStyle="text-align:right">
+                <template #body="{ data }">
+                    {{ formatCurrency(parseFloat(data.montant)) }}
+                </template>
+            </Column>
+        </DataTable>
+    </Dialog>
 </template>
