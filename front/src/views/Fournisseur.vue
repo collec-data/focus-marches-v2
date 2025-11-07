@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
 import { getStructureStructureUidGet } from '@/client';
+import { structureName } from '@/service/HelpersService';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -35,8 +36,8 @@ onMounted(() => {
 
 <template>
     <main className="card">
-        <h1>Tableau de bord du fournisseur : {{ vendeur.nom }}</h1>
-        <p>Cette page vous présente les données essentielles des profils d'acheteurs ayant attribué des contrats au fournisseur {{ vendeur.nom }}, enrichies avec des données complémentaires.</p>
+        <h1>Tableau de bord du fournisseur : {{ structureName(vendeur) }}</h1>
+        <p>Cette page vous présente les données essentielles des profils d'acheteurs ayant attribué des contrats au fournisseur {{ structureName(vendeur) }}, enrichies avec des données complémentaires.</p>
         <DetailsFournisseur :vendeur />
         <FiltreDates :dateMin :dateMax />
         <IndicateursCles :vendeurUid :dateMin :dateMax />

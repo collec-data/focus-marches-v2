@@ -43,6 +43,15 @@ export function longLabelsBreaker(labels: Array<string | null>, length: number =
     });
 }
 
-export function structureName(structure: StructureDto | StructureEtendueDto): string {
-    return structure.nom ? structure.nom : structure.type_identifiant + ':' + structure.identifiant;
+export function structureName(structure: Partial<StructureDto> | Partial<StructureEtendueDto>): string {
+    if (!structure) {
+        return '';
+    }
+    if (structure.nom && structure.nom != '[ND]') {
+        return structure.nom;
+    }
+    if (structure.type_identifiant && structure.identifiant) {
+        return structure.type_identifiant + ':' + structure.identifiant;
+    }
+    return '';
 }

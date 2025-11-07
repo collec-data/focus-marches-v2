@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getListeMarchesMarcheGet } from '@/client';
-import { formatBoolean, formatCurrency, formatDate } from '@/service/HelpersService';
+import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref, watch } from 'vue';
 
@@ -89,10 +89,12 @@ const marcheUid = ref(null);
             ></Column>
             <Column field="cpv" header="CPV" sortable></Column>
             <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
-            <Column v-if="acheteurUid == null" field="acheteur.nom" header="Acheteur" sortable></Column>
+            <Column v-if="acheteurUid == null" field="acheteur.nom" header="Acheteur" sortable>
+                <template #body="{ data }">{{ structureName(data.acheteur) }}</template>
+            </Column>
             <Column header="Fournisseur">
                 <template #body="{ data }">
-                    <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ titulaire.nom ? titulaire.nom : titulaire.type_identifiant + ' ' + titulaire.identifiant }}</div>
+                    <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ structureName(titulaire) }}</div>
                 </template>
             </Column>
             <Column field="" header="Cat entreprise" sortable></Column>

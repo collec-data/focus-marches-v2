@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { FormePrix, getListeMarchesMarcheGet, listStructuresStructureGet, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
 import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
-import { formatCurrency, formatDate } from '@/service/HelpersService';
+import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { ref } from 'vue';
 
 import type { MarcheAllegeDto, StructureDto } from '@/client';
@@ -267,10 +267,12 @@ const marcheUid = ref(null);
                 </Column>
                 <Column field="cpv" header="CPV" sortable></Column>
                 <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
-                <Column field="acheteur.nom" header="Acheteur" sortable></Column>
+                <Column field="acheteur.nom" header="Acheteur" sortable>
+                    <template #body="{ data }">{{ structureName(data.acheteur) }}</template>
+                </Column>
                 <Column header="Fournisseur">
                     <template #body="{ data }">
-                        <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ titulaire.nom ? titulaire.nom : titulaire.type_identifiant + ' ' + titulaire.identifiant }}</div>
+                        <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ structureName(titulaire) }}</div>
                     </template>
                 </Column>
                 <Column field="date_notification" header="Date" sortable>

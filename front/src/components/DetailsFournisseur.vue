@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type StructureEtendueDto } from '@/client';
-import { formatDate } from '@/service/HelpersService';
+import { formatDate, structureName } from '@/service/HelpersService';
 import { ref, watchEffect } from 'vue';
 
 import type { PropType } from 'vue';
@@ -20,7 +20,7 @@ watchEffect(() => {
         <h2>Localisation et contexte</h2>
 
         <div class="grid grid-cols-12 gap-5">
-            <LeafletMap :lon="vendeur.lon" :lat="vendeur.lat" :label="vendeur.nom + '<br>' + vendeur.adresse" class="col-span-12 xl:col-span-6" />
+            <LeafletMap :lon="vendeur.lon" :lat="vendeur.lat" :label="structureName(vendeur) + '<br>' + vendeur.adresse" class="col-span-12 xl:col-span-6" />
             <div class="col-span-12 xl:col-span-6">
                 <Tabs value="etablissement">
                     <TabList>
