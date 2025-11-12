@@ -111,7 +111,7 @@ pydantic[email]==2.12.4
     #   pydantic-settings
 pydantic-core==2.41.5
     # via pydantic
-pydantic-settings==2.11.0
+pydantic-settings==2.12.0
     # via focus-marche-v2 (pyproject.toml)
 pygments==2.19.2
     # via
