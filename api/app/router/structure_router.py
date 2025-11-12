@@ -8,6 +8,7 @@ from sqlalchemy.orm import aliased
 from app.dependencies import ApiEntrepriseDep, OpenDataSoftDep, SessionDep
 from app.models.db import Marche, Structure
 from app.models.dto import StructureAggMarchesDto, StructureDto, StructureEtendueDto
+from app.models.enums import CategorieMarche
 
 router = APIRouter()
 
@@ -40,6 +41,7 @@ def list_acheteurs(
     date_debut: date | None = None,
     date_fin: date | None = None,
     vendeur_uid: int | None = None,
+    categorie: CategorieMarche | None = None,
 ) -> list[dict[str, Decimal | Structure]]:
     stmt = (
         select(
@@ -56,6 +58,9 @@ def list_acheteurs(
         stmt = stmt.outerjoin(titulaires, Marche.titulaires).where(
             titulaires.uid == vendeur_uid
         )
+
+    if categorie:
+        stmt = stmt.where(Marche.categorie == categorie.db_value)
 
     if date_debut:
         stmt = stmt.where(Marche.date_notification >= date_debut)
@@ -81,6 +86,7 @@ def list_vendeurs(
     acheteur_uid: int | None = None,
     date_debut: date | None = None,
     date_fin: date | None = None,
+    categorie: CategorieMarche | None = None,
 ) -> list[dict[str, Structure | Decimal | int]]:
     stmt = (
         select(
@@ -93,6 +99,9 @@ def list_vendeurs(
     )
     if acheteur_uid:
         stmt = stmt.where(Marche.uid_acheteur == acheteur_uid)
+
+    if categorie:
+        stmt = stmt.where(Marche.categorie == categorie.db_value)
 
     if date_debut:
         stmt = stmt.where(Marche.date_notification >= date_debut)
