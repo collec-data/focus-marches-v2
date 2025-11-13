@@ -218,6 +218,7 @@ class ImportateurDecp:
                 else None
             ),
             duree_mois=data.dureeMois,
+            duree_mois_initiale=data.dureeMois,
             date_notification=self.cast_jour(data.dateNotification),
             date_publication=(
                 self.cast_jour(data.datePublicationDonnees)
@@ -225,6 +226,7 @@ class ImportateurDecp:
                 else None
             ),
             montant=data.montant,
+            montant_initial=data.montant,
             type_prix=[
                 o.db_value
                 for o in (data.typesPrix["typePrix"] if data.typesPrix else [])
@@ -270,20 +272,25 @@ class ImportateurDecp:
                     )
                 ),
                 duree_mois=dacte.dureeMois,
+                duree_mois_initiale=dacte.dureeMois,
                 date_notification=self.cast_jour(dacte.dateNotification),
                 date_publication=self.cast_jour(dacte.datePublicationDonnees),
                 montant=dacte.montant,
+                montant_initial=dacte.montant,
                 variation_prix=dacte.variationPrix.db_value,
             )
             marche.actes_sous_traitance.append(acte)
             index_actes_sous_traitance[acte.id] = acte
 
-        for tmp_dma in data.modificationsActesSousTraitance:
-            dmodif: ModificationActeSousTraitanceSchema = (
-                tmp_dma["modificationActeSousTraitance"]
-                if "modificationActeSousTraitance" in tmp_dma
-                else tmp_dma["modificationActesSousTraitance"]
-            )
+        for tmp_dma in sorted(
+            data.modificationsActesSousTraitance,
+            key=lambda x: x[
+                "modificationActeSousTraitance"
+            ].dateNotificationModificationSousTraitance,
+        ):
+            dmodif: ModificationActeSousTraitanceSchema = tmp_dma[
+                "modificationActeSousTraitance"
+            ]
             if dmodif.id not in index_actes_sous_traitance:
                 raise CustomValidationError(
                     errors=[
@@ -294,20 +301,27 @@ class ImportateurDecp:
                         }
                     ],
                 )
-            index_actes_sous_traitance[dmodif.id].modifications.append(
-                ModificationSousTraitance(
-                    duree_mois=dmodif.dureeMois,
-                    date_notif=self.cast_jour(
-                        dmodif.dateNotificationModificationActeSousTraitance
-                    ),
-                    date_publication=self.cast_jour(
-                        dmodif.datePublicationDonneesModificationActeSousTraitance
-                    ),
-                    montant=dmodif.montant,
-                )
+            modif_sous_traitance = ModificationSousTraitance(
+                duree_mois=dmodif.dureeMois,
+                date_notif=self.cast_jour(
+                    dmodif.dateNotificationModificationSousTraitance
+                ),
+                date_publication=self.cast_jour(dmodif.datePublicationDonnees),
+                montant=dmodif.montant,
             )
+            index_actes_sous_traitance[dmodif.id].modifications.append(
+                modif_sous_traitance
+            )
+            if modif_sous_traitance.duree_mois is not None:
+                index_actes_sous_traitance[
+                    dmodif.id
+                ].duree_mois = modif_sous_traitance.duree_mois
+            if modif_sous_traitance.montant is not None:
+                index_actes_sous_traitance[
+                    dmodif.id
+                ].montant = modif_sous_traitance.montant
 
-        for tmp_dm in data.modifications:
+        for tmp_dm in sorted(data.modifications, key=lambda x: x["modification"].id):
             modif: ModificationMarcheSchema = tmp_dm["modification"]
             titulaires: list[Structure] = []
             if modif.titulaires:
@@ -321,20 +335,24 @@ class ImportateurDecp:
                     for titulaire in modif.titulaires
                 ]
 
-            marche.modifications.append(
-                ModificationMarche(
-                    id=modif.id,
-                    duree_mois=modif.dureeMois,
-                    date_notification=self.cast_jour(
-                        modif.dateNotificationModification
-                    ),
-                    date_publication=self.cast_jour(
-                        modif.datePublicationDonneesModification
-                    ),
-                    montant=modif.montant,
-                    titulaires=titulaires,
-                )
+            modif_marche = ModificationMarche(
+                id=modif.id,
+                duree_mois=modif.dureeMois,
+                date_notification=self.cast_jour(modif.dateNotificationModification),
+                date_publication=self.cast_jour(
+                    modif.datePublicationDonneesModification
+                ),
+                montant=modif.montant,
+                titulaires=titulaires,
             )
+            marche.modifications.append(modif_marche)
+
+            if modif_marche.montant is not None:
+                marche.montant = modif_marche.montant
+            if modif_marche.duree_mois is not None:
+                marche.duree_mois = modif_marche.duree_mois
+            if modif_marche.titulaires is not None:
+                marche.titulaires = modif_marche.titulaires
 
         self._session.add(marche)
 
@@ -353,10 +371,12 @@ class ImportateurDecp:
             objet=data.objet,
             procedure=data.procedure.db_value,
             duree_mois=data.dureeMois,
+            duree_mois_initiale=data.dureeMois,
             date_signature=self.cast_jour(data.dateSignature),
             date_publication=self.cast_jour(data.datePublicationDonnees),
             date_debut_execution=self.cast_jour(data.dateDebutExecution),
             valeur_globale=data.valeurGlobale,
+            valeur_globale_initiale=data.valeurGlobale,
             montant_subvention_publique=data.montantSubventionPublique,
             considerations_sociales=[
                 consideration.db_value
@@ -394,21 +414,25 @@ class ImportateurDecp:
                 )
             )
 
-        for tmp_dm in data.modifications:
+        for tmp_dm in sorted(data.modifications, key=lambda x: x["modification"].id):
             data_modification: ModificationConcessionSchema = tmp_dm["modification"]
-            concession.modifications.append(
-                ModificationConcession(
-                    id=data_modification.id,
-                    date_signature=self.cast_jour(
-                        data_modification.dateSignatureModification
-                    ),
-                    date_publication=self.cast_jour(
-                        data_modification.datePublicationDonneesModification
-                    ),
-                    duree_mois=data_modification.dureeMois,
-                    valeur_globale=data_modification.valeurGlobale,
-                )
+            modif_concession = ModificationConcession(
+                id=data_modification.id,
+                date_signature=self.cast_jour(
+                    data_modification.dateSignatureModification
+                ),
+                date_publication=self.cast_jour(
+                    data_modification.datePublicationDonneesModification
+                ),
+                duree_mois=data_modification.dureeMois,
+                valeur_globale=data_modification.valeurGlobale,
             )
+            concession.modifications.append(modif_concession)
+            if modif_concession.valeur_globale is not None:
+                concession.valeur_globale = modif_concession.valeur_globale
+            if modif_concession.duree_mois is not None:
+                concession.duree_mois = modif_concession.duree_mois
+
         self._session.add(concession)
 
     def build_entite_erreur(

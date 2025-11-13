@@ -78,9 +78,11 @@ class ActeSousTraitance(Base):
     sous_traitant: Mapped[Structure] = relationship()  # 1*
     uid_sous_traitant: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
     duree_mois: Mapped[int | None]
+    duree_mois_initiale: Mapped[int | None]
     date_notification: Mapped[date]
     date_publication: Mapped[date]
     montant: Mapped[Decimal]
+    montant_initial: Mapped[Decimal]
     variation_prix: Mapped[int | None]  # enum VariationPrix
     modifications: Mapped[list[ModificationSousTraitance]] = relationship()
 
@@ -172,9 +174,11 @@ class Marche(Base):
     lieu: Mapped[Lieu] = relationship()  # 1*
     uid_lieu: Mapped[int | None] = mapped_column(ForeignKey("lieu.uid"))
     duree_mois: Mapped[int]
+    duree_mois_initiale: Mapped[int]
     date_notification: Mapped[date]
     date_publication: Mapped[date | None]
     montant: Mapped[Decimal]
+    montant_initial: Mapped[Decimal]
     type_prix: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )  # enum TypePrix
@@ -275,10 +279,12 @@ class ContratConcession(Base):
     objet: Mapped[str] = mapped_column(String(1_000))
     procedure: Mapped[int]  # enum ProcédureConcession
     duree_mois: Mapped[int]
+    duree_mois_initiale: Mapped[int]
     date_signature: Mapped[date]
     date_publication: Mapped[date]
     date_debut_execution: Mapped[date]
     valeur_globale: Mapped[Decimal]
+    valeur_globale_initiale: Mapped[Decimal]
     montant_subvention_publique: Mapped[Decimal]
     donnees_execution: Mapped[list[DonneeExecution]] = relationship()  # *1
     concessionnaires: Mapped[list[Structure]] = relationship(

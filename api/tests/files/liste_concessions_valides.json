@@ -58,10 +58,11 @@
                 "modifications": [
                     {
                         "modification": {
-                            "id": 9764,
+                            "id": 1,
                             "dateSignatureModification": "2025-05-01",
                             "datePublicationDonneesModification": "2025-05-10",
-                            "valeurGlobale": 4000.0
+                            "valeurGlobale": 4000.0,
+                            "dureeMois": 150
                         }
                     }
                 ]

@@ -141,6 +141,10 @@ export type ContratConcessionDto = {
      */
     duree_mois: number;
     /**
+     * Duree Mois Initiale
+     */
+    duree_mois_initiale: number;
+    /**
      * Date Signature
      */
     date_signature: Date;
@@ -156,6 +160,10 @@ export type ContratConcessionDto = {
      * Valeur Globale
      */
     valeur_globale: string;
+    /**
+     * Valeur Globale Initiale
+     */
+    valeur_globale_initiale: string;
     /**
      * Montant Subvention Publique
      */
@@ -504,6 +512,10 @@ export type MarcheDto = {
      */
     duree_mois: number;
     /**
+     * Duree Mois Initiale
+     */
+    duree_mois_initiale: number;
+    /**
      * Date Notification
      */
     date_notification: Date;
@@ -515,6 +527,10 @@ export type MarcheDto = {
      * Montant
      */
     montant: string;
+    /**
+     * Montant Initial
+     */
+    montant_initial: string;
     /**
      * Type Prix
      */

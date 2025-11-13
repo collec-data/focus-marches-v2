@@ -34,10 +34,16 @@ function hideMarcheModal() {
         <div class="flex flex-row flex-wrap">
             <div class="bg-neutral-200 basis-10rem pl-3 pr-3">
                 <div class="key">Montant</div>
-                <div class="value text-xl">{{ marcheDetaille?.montant ? formatCurrency(parseFloat(marcheDetaille.montant)) : '' }}</div>
+                <div class="value text-xl">
+                    {{ marcheDetaille?.montant ? formatCurrency(parseFloat(marcheDetaille.montant)) : '' }}
+                    <i v-if="marcheDetaille?.montant_initial && marcheDetaille?.montant != marcheDetaille?.montant_initial" v-tooltip="'Montant initial : ' + formatCurrency(parseFloat(marcheDetaille?.montant_initial))" class="pi pi-history ml-2"></i>
+                </div>
 
                 <div class="key">Durée</div>
-                <div class="value">{{ marcheDetaille?.duree_mois }} mois</div>
+                <div class="value">
+                    {{ marcheDetaille?.duree_mois }} mois
+                    <i v-if="marcheDetaille?.duree_mois_initiale && marcheDetaille?.duree_mois != marcheDetaille?.duree_mois_initiale" v-tooltip.bottom="'Durée initiale : ' + marcheDetaille?.duree_mois_initiale" class="pi pi-history ml-2"></i>
+                </div>
 
                 <div class="key">Lieu d'éxécution</div>
                 <div class="value">

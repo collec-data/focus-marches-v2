@@ -31,13 +31,23 @@ function hideConcessionModal() {
         <div class="flex flex-row flex-wrap">
             <div class="bg-neutral-200 basis-10rem pl-3 pr-3">
                 <div class="key">Montant</div>
-                <div class="value text-xl">{{ concession?.valeur_globale ? formatCurrency(parseFloat(concession.valeur_globale)) : '' }}</div>
+                <div class="value text-xl">
+                    {{ concession?.valeur_globale ? formatCurrency(parseFloat(concession.valeur_globale)) : '' }}
+                    <i
+                        v-if="concession?.valeur_globale_initiale && concession?.valeur_globale != concession?.valeur_globale_initiale"
+                        v-tooltip="'valeur_globale initial : ' + formatCurrency(parseFloat(concession?.valeur_globale_initiale))"
+                        class="pi pi-history ml-2"
+                    ></i>
+                </div>
 
                 <div class="key">Dont subventions publiques</div>
                 <div class="value">{{ concession?.montant_subvention_publique ? formatCurrency(parseFloat(concession.montant_subvention_publique)) : '' }}</div>
 
                 <div class="key">Durée</div>
-                <div class="value">{{ concession?.duree_mois }} mois</div>
+                <div class="value">
+                    {{ concession?.duree_mois }} mois
+                    <i v-if="concession?.duree_mois_initiale && concession?.duree_mois != concession?.duree_mois_initiale" v-tooltip.bottom="'Durée initiale : ' + concession?.duree_mois_initiale" class="pi pi-history ml-2"></i>
+                </div>
 
                 <div class="key">Type de marché</div>
                 <div class="value">{{ concession?.nature }}</div>

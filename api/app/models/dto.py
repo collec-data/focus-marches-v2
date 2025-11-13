@@ -158,9 +158,11 @@ class MarcheDto(BaseModel):
     procedure_as_str: ProcedureMarche | None = Field(serialization_alias="procedure")
     lieu: LieuDto
     duree_mois: int
+    duree_mois_initiale: int
     date_notification: date
     date_publication: date | None
     montant: Decimal
+    montant_initial: Decimal
     type_prix_as_str: list[TypePrix] | None = Field(serialization_alias="type_prix")
     forme_prix_as_str: FormePrix | None = Field(serialization_alias="forme_prix")
     origine_ue: Decimal | None
@@ -195,10 +197,12 @@ class ContratConcessionDto(BaseModel):
         serialization_alias="procedure"
     )
     duree_mois: int
+    duree_mois_initiale: int
     date_signature: date
     date_publication: date
     date_debut_execution: date
     valeur_globale: Decimal
+    valeur_globale_initiale: Decimal
     montant_subvention_publique: Decimal
     donnees_execution: list[DonneeExecutionDto] = Field(default_factory=list)
     concessionnaires: list[StructureDto]

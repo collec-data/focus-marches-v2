@@ -59,10 +59,12 @@ def test_importation_marche_succes(db):
     assert marche1.procedure == 5
     assert marche1.lieu.code == "35"
     assert marche1.lieu.type_code == 5
-    assert marche1.duree_mois == 99
+    assert marche1.duree_mois == 11
+    assert marche1.duree_mois_initiale == 99
     assert marche1.date_notification == date(2042, 12, 1)
     assert marche1.date_publication == date(2042, 12, 2)
-    assert marche1.montant == 6.66e7
+    assert marche1.montant == Decimal(11111.0)
+    assert marche1.montant_initial == 6.66e7
     assert marche1.type_prix == [3]
     assert marche1.forme_prix == 2
     assert len(marche1.titulaires) == 1
@@ -86,8 +88,8 @@ def test_importation_marche_succes(db):
     assert marche1.actes_sous_traitance[0].sous_traitant.type_identifiant == "SIRET"
     assert marche1.actes_sous_traitance[0].date_notification == date(2025, 6, 1)
     assert marche1.actes_sous_traitance[0].date_publication == date(2025, 6, 3)
-    assert marche1.actes_sous_traitance[0].montant == Decimal("5.66E7")
-    assert marche1.actes_sous_traitance[0].duree_mois == 8
+    assert marche1.actes_sous_traitance[0].montant == Decimal("5.9E7")
+    assert marche1.actes_sous_traitance[0].duree_mois == 20
     assert marche1.actes_sous_traitance[0].variation_prix == 2
     assert len(marche1.actes_sous_traitance[0].modifications) == 2
     assert marche1.actes_sous_traitance[0].modifications[0].duree_mois == 10
@@ -121,11 +123,13 @@ def test_importation_concession_succes(db):
     assert concession1.nature == 2
     assert concession1.objet == "Lorem ipsum dolor"
     assert concession1.procedure == 2
-    assert concession1.duree_mois == 180
+    assert concession1.duree_mois == 150
+    assert concession1.duree_mois_initiale == 180
     assert concession1.date_signature == date(2025, 1, 10)
     assert concession1.date_publication == date(2025, 2, 1)
     assert concession1.date_debut_execution == date(2025, 3, 1)
-    assert concession1.valeur_globale == Decimal("31987.0")
+    assert concession1.valeur_globale == Decimal("4000.0")
+    assert concession1.valeur_globale_initiale == Decimal("31987.0")
     assert concession1.montant_subvention_publique == 0
     assert len(concession1.concessionnaires) == 1
     assert concession1.concessionnaires[0].identifiant == "12398755624565"
@@ -141,7 +145,7 @@ def test_importation_concession_succes(db):
     assert concession1.donnees_execution[0].tarifs[0].intitule == "1 voyage"
     assert concession1.donnees_execution[0].tarifs[0].tarif == Decimal(1)
     assert len(concession1.modifications) == 1
-    assert concession1.modifications[0].id == 9764
+    assert concession1.modifications[0].id == 1
     assert concession1.modifications[0].date_signature == date(2025, 5, 1)
     assert concession1.modifications[0].date_publication == date(2025, 5, 10)
     assert concession1.modifications[0].valeur_globale == Decimal(4000)
