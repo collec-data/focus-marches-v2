@@ -121,7 +121,7 @@ pyrate-limiter==2.10.0
     # via
     #   api-entreprise
     #   focus-marche-v2 (pyproject.toml)
-pytest==9.0.0
+pytest==9.0.1
     # via
     #   focus-marche-v2 (pyproject.toml)
     #   pytest-cov
