@@ -53,8 +53,10 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     procedure = enums.ProcedureMarche.ADAPTE.db_value
     lieu = factory.declarations.SubFactory(LieuFactory)
     duree_mois = 1
+    duree_mois_initiale = 1
     date_notification = factory.faker.Faker("date")
     montant = factory.faker.Faker("pyint")
+    montant_initial = factory.faker.Faker("pyint")
     type_prix: list[enums.TypePrix] = []
     titulaires: list[VendeurFactory] = []
     considerations_sociales: list[enums.ConsiderationsSociales] = []
@@ -71,10 +73,12 @@ class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
     objet = "Lorem ipsum dolor"
     procedure = enums.ProcedureConcession.NEGO_OUVERTE.db_value
     duree_mois = 1
+    duree_mois_initiale = 1
     date_signature = factory.faker.Faker("date")
     date_publication = factory.faker.Faker("date")
     date_debut_execution = factory.faker.Faker("date")
     valeur_globale = factory.faker.Faker("pyint")
+    valeur_globale_initiale = factory.faker.Faker("pyint")
     montant_subvention_publique = 0.0
     considerations_sociales: list[enums.ConsiderationsSociales] = []
     considerations_environnementales: list[enums.ConsiderationsEnvironnementales] = []

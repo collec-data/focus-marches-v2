@@ -7,6 +7,7 @@ import Aura from '@primeuix/themes/aura';
 import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
+import Tooltip from 'primevue/tooltip';
 
 import '@/assets/styles.scss';
 
@@ -25,5 +26,6 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+app.directive('tooltip', Tooltip);
 
 app.mount('#app');

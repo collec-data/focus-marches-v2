@@ -65,13 +65,9 @@ class ActeSousTraitanceSchema(BaseModel):
 class ModificationActeSousTraitanceSchema(BaseModel):
     id: int = Field(ge=0)
     dureeMois: int | None = Field(ge=1, default=None)
-    dateNotificationModificationActeSousTraitance: str = Field(
-        pattern=r"\d{4}-\d{2}-\d{2}", alias="dateNotificationModificationSousTraitance"
-    )  # alias hors-norme
+    dateNotificationModificationSousTraitance: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
     montant: float | None = Field(ge=0, default=None)
-    datePublicationDonneesModificationActeSousTraitance: str = Field(
-        pattern=r"\d{4}-\d{2}-\d{2}", alias="datePublicationDonnees"
-    )  # alias hors-norme
+    datePublicationDonnees: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
 
     @field_validator("dureeMois", mode="before")
     @classmethod

@@ -62,10 +62,10 @@
                 "modifications": [
                     {
                         "modification": {
-                            "id": 1,
-                            "dateNotificationModification": "2025-01-01",
-                            "datePublicationDonneesModification": "2025-01-02",
-                            "montant": 3027.97,
+                            "id": 2,
+                            "dateNotificationModification": "2021-01-15",
+                            "datePublicationDonneesModification": "2025-01-16",
+                            "montant": 11111.0,
                             "titulaires": [
                                 {
                                     "titulaire": {
@@ -78,10 +78,11 @@
                     },
                     {
                         "modification": {
-                            "id": 2,
-                            "dateNotificationModification": "2021-01-15",
-                            "datePublicationDonneesModification": "2025-01-16",
-                            "montant": 167517.0,
+                            "id": 1,
+                            "dateNotificationModification": "2025-01-01",
+                            "datePublicationDonneesModification": "2025-01-02",
+                            "montant": 3027.97,
+                            "dureeMois": 11,
                             "titulaires": [
                                 {
                                     "titulaire": {

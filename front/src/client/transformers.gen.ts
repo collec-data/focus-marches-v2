@@ -2,13 +2,6 @@
 
 import type { GetConcessionContratConcessionUidGetResponse, GetListeConcessionsContratConcessionGetResponse, GetListeMarchesMarcheGetResponse, GetMarcheMarcheUidGetResponse, GetStructureStructureUidGetResponse } from './types.gen';
 
-export const getListeMarchesMarcheGetResponseTransformer = async (data: any): Promise<GetListeMarchesMarcheGetResponse> => {
-    data = data.map((item: any) => {
-        return marcheAllegeDtoSchemaResponseTransformer(item);
-    });
-    return data;
-};
-
 const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
     data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => {
         return acteSousTraitanceDtoSchemaResponseTransformer(item);
@@ -23,8 +16,10 @@ const acteSousTraitanceDtoSchemaResponseTransformer = (data: any) => {
     return data;
 };
 
-export const getMarcheMarcheUidGetResponseTransformer = async (data: any): Promise<GetMarcheMarcheUidGetResponse> => {
-    data = marcheDtoSchemaResponseTransformer(data);
+export const getListeMarchesMarcheGetResponseTransformer = async (data: any): Promise<GetListeMarchesMarcheGetResponse> => {
+    data = data.map((item: any) => {
+        return marcheAllegeDtoSchemaResponseTransformer(item);
+    });
     return data;
 };
 
@@ -51,10 +46,8 @@ const modificationMarcheDtoSchemaResponseTransformer = (data: any) => {
     return data;
 };
 
-export const getListeConcessionsContratConcessionGetResponseTransformer = async (data: any): Promise<GetListeConcessionsContratConcessionGetResponse> => {
-    data = data.map((item: any) => {
-        return contratConcessionDtoSchemaResponseTransformer(item);
-    });
+export const getMarcheMarcheUidGetResponseTransformer = async (data: any): Promise<GetMarcheMarcheUidGetResponse> => {
+    data = marcheDtoSchemaResponseTransformer(data);
     return data;
 };
 
@@ -75,13 +68,15 @@ const donneeExecutionDtoSchemaResponseTransformer = (data: any) => {
     return data;
 };
 
-export const getConcessionContratConcessionUidGetResponseTransformer = async (data: any): Promise<GetConcessionContratConcessionUidGetResponse> => {
-    data = contratConcessionDtoSchemaResponseTransformer(data);
+export const getListeConcessionsContratConcessionGetResponseTransformer = async (data: any): Promise<GetListeConcessionsContratConcessionGetResponse> => {
+    data = data.map((item: any) => {
+        return contratConcessionDtoSchemaResponseTransformer(item);
+    });
     return data;
 };
 
-export const getStructureStructureUidGetResponseTransformer = async (data: any): Promise<GetStructureStructureUidGetResponse> => {
-    data = structureEtendueDtoSchemaResponseTransformer(data);
+export const getConcessionContratConcessionUidGetResponseTransformer = async (data: any): Promise<GetConcessionContratConcessionUidGetResponse> => {
+    data = contratConcessionDtoSchemaResponseTransformer(data);
     return data;
 };
 
@@ -89,5 +84,10 @@ const structureEtendueDtoSchemaResponseTransformer = (data: any) => {
     if (data.date_creation) {
         data.date_creation = new Date(data.date_creation);
     }
+    return data;
+};
+
+export const getStructureStructureUidGetResponseTransformer = async (data: any): Promise<GetStructureStructureUidGetResponse> => {
+    data = structureEtendueDtoSchemaResponseTransformer(data);
     return data;
 };
