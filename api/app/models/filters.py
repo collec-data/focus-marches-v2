@@ -2,7 +2,14 @@ from datetime import date
 
 from pydantic import BaseModel, Field
 
-from app.models.enums import FormePrix, NatureMarche, ProcedureMarche, TechniqueAchat
+from app.models.enums import (
+    ConsiderationsEnvironnementales,
+    ConsiderationsSociales,
+    FormePrix,
+    NatureMarche,
+    ProcedureMarche,
+    TechniqueAchat,
+)
 
 
 class FiltreTemporelStructure(BaseModel):
@@ -20,6 +27,9 @@ class FiltreMarchesEtendus(FiltreTemporelStructure):
     type_marche: NatureMarche | None = None
     procedure: ProcedureMarche | None = None
     technique_achat: TechniqueAchat | None = None
+    consideration: ConsiderationsEnvironnementales | ConsiderationsSociales | None = (
+        None
+    )
     montant_max: int | None = Field(ge=0, default=None)
     montant_min: int | None = Field(ge=0, default=None)
     duree_max: int | None = Field(ge=0, default=None)

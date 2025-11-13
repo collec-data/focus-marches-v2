@@ -277,6 +277,9 @@ class IndicateursDto(BaseModel):
     nb_acheteurs: int
     nb_fournisseurs: int
     nb_sous_traitance: int
+    nb_considerations_sociale_env: int
+    nb_considerations_env: int
+    nb_considerations_sociales: int
     nb_innovant: int
 
 

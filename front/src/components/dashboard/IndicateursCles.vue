@@ -85,17 +85,17 @@ onMounted(() => {
             <div class="indicateur">
                 <i class="pi pi-star"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS ENVIRONNEMENTALES ET SOCIALES</div>
-                <div class="value"></div>
+                <div class="value">{{ indicateurs.nb_considerations_sociale_env }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-globe"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS ENVIRONNEMENTALES</div>
-                <div class="value"></div>
+                <div class="value">{{ indicateurs.nb_considerations_env }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-eye"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS SOCIALES</div>
-                <div class="value"></div>
+                <div class="value">{{ indicateurs.nb_considerations_sociales }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-lightbulb"></i>
