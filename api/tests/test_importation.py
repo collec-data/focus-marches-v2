@@ -47,7 +47,8 @@ def test_importation_marche_succes(db):
     assert marche1.nature == 1
     assert marche1.objet == "Lorem ipsum dolor"
     assert marche1.cpv == "12341234"
-    assert marche1.techniques_achat == []
+    assert len(marche1.techniques_achat) == 1
+    assert marche1.techniques_achat[0].technique == 1
     assert marche1.modalites_execution == []
     assert marche1.marche_innovant is True
     assert marche1.ccag == 1

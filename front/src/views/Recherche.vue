@@ -219,7 +219,6 @@ const marcheUid = ref(null);
                             placeholder="Toutes"
                             showClear
                             fluid
-                            disabled
                         />
                     </div>
                     <div class="basis-1/3">

@@ -42,6 +42,7 @@ from app.models.db import (
     ModificationSousTraitance,
     Structure,
     Tarif,
+    TechniqueAchatMarche,
     concession_structure_table,
     marche_titulaire_table,
     modification_titulaire_table,
@@ -185,9 +186,6 @@ class ImportateurDecp:
             objet=data.objet,
             cpv=data.codeCPV,
             categorie=categorisation.CPV2categorie(data.codeCPV).db_value,
-            techniques_achat=[
-                tech.db_value for tech in data.techniques["technique"] if tech.db_value
-            ],
             modalites_execution=[
                 mod.db_value
                 for mod in data.modalitesExecution["modaliteExecution"]
@@ -247,6 +245,15 @@ class ImportateurDecp:
             origine_france=data.origineFrance,
         )
 
+        for tech in data.techniques["technique"]:
+            if tech == TechniqueAchat.AC:
+                self._cache_accords_cadre[marche.id] = marche
+
+            if tech.db_value:
+                marche.techniques_achat.append(
+                    TechniqueAchatMarche(technique=tech.db_value)
+                )
+
         for consideration_sociale in data.considerationsSociales[
             "considerationSociale"
         ]:
@@ -264,9 +271,6 @@ class ImportateurDecp:
                 marche.considerations_environnementales.append(
                     ConsiderationEnvMarche(consideration=consideration_env.db_value)
                 )
-
-        if TechniqueAchat.AC.db_value in marche.techniques_achat:
-            self._cache_accords_cadre[marche.id] = marche
 
         index_actes_sous_traitance: dict[int, ActeSousTraitance] = {}
         for tmp in data.actesSousTraitance:

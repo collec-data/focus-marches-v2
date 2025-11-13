@@ -18,6 +18,7 @@ from tests.factories import (
     LieuFactory,
     MarcheFactory,
     StructureFactory,
+    TechniqueAchatFactory,
     VendeurFactory,
 )
 
@@ -89,6 +90,7 @@ def set_factory_db(db):
         DecpMalFormeFactory,
         ConsiderationSocialeFactory,
         ConsiderationEnvFactory,
+        TechniqueAchatFactory,
     ]:
         my_factory._meta.sqlalchemy_session = db
 

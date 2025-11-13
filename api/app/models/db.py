@@ -157,6 +157,12 @@ class ConsiderationSocialeMarche(Base):
     consideration: Mapped[int]
 
 
+class TechniqueAchatMarche(Base):
+    uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    technique: Mapped[int]
+
+
 class Marche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     id: Mapped[str]
@@ -166,9 +172,7 @@ class Marche(Base):
     objet: Mapped[str] = mapped_column(Text())  # max 1k
     cpv: Mapped[str]
     categorie: Mapped[int]  # enum CategorieMarche
-    techniques_achat: Mapped[list[int]] = mapped_column(
-        MutableList.as_mutable(PickleType)
-    )
+    techniques_achat: Mapped[list[TechniqueAchatMarche]] = relationship()
     modalites_execution: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
@@ -255,7 +259,9 @@ class Marche(Base):
 
     @hybrid_property
     def techniques_achat_as_str(self) -> list[TechniqueAchat]:
-        return [TechniqueAchat.from_db_value(v) for v in self.techniques_achat]
+        return [
+            TechniqueAchat.from_db_value(t.technique) for t in self.techniques_achat
+        ]
 
     @hybrid_property
     def modalites_execution_as_str(self) -> list[ModaliteExecution]:

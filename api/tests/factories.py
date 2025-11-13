@@ -47,6 +47,14 @@ class ConsiderationEnvFactory(factory.alchemy.SQLAlchemyModelFactory):
     consideration = enums.ConsiderationsEnvironnementales.CRITERE.db_value
 
 
+class TechniqueAchatFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = db.TechniqueAchatMarche
+
+    uid = factory.declarations.Sequence(lambda n: n)
+    technique = enums.TechniqueAchat.CONCOURS.db_value
+
+
 class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.Marche
