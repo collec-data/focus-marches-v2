@@ -86,7 +86,8 @@ def application_filtres_etendus(
     if f.procedure:
         stmt = stmt.where(Marche.procedure == f.procedure.db_value)
 
-    # ToDo : technique achat
+    if f.categorie:
+        stmt = stmt.where(Marche.categorie == f.categorie.db_value)
 
     if f.consideration and isinstance(f.consideration, ConsiderationsEnvironnementales):
         stmt = stmt.join(Marche.considerations_environnementales).where(

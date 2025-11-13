@@ -1081,6 +1081,10 @@ export type GetListeMarchesMarcheGetData = {
          */
         procedure?: ProcedureMarche | null;
         /**
+         * Categorie
+         */
+        categorie?: CategorieMarche | null;
+        /**
          * Technique Achat
          */
         technique_achat?: TechniqueAchat | null;
@@ -1312,6 +1316,10 @@ export type GetIndicateursMarcheIndicateursGetData = {
          * Procedure
          */
         procedure?: ProcedureMarche | null;
+        /**
+         * Categorie
+         */
+        categorie?: CategorieMarche | null;
         /**
          * Technique Achat
          */

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getListeMarchesMarcheGet, listStructuresStructureGet, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
+import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getListeMarchesMarcheGet, listStructuresStructureGet, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
 import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
 import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { ref } from 'vue';
@@ -51,6 +51,7 @@ const filtres = ref({
     forme_prix: null,
     type_marche: null,
     procedure: null,
+    categorie: null,
     technique_achat: null,
     consideration: null,
     montant_min: null,
@@ -74,6 +75,7 @@ function fetchData() {
         forme_prix: filtres.value.forme_prix,
         procedure: filtres.value.procedure,
         technique_achat: filtres.value.technique_achat,
+        categorie: filtres.value.categorie,
         consideration: filtres.value.consideration,
         montant_min: filtres.value.montant_min,
         montant_max: filtres.value.montant_max,
@@ -203,8 +205,8 @@ const marcheUid = ref(null);
                 </div>
                 <div v-if="recherche_avancee" class="flex flex-row gap-5 mb-5">
                     <div class="basis-1/3">
-                        <label for="marche">Technique d'achat</label>
-                        <Select inputId="marche" name="marche" aria-label="Sélecteur du marché" placeholder="Toutes" showClear fluid disabled />
+                        <label for="categorie">Catégorie</label>
+                        <Select v-model="filtres.categorie" :options="Object.values(CategorieMarche)" inputId="categorie" name="categorie" aria-label="Sélecteur de la catégorie de marché" placeholder="Toutes" showClear fluid />
                     </div>
                     <div class="basis-1/3">
                         <label for="technique_achat">Technique d'achat</label>
