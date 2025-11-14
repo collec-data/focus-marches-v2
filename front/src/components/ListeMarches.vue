@@ -7,6 +7,7 @@ import { onMounted, ref, watch } from 'vue';
 import type { MarcheAllegeDto } from '@/client';
 
 const props = defineProps({
+    nomStructure: { type: String },
     acheteurUid: { type: [String, null], default: null },
     vendeurUid: { type: [String, null], default: null },
     dateMin: { type: [Date, null], default: null },
@@ -55,8 +56,8 @@ const marcheUid = ref(null);
 
 <template>
     <section>
-        <h2 class="title">Tous les marchés de ...</h2>
-        <p>Ce tableau affiche les principales informations des marchés de ... . Cliquez sur "Voir" pour accéder au détail de chaque marché.</p>
+        <h2 class="title">Tous les marchés de {{ nomStructure }}</h2>
+        <p>Ce tableau affiche les principales informations des marchés de {{ nomStructure }}. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
         <DataTable
             v-model:filters="filters"
             :value="listeMarches"
