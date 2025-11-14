@@ -38,6 +38,14 @@ L'import au sein de Focus Marchés est ensuite réalisé en appelant le script p
 python app/importation.py
 ```
 
+### [ARNIA](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-arnia-1/)
+
+```bash
+for url in https://www.data.gouv.fr/api/1/datasets/r/f2ca0c44-ee8e-42ba-86a2-e83572c1b0d0 https://www.data.gouv.fr/api/1/datasets/r/b6e959fd-9e9d-4dfb-ba54-65b5ddf49881 https://www.data.gouv.fr/api/1/datasets/r/0647e31d-29c5-4adc-8480-23d207eec2bc https://www.data.gouv.fr/api/1/datasets/r/c9071fda-c613-4aa0-ae6a-e73dfca7ec69 https://www.data.gouv.fr/api/1/datasets/r/a136ac8f-7d5b-4bf2-b3de-7919e644aeae https://www.data.gouv.fr/api/1/datasets/r/79746469-5ba6-4955-9bb7-e5e2fdbb2472; \
+do curl -L ${url} -o "data/${url: -36}.json"; done
+```
+
+
 ### [Fichiers consolidés nationnal annuel](https://www.data.gouv.fr/datasets/donnees-essentielles-de-la-commande-publique-fichiers-consolides/)
 ```bash
 for url in https://www.data.gouv.fr/api/1/datasets/r/d00a6a5a-beef-442e-8aee-5867f47a87d0 https://www.data.gouv.fr/api/1/datasets/r/4fafdaff-b697-4494-9523-e9f56916fea8 https://www.data.gouv.fr/api/1/datasets/r/59ba0edb-cf94-4bf1-a546-61f561553917 https://www.data.gouv.fr/api/1/datasets/r/16962018-5c31-4296-9454-5998585496d2  ; \
