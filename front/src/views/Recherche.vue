@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FormePrix, getListeMarchesMarcheGet, listStructuresStructureGet, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
+import { ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getListeMarchesMarcheGet, listStructuresStructureGet, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
 import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
 import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { ref } from 'vue';
@@ -11,6 +11,8 @@ const marches = ref<MarcheAllegeDto[]>([]);
 
 const acheteurs = ref<StructureDto[]>([]);
 const fournisseurs = ref<StructureDto[]>([]);
+
+const options_achat_durable: string[] = (Object.values(ConsiderationsEnvironnementales) as string[]).concat(Object.values(ConsiderationsSociales) as string[]).filter((o) => !o.includes('Pas de'));
 
 const filterOptions = {
     ignoreCase: true
@@ -50,6 +52,7 @@ const filtres = ref({
     type_marche: null,
     procedure: null,
     technique_achat: null,
+    consideration: null,
     montant_min: null,
     montant_max: null,
     duree_min: null,
@@ -71,6 +74,7 @@ function fetchData() {
         forme_prix: filtres.value.forme_prix,
         procedure: filtres.value.procedure,
         technique_achat: filtres.value.technique_achat,
+        consideration: filtres.value.consideration,
         montant_min: filtres.value.montant_min,
         montant_max: filtres.value.montant_max,
         duree_min: filtres.value.duree_min,
@@ -218,7 +222,7 @@ const marcheUid = ref(null);
                     </div>
                     <div class="basis-1/3">
                         <label for="achat_durable">Achat durable</label>
-                        <Select inputId="achat_durable" name="achat_durable" aria-label="Sélecteur des achats durables présents" placeholder="Tous" showClear fluid disabled />
+                        <Select v-model="filtres.consideration" :options="options_achat_durable" inputId="achat_durable" name="achat_durable" aria-label="Sélecteur des achats durables présents" placeholder="Tous" showClear fluid />
                     </div>
                 </div>
                 <div v-if="recherche_avancee" class="flex flex-row gap-5 mb-5">

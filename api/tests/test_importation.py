@@ -71,7 +71,8 @@ def test_importation_marche_succes(db):
     assert marche1.titulaires[0].identifiant == "12345678991230"
     assert marche1.titulaires[0].type_identifiant == "SIRET"
     assert marche1.considerations_sociales == []
-    assert marche1.considerations_environnementales == []
+    assert len(marche1.considerations_environnementales)
+    assert marche1.considerations_environnementales[0].consideration == 1
     assert len(marche1.modifications) == 2
     assert marche1.modifications[0].id == 1
     assert marche1.modifications[0].date_notification == date(2025, 1, 1)

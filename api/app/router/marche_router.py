@@ -6,7 +6,13 @@ from sqlalchemy import Row, Select, asc, desc, distinct, func, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import SessionDep
-from app.models.db import Lieu, Marche, Structure
+from app.models.db import (
+    ConsiderationEnvMarche,
+    ConsiderationSocialeMarche,
+    Lieu,
+    Marche,
+    Structure,
+)
 from app.models.dto import (
     CategoriesDto,
     IndicateursDto,
@@ -18,7 +24,11 @@ from app.models.dto import (
     MarcheNatureDto,
     MarcheProcedureDto,
 )
-from app.models.enums import TypeCodeLieu
+from app.models.enums import (
+    ConsiderationsEnvironnementales,
+    ConsiderationsSociales,
+    TypeCodeLieu,
+)
 from app.models.filters import (
     FiltreMarchesEtendus,
     FiltresListeMarches,
@@ -78,7 +88,15 @@ def application_filtres_etendus(
 
     # ToDo : technique achat
 
-    # ToDo : achat durable
+    if f.consideration and isinstance(f.consideration, ConsiderationsEnvironnementales):
+        stmt = stmt.join(Marche.considerations_environnementales).where(
+            ConsiderationEnvMarche.consideration == f.consideration.db_value
+        )
+
+    if f.consideration and isinstance(f.consideration, ConsiderationsSociales):
+        stmt = stmt.join(Marche.considerations_sociales).where(
+            ConsiderationSocialeMarche.consideration == f.consideration.db_value
+        )
 
     if f.montant_max:
         stmt = stmt.where(Marche.montant <= f.montant_max)
@@ -193,20 +211,20 @@ def get_indicateurs(
         periode = None
     nb_contrats = session.execute(
         application_filtres_etendus(select(func.count(Marche.id)), filtres)
-    ).one()[0]
+    ).scalar()
     montant_total = session.execute(
         application_filtres_etendus(select(func.sum(Marche.montant)), filtres)
-    ).one()[0]
+    ).scalar()
     nb_acheteurs = session.execute(
         application_filtres_etendus(
             select(func.count(distinct(Structure.uid))).join(Marche.acheteur), filtres
         )
-    ).one()[0]
+    ).scalar()
     nb_fournisseurs = session.execute(
         application_filtres_etendus(
             select(func.count(distinct(Structure.uid))).join(Marche.titulaires), filtres
         )
-    ).one()[0]
+    ).scalar()
     nb_sous_traitance = session.execute(
         application_filtres_etendus(
             select(func.count(Marche.sous_traitance_declaree)).where(
@@ -214,7 +232,29 @@ def get_indicateurs(
             ),
             filtres,
         )
-    ).one()[0]
+    ).scalar()
+    nb_considerations_sociale_env = session.execute(
+        application_filtres_etendus(
+            select(func.count(Marche.uid))
+            .join(Marche.considerations_environnementales)
+            .join(Marche.considerations_sociales),
+            filtres,
+        )
+    ).scalar()
+    nb_considerations_env = session.execute(
+        application_filtres_etendus(
+            select(func.count(Marche.uid)).join(
+                Marche.considerations_environnementales
+            ),
+            filtres,
+        )
+    ).scalar()
+    nb_considerations_sociales = session.execute(
+        application_filtres_etendus(
+            select(func.count(Marche.uid)).join(Marche.considerations_sociales),
+            filtres,
+        )
+    ).scalar()
     nb_innovant = session.execute(
         application_filtres_etendus(
             select(func.count(Marche.marche_innovant)).where(
@@ -222,16 +262,23 @@ def get_indicateurs(
             ),
             filtres,
         )
-    ).one()[0]
+    ).scalar()
 
     return IndicateursDto(
         periode=periode,
-        nb_contrats=nb_contrats,
+        nb_contrats=nb_contrats if nb_contrats else 0,
         montant_total=montant_total if montant_total else Decimal("0"),
-        nb_acheteurs=nb_acheteurs,
-        nb_fournisseurs=nb_fournisseurs,
-        nb_sous_traitance=nb_sous_traitance,
-        nb_innovant=nb_innovant,
+        nb_acheteurs=nb_acheteurs if nb_acheteurs else 0,
+        nb_fournisseurs=nb_fournisseurs if nb_fournisseurs else 0,
+        nb_sous_traitance=nb_sous_traitance if nb_sous_traitance else 0,
+        nb_considerations_sociale_env=nb_considerations_sociale_env
+        if nb_considerations_sociale_env
+        else 0,
+        nb_considerations_env=nb_considerations_env if nb_considerations_env else 0,
+        nb_considerations_sociales=nb_considerations_sociales
+        if nb_considerations_sociales
+        else 0,
+        nb_innovant=nb_innovant if nb_innovant else 0,
     )
 
 

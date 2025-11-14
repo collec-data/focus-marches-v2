@@ -307,6 +307,18 @@ export type IndicateursDto = {
      */
     nb_sous_traitance: number;
     /**
+     * Nb Considerations Sociale Env
+     */
+    nb_considerations_sociale_env: number;
+    /**
+     * Nb Considerations Env
+     */
+    nb_considerations_env: number;
+    /**
+     * Nb Considerations Sociales
+     */
+    nb_considerations_sociales: number;
+    /**
      * Nb Innovant
      */
     nb_innovant: number;
@@ -1073,6 +1085,10 @@ export type GetListeMarchesMarcheGetData = {
          */
         technique_achat?: TechniqueAchat | null;
         /**
+         * Consideration
+         */
+        consideration?: ConsiderationsEnvironnementales | ConsiderationsSociales | null;
+        /**
          * Montant Max
          */
         montant_max?: number | null;
@@ -1300,6 +1316,10 @@ export type GetIndicateursMarcheIndicateursGetData = {
          * Technique Achat
          */
         technique_achat?: TechniqueAchat | null;
+        /**
+         * Consideration
+         */
+        consideration?: ConsiderationsEnvironnementales | ConsiderationsSociales | null;
         /**
          * Montant Max
          */

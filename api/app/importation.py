@@ -29,6 +29,8 @@ from app.helpers import categorisation
 from app.models.db import (
     ActeSousTraitance,
     Base,
+    ConsiderationEnvMarche,
+    ConsiderationSocialeMarche,
     ContratConcession,
     DecpMalForme,
     DonneeExecution,
@@ -243,19 +245,25 @@ class ImportateurDecp:
             ],
             origine_ue=data.origineUE,
             origine_france=data.origineFrance,
-            considerations_sociales=[
-                consideration.db_value
-                for consideration in data.considerationsSociales["considerationSociale"]
-                if consideration.db_value
-            ],
-            considerations_environnementales=[
-                consideration.db_value
-                for consideration in data.considerationsEnvironnementales[
-                    "considerationEnvironnementale"
-                ]
-                if consideration.db_value
-            ],
         )
+
+        for consideration_sociale in data.considerationsSociales[
+            "considerationSociale"
+        ]:
+            if consideration_sociale.db_value:
+                marche.considerations_sociales.append(
+                    ConsiderationSocialeMarche(
+                        consideration=consideration_sociale.db_value
+                    )
+                )
+
+        for consideration_env in data.considerationsEnvironnementales[
+            "considerationEnvironnementale"
+        ]:
+            if consideration_env.db_value:
+                marche.considerations_environnementales.append(
+                    ConsiderationEnvMarche(consideration=consideration_env.db_value)
+                )
 
         if TechniqueAchat.AC.db_value in marche.techniques_achat:
             self._cache_accords_cadre[marche.id] = marche

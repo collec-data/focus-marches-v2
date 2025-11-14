@@ -2,7 +2,13 @@ from datetime import date
 from decimal import Decimal
 
 from app.models import enums
-from tests.factories import AcheteurFactory, MarcheFactory, VendeurFactory
+from tests.factories import (
+    AcheteurFactory,
+    ConsiderationEnvFactory,
+    ConsiderationSocialeFactory,
+    MarcheFactory,
+    VendeurFactory,
+)
 
 
 def test_list_marche(client):
@@ -172,7 +178,30 @@ def test_indicateurs_succes(client):
         date_notification=date(2025, 1, 1),
     )
     MarcheFactory.create_batch(
-        9, sous_traitance_declaree=True, montant=100, date_notification=date(2025, 1, 1)
+        6,
+        sous_traitance_declaree=True,
+        montant=100,
+        date_notification=date(2025, 1, 1),
+    )
+
+    MarcheFactory(
+        sous_traitance_declaree=True,
+        montant=100,
+        date_notification=date(2025, 1, 1),
+        considerations_environnementales=[ConsiderationEnvFactory()],
+    )
+    MarcheFactory(
+        sous_traitance_declaree=True,
+        montant=100,
+        date_notification=date(2025, 1, 1),
+        considerations_environnementales=[ConsiderationEnvFactory()],
+        considerations_sociales=[ConsiderationSocialeFactory()],
+    )
+    MarcheFactory(
+        sous_traitance_declaree=True,
+        montant=100,
+        date_notification=date(2025, 1, 1),
+        considerations_sociales=[ConsiderationSocialeFactory()],
     )
 
     response = client.get(
@@ -192,6 +221,9 @@ def test_indicateurs_succes(client):
         "nb_innovant": 10,
         "nb_sous_traitance": 9,
         "periode": 2,
+        "nb_considerations_sociale_env": 1,
+        "nb_considerations_env": 2,
+        "nb_considerations_sociales": 2,
     }
 
 

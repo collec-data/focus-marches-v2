@@ -32,7 +32,18 @@ export const marche: MarcheAllegeDto = {
     considerations_sociales: []
 };
 
-export const indicateurs: IndicateursDto = { periode: null, nb_contrats: 456, montant_total: '10000000000.00', nb_acheteurs: 2, nb_fournisseurs: 3, nb_sous_traitance: 4, nb_innovant: 5 };
+export const indicateurs: IndicateursDto = {
+    periode: null,
+    nb_contrats: 456,
+    montant_total: '10000000000.00',
+    nb_acheteurs: 2,
+    nb_fournisseurs: 3,
+    nb_sous_traitance: 4,
+    nb_innovant: 5,
+    nb_considerations_sociale_env: 10,
+    nb_considerations_env: 16,
+    nb_considerations_sociales: 20
+};
 
 export const structure: StructureAggMarchesDto = { structure: { uid: 42, identifiant: '0000000', type_identifiant: 'SIRET', nom: 'Une structure', vendeur: false, acheteur: true }, montant: '10000000', nb_contrats: 500 };
 

@@ -145,6 +145,18 @@ class DonneeExecution(Base):
     tarifs: Mapped[list[Tarif]] = relationship()
 
 
+class ConsiderationEnvMarche(Base):
+    uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    consideration: Mapped[int]
+
+
+class ConsiderationSocialeMarche(Base):
+    uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    consideration: Mapped[int]
+
+
 class Marche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     id: Mapped[str]
@@ -188,11 +200,9 @@ class Marche(Base):
     titulaires: Mapped[list[Structure]] = relationship(
         secondary=marche_titulaire_table
     )  # **
-    considerations_sociales: Mapped[list[int]] = mapped_column(
-        MutableList.as_mutable(PickleType)
-    )
-    considerations_environnementales: Mapped[list[int]] = mapped_column(
-        MutableList.as_mutable(PickleType)
+    considerations_sociales: Mapped[list[ConsiderationSocialeMarche]] = relationship()
+    considerations_environnementales: Mapped[list[ConsiderationEnvMarche]] = (
+        relationship()
     )
     # modifications_actes_sous_traitance: Mapped[list[ModificationSousTraitance]] = (
     #     relationship()
@@ -222,8 +232,8 @@ class Marche(Base):
     @hybrid_property
     def considerations_sociales_as_str(self) -> list[ConsiderationsSociales]:
         return [
-            ConsiderationsSociales.from_db_value(v)
-            for v in self.considerations_sociales
+            ConsiderationsSociales.from_db_value(c.consideration)
+            for c in self.considerations_sociales
         ]
 
     @hybrid_property
@@ -231,8 +241,8 @@ class Marche(Base):
         self,
     ) -> list[ConsiderationsEnvironnementales]:
         return [
-            ConsiderationsEnvironnementales.from_db_value(v)
-            for v in self.considerations_environnementales
+            ConsiderationsEnvironnementales.from_db_value(c.consideration)
+            for c in self.considerations_environnementales
         ]
 
     @hybrid_property
