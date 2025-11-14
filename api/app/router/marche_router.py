@@ -12,6 +12,7 @@ from app.models.db import (
     Lieu,
     Marche,
     Structure,
+    TechniqueAchatMarche,
 )
 from app.models.dto import (
     CategoriesDto,
@@ -86,7 +87,13 @@ def application_filtres_etendus(
     if f.procedure:
         stmt = stmt.where(Marche.procedure == f.procedure.db_value)
 
-    # ToDo : technique achat
+    if f.categorie:
+        stmt = stmt.where(Marche.categorie == f.categorie.db_value)
+
+    if f.technique_achat:
+        stmt = stmt.join(Marche.techniques_achat).where(
+            TechniqueAchatMarche.technique == f.technique_achat.db_value
+        )
 
     if f.consideration and isinstance(f.consideration, ConsiderationsEnvironnementales):
         stmt = stmt.join(Marche.considerations_environnementales).where(

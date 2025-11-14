@@ -3,6 +3,7 @@ from datetime import date
 from pydantic import BaseModel, Field
 
 from app.models.enums import (
+    CategorieMarche,
     ConsiderationsEnvironnementales,
     ConsiderationsSociales,
     FormePrix,
@@ -26,6 +27,7 @@ class FiltreMarchesEtendus(FiltreTemporelStructure):
     forme_prix: FormePrix | None = None
     type_marche: NatureMarche | None = None
     procedure: ProcedureMarche | None = None
+    categorie: CategorieMarche | None = None
     technique_achat: TechniqueAchat | None = None
     consideration: ConsiderationsEnvironnementales | ConsiderationsSociales | None = (
         None

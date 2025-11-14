@@ -7,6 +7,7 @@ from tests.factories import (
     ConsiderationEnvFactory,
     ConsiderationSocialeFactory,
     MarcheFactory,
+    TechniqueAchatFactory,
     VendeurFactory,
 )
 
@@ -23,6 +24,10 @@ def test_list_marche(client):
         procedure=enums.ProcedureMarche.COMPETITIF.db_value,
         montant=42,
         duree_mois=6,
+        categorie=enums.CategorieMarche.FOURNITURES.db_value,
+        considerations_sociales=[ConsiderationSocialeFactory()],
+        considerations_environnementales=[ConsiderationEnvFactory()],
+        techniques_achat=[TechniqueAchatFactory()],
     )
 
     response = client.get("/marche")
@@ -39,6 +44,9 @@ def test_list_marche(client):
             "forme_prix": enums.FormePrix.FORFAITAIRE.value,
             "type_marche": enums.NatureMarche.DEFSEC.value,
             "procedure": enums.ProcedureMarche.COMPETITIF.value,
+            "categorie": enums.CategorieMarche.FOURNITURES.value,
+            "technique_achat": enums.TechniqueAchat.CONCOURS.value,
+            "consideration": enums.ConsiderationsEnvironnementales.CRITERE.value,
             "montant_max": 42,
             "montant_min": 42,
             "duree_max": 6,
