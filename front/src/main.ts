@@ -11,7 +11,7 @@ import Tooltip from 'primevue/tooltip';
 
 import '@/assets/styles.scss';
 
-client.setConfig({ baseUrl: 'https://api-focus.arnia.do4c.sib.fr' });
+client.setConfig({ baseUrl: settings.api.base });
 
 const app = createApp(App);
 

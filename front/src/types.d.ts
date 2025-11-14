@@ -3,3 +3,11 @@ declare module 'plotly.js-dist' {
 }
 
 declare module '*.png';
+
+type Settings = {
+    api: {
+        base: string;
+    };
+};
+
+declare var settings: Settings;
