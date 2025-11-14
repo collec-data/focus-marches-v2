@@ -1,0 +1,5 @@
+var settings = {
+  api: {
+    base: "${API_BASE}",
+  },
+};

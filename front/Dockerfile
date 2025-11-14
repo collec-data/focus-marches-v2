@@ -9,6 +9,9 @@ RUN rm -rf /usr/share/nginx/html
 
 # Copy from the stahg 1
 COPY --chown=nginx:root dist /usr/share/nginx/html
+COPY --chown=nginx:root docker/settings.js.template /etc/nginx/templates/
+
+ENV NGINX_ENVSUBST_OUTPUT_DIR=/usr/share/nginx/html/
 
 EXPOSE 80
 
