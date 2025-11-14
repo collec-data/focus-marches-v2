@@ -2,9 +2,9 @@
 import type { StructureEtendueDto } from '@/client';
 import { getStructureStructureUidGet } from '@/client';
 import ListeConcessions from '@/components/ListeConcessions.vue';
+import { structureName } from '@/service/HelpersService';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { structureName } from '@/service/HelpersService';
 
 const route = useRoute();
 const acheteurUid = ref(route.params.uid as string);
@@ -45,7 +45,7 @@ onMounted(() => {
         <CategoriePrincipaleDAchat :acheteurUid :dateMin :dateMax />
         <Top12 type="fournisseurs" :acheteurUid :dateMin :dateMax />
         <DistributionTemporelleMarches :acheteurUid :dateMin :dateMax />
-        <ListeMarches :acheteurUid :dateMin :dateMax />
+        <ListeMarches :nomStructure="structureName(acheteur)" :acheteurUid :dateMin :dateMax />
         <NatureContrats :acheteurUid :dateMin :dateMax />
         <CCAG :acheteurUid :dateMin :dateMax />
         <Procedure :acheteurUid :dateMin :dateMax />
