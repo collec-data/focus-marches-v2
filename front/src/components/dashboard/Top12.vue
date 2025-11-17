@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CategorieMarche, listAcheteursStructureAcheteurGet, listVendeursStructureVendeurGet } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { formatCurrency, structureName } from '@/service/HelpersService';
+import { breakLongLabel, formatCurrency, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
@@ -47,7 +47,12 @@ const data = ref({
     travaux: [] as Partial<PlotData>[],
     fournitures: [] as Partial<PlotData>[]
 });
-const layout = { margin: { t: 0 } } as Partial<Layout>;
+const layout = {
+    margin: { t: 0, b: 200, r: 100 },
+    xaxis: {
+        tickangle: 45
+    }
+} as Partial<Layout>;
 
 function transform(input: Array<StructureAggMarchesDto>) {
     let output = {
@@ -55,7 +60,7 @@ function transform(input: Array<StructureAggMarchesDto>) {
         montants: [] as Array<string>
     };
     for (var line of input) {
-        output.structures.push(structureName(line.structure));
+        output.structures.push(breakLongLabel(structureName(line.structure), 30));
         output.montants.push(line.montant);
     }
     return output;
@@ -133,7 +138,9 @@ function openModale() {
                                 </tr>
                             </tbody>
                         </table>
-                        <Graph :data="data.tout" :layout style="min-height: 20rem" />
+                        <div class="basis-2/3">
+                            <Graph :data="data.tout" :layout style="min-height: 25rem" />
+                        </div>
                     </div>
                 </TabPanel>
                 <TabPanel :value="CategorieMarche.SERVICES">
@@ -146,7 +153,9 @@ function openModale() {
                                 </tr>
                             </tbody>
                         </table>
-                        <Graph :data="data.services" :layout style="min-height: 20rem" />
+                        <div class="basis-2/3">
+                            <Graph :data="data.services" :layout style="min-height: 25rem" />
+                        </div>
                     </div>
                 </TabPanel>
                 <TabPanel :value="CategorieMarche.TRAVAUX">
@@ -159,7 +168,9 @@ function openModale() {
                                 </tr>
                             </tbody>
                         </table>
-                        <Graph :data="data.travaux" :layout style="min-height: 20rem" />
+                        <div class="basis-2/3">
+                            <Graph :data="data.travaux" :layout style="min-height: 25rem" />
+                        </div>
                     </div>
                 </TabPanel>
                 <TabPanel :value="CategorieMarche.FOURNITURES">
@@ -172,7 +183,9 @@ function openModale() {
                                 </tr>
                             </tbody>
                         </table>
-                        <Graph :data="data.fournitures" :layout style="min-height: 20rem" />
+                        <div class="basis-2/3">
+                            <Graph :data="data.fournitures" :layout style="min-height: 25rem" />
+                        </div>
                     </div>
                 </TabPanel>
             </TabPanels>
