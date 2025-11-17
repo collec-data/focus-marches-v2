@@ -18,6 +18,7 @@
         "@tailwindcss/postcss": "^4.1.14",
         "leaflet": "^1.9.4",
         "plotly.js-dist": "^3.1.1",
+        "plotly.js-locales": "^3.3.0",
         "primeicons": "^7.0.0",
         "primevue": "^4.3.1",
         "tailwindcss-primeui": "^0.6.0",

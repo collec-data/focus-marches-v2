@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import Plotly from 'plotly.js-dist';
+import locale from 'plotly.js-locales/fr';
 import type { PropType } from 'vue';
 import { onBeforeUnmount, onMounted, useId, watchEffect } from 'vue';
+
+Plotly.register(locale);
+Plotly.setPlotConfig({ locale: 'fr' });
 
 const props = defineProps({
     data: { type: Array as PropType<Plotly.Data[]> },
