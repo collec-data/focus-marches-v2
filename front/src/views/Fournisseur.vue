@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
 import { getStructureStructureUidGet } from '@/client';
-import { structureName } from '@/service/HelpersService';
+import { getNow, structureName } from '@/service/HelpersService';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -11,10 +11,10 @@ const vendeurUid = ref(route.params.uid as string);
 const vendeur = ref<Partial<StructureEtendueDto>>({});
 
 const dateMin = computed(() => {
-    return route.query.dateMin ? new Date(route.query.dateMin as string) : null;
+    return route.query.dateMin ? new Date(route.query.dateMin as string) : new Date(settings.date_min);
 });
 const dateMax = computed(() => {
-    return route.query.dateMax ? new Date(route.query.dateMax as string) : null;
+    return route.query.dateMax ? new Date(route.query.dateMax as string) : getNow();
 });
 
 function fetchData() {

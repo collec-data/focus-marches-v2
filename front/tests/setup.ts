@@ -2,7 +2,7 @@ import { config, RouterLinkStub } from '@vue/test-utils';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 import { defaultOptions } from 'primevue/config';
-import { afterAll, afterEach, beforeAll } from 'vitest';
+import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import { ccag, departements, erreurs, erreursStats, indicateurs, marche, nature, procedures, structure, categories_departements, categories, concession } from './api_test_data';
 
 config.global.mocks['$primevue'] = {
@@ -11,6 +11,8 @@ config.global.mocks['$primevue'] = {
 config.global.stubs = {
     RouterLink: RouterLinkStub
 };
+
+vi.stubGlobal('settings', { date_min: new Date('2020-01-01') });
 
 const baseUrl = 'http://localhost:3000/';
 
