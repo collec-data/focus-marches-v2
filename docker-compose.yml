@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:latest@sha256:1a7c9115671c686384cf4cd9fb50b682f8d5df9bb1d26070001741a064dd04b4
+    image: postgres:latest@sha256:41bfa2e5b168fff0847a5286694a86cff102bdc4d59719869f6b117bb30b3a24
     restart: always
     shm_size: 128mb
     environment:
