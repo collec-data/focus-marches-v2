@@ -99,7 +99,10 @@ const marcheUid = ref(null);
                 </template>
             </Column>
             <Column field="" header="Cat entreprise" sortable></Column>
-            <Column field="sous_traitance_declaree" header="Sous-traitance" sortable>
+            <Column field="sous_traitance_declaree" sortable>
+                <template #header>
+                    <span v-tooltip.bottom="'Sous-traitance déclarée'" class="p-datatable-column-title" data-pc-section="columntitle">Sous-Trait.</span>
+                </template>
                 <template #body="{ data }">
                     {{ formatBoolean(data.sous_traitance_declaree) }}
                 </template>
@@ -107,30 +110,43 @@ const marcheUid = ref(null);
             <Column field="actes_sous_traitance" header="Nb sous-traitants" sortable>
                 <template #body="{ data }">
                     {{ countSousTraitants(data.actes_sous_traitance) }}
-                </template></Column
-            >
-            <Column field="considerations_environnementales" header="Considérations environnement" sortable>
+                </template>
+            </Column>
+            <Column field="considerations_environnementales" sortable>
+                <template #header>
+                    <span v-tooltip.bottom="'Considérations environnementales'" class="p-datatable-column-title" data-pc-section="columntitle">Cons. Env.</span>
+                </template>
                 <template #body="{ data }">
                     {{ formatBoolean(data.considerations_environnementales?.length > 0) }}
                 </template>
             </Column>
-            <Column field="considerations_sociales" header="Considérations sociales" sortable>
+            <Column field="considerations_sociales" sortable>
+                <template #header>
+                    <span v-tooltip.bottom="'Considérations sociales'" class="p-datatable-column-title" data-pc-section="columntitle">Cons. Soc.</span>
+                </template>
                 <template #body="{ data }">
                     {{ formatBoolean(data.considerations_sociales?.length > 0) }}
                 </template>
             </Column>
-            <Column field="date_notification" header="Date de notification" sortable>
+            <Column field="date_notification" sortable>
+                <template #header>
+                    <span v-tooltip.bottom="'Date de notification'" class="p-datatable-column-title" data-pc-section="columntitle">Date de notif.</span>
+                </template>
                 <template #body="{ data }">
                     {{ formatDate(data.date_notification) }}
-                </template></Column
-            >
+                </template>
+            </Column>
             <Column field="montant" header="Montant" dataType="numeric" sortable>
                 <template #body="{ data }">
                     {{ formatCurrency(parseFloat(data.montant)) }}
                 </template>
-                ></Column
-            >
-            <Column field="" header="Montant max si accord cadre" sortable></Column>
+                >
+            </Column>
+            <Column sortable>
+                <template #header>
+                    <span v-tooltip.bottom="'Montant max si accord cadre'" class="p-datatable-column-title" data-pc-section="columntitle">AC</span>
+                </template>
+            </Column>
         </DataTable>
         <BoutonIframe v-if="acheteurUid" :acheteurUid path="marches" name="La liste des marchés publics passés" />
     </section>
