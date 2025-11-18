@@ -2,7 +2,7 @@
 import { getListeMarchesMarcheGet } from '@/client';
 import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import type { MarcheAllegeDto } from '@/client';
 
@@ -52,6 +52,30 @@ const countSousTraitants = (value: Array<any>) => {
 };
 
 const marcheUid = ref(null);
+
+const columns = ref([
+    { field: 'cpv', header: 'CPV' },
+    { field: 'cat_entreprise', header: 'Cat entreprise' },
+    { field: 'sous_trait', header: 'Sous-trait.' },
+    { field: 'nb_sous_traitant', header: 'Nb sous-traitants' },
+    { field: 'cons_env', header: 'Cons. Env.' },
+    { field: 'cons_soc', header: 'Cons. Soc.' },
+    { field: 'ac', header: 'AC' }
+]);
+const selectedColumns = ref(columns.value);
+
+const onToggle = (val) => {
+    selectedColumns.value = columns.value.filter((col) => val.includes(col));
+};
+
+const hiddenCol = computed(() => {
+    const selectedAsArray = new Set(
+        selectedColumns.value.map((e) => {
+            return e.field;
+        })
+    );
+    return Object.fromEntries(columns.value.map((e) => [e.field, !selectedAsArray.has(e.field)]));
+});
 </script>
 
 <template>
@@ -84,11 +108,14 @@ const marcheUid = ref(null);
                         </IconField>
                     </div>
                 </div>
+                <div class="text-right">
+                    <MultiSelect :modelValue="selectedColumns" :options="columns" optionLabel="header" display="chip" placeholder="Colones affichées" @update:modelValue="onToggle" />
+                </div>
             </template>
             <Column header="Détails">
                 <template #body="{ data }"> <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" /> </template
             ></Column>
-            <Column field="cpv" header="CPV" sortable></Column>
+            <Column field="cpv" header="CPV" sortable :hidden="hiddenCol.cpv"></Column>
             <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
             <Column v-if="acheteurUid == null" field="acheteur.nom" header="Acheteur" sortable>
                 <template #body="{ data }">{{ structureName(data.acheteur) }}</template>
@@ -98,8 +125,8 @@ const marcheUid = ref(null);
                     <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ structureName(titulaire) }}</div>
                 </template>
             </Column>
-            <Column field="" header="Cat entreprise" sortable></Column>
-            <Column field="sous_traitance_declaree" sortable>
+            <Column field="" header="Cat entreprise" sortable :hidden="hiddenCol.cat_entreprise"></Column>
+            <Column field="sous_traitance_declaree" sortable :hidden="hiddenCol.sous_trait">
                 <template #header>
                     <span v-tooltip.bottom="'Sous-traitance déclarée'" class="p-datatable-column-title" data-pc-section="columntitle">Sous-Trait.</span>
                 </template>
@@ -107,12 +134,12 @@ const marcheUid = ref(null);
                     {{ formatBoolean(data.sous_traitance_declaree) }}
                 </template>
             </Column>
-            <Column field="actes_sous_traitance" header="Nb sous-traitants" sortable>
+            <Column field="actes_sous_traitance" header="Nb sous-traitants" sortable :hidden="hiddenCol.nb_sous_traitant">
                 <template #body="{ data }">
                     {{ countSousTraitants(data.actes_sous_traitance) }}
                 </template>
             </Column>
-            <Column field="considerations_environnementales" sortable>
+            <Column field="considerations_environnementales" sortable :hidden="hiddenCol.cons_env">
                 <template #header>
                     <span v-tooltip.bottom="'Considérations environnementales'" class="p-datatable-column-title" data-pc-section="columntitle">Cons. Env.</span>
                 </template>
@@ -120,7 +147,7 @@ const marcheUid = ref(null);
                     {{ formatBoolean(data.considerations_environnementales?.length > 0) }}
                 </template>
             </Column>
-            <Column field="considerations_sociales" sortable>
+            <Column field="considerations_sociales" sortable :hidden="hiddenCol.cons_soc">
                 <template #header>
                     <span v-tooltip.bottom="'Considérations sociales'" class="p-datatable-column-title" data-pc-section="columntitle">Cons. Soc.</span>
                 </template>
@@ -142,7 +169,7 @@ const marcheUid = ref(null);
                 </template>
                 >
             </Column>
-            <Column sortable>
+            <Column sortable :hidden="hiddenCol.ac">
                 <template #header>
                     <span v-tooltip.bottom="'Montant max si accord cadre'" class="p-datatable-column-title" data-pc-section="columntitle">AC</span>
                 </template>
