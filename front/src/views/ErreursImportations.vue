@@ -3,6 +3,7 @@ import { getErreursImportErreursImportGet, getStatsErreursErreursImportStatsGet 
 import { onMounted, ref } from 'vue';
 
 import type { DecpMalFormeDto, StatsErreursDto } from '@/client';
+import { formatNumber } from '@/service/HelpersService';
 
 const stats = ref<Array<StatsErreursDto>>([]);
 const listDecpMalFormes = ref<Array<DecpMalFormeDto>>([]);
@@ -38,7 +39,11 @@ function loadDecps(localisation: string, type: string) {
                 </Column>
                 <Column field="localisation" header="Champs" sortable></Column>
                 <Column field="erreur" header="Erreur" sortable></Column>
-                <Column field="nombre" header="Nombre" sortable></Column>
+                <Column field="nombre" header="Nombre" sortable>
+                    <template #body="{ data }">
+                        {{ formatNumber(data.nombre) }}
+                    </template>
+                </Column>
             </DataTable>
         </div>
         <div class="mt-10">

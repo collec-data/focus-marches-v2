@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CategorieMarche, listAcheteursStructureAcheteurGet, listVendeursStructureVendeurGet } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { breakLongLabel, formatCurrency, structureName } from '@/service/HelpersService';
+import { breakLongLabel, formatCurrency, formatNumber, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
@@ -203,7 +203,11 @@ function openModale() {
                     </RouterLink>
                 </template>
             </Column>
-            <Column field="nb_contrats" header="NB contrats" sortable></Column>
+            <Column field="nb_contrats" header="NB contrats" sortable>
+                <template #body="{ data }">
+                    {{ formatNumber(data.nb_contrats) }}
+                </template>
+            </Column>
             <Column field="montant" header="Montant contrats" sortable bodyStyle="text-align:right">
                 <template #body="{ data }">
                     {{ formatCurrency(parseFloat(data.montant)) }}

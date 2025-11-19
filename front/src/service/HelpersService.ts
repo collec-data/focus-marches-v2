@@ -1,5 +1,9 @@
 import type { StructureDto, StructureEtendueDto } from '@/client';
 
+export const formatNumber = (value: number) => {
+    return value ? value.toLocaleString('fr-FR') : 0;
+};
+
 export const formatCurrency = (value: number) => {
     return value.toLocaleString('fr-FR', { style: 'currency', currency: 'eur' });
 };
