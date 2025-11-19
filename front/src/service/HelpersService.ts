@@ -65,3 +65,7 @@ export function getNow(): Date {
     date.setUTCHours(0, 0, 0, 0);
     return date;
 }
+
+export function getDurationInMonths(first: Date, last: Date): number {
+    return (last.getFullYear() - first.getFullYear()) * 12 + (last.getMonth() - first.getMonth()) + 1;
+}

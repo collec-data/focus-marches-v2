@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CategorieMarche, listAcheteursStructureAcheteurGet, listVendeursStructureVendeurGet } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { breakLongLabel, formatCurrency, formatNumber, structureName } from '@/service/HelpersService';
+import { breakLongLabel, formatCurrency, formatNumber, getDurationInMonths, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
@@ -11,8 +11,8 @@ const props = defineProps({
     type: String,
     acheteurUid: { type: [String, null], default: null },
     vendeurUid: { type: [String, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    dateMin: { type: Date, required: true },
+    dateMax: { type: Date, required: true }
 });
 
 const listeStructures = ref({
@@ -31,12 +31,12 @@ let link_path = '';
 
 if (props.type == 'acheteurs') {
     title = 'Qui achète ?';
-    description = 'Top 12 des acheteurs classés par montant total des contrats conclus au cours des 56 derniers mois. Survolez les noms les acheteurs pour les afficher en entier.';
+    description = 'Top 12 des acheteurs classés par montant total des contrats conclus au cours des ' + getDurationInMonths(props.dateMin, props.dateMax) + ' derniers mois. Survolez les noms les acheteurs pour les afficher en entier.';
     btn_label = 'Liste complète des organismes acheteurs';
     link_path = '/acheteur/';
 } else {
     title = 'Qui réalise ?';
-    description = 'Top 12 des fournisseurs classés par montant total des contrats remportés au cours des 56 derniers mois. Survolez les noms des fournisseurs pour les afficher en entier.';
+    description = 'Top 12 des fournisseurs classés par montant total des contrats remportés au cours des ' + getDurationInMonths(props.dateMin, props.dateMax) + ' derniers mois. Survolez les noms des fournisseurs pour les afficher en entier.';
     btn_label = 'Liste complète des fournisseurs';
     link_path = '/fournisseur/';
 }

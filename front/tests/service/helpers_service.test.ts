@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { longLabelsBreaker, structureName } from '../../src/service/HelpersService.ts';
+import { longLabelsBreaker, structureName, getDurationInMonths } from '../../src/service/HelpersService.ts';
 
 it('break long strings', async () => {
     expect(longLabelsBreaker(['Lorem ipsum dolor', null, 'Looooooooooooooorem'], 13)).toStrictEqual(['Lorem ipsum<br>dolor', null, 'Looooooooooooooorem']);
@@ -11,4 +11,8 @@ it('display nom structure', async () => {
     expect(structureName({ nom: '[ND]', identifiant: '1234', type_identifiant: 'SIRET' })).toStrictEqual('SIRET:1234');
     expect(structureName({ nom: null, identifiant: '1234', type_identifiant: 'SIRET' })).toStrictEqual('SIRET:1234');
     expect(structureName({ nom: null, identifiant: null, type_identifiant: null })).toStrictEqual('');
+});
+
+it('dates diff', async () => {
+    expect(getDurationInMonths(new Date(2025, 1, 1), new Date(2026, 3, 1))).toStrictEqual(15);
 });
