@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getCategoriesMarcheCategorieGet } from '@/client';
-import { formatCurrency } from '@/service/HelpersService';
+import { formatCurrency, formatNumber } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { CategoriesDto } from '@/client';
@@ -111,8 +111,8 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             <Graph :data="data.services" :layout />
             <div class="grid grid-cols-3 gap-1 text-center">
                 <div class="label">Nombre</div>
-                <div class="categorie">{{ stats.services.nombre_total }}</div>
-                <div class="total">{{ stats.nombre_total }} marchés</div>
+                <div class="categorie">{{ formatNumber(stats.services.nombre_total) }}</div>
+                <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
                 <div class="label">Montant</div>
                 <div class="categorie">{{ formatCurrency(stats.services.montant_total) }}</div>
                 <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
@@ -123,8 +123,8 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             <Graph :data="data.travaux" :layout />
             <div class="grid grid-cols-3 gap-1 text-center">
                 <div class="label">Nombre</div>
-                <div class="categorie">{{ stats.travaux.nombre_total }}</div>
-                <div class="total">{{ stats.nombre_total }} marchés</div>
+                <div class="categorie">{{ formatNumber(stats.travaux.nombre_total) }}</div>
+                <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
                 <div class="label">Montant</div>
                 <div class="categorie">{{ formatCurrency(stats.travaux.montant_total) }}</div>
                 <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
@@ -135,8 +135,8 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             <Graph :data="data.fournitures" :layout />
             <div class="grid grid-cols-3 gap-1 text-center">
                 <div class="label">Nombre</div>
-                <div class="categorie">{{ stats.fournitures.nombre_total }}</div>
-                <div class="total">{{ stats.nombre_total }} marchés</div>
+                <div class="categorie">{{ formatNumber(stats.fournitures.nombre_total) }}</div>
+                <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
                 <div class="label">Montant</div>
                 <div class="categorie">{{ formatCurrency(stats.fournitures.montant_total) }}</div>
                 <div class="total">{{ formatCurrency(stats.montant_total) }}</div>

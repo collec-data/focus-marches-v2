@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { IndicateursDto } from '@/client';
 import { getIndicateursMarcheIndicateursGet } from '@/client';
-import { formatCurrency } from '@/service/HelpersService';
+import { formatCurrency, formatNumber } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
@@ -60,7 +60,7 @@ onMounted(() => {
             <div class="indicateur">
                 <i class="pi pi-receipt"></i>
                 <div class="label">NB DE CONTRATS</div>
-                <div class="value">{{ indicateurs.nb_contrats }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_contrats) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-calculator"></i>
@@ -70,37 +70,37 @@ onMounted(() => {
             <div v-if="acheteurUid == null" class="indicateur">
                 <i class="pi pi-users"></i>
                 <div class="label">NB ACHETEURS</div>
-                <div class="value">{{ indicateurs.nb_acheteurs }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_acheteurs) }}</div>
             </div>
             <div v-if="vendeurUid == null" class="indicateur">
                 <i class="pi pi-users"></i>
                 <div class="label">NB FOURNISSEURS</div>
-                <div class="value">{{ indicateurs.nb_fournisseurs }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_fournisseurs) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-sitemap"></i>
                 <div class="label">NB CONTRATS AVEC SOUS TRAITANCE</div>
-                <div class="value">{{ indicateurs.nb_sous_traitance }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_sous_traitance) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-star"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS ENVIRONNEMENTALES ET SOCIALES</div>
-                <div class="value">{{ indicateurs.nb_considerations_sociale_env }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_considerations_sociale_env) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-globe"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS ENVIRONNEMENTALES</div>
-                <div class="value">{{ indicateurs.nb_considerations_env }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_considerations_env) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-eye"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS SOCIALES</div>
-                <div class="value">{{ indicateurs.nb_considerations_sociales }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_considerations_sociales) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-lightbulb"></i>
                 <div class="label">NB CONTRATS INNOVANTS</div>
-                <div class="value">{{ indicateurs.nb_innovant }}</div>
+                <div class="value">{{ formatNumber(indicateurs.nb_innovant) }}</div>
             </div>
         </div>
         <BoutonIframe v-if="acheteurUid" :acheteurUid path="indicateurs" name="Des indicateurs sur les marchés publics passés" />
