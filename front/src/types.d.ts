@@ -8,6 +8,7 @@ type Settings = {
     api: {
         base: string;
     };
+    date_min: string;
 };
 
 declare var settings: Settings;

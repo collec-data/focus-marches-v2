@@ -55,3 +55,9 @@ export function structureName(structure: Partial<StructureDto> | Partial<Structu
     }
     return '';
 }
+
+export function getNow(): Date {
+    const date = new Date();
+    date.setUTCHours(0, 0, 0, 0);
+    return date;
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getListeMarchesMarcheGet, listStructuresStructureGet, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
 import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
-import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
+import { formatCurrency, formatDate, getNow, structureName } from '@/service/HelpersService';
 import { ref } from 'vue';
 
 import type { MarcheAllegeDto, StructureDto } from '@/client';
@@ -58,8 +58,8 @@ const filtres = ref({
     montant_max: null,
     duree_min: null,
     duree_max: null,
-    date_min: null,
-    date_max: null
+    date_min: new Date(settings.date_min),
+    date_max: getNow()
 });
 
 const query = ref({});

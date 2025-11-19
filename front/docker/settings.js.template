@@ -2,4 +2,5 @@ var settings = {
   api: {
     base: "${API_BASE}",
   },
+  date_min: "${DATE_MIN}",
 };
