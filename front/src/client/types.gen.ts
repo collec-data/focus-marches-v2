@@ -974,7 +974,7 @@ export const VariationPrix = {
  */
 export type VariationPrix = typeof VariationPrix[keyof typeof VariationPrix];
 
-export type GetErreursImportErreursImportGetData = {
+export type GetErreursImportData = {
     body?: never;
     path?: never;
     query?: {
@@ -998,45 +998,45 @@ export type GetErreursImportErreursImportGetData = {
     url: '/erreurs-import/';
 };
 
-export type GetErreursImportErreursImportGetErrors = {
+export type GetErreursImportErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetErreursImportErreursImportGetError = GetErreursImportErreursImportGetErrors[keyof GetErreursImportErreursImportGetErrors];
+export type GetErreursImportError = GetErreursImportErrors[keyof GetErreursImportErrors];
 
-export type GetErreursImportErreursImportGetResponses = {
+export type GetErreursImportResponses = {
     /**
-     * Response Get Erreurs Import Erreurs Import  Get
+     * Response Get Erreurs Import
      *
      * Successful Response
      */
     200: Array<DecpMalFormeDto>;
 };
 
-export type GetErreursImportErreursImportGetResponse = GetErreursImportErreursImportGetResponses[keyof GetErreursImportErreursImportGetResponses];
+export type GetErreursImportResponse = GetErreursImportResponses[keyof GetErreursImportResponses];
 
-export type GetStatsErreursErreursImportStatsGetData = {
+export type GetStatsErreursData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/erreurs-import/stats';
 };
 
-export type GetStatsErreursErreursImportStatsGetResponses = {
+export type GetStatsErreursResponses = {
     /**
-     * Response Get Stats Erreurs Erreurs Import Stats Get
+     * Response Get Stats Erreurs
      *
      * Successful Response
      */
     200: Array<StatsErreursDto>;
 };
 
-export type GetStatsErreursErreursImportStatsGetResponse = GetStatsErreursErreursImportStatsGetResponses[keyof GetStatsErreursErreursImportStatsGetResponses];
+export type GetStatsErreursResponse = GetStatsErreursResponses[keyof GetStatsErreursResponses];
 
-export type GetListeMarchesMarcheGetData = {
+export type GetListeMarchesData = {
     body?: never;
     path?: never;
     query?: {
@@ -1120,27 +1120,27 @@ export type GetListeMarchesMarcheGetData = {
     url: '/marche/';
 };
 
-export type GetListeMarchesMarcheGetErrors = {
+export type GetListeMarchesErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetListeMarchesMarcheGetError = GetListeMarchesMarcheGetErrors[keyof GetListeMarchesMarcheGetErrors];
+export type GetListeMarchesError = GetListeMarchesErrors[keyof GetListeMarchesErrors];
 
-export type GetListeMarchesMarcheGetResponses = {
+export type GetListeMarchesResponses = {
     /**
-     * Response Get Liste Marches Marche  Get
+     * Response Get Liste Marches
      *
      * Successful Response
      */
     200: Array<MarcheAllegeDto>;
 };
 
-export type GetListeMarchesMarcheGetResponse = GetListeMarchesMarcheGetResponses[keyof GetListeMarchesMarcheGetResponses];
+export type GetListeMarchesResponse = GetListeMarchesResponses[keyof GetListeMarchesResponses];
 
-export type GetMarchesParProcedureMarcheProcedureGetData = {
+export type GetMarchesParProcedureData = {
     body?: never;
     path?: never;
     query?: {
@@ -1164,27 +1164,27 @@ export type GetMarchesParProcedureMarcheProcedureGetData = {
     url: '/marche/procedure';
 };
 
-export type GetMarchesParProcedureMarcheProcedureGetErrors = {
+export type GetMarchesParProcedureErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetMarchesParProcedureMarcheProcedureGetError = GetMarchesParProcedureMarcheProcedureGetErrors[keyof GetMarchesParProcedureMarcheProcedureGetErrors];
+export type GetMarchesParProcedureError = GetMarchesParProcedureErrors[keyof GetMarchesParProcedureErrors];
 
-export type GetMarchesParProcedureMarcheProcedureGetResponses = {
+export type GetMarchesParProcedureResponses = {
     /**
-     * Response Get Marches Par Procedure Marche Procedure Get
+     * Response Get Marches Par Procedure
      *
      * Successful Response
      */
     200: Array<MarcheProcedureDto>;
 };
 
-export type GetMarchesParProcedureMarcheProcedureGetResponse = GetMarchesParProcedureMarcheProcedureGetResponses[keyof GetMarchesParProcedureMarcheProcedureGetResponses];
+export type GetMarchesParProcedureResponse = GetMarchesParProcedureResponses[keyof GetMarchesParProcedureResponses];
 
-export type GetMarchesParNatureMarcheNatureGetData = {
+export type GetMarchesParNatureData = {
     body?: never;
     path?: never;
     query?: {
@@ -1208,27 +1208,27 @@ export type GetMarchesParNatureMarcheNatureGetData = {
     url: '/marche/nature';
 };
 
-export type GetMarchesParNatureMarcheNatureGetErrors = {
+export type GetMarchesParNatureErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetMarchesParNatureMarcheNatureGetError = GetMarchesParNatureMarcheNatureGetErrors[keyof GetMarchesParNatureMarcheNatureGetErrors];
+export type GetMarchesParNatureError = GetMarchesParNatureErrors[keyof GetMarchesParNatureErrors];
 
-export type GetMarchesParNatureMarcheNatureGetResponses = {
+export type GetMarchesParNatureResponses = {
     /**
-     * Response Get Marches Par Nature Marche Nature Get
+     * Response Get Marches Par Nature
      *
      * Successful Response
      */
     200: Array<MarcheNatureDto>;
 };
 
-export type GetMarchesParNatureMarcheNatureGetResponse = GetMarchesParNatureMarcheNatureGetResponses[keyof GetMarchesParNatureMarcheNatureGetResponses];
+export type GetMarchesParNatureResponse = GetMarchesParNatureResponses[keyof GetMarchesParNatureResponses];
 
-export type GetMarchesParCcagMarcheCcagGetData = {
+export type GetMarchesParCcagData = {
     body?: never;
     path?: never;
     query?: {
@@ -1252,27 +1252,27 @@ export type GetMarchesParCcagMarcheCcagGetData = {
     url: '/marche/ccag';
 };
 
-export type GetMarchesParCcagMarcheCcagGetErrors = {
+export type GetMarchesParCcagErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetMarchesParCcagMarcheCcagGetError = GetMarchesParCcagMarcheCcagGetErrors[keyof GetMarchesParCcagMarcheCcagGetErrors];
+export type GetMarchesParCcagError = GetMarchesParCcagErrors[keyof GetMarchesParCcagErrors];
 
-export type GetMarchesParCcagMarcheCcagGetResponses = {
+export type GetMarchesParCcagResponses = {
     /**
-     * Response Get Marches Par Ccag Marche Ccag Get
+     * Response Get Marches Par Ccag
      *
      * Successful Response
      */
     200: Array<MarcheCcagDto>;
 };
 
-export type GetMarchesParCcagMarcheCcagGetResponse = GetMarchesParCcagMarcheCcagGetResponses[keyof GetMarchesParCcagMarcheCcagGetResponses];
+export type GetMarchesParCcagResponse = GetMarchesParCcagResponses[keyof GetMarchesParCcagResponses];
 
-export type GetIndicateursMarcheIndicateursGetData = {
+export type GetIndicateursData = {
     body?: never;
     path?: never;
     query?: {
@@ -1348,61 +1348,61 @@ export type GetIndicateursMarcheIndicateursGetData = {
     url: '/marche/indicateurs';
 };
 
-export type GetIndicateursMarcheIndicateursGetErrors = {
+export type GetIndicateursErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetIndicateursMarcheIndicateursGetError = GetIndicateursMarcheIndicateursGetErrors[keyof GetIndicateursMarcheIndicateursGetErrors];
+export type GetIndicateursError = GetIndicateursErrors[keyof GetIndicateursErrors];
 
-export type GetIndicateursMarcheIndicateursGetResponses = {
+export type GetIndicateursResponses = {
     /**
      * Successful Response
      */
     200: IndicateursDto;
 };
 
-export type GetIndicateursMarcheIndicateursGetResponse = GetIndicateursMarcheIndicateursGetResponses[keyof GetIndicateursMarcheIndicateursGetResponses];
+export type GetIndicateursResponse = GetIndicateursResponses[keyof GetIndicateursResponses];
 
-export type GetMarchesParDepartementMarcheDepartementGetData = {
+export type GetMarchesParDepartementData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/marche/departement';
 };
 
-export type GetMarchesParDepartementMarcheDepartementGetResponses = {
+export type GetMarchesParDepartementResponses = {
     /**
-     * Response Get Marches Par Departement Marche Departement Get
+     * Response Get Marches Par Departement
      *
      * Successful Response
      */
     200: Array<MarcheDepartementDto>;
 };
 
-export type GetMarchesParDepartementMarcheDepartementGetResponse = GetMarchesParDepartementMarcheDepartementGetResponses[keyof GetMarchesParDepartementMarcheDepartementGetResponses];
+export type GetMarchesParDepartementResponse = GetMarchesParDepartementResponses[keyof GetMarchesParDepartementResponses];
 
-export type GetCategorieDepartementMarcheCategorieDepartementGetData = {
+export type GetCategorieDepartementData = {
     body?: never;
     path?: never;
     query?: never;
     url: '/marche/categorie-departement';
 };
 
-export type GetCategorieDepartementMarcheCategorieDepartementGetResponses = {
+export type GetCategorieDepartementResponses = {
     /**
-     * Response Get Categorie Departement Marche Categorie Departement Get
+     * Response Get Categorie Departement
      *
      * Successful Response
      */
     200: Array<MarcheCategorieDepartementDto>;
 };
 
-export type GetCategorieDepartementMarcheCategorieDepartementGetResponse = GetCategorieDepartementMarcheCategorieDepartementGetResponses[keyof GetCategorieDepartementMarcheCategorieDepartementGetResponses];
+export type GetCategorieDepartementResponse = GetCategorieDepartementResponses[keyof GetCategorieDepartementResponses];
 
-export type GetCategoriesMarcheCategorieGetData = {
+export type GetCategoriesData = {
     body?: never;
     path?: never;
     query?: {
@@ -1426,27 +1426,27 @@ export type GetCategoriesMarcheCategorieGetData = {
     url: '/marche/categorie';
 };
 
-export type GetCategoriesMarcheCategorieGetErrors = {
+export type GetCategoriesErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetCategoriesMarcheCategorieGetError = GetCategoriesMarcheCategorieGetErrors[keyof GetCategoriesMarcheCategorieGetErrors];
+export type GetCategoriesError = GetCategoriesErrors[keyof GetCategoriesErrors];
 
-export type GetCategoriesMarcheCategorieGetResponses = {
+export type GetCategoriesResponses = {
     /**
-     * Response Get Categories Marche Categorie Get
+     * Response Get Categories
      *
      * Successful Response
      */
     200: Array<CategoriesDto>;
 };
 
-export type GetCategoriesMarcheCategorieGetResponse = GetCategoriesMarcheCategorieGetResponses[keyof GetCategoriesMarcheCategorieGetResponses];
+export type GetCategoriesResponse = GetCategoriesResponses[keyof GetCategoriesResponses];
 
-export type GetMarcheMarcheUidGetData = {
+export type GetMarcheData = {
     body?: never;
     path: {
         /**
@@ -1458,25 +1458,25 @@ export type GetMarcheMarcheUidGetData = {
     url: '/marche/{uid}';
 };
 
-export type GetMarcheMarcheUidGetErrors = {
+export type GetMarcheErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetMarcheMarcheUidGetError = GetMarcheMarcheUidGetErrors[keyof GetMarcheMarcheUidGetErrors];
+export type GetMarcheError = GetMarcheErrors[keyof GetMarcheErrors];
 
-export type GetMarcheMarcheUidGetResponses = {
+export type GetMarcheResponses = {
     /**
      * Successful Response
      */
     200: MarcheDto;
 };
 
-export type GetMarcheMarcheUidGetResponse = GetMarcheMarcheUidGetResponses[keyof GetMarcheMarcheUidGetResponses];
+export type GetMarcheResponse = GetMarcheResponses[keyof GetMarcheResponses];
 
-export type GetListeConcessionsContratConcessionGetData = {
+export type GetListeConcessionsData = {
     body?: never;
     path?: never;
     query?: {
@@ -1508,27 +1508,27 @@ export type GetListeConcessionsContratConcessionGetData = {
     url: '/contrat-concession/';
 };
 
-export type GetListeConcessionsContratConcessionGetErrors = {
+export type GetListeConcessionsErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetListeConcessionsContratConcessionGetError = GetListeConcessionsContratConcessionGetErrors[keyof GetListeConcessionsContratConcessionGetErrors];
+export type GetListeConcessionsError = GetListeConcessionsErrors[keyof GetListeConcessionsErrors];
 
-export type GetListeConcessionsContratConcessionGetResponses = {
+export type GetListeConcessionsResponses = {
     /**
-     * Response Get Liste Concessions Contrat Concession  Get
+     * Response Get Liste Concessions
      *
      * Successful Response
      */
     200: Array<ContratConcessionDto>;
 };
 
-export type GetListeConcessionsContratConcessionGetResponse = GetListeConcessionsContratConcessionGetResponses[keyof GetListeConcessionsContratConcessionGetResponses];
+export type GetListeConcessionsResponse = GetListeConcessionsResponses[keyof GetListeConcessionsResponses];
 
-export type GetConcessionContratConcessionUidGetData = {
+export type GetConcessionData = {
     body?: never;
     path: {
         /**
@@ -1540,25 +1540,25 @@ export type GetConcessionContratConcessionUidGetData = {
     url: '/contrat-concession/{uid}';
 };
 
-export type GetConcessionContratConcessionUidGetErrors = {
+export type GetConcessionErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetConcessionContratConcessionUidGetError = GetConcessionContratConcessionUidGetErrors[keyof GetConcessionContratConcessionUidGetErrors];
+export type GetConcessionError = GetConcessionErrors[keyof GetConcessionErrors];
 
-export type GetConcessionContratConcessionUidGetResponses = {
+export type GetConcessionResponses = {
     /**
      * Successful Response
      */
     200: ContratConcessionDto;
 };
 
-export type GetConcessionContratConcessionUidGetResponse = GetConcessionContratConcessionUidGetResponses[keyof GetConcessionContratConcessionUidGetResponses];
+export type GetConcessionResponse = GetConcessionResponses[keyof GetConcessionResponses];
 
-export type ListStructuresStructureGetData = {
+export type ListStructuresData = {
     body?: never;
     path?: never;
     query?: {
@@ -1578,27 +1578,27 @@ export type ListStructuresStructureGetData = {
     url: '/structure/';
 };
 
-export type ListStructuresStructureGetErrors = {
+export type ListStructuresErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type ListStructuresStructureGetError = ListStructuresStructureGetErrors[keyof ListStructuresStructureGetErrors];
+export type ListStructuresError = ListStructuresErrors[keyof ListStructuresErrors];
 
-export type ListStructuresStructureGetResponses = {
+export type ListStructuresResponses = {
     /**
-     * Response List Structures Structure  Get
+     * Response List Structures
      *
      * Successful Response
      */
     200: Array<StructureDto>;
 };
 
-export type ListStructuresStructureGetResponse = ListStructuresStructureGetResponses[keyof ListStructuresStructureGetResponses];
+export type ListStructuresResponse = ListStructuresResponses[keyof ListStructuresResponses];
 
-export type ListAcheteursStructureAcheteurGetData = {
+export type ListAcheteursData = {
     body?: never;
     path?: never;
     query?: {
@@ -1626,27 +1626,27 @@ export type ListAcheteursStructureAcheteurGetData = {
     url: '/structure/acheteur';
 };
 
-export type ListAcheteursStructureAcheteurGetErrors = {
+export type ListAcheteursErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type ListAcheteursStructureAcheteurGetError = ListAcheteursStructureAcheteurGetErrors[keyof ListAcheteursStructureAcheteurGetErrors];
+export type ListAcheteursError = ListAcheteursErrors[keyof ListAcheteursErrors];
 
-export type ListAcheteursStructureAcheteurGetResponses = {
+export type ListAcheteursResponses = {
     /**
-     * Response List Acheteurs Structure Acheteur Get
+     * Response List Acheteurs
      *
      * Successful Response
      */
     200: Array<StructureAggMarchesDto>;
 };
 
-export type ListAcheteursStructureAcheteurGetResponse = ListAcheteursStructureAcheteurGetResponses[keyof ListAcheteursStructureAcheteurGetResponses];
+export type ListAcheteursResponse = ListAcheteursResponses[keyof ListAcheteursResponses];
 
-export type ListVendeursStructureVendeurGetData = {
+export type ListVendeursData = {
     body?: never;
     path?: never;
     query?: {
@@ -1674,27 +1674,27 @@ export type ListVendeursStructureVendeurGetData = {
     url: '/structure/vendeur';
 };
 
-export type ListVendeursStructureVendeurGetErrors = {
+export type ListVendeursErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type ListVendeursStructureVendeurGetError = ListVendeursStructureVendeurGetErrors[keyof ListVendeursStructureVendeurGetErrors];
+export type ListVendeursError = ListVendeursErrors[keyof ListVendeursErrors];
 
-export type ListVendeursStructureVendeurGetResponses = {
+export type ListVendeursResponses = {
     /**
-     * Response List Vendeurs Structure Vendeur Get
+     * Response List Vendeurs
      *
      * Successful Response
      */
     200: Array<StructureAggMarchesDto>;
 };
 
-export type ListVendeursStructureVendeurGetResponse = ListVendeursStructureVendeurGetResponses[keyof ListVendeursStructureVendeurGetResponses];
+export type ListVendeursResponse = ListVendeursResponses[keyof ListVendeursResponses];
 
-export type GetStructureStructureUidGetData = {
+export type GetStructureData = {
     body?: never;
     path: {
         /**
@@ -1706,20 +1706,20 @@ export type GetStructureStructureUidGetData = {
     url: '/structure/{uid}';
 };
 
-export type GetStructureStructureUidGetErrors = {
+export type GetStructureErrors = {
     /**
      * Validation Error
      */
     422: HttpValidationError;
 };
 
-export type GetStructureStructureUidGetError = GetStructureStructureUidGetErrors[keyof GetStructureStructureUidGetErrors];
+export type GetStructureError = GetStructureErrors[keyof GetStructureErrors];
 
-export type GetStructureStructureUidGetResponses = {
+export type GetStructureResponses = {
     /**
      * Successful Response
      */
     200: StructureEtendueDto;
 };
 
-export type GetStructureStructureUidGetResponse = GetStructureStructureUidGetResponses[keyof GetStructureStructureUidGetResponses];
+export type GetStructureResponse = GetStructureResponses[keyof GetStructureResponses];

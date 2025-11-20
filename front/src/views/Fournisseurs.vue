@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { listVendeursStructureVendeurGet } from '@/client';
+import { listVendeurs } from '@/client';
 import { formatCurrency, formatNumber, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
@@ -16,7 +16,7 @@ const filters = ref({
 const fournisseurs = ref<Array<StructureAggMarchesDto>>([]);
 
 onMounted(() => {
-    listVendeursStructureVendeurGet().then((response) => {
+    listVendeurs().then((response) => {
         if (response.data) {
             fournisseurs.value = response.data;
         }

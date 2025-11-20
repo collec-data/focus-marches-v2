@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type ContratConcessionDto, getListeConcessionsContratConcessionGet } from '@/client';
+import { type ContratConcessionDto, getListeConcessions } from '@/client';
 import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
@@ -13,7 +13,7 @@ const props = defineProps({
 const listeConcessions = ref<Array<ContratConcessionDto>>([]);
 
 function fetchData() {
-    getListeConcessionsContratConcessionGet({
+    getListeConcessions({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

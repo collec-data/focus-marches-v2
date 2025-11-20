@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
-import { getStructureStructureUidGet } from '@/client';
+import { getStructure } from '@/client';
 import { getNow, structureName } from '@/service/HelpersService';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
@@ -18,7 +18,7 @@ const dateMax = computed(() => {
 });
 
 function fetchData() {
-    getStructureStructureUidGet({ path: { uid: parseInt(vendeurUid.value) } }).then((response) => {
+    getStructure({ path: { uid: parseInt(vendeurUid.value) } }).then((response) => {
         if (response.data) {
             vendeur.value = response.data;
         }

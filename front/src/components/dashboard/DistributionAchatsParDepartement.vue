@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getCategorieDepartementMarcheCategorieDepartementGet } from '@/client';
+import { getCategorieDepartement } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { onMounted, ref } from 'vue';
@@ -24,7 +24,7 @@ const data = ref<Partial<SankeyData>[]>([
 const layout = { margin: { l: 0, t: 0, b: 0, r: 0 } };
 
 onMounted(() => {
-    getCategorieDepartementMarcheCategorieDepartementGet().then((response) => {
+    getCategorieDepartement().then((response) => {
         if (response.data) {
             function getOrCreateLabel(label: string): number {
                 let indice = data.value[0].node?.label?.indexOf(label) as number;

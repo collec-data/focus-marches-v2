@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getCategoriesMarcheCategorieGet } from '@/client';
+import { getCategories } from '@/client';
 import { formatCurrency, formatNumber } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
@@ -77,7 +77,7 @@ function transform(input: CategoriesDto[]): idatas {
 }
 
 function fetchData() {
-    getCategoriesMarcheCategorieGet({
+    getCategories({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

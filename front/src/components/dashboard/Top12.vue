@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CategorieMarche, listAcheteursStructureAcheteurGet, listVendeursStructureVendeurGet } from '@/client';
+import { CategorieMarche, listAcheteurs, listVendeurs } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel, formatCurrency, formatNumber, getDurationInMonths, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
@@ -67,7 +67,7 @@ function transform(input: Array<StructureAggMarchesDto>) {
 }
 
 function fetchData(categorie: CategorieMarche | undefined = undefined, exhaustif: boolean = false) {
-    (props.type == 'acheteurs' ? listAcheteursStructureAcheteurGet : listVendeursStructureVendeurGet)({
+    (props.type == 'acheteurs' ? listAcheteurs : listVendeurs)({
         query: {
             limit: exhaustif ? null : 12,
             acheteur_uid: props.acheteurUid ? parseInt(props.acheteurUid) : null,

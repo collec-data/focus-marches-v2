@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getErreursImportErreursImportGet, getStatsErreursErreursImportStatsGet } from '@/client';
+import { getErreursImport, getStatsErreurs } from '@/client';
 import { onMounted, ref } from 'vue';
 
 import type { DecpMalFormeDto, StatsErreursDto } from '@/client';
@@ -9,7 +9,7 @@ const stats = ref<Array<StatsErreursDto>>([]);
 const listDecpMalFormes = ref<Array<DecpMalFormeDto>>([]);
 
 onMounted(() => {
-    getStatsErreursErreursImportStatsGet().then((response) => {
+    getStatsErreurs().then((response) => {
         if (response.data) {
             stats.value = response.data;
         }
@@ -18,7 +18,7 @@ onMounted(() => {
 
 function loadDecps(localisation: string, type: string) {
     console.log(type);
-    getErreursImportErreursImportGet({ query: { localisation: localisation, type: type } }).then((response) => {
+    getErreursImport({ query: { localisation: localisation, type: type } }).then((response) => {
         if (response.data) {
             listDecpMalFormes.value = response.data;
         }

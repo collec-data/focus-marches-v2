@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { IndicateursDto } from '@/client';
-import { getIndicateursMarcheIndicateursGet } from '@/client';
+import { getIndicateurs } from '@/client';
 import { formatCurrency, formatNumber } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 const props = defineProps({
@@ -19,7 +19,7 @@ const props = defineProps({
 const indicateurs = ref({} as IndicateursDto);
 
 function fetchData() {
-    getIndicateursMarcheIndicateursGet({
+    getIndicateurs({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

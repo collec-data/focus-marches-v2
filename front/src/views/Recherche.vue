@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getListeMarchesMarcheGet, listStructuresStructureGet, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
+import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getListeMarches, listStructures, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
 import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
 import { formatCurrency, formatDate, getNow, structureName } from '@/service/HelpersService';
 import { ref } from 'vue';
@@ -20,7 +20,7 @@ const filterOptions = {
 
 function searchAcheteur(e: AutoCompleteCompleteEvent) {
     if (e.query.length > 1) {
-        listStructuresStructureGet({ query: { nom: e.query.toUpperCase(), is_acheteur: true } }).then((response) => {
+        listStructures({ query: { nom: e.query.toUpperCase(), is_acheteur: true } }).then((response) => {
             if (response.data) {
                 acheteurs.value = response.data;
             }
@@ -32,7 +32,7 @@ function searchAcheteur(e: AutoCompleteCompleteEvent) {
 
 function searchFournisseur(e: AutoCompleteCompleteEvent) {
     if (e.query.length > 1) {
-        listStructuresStructureGet({ query: { nom: e.query.toUpperCase(), is_vendeur: true } }).then((response) => {
+        listStructures({ query: { nom: e.query.toUpperCase(), is_vendeur: true } }).then((response) => {
             if (response.data) {
                 fournisseurs.value = response.data;
             }
@@ -84,7 +84,7 @@ function fetchData() {
         date_debut: filtres.value.date_min,
         date_fin: filtres.value.date_max
     };
-    getListeMarchesMarcheGet({
+    getListeMarches({
         query: {
             ...query.value
         }
