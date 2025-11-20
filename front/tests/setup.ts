@@ -12,7 +12,7 @@ config.global.stubs = {
     RouterLink: RouterLinkStub
 };
 
-vi.stubGlobal('settings', { date_min: new Date('2020-01-01') });
+vi.stubGlobal('settings', { date_min: new Date('2020-01-01'), opsn: 'OPSN', region: 'REGION' });
 
 const baseUrl = 'http://localhost:3000/';
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { listVendeurs } from '@/client';
-import { formatCurrency, formatNumber, structureName } from '@/service/HelpersService';
+import { formatCurrency, formatNumber, getOpsnRegion, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
 
@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
     <main className="card">
-        <h1>Les fournisseurs répertoriés dans les profils d'acheteur de Mégalis Bretagne</h1>
+        <h1>Les fournisseurs répertoriés dans les profils d'acheteur de {{ getOpsnRegion() }}</h1>
         <p>Cliquez sur chaque élement de la liste pour découvrir le profil détaillé du titulaire. Le montant affiché correspond au total des contrats gagnés par le titulaire. La table est triée alphabetiquement par la dénomination des titulaires.</p>
         <DataTable
             v-model:filters="filters"

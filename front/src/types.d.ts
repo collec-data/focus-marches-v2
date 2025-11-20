@@ -9,6 +9,8 @@ type Settings = {
         base: string;
     };
     date_min: string;
+    opsn: string;
+    region: string;
 };
 
 declare var settings: Settings;

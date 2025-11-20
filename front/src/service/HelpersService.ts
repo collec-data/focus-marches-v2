@@ -69,3 +69,7 @@ export function getNow(): Date {
 export function getDurationInMonths(first: Date, last: Date): number {
     return (last.getFullYear() - first.getFullYear()) * 12 + (last.getMonth() - first.getMonth()) + 1;
 }
+
+export const getOpsnRegion = () => {
+    return settings.opsn + ' ' + settings.region;
+};

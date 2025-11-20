@@ -3,4 +3,6 @@ var settings = {
     base: "${API_BASE}",
   },
   date_min: "${DATE_MIN}",
+  opsn: "${OPSN}",
+  region: "${REGION}",
 };

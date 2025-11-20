@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { listAcheteurs } from '@/client';
-import { formatCurrency, formatNumber, structureName } from '@/service/HelpersService';
+import { formatCurrency, formatNumber, getOpsnRegion, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
 
@@ -26,7 +26,7 @@ onMounted(() => {
 
 <template>
     <main className="card">
-        <h1>Les organismes du profil d'acheteur de Mégalis Bretagne</h1>
+        <h1>Les organismes du profil d'acheteur de {{ getOpsnRegion() }}</h1>
         <p>Cliquez sur chaque élement de la liste pour découvrir le profil détaillé de l'acheteur. Le montant affiché correspond au total des marchés passés par cet acheteur. La table est triée alphabetiquement par les organismes.</p>
         <DataTable
             v-model:filters="filters"
