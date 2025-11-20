@@ -38,6 +38,14 @@ function transform(input: CategoriesDto[]): idatas {
     };
     const total_mensuel: { [month: string]: number } = {};
 
+    stats.value = {
+        montant_total: 0,
+        nombre_total: 0,
+        travaux: { montant_total: 0, nombre_total: 0 },
+        fournitures: { montant_total: 0, nombre_total: 0 },
+        services: { montant_total: 0, nombre_total: 0 }
+    };
+
     for (let line of input) {
         const key = line.categorie.toLowerCase();
 
