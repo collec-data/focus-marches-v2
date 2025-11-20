@@ -2,8 +2,12 @@ from fastapi import FastAPI
 
 from .router.api_router import api_router
 
-
-app = FastAPI(title="Focus Marche V2", root_path="/api", dependencies=[])
+app = FastAPI(
+    title="Focus Marche V2",
+    root_path="/api",
+    dependencies=[],
+    generate_unique_id_function=lambda route: route.name,
+)
 
 app.include_router(api_router)
 

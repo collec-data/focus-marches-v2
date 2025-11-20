@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMarchesParNatureMarcheNatureGet } from '@/client';
+import { getMarchesParNature } from '@/client';
 import { formatCurrency } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
@@ -55,7 +55,7 @@ function makeGraph(labels: Array<string | null>, data: Array<number>, color: str
 }
 
 function fetchData() {
-    getMarchesParNatureMarcheNatureGet({
+    getMarchesParNature({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

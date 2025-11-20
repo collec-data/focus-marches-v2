@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMarchesParDepartementMarcheDepartementGet } from '@/client';
+import { getMarchesParDepartement } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { onMounted, ref } from 'vue';
 
@@ -41,7 +41,7 @@ function transform(input: Array<MarcheDepartementDto>) {
 }
 
 onMounted(() => {
-    getMarchesParDepartementMarcheDepartementGet().then((response) => {
+    getMarchesParDepartement().then((response) => {
         if (response.data) {
             let data = transform(response.data);
             montaData.value = makeGraph(data.departements, data.montants);

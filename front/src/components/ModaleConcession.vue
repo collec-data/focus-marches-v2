@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { type ContratConcessionDto, getConcessionContratConcessionUidGet } from '@/client';
+import { type ContratConcessionDto, getConcession } from '@/client';
 import { formatCurrency, formatDate } from '@/service/HelpersService';
 import { computed, ref, watch } from 'vue';
 
@@ -12,7 +12,7 @@ watch(
     () => props.concessionUid,
     () => {
         if (props.concessionUid) {
-            getConcessionContratConcessionUidGet({ path: { uid: props.concessionUid } }).then((response) => {
+            getConcession({ path: { uid: props.concessionUid } }).then((response) => {
                 if (response.data) {
                     concession.value = response.data;
                 }

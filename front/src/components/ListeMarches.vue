@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getListeMarchesMarcheGet } from '@/client';
+import { getListeMarches } from '@/client';
 import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { computed, onMounted, ref, watch } from 'vue';
@@ -25,7 +25,7 @@ const filters = ref({
 const listeMarches = ref<Array<MarcheAllegeDto>>([]);
 
 function fetchData() {
-    getListeMarchesMarcheGet({
+    getListeMarches({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

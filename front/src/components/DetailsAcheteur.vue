@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getStructureStructureUidGet, type StructureEtendueDto } from '@/client';
+import { getStructure, type StructureEtendueDto } from '@/client';
 import { formatDate, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watchEffect } from 'vue';
 
@@ -17,7 +17,7 @@ watchEffect(() => {
 
 onMounted(() => {
     if (props.acheteurUid !== null) {
-        getStructureStructureUidGet({ path: { uid: parseInt(props.acheteurUid) } }).then((response) => {
+        getStructure({ path: { uid: parseInt(props.acheteurUid) } }).then((response) => {
             if (response.data) {
                 acheteur.value = response.data;
             }

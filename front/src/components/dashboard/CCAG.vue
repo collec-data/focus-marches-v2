@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMarchesParCcagMarcheCcagGet } from '@/client';
+import { getMarchesParCcag } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
@@ -54,7 +54,7 @@ function transform(input: Array<MarcheCcagDto>): idatas {
 }
 
 function fetchData() {
-    getMarchesParCcagMarcheCcagGet({
+    getMarchesParCcag({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

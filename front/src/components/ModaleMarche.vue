@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 
-import { getMarcheMarcheUidGet, type MarcheDto } from '@/client';
+import { getMarche, type MarcheDto } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { watch } from 'vue';
@@ -15,7 +15,7 @@ watch(
     () => props.marcheUid,
     () => {
         if (props.marcheUid) {
-            getMarcheMarcheUidGet({ path: { uid: props.marcheUid } }).then((response) => {
+            getMarche({ path: { uid: props.marcheUid } }).then((response) => {
                 if (response.data) {
                     marcheDetaille.value = response.data;
                 }

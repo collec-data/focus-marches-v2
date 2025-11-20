@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getListeMarchesMarcheGet } from '@/client';
+import { getListeMarches } from '@/client';
 import { formatDate } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
@@ -78,7 +78,7 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     return traces;
 }
 function fetchData() {
-    getListeMarchesMarcheGet({
+    getListeMarches({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

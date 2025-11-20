@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getMarchesParProcedureMarcheProcedureGet } from '@/client';
+import { getMarchesParProcedure } from '@/client';
 import { longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 import Graph from '../Graph.vue';
@@ -46,7 +46,7 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<P
 }
 
 function fetchData() {
-    getMarchesParProcedureMarcheProcedureGet({
+    getMarchesParProcedure({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,

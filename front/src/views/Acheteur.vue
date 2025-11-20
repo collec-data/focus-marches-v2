@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
-import { getStructureStructureUidGet } from '@/client';
+import { getStructure } from '@/client';
 import ListeConcessions from '@/components/ListeConcessions.vue';
 import { getNow, structureName } from '@/service/HelpersService';
 import { computed, onMounted, ref, watch } from 'vue';
@@ -19,7 +19,7 @@ const dateMax = computed(() => {
 });
 
 function fetchData() {
-    getStructureStructureUidGet({ path: { uid: parseInt(acheteurUid.value) } }).then((response) => {
+    getStructure({ path: { uid: parseInt(acheteurUid.value) } }).then((response) => {
         if (response.data) {
             acheteur.value = response.data;
         }
