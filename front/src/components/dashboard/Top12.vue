@@ -2,7 +2,7 @@
 import { CategorieMarche, listAcheteurs, listVendeurs } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel, formatCurrency, formatNumber, getDurationInMonths, structureName } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
@@ -100,7 +100,19 @@ onMounted(() => {
     fetchData();
 });
 
+// on garde trace de l'onglet sélectionné pour savoir quoi mettre à jour
+let selectedTab = 'tout';
+
+watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
+    data.value = { tout: [], services: [], travaux: [], fournitures: [] };
+    fetchData();
+    if (selectedTab != 'tout') {
+        fetchData(selectedTab as CategorieMarche);
+    }
+});
+
 function change(categorie: string | number) {
+    selectedTab = categorie as CategorieMarche;
     if (categorie != 'tout' && typeof categorie === 'string' && !data.value[categorie.toLowerCase()].length) {
         fetchData(categorie as CategorieMarche);
     }
@@ -110,9 +122,8 @@ const showModale = ref(false);
 
 function openModale() {
     showModale.value = true;
-    if (!listeExhaustiveStructures.value.length) {
-        fetchData(undefined, true);
-    }
+    // on recharge systématiquement à l'ouverture au cas où les filtres auraient changé
+    fetchData(undefined, true);
 }
 </script>
 
