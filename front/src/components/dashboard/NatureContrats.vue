@@ -26,6 +26,13 @@ function transform(input: Array<MarcheNatureDto>) {
         { labels: [] as Array<string>, values: [] as Array<number> },
         { labels: [] as Array<string>, values: [] as Array<number> }
     ];
+
+    stats.value = [
+        { montant_total: 0, nombre_total: 0 },
+        { montant_total: 0, nombre_total: 0 },
+        { montant_total: 0, nombre_total: 0 }
+    ];
+
     for (let line of input) {
         // les valeurs de `line.nature` vont de 1 à 3 -> on décale
         // pour se caler sur les tableaux dont les indices commencent à 0
