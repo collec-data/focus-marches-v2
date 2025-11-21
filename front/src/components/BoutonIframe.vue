@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import { useLayout } from '@/layout/composables/layout';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
+
+const { layoutConfig } = useLayout();
 
 const props = defineProps({
     path: String,
@@ -13,9 +16,15 @@ const show = !route.path.includes('widget');
 
 const label = ref('Intégrer le widget');
 async function genUrl() {
+    const layoutParams = { color_primary: layoutConfig.primary, preset: layoutConfig.preset };
+    if (layoutConfig.surface) {
+        layoutParams['color_surface'] = layoutConfig.surface;
+    }
+
     const query = new URLSearchParams({
         ...(props.acheteurUid ? { acheteurUid: props.acheteurUid } : null),
-        ...route.query
+        ...route.query,
+        ...layoutParams
     }).toString();
     let url = '<iframe src="' + window.origin + '/widget/' + props.path + '?' + query + '" referrerpolicy="strict-origin-when-cross-origin" style="border: 0; overflow: hidden;" title="' + props.name + '"></iframe>';
     await navigator.clipboard.writeText(url);

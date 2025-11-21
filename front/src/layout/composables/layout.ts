@@ -1,6 +1,14 @@
 import { computed, reactive } from 'vue';
 
-const layoutConfig = reactive({
+export interface layoutConfigInterface {
+    preset: string;
+    primary: string;
+    surface: null | string;
+    darkTheme: boolean;
+    menuMode: string;
+}
+
+const layoutConfig = reactive<layoutConfigInterface>({
     preset: 'Aura',
     primary: 'emerald',
     surface: null,
@@ -30,7 +38,7 @@ export function useLayout() {
             return;
         }
 
-        document.startViewTransition(() => executeDarkModeToggle(event));
+        document.startViewTransition(() => executeDarkModeToggle());
     };
 
     const executeDarkModeToggle = () => {
