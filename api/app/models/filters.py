@@ -23,7 +23,7 @@ class FiltreTemporelStructure(BaseModel):
 class FiltreMarchesEtendus(FiltreTemporelStructure):
     objet: str | None = None
     cpv: str | None = None
-    code_lieu: int | None = Field(gt=0, default=None)
+    code_lieu: str | None = Field(default=None)
     forme_prix: FormePrix | None = None
     type_marche: NatureMarche | None = None
     procedure: ProcedureMarche | None = None

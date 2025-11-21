@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getListeMarches, listStructures, NatureMarche, ProcedureMarche, TechniqueAchat } from '@/client';
-import { getDepartementAvecNumeroAsListe } from '@/service/Departements';
+import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listStructures, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
+import { getNomDepartement } from '@/service/Departements';
 import { formatCurrency, formatDate, getNow, structureName } from '@/service/HelpersService';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
-import type { MarcheAllegeDto, StructureDto } from '@/client';
+import type { LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
 import type { AutoCompleteCompleteEvent } from 'primevue';
 
 const marches = ref<MarcheAllegeDto[]>([]);
@@ -17,6 +17,25 @@ const options_achat_durable: string[] = (Object.values(ConsiderationsEnvironneme
 const filterOptions = {
     ignoreCase: true
 };
+
+interface departement {
+    value: string;
+    code: string;
+}
+const departements = ref<departement[]>([]);
+function getDepartementsRecenses() {
+    getLieux({ query: { type_lieu: TypeCodeLieu.CODE_DÉPARTEMENT } }).then((response) => {
+        if (response.data) {
+            departements.value = response.data.map((lieu: LieuDto) => {
+                return { value: `(${lieu.code}) ${getNomDepartement(lieu.code)}`, code: lieu.code };
+            });
+        }
+    });
+}
+
+onMounted(() => {
+    getDepartementsRecenses();
+});
 
 function searchAcheteur(e: AutoCompleteCompleteEvent) {
     if (e.query.length > 1) {
@@ -175,18 +194,7 @@ const marcheUid = ref(null);
                     </div>
                     <div class="basis-1/3">
                         <label for="lieu">Lieu</label>
-                        <Select
-                            v-model="filtres.code_lieu"
-                            :options="getDepartementAvecNumeroAsListe()"
-                            optionLabel="value"
-                            optionValue="code"
-                            inputId="lieu"
-                            name="lieu"
-                            aria-label="Sélecteur de département"
-                            placeholder="Tous les départements"
-                            showClear
-                            fluid
-                        />
+                        <Select v-model="filtres.code_lieu" :options="departements" optionLabel="value" optionValue="code" inputId="lieu" name="lieu" aria-label="Sélecteur de département" placeholder="Tous les départements" showClear fluid />
                     </div>
                 </div>
                 <div v-if="recherche_avancee" class="flex flex-row gap-5 mb-5">

@@ -1067,7 +1067,7 @@ export type GetListeMarchesData = {
         /**
          * Code Lieu
          */
-        code_lieu?: number | null;
+        code_lieu?: string | null;
         /**
          * Forme Prix
          */
@@ -1303,7 +1303,7 @@ export type GetIndicateursData = {
         /**
          * Code Lieu
          */
-        code_lieu?: number | null;
+        code_lieu?: string | null;
         /**
          * Forme Prix
          */
@@ -1723,3 +1723,35 @@ export type GetStructureResponses = {
 };
 
 export type GetStructureResponse = GetStructureResponses[keyof GetStructureResponses];
+
+export type GetLieuxData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Type Lieu
+         */
+        type_lieu?: TypeCodeLieu | null;
+    };
+    url: '/lieu/';
+};
+
+export type GetLieuxErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetLieuxError = GetLieuxErrors[keyof GetLieuxErrors];
+
+export type GetLieuxResponses = {
+    /**
+     * Response Get Lieux
+     *
+     * Successful Response
+     */
+    200: Array<LieuDto>;
+};
+
+export type GetLieuxResponse = GetLieuxResponses[keyof GetLieuxResponses];

@@ -13,7 +13,8 @@ import {
     ProcedureMarche,
     StatsErreursDto,
     type StructureAggMarchesDto,
-    type ContratConcessionDto
+    type ContratConcessionDto,
+    type LieuDto
 } from '../src/client/types.gen.ts';
 
 export const marche: MarcheAllegeDto = {
@@ -110,4 +111,12 @@ export const concession: ContratConcessionDto = [
         considerations_sociales: [],
         considerations_environnementales: []
     }
+];
+
+export const lieux: LieuDto[] = [
+    { uid: 1, code: '35', type_code: 'Code département' },
+    { uid: 2, code: '44', type_code: 'Code département' },
+    { uid: 3, code: '56', type_code: 'Code département' },
+    { uid: 4, code: '29', type_code: 'Code département' },
+    { uid: 5, code: '22', type_code: 'Code département' }
 ];
