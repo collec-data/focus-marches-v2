@@ -18,11 +18,12 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
-                <button type="button" aria-label="Changer entre l'affichage clair et sombre" class="layout-topbar-action" @click="toggleDarkMode">
+                <button v-tooltip.left="'Passer au mode ' + (isDarkTheme ? 'clair' : 'sombre')" type="button" aria-label="Changer entre l'affichage clair et sombre" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
                 <div class="relative">
                     <button
+                        v-tooltip.left="'Modifier la couleur et le thème'"
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
                         aria-label="Changer la palette de couleurs"
                         type="button"
