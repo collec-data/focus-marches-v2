@@ -32,7 +32,7 @@
         "@rushstack/eslint-patch": "^1.8.0",
         "@testing-library/vue": "^8.1.0",
         "@types/plotly.js": "^3.0.6",
-        "@vitejs/plugin-vue": "6.0.1",
+        "@vitejs/plugin-vue": "6.0.2",
         "@vitest/coverage-istanbul": "^4.0.0",
         "@vitest/coverage-v8": "^4.0.0",
         "autoprefixer": "^10.4.19",

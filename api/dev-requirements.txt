@@ -157,7 +157,7 @@ rich-toolkit==0.15.1
     #   fastapi-cloud-cli
 rignore==0.7.6
     # via fastapi-cloud-cli
-ruff==0.14.5
+ruff==0.14.6
     # via focus-marche-v2 (pyproject.toml)
 sentry-sdk==2.44.0
     # via fastapi-cloud-cli
