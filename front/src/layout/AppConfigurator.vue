@@ -11,8 +11,8 @@ const presetOptions = ref(Object.keys(presets));
 
 const menuMode = ref(layoutConfig.menuMode);
 const menuModeOptions = ref([
-    { label: 'Static', value: 'static' },
-    { label: 'Overlay', value: 'overlay' }
+    { label: 'Statique', value: 'static' },
+    { label: 'Survol', value: 'overlay' }
 ]);
 
 function updateColors(type, color) {
@@ -48,7 +48,7 @@ function onMenuModeChange() {
     >
         <div class="flex flex-col gap-4">
             <div>
-                <span class="text-sm text-muted-color font-semibold">Primary</span>
+                <span class="text-sm text-muted-color font-semibold">Couleur principale</span>
                 <div class="pt-2 flex gap-2 flex-wrap justify-between">
                     <button
                         v-for="primaryColor in primaryColors"
@@ -62,7 +62,7 @@ function onMenuModeChange() {
                 </div>
             </div>
             <div>
-                <span class="text-sm text-muted-color font-semibold">Surface</span>
+                <span class="text-sm text-muted-color font-semibold">Couleur du fond</span>
                 <div class="pt-2 flex gap-2 flex-wrap justify-between">
                     <button
                         v-for="surface in surfaces"
@@ -79,11 +79,11 @@ function onMenuModeChange() {
                 </div>
             </div>
             <div class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Presets</span>
+                <span class="text-sm text-muted-color font-semibold">Thème</span>
                 <SelectButton v-model="preset" :options="presetOptions" :allowEmpty="false" @change="onPresetChange" />
             </div>
             <div class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Menu Mode</span>
+                <span class="text-sm text-muted-color font-semibold">Affichage du menu</span>
                 <SelectButton v-model="menuMode" :options="menuModeOptions" :allowEmpty="false" optionLabel="label" optionValue="value" @change="onMenuModeChange" />
             </div>
         </div>
