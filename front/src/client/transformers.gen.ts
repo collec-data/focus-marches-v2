@@ -3,9 +3,7 @@
 import type { GetConcessionResponse, GetListeConcessionsResponse, GetListeMarchesResponse, GetMarcheResponse, GetStructureResponse } from './types.gen';
 
 const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
-    data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => {
-        return acteSousTraitanceDtoSchemaResponseTransformer(item);
-    });
+    data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => acteSousTraitanceDtoSchemaResponseTransformer(item));
     data.date_notification = new Date(data.date_notification);
     return data;
 };
@@ -17,9 +15,7 @@ const acteSousTraitanceDtoSchemaResponseTransformer = (data: any) => {
 };
 
 export const getListeMarchesResponseTransformer = async (data: any): Promise<GetListeMarchesResponse> => {
-    data = data.map((item: any) => {
-        return marcheAllegeDtoSchemaResponseTransformer(item);
-    });
+    data = data.map((item: any) => marcheAllegeDtoSchemaResponseTransformer(item));
     return data;
 };
 
@@ -27,16 +23,12 @@ const marcheDtoSchemaResponseTransformer = (data: any) => {
     if (data.accord_cadre) {
         data.accord_cadre = marcheDtoSchemaResponseTransformer(data.accord_cadre);
     }
-    data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => {
-        return acteSousTraitanceDtoSchemaResponseTransformer(item);
-    });
+    data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => acteSousTraitanceDtoSchemaResponseTransformer(item));
     data.date_notification = new Date(data.date_notification);
     if (data.date_publication) {
         data.date_publication = new Date(data.date_publication);
     }
-    data.modifications = data.modifications.map((item: any) => {
-        return modificationMarcheDtoSchemaResponseTransformer(item);
-    });
+    data.modifications = data.modifications.map((item: any) => modificationMarcheDtoSchemaResponseTransformer(item));
     return data;
 };
 
@@ -56,9 +48,7 @@ const contratConcessionDtoSchemaResponseTransformer = (data: any) => {
     data.date_publication = new Date(data.date_publication);
     data.date_debut_execution = new Date(data.date_debut_execution);
     if (data.donnees_execution) {
-        data.donnees_execution = data.donnees_execution.map((item: any) => {
-            return donneeExecutionDtoSchemaResponseTransformer(item);
-        });
+        data.donnees_execution = data.donnees_execution.map((item: any) => donneeExecutionDtoSchemaResponseTransformer(item));
     }
     return data;
 };
@@ -69,9 +59,7 @@ const donneeExecutionDtoSchemaResponseTransformer = (data: any) => {
 };
 
 export const getListeConcessionsResponseTransformer = async (data: any): Promise<GetListeConcessionsResponse> => {
-    data = data.map((item: any) => {
-        return contratConcessionDtoSchemaResponseTransformer(item);
-    });
+    data = data.map((item: any) => contratConcessionDtoSchemaResponseTransformer(item));
     return data;
 };
 

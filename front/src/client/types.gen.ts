@@ -41,11 +41,11 @@ export type ActeSousTraitanceDto = {
  */
 export const Ccag = {
     TRAVAUX: 'Travaux',
-    'MAITRISE_D_ŒUVRE': "Maitrise d'œuvre",
+    'MAITRISE_D\'ŒUVRE': 'Maitrise d\'œuvre',
     FOURNITURES_COURANTES_ET_SERVICES: 'Fournitures courantes et services',
-    'MARCHÉS_INDUSTRIELS': 'Marchés industriels',
+    MARCHÉS_INDUSTRIELS: 'Marchés industriels',
     PRESTATIONS_INTELLECTUELLES: 'Prestations intellectuelles',
-    'TECHNIQUES_DE_L_INFORMATION_ET_DE_LA_COMMUNICATION': "Techniques de l'information et de la communication",
+    'TECHNIQUES_DE_L\'INFORMATION_ET_DE_LA_COMMUNICATION': 'Techniques de l\'information et de la communication',
     PAS_DE_CCAG: 'Pas de CCAG'
 } as const;
 
@@ -91,9 +91,9 @@ export type CategoriesDto = {
  * ConsiderationsEnvironnementales
  */
 export const ConsiderationsEnvironnementales = {
-    'CRITÈRE_ENVIRONNEMENTAL': 'Critère environnemental',
+    CRITÈRE_ENVIRONNEMENTAL: 'Critère environnemental',
     CLAUSE_ENVIRONNEMENTALE: 'Clause environnementale',
-    'PAS_DE_CONSIDÉRATION_ENVIRONNEMENTALE': 'Pas de considération environnementale'
+    PAS_DE_CONSIDÉRATION_ENVIRONNEMENTALE: 'Pas de considération environnementale'
 } as const;
 
 /**
@@ -105,11 +105,11 @@ export type ConsiderationsEnvironnementales = typeof ConsiderationsEnvironnement
  * ConsiderationsSociales
  */
 export const ConsiderationsSociales = {
-    'CRITÈRE_SOCIAL': 'Critère social',
+    CRITÈRE_SOCIAL: 'Critère social',
     CLAUSE_SOCIALE: 'Clause sociale',
-    'MARCHÉ_RÉSERVÉ': 'Marché réservé',
-    'CONCESSION_RÉSERVÉE': 'Concession réservée',
-    'PAS_DE_CONSIDÉRATION_SOCIALE': 'Pas de considération sociale'
+    MARCHÉ_RÉSERVÉ: 'Marché réservé',
+    CONCESSION_RÉSERVÉE: 'Concession réservée',
+    PAS_DE_CONSIDÉRATION_SOCIALE: 'Pas de considération sociale'
 } as const;
 
 /**
@@ -617,7 +617,7 @@ export type MarcheProcedureDto = {
 export const ModaliteExecution = {
     TRANCHES: 'Tranches',
     BONS_DE_COMMANDE: 'Bons de commande',
-    'MARCHÉS_SUBSÉQUENTS': 'Marchés subséquents',
+    MARCHÉS_SUBSÉQUENTS: 'Marchés subséquents',
     SANS_OBJET: 'Sans objet'
 } as const;
 
@@ -667,7 +667,7 @@ export const NatureConcession = {
     CONCESSION_DE_TRAVAUX: 'Concession de travaux',
     CONCESSION_DE_SERVICE: 'Concession de service',
     CONCESSION_DE_SERVICE_PUBLIC: 'Concession de service public',
-    'DÉLÉGATION_DE_SERVICE_PUBLIC': 'Délégation de service public'
+    DÉLÉGATION_DE_SERVICE_PUBLIC: 'Délégation de service public'
 } as const;
 
 /**
@@ -679,9 +679,9 @@ export type NatureConcession = typeof NatureConcession[keyof typeof NatureConces
  * NatureMarche
  */
 export const NatureMarche = {
-    'MARCHÉ': 'Marché',
-    'MARCHÉ_DE_PARTENARIAT': 'Marché de partenariat',
-    'MARCHÉ_DE_DÉFENSE_OU_DE_SÉCURITÉ': 'Marché de défense ou de sécurité'
+    MARCHÉ: 'Marché',
+    MARCHÉ_DE_PARTENARIAT: 'Marché de partenariat',
+    MARCHÉ_DE_DÉFENSE_OU_DE_SÉCURITÉ: 'Marché de défense ou de sécurité'
 } as const;
 
 /**
@@ -693,10 +693,10 @@ export type NatureMarche = typeof NatureMarche[keyof typeof NatureMarche];
  * ProcedureConcession
  */
 export const ProcedureConcession = {
-    'PROCÉDURE_NÉGOCIÉE_OUVERTE': 'Procédure négociée ouverte',
-    'PROCÉDURE_NON_NÉGOCIÉE_OUVERTE': 'Procédure non négociée ouverte',
-    'PROCÉDURE_NÉGOCIÉE_RESTREINTE': 'Procédure négociée restreinte',
-    'PROCÉDURE_NON_NÉGOCIÉE_RESTREINTE': 'Procédure non négociée restreinte'
+    PROCÉDURE_NÉGOCIÉE_OUVERTE: 'Procédure négociée ouverte',
+    PROCÉDURE_NON_NÉGOCIÉE_OUVERTE: 'Procédure non négociée ouverte',
+    PROCÉDURE_NÉGOCIÉE_RESTREINTE: 'Procédure négociée restreinte',
+    PROCÉDURE_NON_NÉGOCIÉE_RESTREINTE: 'Procédure non négociée restreinte'
 } as const;
 
 /**
@@ -708,12 +708,12 @@ export type ProcedureConcession = typeof ProcedureConcession[keyof typeof Proced
  * ProcedureMarche
  */
 export const ProcedureMarche = {
-    'PROCÉDURE_ADAPTÉE': 'Procédure adaptée',
-    'APPEL_D_OFFRES_OUVERT': "Appel d'offres ouvert",
-    'APPEL_D_OFFRES_RESTREINT': "Appel d'offres restreint",
-    'MARCHÉ_PASSÉ_SANS_PUBLICITÉ_NI_MISE_EN_CONCURRENCE_PRÉALABLE': 'Marché passé sans publicité ni mise en concurrence préalable',
-    'DIALOGUE_COMPÉTITIF': 'Dialogue compétitif',
-    'PROCÉDURE_AVEC_NÉGOCIATION': 'Procédure avec négociation'
+    PROCÉDURE_ADAPTÉE: 'Procédure adaptée',
+    'APPEL_D\'OFFRES_OUVERT': 'Appel d\'offres ouvert',
+    'APPEL_D\'OFFRES_RESTREINT': 'Appel d\'offres restreint',
+    MARCHÉ_PASSÉ_SANS_PUBLICITÉ_NI_MISE_EN_CONCURRENCE_PRÉALABLE: 'Marché passé sans publicité ni mise en concurrence préalable',
+    DIALOGUE_COMPÉTITIF: 'Dialogue compétitif',
+    PROCÉDURE_AVEC_NÉGOCIATION: 'Procédure avec négociation'
 } as const;
 
 /**
@@ -882,10 +882,10 @@ export type TarifDto = {
 export const TechniqueAchat = {
     ACCORD_CADRE: 'Accord-cadre',
     CONCOURS: 'Concours',
-    'SYSTÈME_DE_QUALIFICATION': 'Système de qualification',
-    'SYSTÈME_D_ACQUISITION_DYNAMIQUE': "Système d'acquisition dynamique",
-    'CATALOGUE_ÉLECTRONIQUE': 'Catalogue électronique',
-    'ENCHÈRE_ÉLECTRONIQUE': 'Enchère électronique',
+    SYSTÈME_DE_QUALIFICATION: 'Système de qualification',
+    'SYSTÈME_D\'ACQUISITION_DYNAMIQUE': 'Système d\'acquisition dynamique',
+    CATALOGUE_ÉLECTRONIQUE: 'Catalogue électronique',
+    ENCHÈRE_ÉLECTRONIQUE: 'Enchère électronique',
     SANS_OBJET: 'Sans objet'
 } as const;
 
@@ -902,8 +902,8 @@ export const TypeCodeLieu = {
     CODE_COMMUNE: 'Code commune',
     CODE_ARRONDISSEMENT: 'Code arrondissement',
     CODE_CANTON: 'Code canton',
-    'CODE_DÉPARTEMENT': 'Code département',
-    'CODE_RÉGION': 'Code région',
+    CODE_DÉPARTEMENT: 'Code département',
+    CODE_RÉGION: 'Code région',
     CODE_PAYS: 'Code pays'
 } as const;
 
@@ -930,9 +930,9 @@ export type TypeGroupementOperateur = typeof TypeGroupementOperateur[keyof typeo
  * TypePrix
  */
 export const TypePrix = {
-    'DÉFINITIF_FERME': 'Définitif ferme',
-    'DÉFINITIF_ACTUALISABLE': 'Définitif actualisable',
-    'DÉFINITIF_RÉVISABLE': 'Définitif révisable',
+    DÉFINITIF_FERME: 'Définitif ferme',
+    DÉFINITIF_ACTUALISABLE: 'Définitif actualisable',
+    DÉFINITIF_RÉVISABLE: 'Définitif révisable',
     PROVISOIRE: 'Provisoire'
 } as const;
 
@@ -965,7 +965,7 @@ export type ValidationError = {
 export const VariationPrix = {
     FERME: 'Ferme',
     ACTUALISABLE: 'Actualisable',
-    'RÉVISABLE': 'Révisable',
+    RÉVISABLE: 'Révisable',
     NC: 'NC'
 } as const;
 

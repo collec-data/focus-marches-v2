@@ -22,184 +22,109 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 /**
  * Get Erreurs Import
  */
-export const getErreursImport = <ThrowOnError extends boolean = false>(options?: Options<GetErreursImportData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetErreursImportResponses, GetErreursImportErrors, ThrowOnError>({
-        url: '/erreurs-import/',
-        ...options
-    });
-};
+export const getErreursImport = <ThrowOnError extends boolean = false>(options?: Options<GetErreursImportData, ThrowOnError>) => (options?.client ?? client).get<GetErreursImportResponses, GetErreursImportErrors, ThrowOnError>({ url: '/erreurs-import/', ...options });
 
 /**
  * Get Stats Erreurs
  */
-export const getStatsErreurs = <ThrowOnError extends boolean = false>(options?: Options<GetStatsErreursData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetStatsErreursResponses, unknown, ThrowOnError>({
-        url: '/erreurs-import/stats',
-        ...options
-    });
-};
+export const getStatsErreurs = <ThrowOnError extends boolean = false>(options?: Options<GetStatsErreursData, ThrowOnError>) => (options?.client ?? client).get<GetStatsErreursResponses, unknown, ThrowOnError>({ url: '/erreurs-import/stats', ...options });
 
 /**
  * Get Liste Marches
  */
-export const getListeMarches = <ThrowOnError extends boolean = false>(options?: Options<GetListeMarchesData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetListeMarchesResponses, GetListeMarchesErrors, ThrowOnError>({
-        responseTransformer: getListeMarchesResponseTransformer,
-        url: '/marche/',
-        ...options
-    });
-};
+export const getListeMarches = <ThrowOnError extends boolean = false>(options?: Options<GetListeMarchesData, ThrowOnError>) => (options?.client ?? client).get<GetListeMarchesResponses, GetListeMarchesErrors, ThrowOnError>({
+    responseTransformer: getListeMarchesResponseTransformer,
+    url: '/marche/',
+    ...options
+});
 
 /**
  * Get Marches Par Procedure
  */
-export const getMarchesParProcedure = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParProcedureData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetMarchesParProcedureResponses, GetMarchesParProcedureErrors, ThrowOnError>({
-        url: '/marche/procedure',
-        ...options
-    });
-};
+export const getMarchesParProcedure = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParProcedureData, ThrowOnError>) => (options?.client ?? client).get<GetMarchesParProcedureResponses, GetMarchesParProcedureErrors, ThrowOnError>({ url: '/marche/procedure', ...options });
 
 /**
  * Get Marches Par Nature
  */
-export const getMarchesParNature = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParNatureData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetMarchesParNatureResponses, GetMarchesParNatureErrors, ThrowOnError>({
-        url: '/marche/nature',
-        ...options
-    });
-};
+export const getMarchesParNature = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParNatureData, ThrowOnError>) => (options?.client ?? client).get<GetMarchesParNatureResponses, GetMarchesParNatureErrors, ThrowOnError>({ url: '/marche/nature', ...options });
 
 /**
  * Get Marches Par Ccag
  */
-export const getMarchesParCcag = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParCcagData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetMarchesParCcagResponses, GetMarchesParCcagErrors, ThrowOnError>({
-        url: '/marche/ccag',
-        ...options
-    });
-};
+export const getMarchesParCcag = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParCcagData, ThrowOnError>) => (options?.client ?? client).get<GetMarchesParCcagResponses, GetMarchesParCcagErrors, ThrowOnError>({ url: '/marche/ccag', ...options });
 
 /**
  * Get Indicateurs
  */
-export const getIndicateurs = <ThrowOnError extends boolean = false>(options?: Options<GetIndicateursData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetIndicateursResponses, GetIndicateursErrors, ThrowOnError>({
-        url: '/marche/indicateurs',
-        ...options
-    });
-};
+export const getIndicateurs = <ThrowOnError extends boolean = false>(options?: Options<GetIndicateursData, ThrowOnError>) => (options?.client ?? client).get<GetIndicateursResponses, GetIndicateursErrors, ThrowOnError>({ url: '/marche/indicateurs', ...options });
 
 /**
  * Get Marches Par Departement
  */
-export const getMarchesParDepartement = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParDepartementData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetMarchesParDepartementResponses, unknown, ThrowOnError>({
-        url: '/marche/departement',
-        ...options
-    });
-};
+export const getMarchesParDepartement = <ThrowOnError extends boolean = false>(options?: Options<GetMarchesParDepartementData, ThrowOnError>) => (options?.client ?? client).get<GetMarchesParDepartementResponses, unknown, ThrowOnError>({ url: '/marche/departement', ...options });
 
 /**
  * Get Categorie Departement
  */
-export const getCategorieDepartement = <ThrowOnError extends boolean = false>(options?: Options<GetCategorieDepartementData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetCategorieDepartementResponses, unknown, ThrowOnError>({
-        url: '/marche/categorie-departement',
-        ...options
-    });
-};
+export const getCategorieDepartement = <ThrowOnError extends boolean = false>(options?: Options<GetCategorieDepartementData, ThrowOnError>) => (options?.client ?? client).get<GetCategorieDepartementResponses, unknown, ThrowOnError>({ url: '/marche/categorie-departement', ...options });
 
 /**
  * Get Categories
  */
-export const getCategories = <ThrowOnError extends boolean = false>(options?: Options<GetCategoriesData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetCategoriesResponses, GetCategoriesErrors, ThrowOnError>({
-        url: '/marche/categorie',
-        ...options
-    });
-};
+export const getCategories = <ThrowOnError extends boolean = false>(options?: Options<GetCategoriesData, ThrowOnError>) => (options?.client ?? client).get<GetCategoriesResponses, GetCategoriesErrors, ThrowOnError>({ url: '/marche/categorie', ...options });
 
 /**
  * Get Marche
  */
-export const getMarche = <ThrowOnError extends boolean = false>(options: Options<GetMarcheData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetMarcheResponses, GetMarcheErrors, ThrowOnError>({
-        responseTransformer: getMarcheResponseTransformer,
-        url: '/marche/{uid}',
-        ...options
-    });
-};
+export const getMarche = <ThrowOnError extends boolean = false>(options: Options<GetMarcheData, ThrowOnError>) => (options.client ?? client).get<GetMarcheResponses, GetMarcheErrors, ThrowOnError>({
+    responseTransformer: getMarcheResponseTransformer,
+    url: '/marche/{uid}',
+    ...options
+});
 
 /**
  * Get Liste Concessions
  */
-export const getListeConcessions = <ThrowOnError extends boolean = false>(options?: Options<GetListeConcessionsData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetListeConcessionsResponses, GetListeConcessionsErrors, ThrowOnError>({
-        responseTransformer: getListeConcessionsResponseTransformer,
-        url: '/contrat-concession/',
-        ...options
-    });
-};
+export const getListeConcessions = <ThrowOnError extends boolean = false>(options?: Options<GetListeConcessionsData, ThrowOnError>) => (options?.client ?? client).get<GetListeConcessionsResponses, GetListeConcessionsErrors, ThrowOnError>({
+    responseTransformer: getListeConcessionsResponseTransformer,
+    url: '/contrat-concession/',
+    ...options
+});
 
 /**
  * Get Concession
  */
-export const getConcession = <ThrowOnError extends boolean = false>(options: Options<GetConcessionData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetConcessionResponses, GetConcessionErrors, ThrowOnError>({
-        responseTransformer: getConcessionResponseTransformer,
-        url: '/contrat-concession/{uid}',
-        ...options
-    });
-};
+export const getConcession = <ThrowOnError extends boolean = false>(options: Options<GetConcessionData, ThrowOnError>) => (options.client ?? client).get<GetConcessionResponses, GetConcessionErrors, ThrowOnError>({
+    responseTransformer: getConcessionResponseTransformer,
+    url: '/contrat-concession/{uid}',
+    ...options
+});
 
 /**
  * List Structures
  */
-export const listStructures = <ThrowOnError extends boolean = false>(options?: Options<ListStructuresData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListStructuresResponses, ListStructuresErrors, ThrowOnError>({
-        url: '/structure/',
-        ...options
-    });
-};
+export const listStructures = <ThrowOnError extends boolean = false>(options?: Options<ListStructuresData, ThrowOnError>) => (options?.client ?? client).get<ListStructuresResponses, ListStructuresErrors, ThrowOnError>({ url: '/structure/', ...options });
 
 /**
  * List Acheteurs
  */
-export const listAcheteurs = <ThrowOnError extends boolean = false>(options?: Options<ListAcheteursData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListAcheteursResponses, ListAcheteursErrors, ThrowOnError>({
-        url: '/structure/acheteur',
-        ...options
-    });
-};
+export const listAcheteurs = <ThrowOnError extends boolean = false>(options?: Options<ListAcheteursData, ThrowOnError>) => (options?.client ?? client).get<ListAcheteursResponses, ListAcheteursErrors, ThrowOnError>({ url: '/structure/acheteur', ...options });
 
 /**
  * List Vendeurs
  */
-export const listVendeurs = <ThrowOnError extends boolean = false>(options?: Options<ListVendeursData, ThrowOnError>) => {
-    return (options?.client ?? client).get<ListVendeursResponses, ListVendeursErrors, ThrowOnError>({
-        url: '/structure/vendeur',
-        ...options
-    });
-};
+export const listVendeurs = <ThrowOnError extends boolean = false>(options?: Options<ListVendeursData, ThrowOnError>) => (options?.client ?? client).get<ListVendeursResponses, ListVendeursErrors, ThrowOnError>({ url: '/structure/vendeur', ...options });
 
 /**
  * Get Structure
  */
-export const getStructure = <ThrowOnError extends boolean = false>(options: Options<GetStructureData, ThrowOnError>) => {
-    return (options.client ?? client).get<GetStructureResponses, GetStructureErrors, ThrowOnError>({
-        responseTransformer: getStructureResponseTransformer,
-        url: '/structure/{uid}',
-        ...options
-    });
-};
+export const getStructure = <ThrowOnError extends boolean = false>(options: Options<GetStructureData, ThrowOnError>) => (options.client ?? client).get<GetStructureResponses, GetStructureErrors, ThrowOnError>({
+    responseTransformer: getStructureResponseTransformer,
+    url: '/structure/{uid}',
+    ...options
+});
 
 /**
  * Get Lieux
  */
-export const getLieux = <ThrowOnError extends boolean = false>(options?: Options<GetLieuxData, ThrowOnError>) => {
-    return (options?.client ?? client).get<GetLieuxResponses, GetLieuxErrors, ThrowOnError>({
-        url: '/lieu/',
-        ...options
-    });
-};
+export const getLieux = <ThrowOnError extends boolean = false>(options?: Options<GetLieuxData, ThrowOnError>) => (options?.client ?? client).get<GetLieuxResponses, GetLieuxErrors, ThrowOnError>({ url: '/lieu/', ...options });
