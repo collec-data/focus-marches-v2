@@ -103,7 +103,7 @@ pluggy==1.6.0
     #   pytest-cov
 psycopg2-binary==2.9.11
     # via focus-marche-v2 (pyproject.toml)
-pydantic[email]==2.12.4
+pydantic[email]==2.12.5
     # via
     #   fastapi
     #   fastapi-cloud-cli
