@@ -85,7 +85,7 @@ marshmallow-dataclass==8.7.1
     # via api-entreprise
 mdurl==0.1.2
     # via markdown-it-py
-mypy==1.18.2
+mypy==1.19.0
     # via focus-marche-v2 (pyproject.toml)
 mypy-extensions==1.1.0
     # via
