@@ -316,3 +316,38 @@ class CategoriesDto(BaseModel):
     @classmethod
     def transform_cat(cls, v: int) -> CategorieMarche:
         return CategorieMarche.from_db_value(v)
+
+
+class ConsiderationAnnuelleDto(BaseModel):
+    nombre: int
+    annee: str
+
+
+class ConsiderationsGlobalDto(BaseModel):
+    consideration: str
+    data: list[ConsiderationAnnuelleDto]
+
+
+class ConsiderationDto(BaseModel):
+    consideration: str
+    nombre: int
+
+
+class ConsiderationsEnvDto(BaseModel):
+    consideration: ConsiderationsEnvironnementales
+    nombre: int
+
+    @field_validator("consideration", mode="before")
+    @classmethod
+    def transform_env(cls, v: int) -> ConsiderationsEnvironnementales:
+        return ConsiderationsEnvironnementales.from_db_value(v)
+
+
+class ConsiderationsSocialeDto(BaseModel):
+    consideration: ConsiderationsSociales
+    nombre: int
+
+    @field_validator("consideration", mode="before")
+    @classmethod
+    def transform_soc(cls, v: int) -> ConsiderationsSociales:
+        return ConsiderationsSociales.from_db_value(v)

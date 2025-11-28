@@ -11,6 +11,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AchatDurable: typeof import('./src/components/dashboard/AchatDurable.vue')['default']
     Acheteurs: typeof import('./src/components/dashboard/Acheteurs.vue')['default']
     AutoComplete: typeof import('primevue/autocomplete')['default']
     BoutonIframe: typeof import('./src/components/BoutonIframe.vue')['default']

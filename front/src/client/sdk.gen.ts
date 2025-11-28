@@ -3,7 +3,7 @@
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
 import { getConcessionResponseTransformer, getListeConcessionsResponseTransformer, getListeMarchesResponseTransformer, getMarcheResponseTransformer, getStructureResponseTransformer } from './transformers.gen';
-import type { GetCategorieDepartementData, GetCategorieDepartementResponses, GetCategoriesData, GetCategoriesErrors, GetCategoriesResponses, GetConcessionData, GetConcessionErrors, GetConcessionResponses, GetErreursImportData, GetErreursImportErrors, GetErreursImportResponses, GetIndicateursData, GetIndicateursErrors, GetIndicateursResponses, GetLieuxData, GetLieuxErrors, GetLieuxResponses, GetListeConcessionsData, GetListeConcessionsErrors, GetListeConcessionsResponses, GetListeMarchesData, GetListeMarchesErrors, GetListeMarchesResponses, GetMarcheData, GetMarcheErrors, GetMarcheResponses, GetMarchesParCcagData, GetMarchesParCcagErrors, GetMarchesParCcagResponses, GetMarchesParDepartementData, GetMarchesParDepartementResponses, GetMarchesParNatureData, GetMarchesParNatureErrors, GetMarchesParNatureResponses, GetMarchesParProcedureData, GetMarchesParProcedureErrors, GetMarchesParProcedureResponses, GetStatsErreursData, GetStatsErreursResponses, GetStructureData, GetStructureErrors, GetStructureResponses, ListAcheteursData, ListAcheteursErrors, ListAcheteursResponses, ListStructuresData, ListStructuresErrors, ListStructuresResponses, ListVendeursData, ListVendeursErrors, ListVendeursResponses } from './types.gen';
+import type { GetCategorieDepartementData, GetCategorieDepartementResponses, GetCategoriesData, GetCategoriesErrors, GetCategoriesResponses, GetConcessionData, GetConcessionErrors, GetConcessionResponses, GetConsiderationsData, GetConsiderationsEnvEtSocialeData, GetConsiderationsEnvEtSocialeErrors, GetConsiderationsEnvEtSocialeResponses, GetConsiderationsEnvironnementaleData, GetConsiderationsEnvironnementaleErrors, GetConsiderationsEnvironnementaleResponses, GetConsiderationsErrors, GetConsiderationsResponses, GetConsiderationsSocialeData, GetConsiderationsSocialeErrors, GetConsiderationsSocialeResponses, GetErreursImportData, GetErreursImportErrors, GetErreursImportResponses, GetIndicateursData, GetIndicateursErrors, GetIndicateursResponses, GetLieuxData, GetLieuxErrors, GetLieuxResponses, GetListeConcessionsData, GetListeConcessionsErrors, GetListeConcessionsResponses, GetListeMarchesData, GetListeMarchesErrors, GetListeMarchesResponses, GetMarcheData, GetMarcheErrors, GetMarcheResponses, GetMarchesParCcagData, GetMarchesParCcagErrors, GetMarchesParCcagResponses, GetMarchesParDepartementData, GetMarchesParDepartementResponses, GetMarchesParNatureData, GetMarchesParNatureErrors, GetMarchesParNatureResponses, GetMarchesParProcedureData, GetMarchesParProcedureErrors, GetMarchesParProcedureResponses, GetStatsErreursData, GetStatsErreursResponses, GetStructureData, GetStructureErrors, GetStructureResponses, ListAcheteursData, ListAcheteursErrors, ListAcheteursResponses, ListStructuresData, ListStructuresErrors, ListStructuresResponses, ListVendeursData, ListVendeursErrors, ListVendeursResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -72,6 +72,26 @@ export const getCategorieDepartement = <ThrowOnError extends boolean = false>(op
  * Get Categories
  */
 export const getCategories = <ThrowOnError extends boolean = false>(options?: Options<GetCategoriesData, ThrowOnError>) => (options?.client ?? client).get<GetCategoriesResponses, GetCategoriesErrors, ThrowOnError>({ url: '/marche/categorie', ...options });
+
+/**
+ * Get Considerations
+ */
+export const getConsiderations = <ThrowOnError extends boolean = false>(options?: Options<GetConsiderationsData, ThrowOnError>) => (options?.client ?? client).get<GetConsiderationsResponses, GetConsiderationsErrors, ThrowOnError>({ url: '/marche/consideration', ...options });
+
+/**
+ * Get Considerations Environnementale
+ */
+export const getConsiderationsEnvironnementale = <ThrowOnError extends boolean = false>(options?: Options<GetConsiderationsEnvironnementaleData, ThrowOnError>) => (options?.client ?? client).get<GetConsiderationsEnvironnementaleResponses, GetConsiderationsEnvironnementaleErrors, ThrowOnError>({ url: '/marche/consideration/environnementale', ...options });
+
+/**
+ * Get Considerations Sociale
+ */
+export const getConsiderationsSociale = <ThrowOnError extends boolean = false>(options?: Options<GetConsiderationsSocialeData, ThrowOnError>) => (options?.client ?? client).get<GetConsiderationsSocialeResponses, GetConsiderationsSocialeErrors, ThrowOnError>({ url: '/marche/consideration/sociale', ...options });
+
+/**
+ * Get Considerations Env Et Sociale
+ */
+export const getConsiderationsEnvEtSociale = <ThrowOnError extends boolean = false>(options?: Options<GetConsiderationsEnvEtSocialeData, ThrowOnError>) => (options?.client ?? client).get<GetConsiderationsEnvEtSocialeResponses, GetConsiderationsEnvEtSocialeErrors, ThrowOnError>({ url: '/marche/consideration/combine', ...options });
 
 /**
  * Get Marche

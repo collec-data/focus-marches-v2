@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AchatDurable from '@/components/dashboard/AchatDurable.vue';
 import CategoriePrincipaleDAchat from '@/components/dashboard/CategoriePrincipaleDAchat.vue';
 import Departements from '@/components/dashboard/Departements.vue';
 import DistributionAchatsParDepartement from '@/components/dashboard/DistributionAchatsParDepartement.vue';
@@ -27,6 +28,7 @@ const opsn = settings.opsn;
         <Top12 type="fournisseurs" :dateMin :dateMax />
         <NatureContrats :dateMin :dateMax />
         <Procedure :dateMin :dateMax />
+        <AchatDurable :dateMin :dateMax />
         <Departements :dateMin :dateMax />
         <DistributionAchatsParDepartement :dateMin :dateMax />
     </main>

@@ -88,6 +88,45 @@ export type CategoriesDto = {
 };
 
 /**
+ * ConsiderationAnneeDto
+ */
+export type ConsiderationAnneeDto = {
+    /**
+     * Nombre
+     */
+    nombre: number;
+    /**
+     * Annee
+     */
+    annee: string;
+};
+
+/**
+ * ConsiderationDto
+ */
+export type ConsiderationDto = {
+    /**
+     * Consideration
+     */
+    consideration: string;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
+ * ConsiderationsEnvDto
+ */
+export type ConsiderationsEnvDto = {
+    consideration: ConsiderationsEnvironnementales;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
+
+/**
  * ConsiderationsEnvironnementales
  */
 export const ConsiderationsEnvironnementales = {
@@ -100,6 +139,31 @@ export const ConsiderationsEnvironnementales = {
  * ConsiderationsEnvironnementales
  */
 export type ConsiderationsEnvironnementales = typeof ConsiderationsEnvironnementales[keyof typeof ConsiderationsEnvironnementales];
+
+/**
+ * ConsiderationsMensuelleDto
+ */
+export type ConsiderationsMensuelleDto = {
+    /**
+     * Consideration
+     */
+    consideration: string;
+    /**
+     * Data
+     */
+    data: Array<ConsiderationAnneeDto>;
+};
+
+/**
+ * ConsiderationsSocialeDto
+ */
+export type ConsiderationsSocialeDto = {
+    consideration: ConsiderationsSociales;
+    /**
+     * Nombre
+     */
+    nombre: number;
+};
 
 /**
  * ConsiderationsSociales
@@ -1445,6 +1509,182 @@ export type GetCategoriesResponses = {
 };
 
 export type GetCategoriesResponse = GetCategoriesResponses[keyof GetCategoriesResponses];
+
+export type GetConsiderationsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: string | null;
+    };
+    url: '/marche/consideration';
+};
+
+export type GetConsiderationsErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetConsiderationsError = GetConsiderationsErrors[keyof GetConsiderationsErrors];
+
+export type GetConsiderationsResponses = {
+    /**
+     * Response Get Considerations
+     *
+     * Successful Response
+     */
+    200: Array<ConsiderationsMensuelleDto>;
+};
+
+export type GetConsiderationsResponse = GetConsiderationsResponses[keyof GetConsiderationsResponses];
+
+export type GetConsiderationsEnvironnementaleData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: string | null;
+    };
+    url: '/marche/consideration/environnementale';
+};
+
+export type GetConsiderationsEnvironnementaleErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetConsiderationsEnvironnementaleError = GetConsiderationsEnvironnementaleErrors[keyof GetConsiderationsEnvironnementaleErrors];
+
+export type GetConsiderationsEnvironnementaleResponses = {
+    /**
+     * Response Get Considerations Environnementale
+     *
+     * Successful Response
+     */
+    200: Array<ConsiderationsEnvDto>;
+};
+
+export type GetConsiderationsEnvironnementaleResponse = GetConsiderationsEnvironnementaleResponses[keyof GetConsiderationsEnvironnementaleResponses];
+
+export type GetConsiderationsSocialeData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: string | null;
+    };
+    url: '/marche/consideration/sociale';
+};
+
+export type GetConsiderationsSocialeErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetConsiderationsSocialeError = GetConsiderationsSocialeErrors[keyof GetConsiderationsSocialeErrors];
+
+export type GetConsiderationsSocialeResponses = {
+    /**
+     * Response Get Considerations Sociale
+     *
+     * Successful Response
+     */
+    200: Array<ConsiderationsSocialeDto>;
+};
+
+export type GetConsiderationsSocialeResponse = GetConsiderationsSocialeResponses[keyof GetConsiderationsSocialeResponses];
+
+export type GetConsiderationsEnvEtSocialeData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: string | null;
+    };
+    url: '/marche/consideration/combine';
+};
+
+export type GetConsiderationsEnvEtSocialeErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetConsiderationsEnvEtSocialeError = GetConsiderationsEnvEtSocialeErrors[keyof GetConsiderationsEnvEtSocialeErrors];
+
+export type GetConsiderationsEnvEtSocialeResponses = {
+    /**
+     * Response Get Considerations Env Et Sociale
+     *
+     * Successful Response
+     */
+    200: Array<ConsiderationDto>;
+};
+
+export type GetConsiderationsEnvEtSocialeResponse = GetConsiderationsEnvEtSocialeResponses[keyof GetConsiderationsEnvEtSocialeResponses];
 
 export type GetMarcheData = {
     body?: never;

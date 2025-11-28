@@ -2,6 +2,12 @@ import {
     CategorieMarche,
     type CategoriesDto,
     Ccag,
+    ConsiderationsSociales,
+    ConsiderationsEnvironnementales,
+    type ConsiderationsMensuelleDto,
+    type ConsiderationsEnvDto,
+    type ConsiderationsSocialeDto,
+    type ConsiderationDto,
     type DecpMalFormeDto,
     type IndicateursDto,
     type MarcheAllegeDto,
@@ -119,4 +125,39 @@ export const lieux: LieuDto[] = [
     { uid: 3, code: '56', type_code: 'Code département' },
     { uid: 4, code: '29', type_code: 'Code département' },
     { uid: 5, code: '22', type_code: 'Code département' }
+];
+
+export const consideration_env: ConsiderationsEnvDto[] = [
+    { consideration: ConsiderationsEnvironnementales.CRITÈRE_ENVIRONNEMENTAL, nombre: 1 },
+    { consideration: ConsiderationsEnvironnementales.CLAUSE_ENVIRONNEMENTALE, nombre: 2 },
+    { consideration: ConsiderationsEnvironnementales.PAS_DE_CONSIDÉRATION_ENVIRONNEMENTALE, nombre: 3 }
+];
+
+export const consideration_soc: ConsiderationsSocialeDto[] = [
+    { consideration: ConsiderationsSociales.CRITÈRE_SOCIAL, nombre: 1 },
+    { consideration: ConsiderationsSociales.CLAUSE_SOCIALE, nombre: 2 },
+    { consideration: ConsiderationsSociales.PAS_DE_CONSIDÉRATION_SOCIALE, nombre: 3 }
+];
+
+export const consideration_combine: ConsiderationDto[] = [
+    { consideration: 'Clause environnementale et sociale', nombre: 1 },
+    { consideration: 'Critère environnemental et social', nombre: 2 },
+    { consideration: 'Pas de considérations', nombre: 3 }
+];
+
+export const considerations: ConsiderationsMensuelleDto[] = [
+    {
+        consideration: 'Aucune considération',
+        data: [
+            { nombre: 1, annee: '2024' },
+            { nombre: 2, annee: '2025' }
+        ]
+    },
+    {
+        consideration: 'Considération sociale uniquement',
+        data: [
+            { nombre: 3, annee: '2024' },
+            { nombre: 4, annee: '2025' }
+        ]
+    }
 ];
