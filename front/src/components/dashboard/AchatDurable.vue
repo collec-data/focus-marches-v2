@@ -2,10 +2,11 @@
 import { getConsiderations, getConsiderationsEnvEtSociale, getConsiderationsEnvironnementale, getConsiderationsSociale } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel } from '@/service/HelpersService';
-import Plotly, { PlotData } from 'plotly.js-dist';
 import { onMounted, ref, watch } from 'vue';
 
 import type { ConsiderationDto, ConsiderationsEnvDto, ConsiderationsSocialeDto } from '@/client';
+import type Plotly from 'plotly.js-dist';
+import type { PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
