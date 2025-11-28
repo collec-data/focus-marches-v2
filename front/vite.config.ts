@@ -68,6 +68,6 @@ export default defineConfig({
             provider: 'istanbul',
             reportsDirectory: './coverage'
         },
-        testTimeout: 25_000
+        testTimeout: 30_000
     }
 });

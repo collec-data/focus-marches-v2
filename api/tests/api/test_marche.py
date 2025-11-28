@@ -4,8 +4,10 @@ from decimal import Decimal
 from app.models import enums
 from tests.factories import (
     AcheteurFactory,
-    ConsiderationEnvFactory,
-    ConsiderationSocialeFactory,
+    ClauseEnvFactory,
+    ClauseSocialeFactory,
+    CritereEnvFactory,
+    CritereSocialFactory,
     MarcheFactory,
     TechniqueAchatFactory,
     VendeurFactory,
@@ -25,8 +27,8 @@ def test_list_marche(client):
         montant=42,
         duree_mois=6,
         categorie=enums.CategorieMarche.FOURNITURES.db_value,
-        considerations_sociales=[ConsiderationSocialeFactory()],
-        considerations_environnementales=[ConsiderationEnvFactory()],
+        considerations_sociales=[CritereSocialFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
         techniques_achat=[TechniqueAchatFactory()],
     )
 
@@ -196,20 +198,20 @@ def test_indicateurs_succes(client):
         sous_traitance_declaree=True,
         montant=100,
         date_notification=date(2025, 1, 1),
-        considerations_environnementales=[ConsiderationEnvFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
     )
     MarcheFactory(
         sous_traitance_declaree=True,
         montant=100,
         date_notification=date(2025, 1, 1),
-        considerations_environnementales=[ConsiderationEnvFactory()],
-        considerations_sociales=[ConsiderationSocialeFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
+        considerations_sociales=[CritereSocialFactory()],
     )
     MarcheFactory(
         sous_traitance_declaree=True,
         montant=100,
         date_notification=date(2025, 1, 1),
-        considerations_sociales=[ConsiderationSocialeFactory()],
+        considerations_sociales=[CritereSocialFactory()],
     )
 
     response = client.get(
@@ -334,6 +336,127 @@ def test_categories(client):
         {"categorie": "Travaux", "mois": "2025-01", "montant": "10", "nombre": 1},
         {"categorie": "Travaux", "mois": "2025-02", "montant": "3", "nombre": 2},
         {"categorie": "Fournitures", "mois": "2025-02", "montant": "4", "nombre": 1},
+    ]
+
+
+def test_get_consideration(client):
+    MarcheFactory(
+        date_notification=date(2025, 2, 1),
+    )
+    MarcheFactory(
+        considerations_sociales=[CritereSocialFactory()],
+        considerations_environnementales=[],
+        date_notification=date(2025, 2, 1),
+    )
+    MarcheFactory(
+        considerations_sociales=[CritereSocialFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
+        date_notification=date(2025, 2, 1),
+    )
+    MarcheFactory(
+        considerations_sociales=[],
+        considerations_environnementales=[ClauseEnvFactory()],
+        date_notification=date(2025, 2, 1),
+    )
+
+    MarcheFactory(
+        considerations_sociales=[],
+        considerations_environnementales=[CritereEnvFactory()],
+        date_notification=date(2025, 2, 1),
+    )
+
+    response = client.get("/marche/consideration")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "consideration": "Aucune considération",
+            "data": [{"nombre": 1, "annee": "2025"}],
+        },
+        {
+            "consideration": "Considération sociale uniquement",
+            "data": [{"nombre": 1, "annee": "2025"}],
+        },
+        {
+            "consideration": "Considération environnementale uniquement",
+            "data": [{"nombre": 2, "annee": "2025"}],
+        },
+        {
+            "consideration": "Considération sociale et environnementale",
+            "data": [{"nombre": 1, "annee": "2025"}],
+        },
+    ]
+
+
+def test_get_consideration_environnementale(client):
+    MarcheFactory()
+    MarcheFactory(
+        considerations_sociales=[CritereSocialFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
+    )
+    MarcheFactory(
+        considerations_environnementales=[ClauseEnvFactory()],
+    )
+    MarcheFactory.create(
+        considerations_environnementales=[CritereEnvFactory()],
+    )
+    MarcheFactory.create(
+        considerations_environnementales=[CritereEnvFactory()],
+    )
+
+    response = client.get("/marche/consideration/environnementale")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {"consideration": "Pas de considération environnementale", "nombre": 1},
+        {"consideration": "Clause environnementale", "nombre": 1},
+        {"consideration": "Critère environnemental", "nombre": 2},
+    ]
+
+
+def test_get_consideration_sociale(client):
+    MarcheFactory()
+    MarcheFactory(
+        considerations_sociales=[CritereSocialFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
+    )
+    MarcheFactory(
+        considerations_sociales=[ClauseSocialeFactory()],
+    )
+    MarcheFactory.create(
+        considerations_sociales=[CritereSocialFactory()],
+    )
+    MarcheFactory.create(
+        considerations_sociales=[CritereSocialFactory()],
+    )
+
+    response = client.get("/marche/consideration/sociale")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {"consideration": "Pas de considération sociale", "nombre": 1},
+        {"consideration": "Clause sociale", "nombre": 1},
+        {"consideration": "Critère social", "nombre": 2},
+    ]
+
+
+def test_get_consideration_combine(client):
+    MarcheFactory()
+    MarcheFactory(
+        considerations_sociales=[CritereSocialFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
+    )
+    MarcheFactory(
+        considerations_sociales=[ClauseSocialeFactory()],
+        considerations_environnementales=[CritereEnvFactory()],
+    )
+    response = client.get("/marche/consideration/combine")
+
+    assert response.status_code == 200
+    assert response.json() == [
+        {"consideration": "Clause environnementale et sociale", "nombre": 0},
+        {"consideration": "Critère environnemental et social", "nombre": 1},
+        {"consideration": "Pas de considérations", "nombre": 2},
     ]
 
 

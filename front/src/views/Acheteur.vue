@@ -49,6 +49,7 @@ onMounted(() => {
         <NatureContrats :acheteurUid :dateMin :dateMax />
         <CCAG :acheteurUid :dateMin :dateMax />
         <Procedure :acheteurUid :dateMin :dateMax />
+        <AchatDurable :acheteurUid :dateMin :dateMax />
         <ListeConcessions :autoriteConcedanteUid="acheteurUid" :dateMin :dateMax />
     </main>
 </template>

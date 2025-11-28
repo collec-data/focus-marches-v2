@@ -15,6 +15,8 @@ Créer le fichier `.env`, en le recopiant depuis `.env.default` :
 cp .env.default .env
 ```
 
+Puis compléter les champs manquants dans le [`.env`](.env) tels que `API_ENTREPRISE_TOKEN`, `OPSN` ou `REGION`.
+
 Se reporter ensuite aux instructions spécifiques pour l'initialisation [du front](./front/README.md#initialisation-pour-le-développement) et [de l'API](./api/README.md#initialisation-pour-le-développement).
 
 ## Tests - Statistiques

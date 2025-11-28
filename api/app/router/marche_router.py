@@ -16,6 +16,10 @@ from app.models.db import (
 )
 from app.models.dto import (
     CategoriesDto,
+    ConsiderationDto,
+    ConsiderationsEnvDto,
+    ConsiderationsGlobalDto,
+    ConsiderationsSocialeDto,
     IndicateursDto,
     MarcheAllegeDto,
     MarcheCategorieDepartementDto,
@@ -361,6 +365,181 @@ def get_categories(
     )
 
     return list(session.execute(stmt).all())
+
+
+@router.get("/consideration", response_model=list[ConsiderationsGlobalDto])
+def get_considerations(
+    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+) -> list[dict[str, str | list[Row[tuple[str, int]]]]]:
+    aucune_consideration = session.execute(
+        application_filtres(
+            select(
+                func.count(Marche.uid).label("nombre"),
+                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+            ),
+            filtres,
+        )
+        .outerjoin(Marche.considerations_environnementales)
+        .outerjoin(Marche.considerations_sociales)
+        .where(ConsiderationSocialeMarche.uid.is_(None))
+        .where(ConsiderationEnvMarche.uid.is_(None))
+        .group_by("annee")
+        .order_by("annee")
+    ).all()
+    consideration_sociale_uniquement = session.execute(
+        application_filtres(
+            select(
+                func.count(Marche.uid).label("nombre"),
+                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+            ),
+            filtres,
+        )
+        .outerjoin(Marche.considerations_environnementales)
+        .join(Marche.considerations_sociales)
+        .where(ConsiderationEnvMarche.uid.is_(None))
+        .group_by("annee")
+        .order_by("annee")
+    ).all()
+    consideration_env_uniquement = session.execute(
+        application_filtres(
+            select(
+                func.count(Marche.uid).label("nombre"),
+                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+            ),
+            filtres,
+        )
+        .outerjoin(Marche.considerations_sociales)
+        .join(Marche.considerations_environnementales)
+        .where(ConsiderationSocialeMarche.uid.is_(None))
+        .group_by("annee")
+        .order_by("annee")
+    ).all()
+    consideration_env_et_soc = session.execute(
+        application_filtres(
+            select(
+                func.count(Marche.uid).label("nombre"),
+                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+            ),
+            filtres,
+        )
+        .join(Marche.considerations_sociales)
+        .join(Marche.considerations_environnementales)
+        .group_by("annee")
+        .order_by("annee")
+    ).all()
+
+    return [
+        {
+            "consideration": "Aucune considération",
+            "data": list(aucune_consideration),
+        },
+        {
+            "consideration": "Considération sociale uniquement",
+            "data": list(consideration_sociale_uniquement),
+        },
+        {
+            "consideration": "Considération environnementale uniquement",
+            "data": list(consideration_env_uniquement),
+        },
+        {
+            "consideration": "Considération sociale et environnementale",
+            "data": list(consideration_env_et_soc),
+        },
+    ]
+
+
+@router.get(
+    "/consideration/environnementale", response_model=list[ConsiderationsEnvDto]
+)
+def get_considerations_environnementale(
+    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+) -> list[Row[tuple[int, int]]]:
+    stmt = (
+        application_filtres(
+            select(
+                func.count(Marche.uid).label("nombre"),
+                ConsiderationEnvMarche.consideration,
+            ),
+            filtres,
+        )
+        .outerjoin(Marche.considerations_environnementales)
+        .outerjoin(Marche.considerations_sociales)
+        .where(ConsiderationSocialeMarche.uid.is_(None))
+        .group_by(ConsiderationEnvMarche.consideration)
+    )
+
+    result = list(session.execute(stmt).all())
+    return result
+
+
+@router.get("/consideration/sociale", response_model=list[ConsiderationsSocialeDto])
+def get_considerations_sociale(
+    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+) -> list[Row[tuple[int, int]]]:
+    stmt = (
+        application_filtres(
+            select(
+                func.count(Marche.uid).label("nombre"),
+                ConsiderationSocialeMarche.consideration,
+            ),
+            filtres,
+        )
+        .outerjoin(Marche.considerations_sociales)
+        .outerjoin(Marche.considerations_environnementales)
+        .where(ConsiderationEnvMarche.uid.is_(None))
+        .group_by(ConsiderationSocialeMarche.consideration)
+    )
+
+    result = list(session.execute(stmt).all())
+    return result
+
+
+@router.get("/consideration/combine", response_model=list[ConsiderationDto])
+def get_considerations_env_et_sociale(
+    session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
+) -> list[dict[str, str | int]]:
+    clause = session.execute(
+        application_filtres(select(func.count(Marche.uid)), filtres)
+        .outerjoin(Marche.considerations_sociales)
+        .outerjoin(Marche.considerations_environnementales)
+        .where(
+            ConsiderationEnvMarche.consideration
+            == ConsiderationsEnvironnementales.CLAUSE.db_value,
+            ConsiderationSocialeMarche.consideration
+            == ConsiderationsSociales.CLAUSE.db_value,
+        )
+    ).scalar()
+    clause = clause if clause else 0
+
+    critere = session.execute(
+        application_filtres(select(func.count(Marche.uid)), filtres)
+        .outerjoin(Marche.considerations_sociales)
+        .outerjoin(Marche.considerations_environnementales)
+        .where(
+            ConsiderationEnvMarche.consideration
+            == ConsiderationsEnvironnementales.CRITERE.db_value,
+            ConsiderationSocialeMarche.consideration
+            == ConsiderationsSociales.CRITERE.db_value,
+        )
+    ).scalar()
+    critere = critere if critere else 0
+
+    total = session.execute(
+        application_filtres(select(func.count(Marche.id)), filtres)
+    ).scalar()
+    total = total if total else 0
+    sans = total - critere - clause
+    return [
+        {
+            "consideration": "Clause environnementale et sociale",
+            "nombre": clause,
+        },
+        {
+            "consideration": "Critère environnemental et social",
+            "nombre": critere,
+        },
+        {"consideration": "Pas de considérations", "nombre": sans},
+    ]
 
 
 @router.get("/{uid}", response_model=MarcheDto)

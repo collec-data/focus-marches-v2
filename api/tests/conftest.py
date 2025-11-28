@@ -10,9 +10,11 @@ from app.main import app
 from app.models.db import Base
 from tests.factories import (
     AcheteurFactory,
+    ClauseEnvFactory,
+    ClauseSocialeFactory,
     ConcessionFactory,
-    ConsiderationEnvFactory,
-    ConsiderationSocialeFactory,
+    CritereEnvFactory,
+    CritereSocialFactory,
     DecpMalFormeFactory,
     ErreurFactory,
     LieuFactory,
@@ -88,8 +90,10 @@ def set_factory_db(db):
         VendeurFactory,
         ErreurFactory,
         DecpMalFormeFactory,
-        ConsiderationSocialeFactory,
-        ConsiderationEnvFactory,
+        CritereSocialFactory,
+        ClauseSocialeFactory,
+        CritereEnvFactory,
+        ClauseEnvFactory,
         TechniqueAchatFactory,
     ]:
         my_factory._meta.sqlalchemy_session = db

@@ -31,7 +31,7 @@ class LieuFactory(factory.alchemy.SQLAlchemyModelFactory):
     type_code = enums.TypeCodeLieu.DEP.db_value
 
 
-class ConsiderationSocialeFactory(factory.alchemy.SQLAlchemyModelFactory):
+class CritereSocialFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.ConsiderationSocialeMarche
 
@@ -39,12 +39,20 @@ class ConsiderationSocialeFactory(factory.alchemy.SQLAlchemyModelFactory):
     consideration = enums.ConsiderationsSociales.CRITERE.db_value
 
 
-class ConsiderationEnvFactory(factory.alchemy.SQLAlchemyModelFactory):
+class ClauseSocialeFactory(CritereSocialFactory):
+    consideration = enums.ConsiderationsSociales.CLAUSE.db_value
+
+
+class CritereEnvFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.ConsiderationEnvMarche
 
     uid = factory.declarations.Sequence(lambda n: n)
     consideration = enums.ConsiderationsEnvironnementales.CRITERE.db_value
+
+
+class ClauseEnvFactory(CritereEnvFactory):
+    consideration = enums.ConsiderationsEnvironnementales.CLAUSE.db_value
 
 
 class TechniqueAchatFactory(factory.alchemy.SQLAlchemyModelFactory):
