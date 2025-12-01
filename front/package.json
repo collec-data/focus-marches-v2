@@ -14,7 +14,7 @@
         "test": "vitest run --coverage"
     },
     "dependencies": {
-        "@primeuix/themes": "^1.0.0",
+        "@primeuix/themes": "^2.0.0",
         "@tailwindcss/postcss": "^4.1.14",
         "leaflet": "^1.9.4",
         "plotly.js-dist": "^3.1.1",
