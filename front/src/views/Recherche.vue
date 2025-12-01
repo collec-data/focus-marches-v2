@@ -303,7 +303,7 @@ const marcheUid = ref(null);
                 >
             </DataTable>
         </section>
-        <ModaleMarche :marcheUid />
+        <ModaleMarche v-model="marcheUid" />
     </main>
 </template>
 

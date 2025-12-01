@@ -1,27 +1,24 @@
 <script setup lang="ts">
 import { type ContratConcessionDto, getConcession } from '@/client';
 import { formatCurrency, formatDate } from '@/service/HelpersService';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
-const props = defineProps({ concessionUid: { type: [Number, null], default: null } });
-
+const concessionUid = defineModel<number | null>();
 const concession = ref<Partial<ContratConcessionDto>>();
 const showModale = computed(() => concession.value != null);
 
-watch(
-    () => props.concessionUid,
-    () => {
-        if (props.concessionUid) {
-            getConcession({ path: { uid: props.concessionUid } }).then((response) => {
-                if (response.data) {
-                    concession.value = response.data;
-                }
-            });
-        }
+watchEffect(() => {
+    if (concessionUid.value) {
+        getConcession({ path: { uid: concessionUid.value } }).then((response) => {
+            if (response.data) {
+                concession.value = response.data;
+            }
+        });
     }
-);
+});
 
 function hideConcessionModal() {
+    concessionUid.value = null;
     concession.value = undefined;
 }
 </script>

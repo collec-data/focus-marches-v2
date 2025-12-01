@@ -178,5 +178,5 @@ const hiddenCol = computed(() => {
         <BoutonIframe v-if="acheteurUid" :acheteurUid path="marches" name="La liste des marchés publics passés" />
     </section>
 
-    <ModaleMarche :marcheUid />
+    <ModaleMarche v-model="marcheUid" />
 </template>
