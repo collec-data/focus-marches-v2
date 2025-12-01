@@ -66,5 +66,5 @@ const concessionUid = ref(null);
             </Column>
         </DataTable>
     </section>
-    <ModaleConcession :concessionUid />
+    <ModaleConcession v-model="concessionUid" />
 </template>

@@ -1,30 +1,27 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
 import { getMarche, type MarcheDto } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
-import { watch } from 'vue';
 
-const props = defineProps({ marcheUid: { type: [Number, null], default: null } });
+const marcheUid = defineModel<number | null>();
 
 const marcheDetaille = ref<Partial<MarcheDto>>();
 const showModale = computed(() => marcheDetaille.value != null);
 
-watch(
-    () => props.marcheUid,
-    () => {
-        if (props.marcheUid) {
-            getMarche({ path: { uid: props.marcheUid } }).then((response) => {
-                if (response.data) {
-                    marcheDetaille.value = response.data;
-                }
-            });
-        }
+watchEffect(() => {
+    if (marcheUid.value) {
+        getMarche({ path: { uid: marcheUid.value } }).then((response) => {
+            if (response.data) {
+                marcheDetaille.value = response.data;
+            }
+        });
     }
-);
+});
 
 function hideMarcheModal() {
+    marcheUid.value = null;
     marcheDetaille.value = undefined;
 }
 </script>
