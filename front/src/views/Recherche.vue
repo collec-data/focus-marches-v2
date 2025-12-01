@@ -100,8 +100,8 @@ function fetchData() {
         montant_max: filtres.value.montant_max,
         duree_min: filtres.value.duree_min,
         duree_max: filtres.value.duree_max,
-        date_debut: filtres.value.date_min,
-        date_fin: filtres.value.date_max
+        date_debut: filtres.value.date_min.toISOString().substring(0, 10),
+        date_fin: filtres.value.date_max.toISOString().substring(0, 10)
     };
     getListeMarches({
         query: {
