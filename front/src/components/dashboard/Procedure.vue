@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getMarchesParProcedure } from '@/client';
-import { longLabelsBreaker } from '@/service/HelpersService';
+import { getDurationInMonths, longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 import Graph from '../Graph.vue';
 
@@ -11,8 +11,8 @@ import type { Layout, PlotData } from 'plotly.js-dist';
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
     vendeurUid: { type: [String, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    dateMin: { type: Date, required: true },
+    dateMax: { type: Date, required: true }
 });
 
 const montantData = ref<Partial<PlotData>[]>();
@@ -75,7 +75,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
     <Fluid class="grid grid-cols-12 gap-8">
         <div class="col-span-12">
             <h2 class="title">Procédure suivie</h2>
-            <p class="subtitle">Classement des contrats selon la procédure suivie lors de la consultation. La période observée est de XX mois</p>
+            <p class="subtitle">Classement des contrats selon la procédure suivie lors de la consultation. La période observée est de {{ getDurationInMonths(dateMin, dateMax) }} mois</p>
         </div>
         <div class="col-span-12 xl:col-span-6">
             <h3>Montant des contrats par procédure</h3>

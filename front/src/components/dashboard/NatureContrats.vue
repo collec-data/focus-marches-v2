@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getMarchesParNature } from '@/client';
-import { formatCurrency } from '@/service/HelpersService';
+import { formatCurrency, getDurationInMonths } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { MarcheNatureDto } from '@/client';
@@ -10,8 +10,8 @@ import type Plotly from 'plotly.js-dist';
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
     vendeurUid: { type: [String, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    dateMin: { type: Date, required: true },
+    dateMax: { type: Date, required: true }
 });
 
 const stats = ref([
@@ -91,7 +91,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
 <template>
     <section class="flex flex-col">
         <h2 class="title">Nature des contrats</h2>
-        <p>Répartition des contrats par nature du marché public, en montant et en nombre. La période observée est de XX mois et les marchés sont groupés par mois.</p>
+        <p>Répartition des contrats par nature du marché public, en montant et en nombre. La période observée est de {{ getDurationInMonths(dateMin, dateMax) }} mois et les marchés sont groupés par mois.</p>
         <div class="flex flex-row gap-5 flex-wrap">
             <div class="nature basis-md grow shrink">
                 <h3>Marché</h3>
