@@ -11,8 +11,8 @@ import type { PlotData } from 'plotly.js-dist';
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
     vendeurUid: { type: [String, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    dateMin: { type: Date, required: true },
+    dateMax: { type: Date, required: true }
 });
 
 interface dataInterface {
@@ -51,8 +51,9 @@ const dataSocial = ref<Partial<PlotData>[]>([]);
 const dataSocialEnv = ref<Partial<PlotData>[]>([]);
 
 function fetchData() {
+    const y2024 = new Date(Date.UTC(2024, 1, 1));
     const query = {
-        date_debut: props.dateMin,
+        date_debut: props.dateMin > y2024 ? props.dateMin : y2024,
         date_fin: props.dateMax,
         acheteur_uid: props.acheteurUid,
         vendeur_uid: props.vendeurUid
@@ -102,6 +103,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
 <template>
     <section>
         <h2>L'achat durable</h2>
+        <p>Les données sur les considération environnementales et sociales ne sont communiquées qu'à partir du 01/01/2024, date à laquelle elles ont été rendues obligatoires.</p>
         <div class="grid grid-cols-12 gap-8">
             <div class="col-span-12 xl:col-span-6">
                 <h3>Répartition globale par nombre de marchés</h3>
