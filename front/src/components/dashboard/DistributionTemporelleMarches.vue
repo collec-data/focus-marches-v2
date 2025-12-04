@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { getListeMarches } from '@/client';
-import { formatDate } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { MarcheAllegeDto } from '@/client';
@@ -9,8 +8,8 @@ import type { PlotData } from 'plotly.js-dist';
 const props = defineProps({
     acheteurUid: { type: [String, null], default: null },
     vendeurUid: { type: [String, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null },
+    dateMin: { type: Date, required: true },
+    dateMax: { type: Date, required: true },
     query: {
         type: Object,
         default: () => {
@@ -20,7 +19,15 @@ const props = defineProps({
 });
 
 const data = ref<Partial<PlotData>[]>();
-const layout = { margin: { t: 0, r: 0, l: 60, b: 50 }, xaxis: { dtick: 24, title: { text: 'DATE' } }, yaxis: { title: { text: 'MONTANT (€)' } } };
+const layout = {
+    margin: { t: 0, r: 0, l: 60, b: 50 },
+    xaxis: {
+        type: 'date',
+        range: [props.dateMin.toISOString().substring(0, 10), props.dateMax.toISOString().substring(0, 10)],
+        title: { text: 'DATE' }
+    },
+    yaxis: { title: { text: 'MONTANT (€)' } }
+};
 
 function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     const common_data = { mode: 'markers' as PlotData['mode'] };
@@ -33,7 +40,7 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     };
     const traces = [
         {
-            x: [] as string[],
+            x: [] as Date[],
             y: [] as number[],
             text: [] as string[],
             name: 'Travaux',
@@ -45,7 +52,7 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
             ...common_data
         },
         {
-            x: [] as string[],
+            x: [] as Date[],
             y: [] as number[],
             text: [] as string[],
             name: 'Fournitures',
@@ -56,7 +63,7 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
             ...common_data
         },
         {
-            x: [] as string[],
+            x: [] as Date[],
             y: [] as number[],
             text: [] as string[],
             name: 'Services',
@@ -71,7 +78,7 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     const keys = ['Travaux', 'Fournitures', 'Services'];
     for (var marche of data) {
         const key = keys.indexOf(marche.categorie);
-        traces[key].x.push(formatDate(marche.date_notification));
+        traces[key].x.push(marche.date_notification);
         traces[key].y.push(parseFloat(marche.montant));
         traces[key].text.push(marche.objet.substring(0, 100));
     }
