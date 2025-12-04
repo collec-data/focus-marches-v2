@@ -38,7 +38,7 @@ fastapi-cli[standard]==0.0.16
     # via fastapi
 fastapi-cloud-cli==0.5.2
     # via fastapi-cli
-greenlet==3.2.4
+greenlet==3.3.0
     # via sqlalchemy
 h11==0.16.0
     # via
