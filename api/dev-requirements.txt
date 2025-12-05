@@ -44,7 +44,7 @@ fastapi[standard]==0.123.5
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard]==0.0.16
     # via fastapi
-fastapi-cloud-cli==0.5.2
+fastapi-cloud-cli==0.6.0
     # via fastapi-cli
 greenlet==3.2.4
     # via sqlalchemy
