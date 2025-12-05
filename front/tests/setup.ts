@@ -32,6 +32,8 @@ config.global.stubs = {
 
 vi.stubGlobal('settings', { date_min: new Date('2020-01-01'), opsn: 'OPSN', region: 'REGION' });
 
+vi.mock('vue-router');
+
 const baseUrl = 'http://localhost:3000/';
 
 export const restHandlers = [

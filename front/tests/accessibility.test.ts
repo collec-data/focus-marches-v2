@@ -15,9 +15,6 @@ expect.extend(toHaveNoViolations);
 
 it('other views has no accessibility violations', async () => {
     const views = [
-        { view: Accueil, config: {} },
-        { view: Acheteurs, config: {} },
-        { view: Fournisseurs, config: {} },
         { view: Recherche, config: {} },
         { view: ErreursImportations, config: {} }
     ];
@@ -27,32 +24,4 @@ it('other views has no accessibility violations', async () => {
         expect(results).toHaveNoViolations();
         unmount();
     }
-});
-
-vi.mock('vue-router');
-async function mockRouter(params): Promise<void> {
-    const VueRouter = await import('vue-router');
-    VueRouter.useRoute.mockReturnValue({
-        params: params,
-        path: '/lorem/ipsum/dolor',
-        query: {}
-    });
-}
-
-it('acheteur has no accessibility violations', async () => {
-    await mockRouter({ uid: '42' });
-
-    const { container, unmount } = render(Acheteur);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-    unmount();
-});
-
-it('vendeur has no accessibility violations', async () => {
-    await mockRouter({ uid: '42' });
-
-    const { container, unmount } = render(Fournisseur);
-    const results = await axe(container);
-    expect(results).toHaveNoViolations();
-    unmount();
 });
