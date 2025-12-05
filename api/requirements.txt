@@ -32,7 +32,7 @@ email-validator==2.3.0
     # via
     #   fastapi
     #   pydantic
-fastapi[standard]==0.123.5
+fastapi[standard]==0.123.8
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard]==0.0.16
     # via fastapi
