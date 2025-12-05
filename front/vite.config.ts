@@ -63,7 +63,7 @@ export default defineConfig({
         coverage: {
             enabled: true,
             include: ['src/*'],
-            exclude: ['src/client/', 'src/assets/'],
+            exclude: ['src/client/', 'src/assets/', 'src/main.ts', 'src/layout/'],
             reporter: ['cobertura', 'text'],
             provider: 'istanbul',
             reportsDirectory: './coverage'
