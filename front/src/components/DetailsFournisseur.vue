@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type StructureEtendueDto } from '@/client';
-import { formatDate, structureName } from '@/service/HelpersService';
+import { formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { ref, watchEffect } from 'vue';
 
 import type { PropType } from 'vue';
@@ -72,7 +72,7 @@ watchEffect(() => {
                                     </tr>
                                     <tr>
                                         <th>Cat entreprise</th>
-                                        <td></td>
+                                        <td>{{ getCatEntreprise(vendeur.cat_entreprise) }}</td>
                                     </tr>
                                     <tr>
                                         <th>Cat juridique</th>

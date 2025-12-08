@@ -542,8 +542,9 @@ class ImportateurDecp:
 def decps(import_de_0: bool = False) -> None:  # pragma: no cover
     if import_de_0:
         log.info("🧹 Suppression totale de la base de données")
-        Base.metadata.drop_all(get_engine())
-        get_engine()
+        engine = get_engine()
+        Base.metadata.drop_all(engine)
+        Base.metadata.create_all(engine)
     else:
         log.info(
             "🧹 Suppression partielle de la base de données (lieux et structures conservés)"
@@ -600,7 +601,7 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
 
 
 @app.command()
-def noms_structures() -> None:
+def structures() -> None:
     api = get_api_entreprise(get_config())
     with Session(get_engine()) as session:
         structures = list(
@@ -614,14 +615,16 @@ def noms_structures() -> None:
 
         nb: int = 0
         for structure in track(structures):
-            data = api.donnees_etablissement(structure.identifiant)
-            if (
-                data
-                and data.unite_legale
-                and data.unite_legale.personne_morale_attributs
-            ):
+            raw = api.raw_donnees_etablissement(structure.identifiant)
+            if raw and raw.get("data") and raw["data"].get("unite_legale"):
+                details = raw["data"]
                 structure.nom = (
-                    data.unite_legale.personne_morale_attributs.raison_sociale
+                    details["unite_legale"]
+                    .get("personne_morale_attributs", {})
+                    .get("raison_sociale")
+                )
+                structure.cat_entreprise = details["unite_legale"].get(
+                    "categorie_entreprise"
                 )
                 session.add(structure)
                 log.debug(structure.nom)

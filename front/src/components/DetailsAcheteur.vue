@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getStructure, type StructureEtendueDto } from '@/client';
-import { formatDate, structureName } from '@/service/HelpersService';
+import { formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watchEffect } from 'vue';
 
 import type { PropType } from 'vue';
@@ -51,6 +51,7 @@ onMounted(() => {
                     </tr>
                     <tr>
                         <th>Cat entreprise</th>
+                        <td>{{ getCatEntreprise(acheteur.cat_entreprise) }}</td>
                     </tr>
                     <tr>
                         <th>Cat juridique</th>

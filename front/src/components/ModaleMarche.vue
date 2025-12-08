@@ -3,7 +3,7 @@ import { computed, ref, watchEffect } from 'vue';
 
 import { getMarche, type MarcheDto } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
-import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
+import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 
 const marcheUid = defineModel<number | null>();
 
@@ -124,7 +124,9 @@ function hideMarcheModal() {
                                 </RouterLink>
                             </template>
                         </Column>
-                        <Column field="" header="Cat. entreprise"></Column>
+                        <Column field="" header="Cat. entreprise">
+                            <template #body="{ data }">{{ getCatEntreprise(data.sous_traitant.cat_entreprise) }}</template>
+                        </Column>
                         <Column field="date_notification" header="Date de notif">
                             <template #body="{ data }">{{ formatDate(data.date_notification) }}</template>
                         </Column>

@@ -30,6 +30,7 @@ class StructureDto(BaseModel):
     nom: str | None
     vendeur: bool
     acheteur: bool
+    cat_entreprise: str | None
 
 
 class StructureEtendueDto(StructureDto):

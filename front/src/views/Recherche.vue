@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listStructures, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
-import { formatCurrency, formatDate, getNow, structureName } from '@/service/HelpersService';
+import { formatCurrency, formatDate, getCatEntreprise, getNow, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 import type { LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
@@ -285,7 +285,9 @@ const marcheUid = ref(null);
                 </Column>
                 <Column header="Fournisseur">
                     <template #body="{ data }">
-                        <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ structureName(titulaire) }}</div>
+                        <div v-for="titulaire in data.titulaires" :key="titulaire.uid">
+                            {{ structureName(titulaire) }}&nbsp;<span v-tooltip="getCatEntreprise(titulaire.cat_entreprise)" class="text-sm">[{{ titulaire.cat_entreprise }}]</span>
+                        </div>
                     </template>
                 </Column>
                 <Column field="date_notification" header="Date" sortable>
