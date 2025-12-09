@@ -266,8 +266,8 @@ const marcheUid = ref(null);
         </Panel>
 
         <hr />
-        <IndicateursCles v-if="marches.length" :query />
-        <DistributionTemporelleMarches v-if="marches.length" :query />
+        <IndicateursCles v-if="marches.length" :query :dateMin="filtres.date_min" :dateMax="filtres.date_max" />
+        <DistributionTemporelleMarches v-if="marches.length" :query :dateMin="filtres.date_min" :dateMax="filtres.date_max" />
 
         <section>
             <h2 class="title">Toutes les données de votre recherche</h2>
