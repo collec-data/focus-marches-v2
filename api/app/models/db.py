@@ -54,6 +54,7 @@ class Structure(Base):
     nom: Mapped[str | None] = mapped_column(default=None)
     vendeur: Mapped[bool] = mapped_column(default=False)
     acheteur: Mapped[bool] = mapped_column(default=False)
+    cat_entreprise: Mapped[str | None] = mapped_column(default=None)
     marches_acheteurs: Mapped[list["Marche"]] = relationship(back_populates="acheteur")
     marches_vendeur: Mapped[list["Marche"]] = relationship(
         back_populates="titulaires", secondary=marche_titulaire_table

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { getListeMarches } from '@/client';
-import { formatBoolean, formatCurrency, formatDate, structureName } from '@/service/HelpersService';
+import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { computed, onMounted, ref, watch } from 'vue';
 
@@ -55,7 +55,6 @@ const marcheUid = ref(null);
 
 const columns = ref([
     { field: 'cpv', header: 'CPV' },
-    { field: 'cat_entreprise', header: 'Cat entreprise' },
     { field: 'sous_trait', header: 'Sous-trait.' },
     { field: 'nb_sous_traitant', header: 'Nb sous-traitants' },
     { field: 'cons_env', header: 'Cons. Env.' },
@@ -122,10 +121,11 @@ const hiddenCol = computed(() => {
             </Column>
             <Column header="Fournisseur">
                 <template #body="{ data }">
-                    <div v-for="titulaire in data.titulaires" :key="titulaire.uid">{{ structureName(titulaire) }}</div>
+                    <div v-for="titulaire in data.titulaires" :key="titulaire.uid">
+                        {{ structureName(titulaire) }}&nbsp;<span v-tooltip="getCatEntreprise(titulaire.cat_entreprise)" class="text-sm">[{{ titulaire.cat_entreprise }}]</span>
+                    </div>
                 </template>
             </Column>
-            <Column field="" header="Cat entreprise" sortable :hidden="hiddenCol.cat_entreprise"></Column>
             <Column field="sous_traitance_declaree" sortable :hidden="hiddenCol.sous_trait">
                 <template #header>
                     <span v-tooltip.bottom="'Sous-traitance déclarée'" class="p-datatable-column-title" data-pc-section="columntitle">Sous-Trait.</span>

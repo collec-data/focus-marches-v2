@@ -88,9 +88,9 @@ export type CategoriesDto = {
 };
 
 /**
- * ConsiderationAnneeDto
+ * ConsiderationAnnuelleDto
  */
-export type ConsiderationAnneeDto = {
+export type ConsiderationAnnuelleDto = {
     /**
      * Nombre
      */
@@ -141,9 +141,9 @@ export const ConsiderationsEnvironnementales = {
 export type ConsiderationsEnvironnementales = typeof ConsiderationsEnvironnementales[keyof typeof ConsiderationsEnvironnementales];
 
 /**
- * ConsiderationsMensuelleDto
+ * ConsiderationsGlobalDto
  */
-export type ConsiderationsMensuelleDto = {
+export type ConsiderationsGlobalDto = {
     /**
      * Consideration
      */
@@ -151,7 +151,7 @@ export type ConsiderationsMensuelleDto = {
     /**
      * Data
      */
-    data: Array<ConsiderationAnneeDto>;
+    data: Array<ConsiderationAnnuelleDto>;
 };
 
 /**
@@ -850,6 +850,10 @@ export type StructureDto = {
      * Acheteur
      */
     acheteur: boolean;
+    /**
+     * Cat Entreprise
+     */
+    cat_entreprise: string | null;
 };
 
 /**
@@ -880,6 +884,10 @@ export type StructureEtendueDto = {
      * Acheteur
      */
     acheteur: boolean;
+    /**
+     * Cat Entreprise
+     */
+    cat_entreprise: string | null;
     /**
      * Denomination
      */
@@ -1549,7 +1557,7 @@ export type GetConsiderationsResponses = {
      *
      * Successful Response
      */
-    200: Array<ConsiderationsMensuelleDto>;
+    200: Array<ConsiderationsGlobalDto>;
 };
 
 export type GetConsiderationsResponse = GetConsiderationsResponses[keyof GetConsiderationsResponses];

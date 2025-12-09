@@ -48,6 +48,7 @@ def test_list_acheteurs(client):
             "nb_contrats": 1,
             "structure": {
                 "acheteur": True,
+                "cat_entreprise": None,
                 "identifiant": acheteurs[1].identifiant,
                 "nom": None,
                 "type_identifiant": acheteurs[1].type_identifiant,
@@ -60,6 +61,7 @@ def test_list_acheteurs(client):
             "nb_contrats": 2,
             "structure": {
                 "acheteur": True,
+                "cat_entreprise": None,
                 "identifiant": acheteurs[0].identifiant,
                 "nom": None,
                 "type_identifiant": acheteurs[0].type_identifiant,

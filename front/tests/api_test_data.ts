@@ -26,7 +26,7 @@ import {
 export const marche: MarcheAllegeDto = {
     uid: 1234,
     id: '00001234',
-    acheteur: { uid: 42, identifiant: '000000', type_identifiant: 'SIRET', nom: 'Acheteur', vendeur: false, acheteur: true },
+    acheteur: { uid: 42, identifiant: '000000', type_identifiant: 'SIRET', nom: 'Acheteur', vendeur: false, acheteur: true, cat_entreprise: 'GE' },
     objet: 'Lorem ipsum dolor',
     categorie: 'Services',
     cpv: '123456',
@@ -34,7 +34,7 @@ export const marche: MarcheAllegeDto = {
     actes_sous_traitance: [],
     date_notification: new Date('2025-01-01'),
     montant: '1000',
-    titulaires: [{ uid: 4321, identifiant: '00000011111', type_identifiant: 'SIRET', nom: 'Vendeur', vendeur: true, acheteur: false }],
+    titulaires: [{ uid: 4321, identifiant: '00000011111', type_identifiant: 'SIRET', nom: 'Vendeur', vendeur: true, acheteur: false, cat_entreprise: 'PME' }],
     considerations_environnementales: [],
     considerations_sociales: []
 };
@@ -52,7 +52,11 @@ export const indicateurs: IndicateursDto = {
     nb_considerations_sociales: 20
 };
 
-export const structure: StructureAggMarchesDto = { structure: { uid: 42, identifiant: '0000000', type_identifiant: 'SIRET', nom: 'Une structure', vendeur: false, acheteur: true }, montant: '10000000', nb_contrats: 500 };
+export const structure: StructureAggMarchesDto = {
+    structure: { uid: 42, identifiant: '0000000', type_identifiant: 'SIRET', nom: 'Une structure', vendeur: false, acheteur: true, cat_entreprise: 'ETI' },
+    montant: '10000000',
+    nb_contrats: 500
+};
 
 export const nature: MarcheNatureDto[] = [
     { mois: '2025-01', nature: 1, montant: '100', nombre: 2 },

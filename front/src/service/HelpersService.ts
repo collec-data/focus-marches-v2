@@ -73,3 +73,18 @@ export function getDurationInMonths(first: Date, last: Date): number {
 export const getOpsnRegion = () => {
     return settings.opsn + ' ' + settings.region;
 };
+
+export const getCatEntreprise = (cat: string | undefined | null) => {
+    switch (cat) {
+        case 'GE':
+            return 'GE - Grande entreprise';
+        case 'PME':
+            return 'PME - Petite et moyenne entreprise';
+        case 'ETI':
+            return 'ETI - Entreprise de taille intermédiaire';
+        case 'TPE':
+            return 'TPE - Très petite entreprise';
+        default:
+            return '-';
+    }
+};
