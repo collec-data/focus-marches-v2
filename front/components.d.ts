@@ -16,6 +16,7 @@ declare module 'vue' {
     AutoComplete: typeof import('primevue/autocomplete')['default']
     BoutonIframe: typeof import('./src/components/BoutonIframe.vue')['default']
     Button: typeof import('primevue/button')['default']
+    CarteAcheteursFournisseurs: typeof import('./src/components/dashboard/CarteAcheteursFournisseurs.vue')['default']
     CategoriePrincipaleDAchat: typeof import('./src/components/dashboard/CategoriePrincipaleDAchat.vue')['default']
     CCAG: typeof import('./src/components/dashboard/CCAG.vue')['default']
     Column: typeof import('primevue/column')['default']

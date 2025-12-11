@@ -16,6 +16,7 @@ import ijson
 import rich
 import rich.progress
 import typer
+from api_entreprise.exceptions import ApiEntrepriseClientError
 from pydantic_core import ValidationError
 from rich.logging import RichHandler
 from rich.progress import track
@@ -615,24 +616,33 @@ def structures() -> None:
 
         nb: int = 0
         for structure in track(structures):
-            raw = api.raw_donnees_etablissement(structure.identifiant)
-            if raw and raw.get("data") and raw["data"].get("unite_legale"):
-                details = raw["data"]
-                structure.nom = (
-                    details["unite_legale"]
-                    .get("personne_morale_attributs", {})
-                    .get("raison_sociale")
+            try:
+                raw = api.raw_donnees_etablissement(
+                    f"enrichi/{structure.identifiant}?coordinates_format=WSG84"
                 )
-                structure.cat_entreprise = details["unite_legale"].get(
-                    "categorie_entreprise"
+                if raw and raw.get("data") and raw["data"].get("unite_legale"):
+                    details = raw["data"]
+                    structure.nom = (
+                        details["unite_legale"]
+                        .get("personne_morale_attributs", {})
+                        .get("raison_sociale")
+                    )
+                    structure.cat_entreprise = details["unite_legale"].get(
+                        "categorie_entreprise"
+                    )
+                    structure.longitude = details["coordonnees"][0]
+                    structure.latitude = details["coordonnees"][1]
+                    session.add(structure)
+                    log.debug(structure.nom)
+                    nb += 1
+                    if nb > 500:
+                        log.info("💾 Commit de 500 objets")
+                        nb = 0
+                        session.commit()
+            except ApiEntrepriseClientError:
+                log.error(
+                    f"Erreur ApiEntreprise lors de l'import des données de {structure.identifiant}"
                 )
-                session.add(structure)
-                log.debug(structure.nom)
-                nb += 1
-                if nb > 500:
-                    log.info("💾 Commit de 500 objets")
-                    nb = 0
-                    session.commit()
 
         session.commit()
 

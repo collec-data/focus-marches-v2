@@ -59,6 +59,8 @@ class Structure(Base):
     marches_vendeur: Mapped[list["Marche"]] = relationship(
         back_populates="titulaires", secondary=marche_titulaire_table
     )
+    longitude: Mapped[float | None] = mapped_column(default=None)
+    latitude: Mapped[float | None] = mapped_column(default=None)
 
 
 class ModificationSousTraitance(Base):

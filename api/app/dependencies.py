@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session
 
 from app.config import Config, get_config
 from app.db import get_engine
-from app.helpers.opendatasoft import OpenDataSoft, get_opendatasoft
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -34,4 +33,3 @@ def get_api_entreprise(config: ConfigDep) -> ApiEntreprise:
 
 
 ApiEntrepriseDep = Annotated[ApiEntreprise, Depends(get_api_entreprise)]
-OpenDataSoftDep = Annotated[OpenDataSoft, Depends(get_opendatasoft)]

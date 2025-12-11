@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { StructureEtendueDto } from '@/client';
 import { getStructure } from '@/client';
+import CarteAcheteursFournisseurs from '@/components/dashboard/CarteAcheteursFournisseurs.vue';
 import ListeConcessions from '@/components/ListeConcessions.vue';
 import { getNow, structureName } from '@/service/HelpersService';
 import { computed, onMounted, ref, watch } from 'vue';
@@ -44,6 +45,7 @@ onMounted(() => {
         <IndicateursCles :acheteurUid :dateMin :dateMax />
         <CategoriePrincipaleDAchat :acheteurUid :dateMin :dateMax />
         <Top12 type="fournisseurs" :acheteurUid :dateMin :dateMax />
+        <CarteAcheteursFournisseurs :acheteur :dateMin :dateMax />
         <DistributionTemporelleMarches :acheteurUid :dateMin :dateMax />
         <ListeMarches :nomStructure="structureName(acheteur)" :acheteurUid :dateMin :dateMax />
         <NatureContrats :acheteurUid :dateMin :dateMax />

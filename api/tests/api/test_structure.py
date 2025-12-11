@@ -1,5 +1,4 @@
 from app.dependencies import get_api_entreprise
-from app.helpers.opendatasoft import get_opendatasoft
 from tests.factories import AcheteurFactory, MarcheFactory, VendeurFactory
 
 
@@ -54,6 +53,8 @@ def test_list_acheteurs(client):
                 "type_identifiant": acheteurs[1].type_identifiant,
                 "uid": acheteurs[1].uid,
                 "vendeur": False,
+                "latitude": None,
+                "longitude": None,
             },
         },
         {
@@ -67,6 +68,8 @@ def test_list_acheteurs(client):
                 "type_identifiant": acheteurs[0].type_identifiant,
                 "uid": acheteurs[0].uid,
                 "vendeur": False,
+                "latitude": None,
+                "longitude": None,
             },
         },
     ]
@@ -155,17 +158,12 @@ def test_get_structure(client, mocker):
     api_entreprise_mock.donnees_etablissement.return_value = data_mock
     client.app.dependency_overrides[get_api_entreprise] = lambda: api_entreprise_mock
 
-    ods_mock = mocker.Mock()
-    ods_mock.getCoordonnees.return_value = {"lon": 1, "lat": 2}
-    client.app.dependency_overrides[get_opendatasoft] = lambda: ods_mock
-
     acheteur = AcheteurFactory(identifiant="9999")
     response = client.get(f"/structure/{acheteur.uid}")
 
     assert response.status_code == 200
     assert response.json()["sigle"] == "ME"
     api_entreprise_mock.donnees_etablissement.assert_called_with(acheteur.identifiant)
-    ods_mock.getCoordonnees.assert_called_with(acheteur.identifiant)
 
 
 def test_get_structure_does_not_exists(client):

@@ -31,6 +31,8 @@ class StructureDto(BaseModel):
     vendeur: bool
     acheteur: bool
     cat_entreprise: str | None
+    longitude: float | None = None
+    latitude: float | None = None
 
 
 class StructureEtendueDto(StructureDto):
@@ -41,8 +43,6 @@ class StructureEtendueDto(StructureDto):
     naf: str | None = None
     effectifs: str | None = None
     date_effectifs: int | None = None
-    lon: float | None = None
-    lat: float | None = None
     date_creation: date | None = None
 
 
