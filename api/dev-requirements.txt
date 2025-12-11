@@ -40,7 +40,7 @@ factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
 faker==38.2.0
     # via factory-boy
-fastapi[standard]==0.124.0
+fastapi[standard]==0.124.2
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard]==0.0.16
     # via fastapi
@@ -121,7 +121,7 @@ pyrate-limiter==2.10.0
     # via
     #   api-entreprise
     #   focus-marche-v2 (pyproject.toml)
-pytest==9.0.1
+pytest==9.0.2
     # via
     #   focus-marche-v2 (pyproject.toml)
     #   pytest-cov
@@ -165,7 +165,7 @@ shellingham==1.5.4
     # via typer
 sniffio==1.3.1
     # via anyio
-sqlalchemy==2.0.44
+sqlalchemy==2.0.45
     # via focus-marche-v2 (pyproject.toml)
 starlette==0.50.0
     # via fastapi
