@@ -157,7 +157,7 @@ rich-toolkit==0.17.0
     #   fastapi-cloud-cli
 rignore==0.7.6
     # via fastapi-cloud-cli
-ruff==0.14.8
+ruff==0.14.9
     # via focus-marche-v2 (pyproject.toml)
 sentry-sdk==2.47.0
     # via fastapi-cloud-cli
@@ -201,7 +201,7 @@ typing-inspection==0.4.2
     #   pydantic-settings
 tzdata==2025.2
     # via faker
-urllib3==2.6.1
+urllib3==2.6.2
     # via
     #   docker
     #   requests
