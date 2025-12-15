@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException
 from sqlalchemy import desc, func, select
 from sqlalchemy.orm import aliased
 
-from app.dependencies import ApiEntrepriseDep, OpenDataSoftDep, SessionDep
+from app.dependencies import ApiEntrepriseDep, SessionDep
 from app.models.db import Marche, Structure
 from app.models.dto import StructureAggMarchesDto, StructureDto, StructureEtendueDto
 from app.models.enums import CategorieMarche
@@ -125,7 +125,6 @@ def get_structure(
     uid: int,
     session: SessionDep,
     api_entreprise: ApiEntrepriseDep,
-    opendatasoft: OpenDataSoftDep,
 ) -> StructureEtendueDto:
     stmt = select(Structure).where(Structure.uid == uid)
     structure = session.execute(stmt).scalar()
@@ -151,9 +150,6 @@ def get_structure(
             structure_dto.date_effectifs = int(
                 details.unite_legale.tranche_effectif_salarie.date_reference or "0"
             )
-            geoloc = opendatasoft.getCoordonnees(structure.identifiant)
-            structure_dto.lon = geoloc["lon"]
-            structure_dto.lat = geoloc["lat"]
             structure_dto.date_creation = (
                 date.fromtimestamp(float(details.date_creation))
                 if details.date_creation

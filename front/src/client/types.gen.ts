@@ -854,6 +854,14 @@ export type StructureDto = {
      * Cat Entreprise
      */
     cat_entreprise: string | null;
+    /**
+     * Longitude
+     */
+    longitude?: number | null;
+    /**
+     * Latitude
+     */
+    latitude?: number | null;
 };
 
 /**
@@ -889,6 +897,14 @@ export type StructureEtendueDto = {
      */
     cat_entreprise: string | null;
     /**
+     * Longitude
+     */
+    longitude?: number | null;
+    /**
+     * Latitude
+     */
+    latitude?: number | null;
+    /**
      * Denomination
      */
     denomination?: string | null;
@@ -916,14 +932,6 @@ export type StructureEtendueDto = {
      * Date Effectifs
      */
     date_effectifs?: number | null;
-    /**
-     * Lon
-     */
-    lon?: number | null;
-    /**
-     * Lat
-     */
-    lat?: number | null;
     /**
      * Date Creation
      */

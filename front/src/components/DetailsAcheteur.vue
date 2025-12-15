@@ -30,7 +30,7 @@ onMounted(() => {
     <section class="mb-10">
         <h2>Localisation et contexte</h2>
         <div class="grid grid-cols-12 gap-5">
-            <LeafletMap :lon="acheteur.lon" :lat="acheteur.lat" :label="structureName(acheteur) + '<br>' + acheteur.adresse" class="col-span-12 xl:col-span-6" />
+            <LeafletMap :lon="acheteur.longitude" :lat="acheteur.latitude" :label="structureName(acheteur) + '<br>' + acheteur.adresse" class="col-span-12 xl:col-span-6" />
             <table class="col-span-12 xl:col-span-6">
                 <tbody>
                     <tr>
