@@ -39,6 +39,7 @@ class FiltreMarchesEtendus(FiltreTemporelStructure):
 
 
 class FiltresListeMarches(FiltreMarchesEtendus):
+    accord_cadre_uid: int | None = Field(default=None)
     limit: int | None = Field(default=None, gt=0)
     offset: int | None = Field(default=None, ge=0)
 
