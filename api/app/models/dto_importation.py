@@ -1,3 +1,4 @@
+from datetime import date
 from pydantic import BaseModel, Field, field_validator
 
 from app.models.enums import (
@@ -19,6 +20,9 @@ from app.models.enums import (
 )
 
 
+date_min = date(2000, 1, 1)
+
+
 class AcheteurSchema(BaseModel):
     id: str = Field(pattern=r"^[0-9]{14}$")  # SIRET
 
@@ -37,37 +41,30 @@ SousTraitantSchema = TitulaireSchema
 
 
 class ModificationMarcheSchema(BaseModel):
-    id: int = Field(ge=0)
-    dateNotificationModification: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    datePublicationDonneesModification: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
+    id: int = Field(ge=1)
+    dateNotificationModification: date = Field(ge=date_min)
+    datePublicationDonneesModification: date = Field(ge=date_min)
     dureeMois: int | None = Field(ge=1, default=None)
-    montant: float | None = Field(ge=0, default=None)
+    montant: float | None = Field(ge=1, default=None)
     titulaires: list[dict[str, TitulaireSchema]] | None = None
 
 
 class ActeSousTraitanceSchema(BaseModel):
-    id: int = Field(ge=0)
+    id: int = Field(ge=1)
     sousTraitant: SousTraitantSchema
-    dureeMois: int | None = Field(ge=1)  # should not be null
-    dateNotification: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    datePublicationDonnees: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    montant: float = Field(ge=0)
+    dureeMois: int = Field(ge=1)
+    dateNotification: date = Field(ge=date_min)
+    datePublicationDonnees: date = Field(ge=date_min)
+    montant: float = Field(ge=1)
     variationPrix: VariationPrix
-
-    @field_validator("dureeMois", mode="before")
-    @classmethod
-    def transform(cls, raw: str | int) -> int | None:
-        if raw == "NC":
-            return None
-        return int(raw)
 
 
 class ModificationActeSousTraitanceSchema(BaseModel):
-    id: int = Field(ge=0)
+    id: int = Field(ge=1)
     dureeMois: int | None = Field(ge=1, default=None)
-    dateNotificationModificationSousTraitance: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    montant: float | None = Field(ge=0, default=None)
-    datePublicationDonnees: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
+    dateNotificationModificationSousTraitance: date = Field(ge=date_min)
+    montant: float | None = Field(ge=1, default=None)
+    datePublicationDonnees: date = Field(ge=date_min)
 
     @field_validator("dureeMois", mode="before")
     @classmethod
@@ -77,7 +74,7 @@ class ModificationActeSousTraitanceSchema(BaseModel):
         return int(raw)
 
 
-class MarcheSchema(BaseModel):
+class MarcheCommunSchema(BaseModel):
     id: str = Field(min_length=1, max_length=16)
     acheteur: AcheteurSchema
     nature: NatureMarche
@@ -86,24 +83,14 @@ class MarcheSchema(BaseModel):
     techniques: dict[str, list[TechniqueAchat]]
     modalitesExecution: dict[str, list[ModaliteExecution]]
     idAccordCadre: str | None = None
-    marcheInnovant: bool | None  # should not be null
-    ccag: CCAG | None = None
-    offresRecues: int | None = Field(ge=1)  # should not be null
-    attributionAvance: bool | None  # should not be null
-    tauxAvance: float = Field(ge=0, le=1)
-    typeGroupementOperateurs: TypeGroupementOperateur | None
-    sousTraitanceDeclaree: bool | None  # should not be null
+    tauxAvance: float | None = Field(ge=0, le=1, default=None)
     actesSousTraitance: list[dict[str, ActeSousTraitanceSchema]] = []
-    procedure: ProcedureMarche | None = None
     lieuExecution: LieuExecutionSchema
     dureeMois: int = Field(ge=1)
-    dateNotification: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    datePublicationDonnees: str | None = Field(
-        pattern=r"\d{4}-\d{2}-\d{2}"
-    )  # should not be null
-    montant: float = Field(ge=0)
+    dateNotification: date = Field(ge=date_min)
+    datePublicationDonnees: date = Field(ge=date_min)
+    montant: float = Field(ge=1)
     typesPrix: dict[str, list[TypePrix]]
-    formePrix: FormePrix | None = None
     origineUE: float | None = Field(ge=0, le=1, default=None)
     origineFrance: float | None = Field(ge=0, le=1, default=None)
     titulaires: list[dict[str, TitulaireSchema]]
@@ -113,6 +100,28 @@ class MarcheSchema(BaseModel):
         dict[str, ModificationActeSousTraitanceSchema]
     ] = []
     modifications: list[dict[str, ModificationMarcheSchema]] = []
+
+
+class MarcheSchema(MarcheCommunSchema):
+    marcheInnovant: bool
+    ccag: CCAG
+    offresRecues: int = Field(ge=1)
+    attributionAvance: bool
+    typeGroupementOperateurs: TypeGroupementOperateur
+    sousTraitanceDeclaree: bool
+    procedure: ProcedureMarche
+    formePrix: FormePrix
+
+
+class MarcheAncienSchema(MarcheCommunSchema):
+    marcheInnovant: bool | None
+    ccag: CCAG | None = None
+    offresRecues: int | None = Field(ge=1, default=None)
+    attributionAvance: bool | None
+    typeGroupementOperateurs: TypeGroupementOperateur | None
+    sousTraitanceDeclaree: bool | None
+    procedure: ProcedureMarche | None = None
+    formePrix: FormePrix | None = None
 
     @field_validator("offresRecues", mode="before")
     @classmethod
@@ -126,8 +135,8 @@ ConcessionnaireSchema = TitulaireSchema
 
 class ModificationConcessionSchema(BaseModel):
     id: int = Field(ge=0)
-    dateSignatureModification: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    datePublicationDonneesModification: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
+    dateSignatureModification: date = Field(ge=date_min)
+    datePublicationDonneesModification: date = Field(ge=date_min)
     dureeMois: int | None = Field(ge=1, default=None)
     valeurGlobale: float | None = Field(ge=0, default=None)
 
@@ -138,7 +147,7 @@ class TarifSchema(BaseModel):
 
 
 class DonneeExecutionSchema(BaseModel):
-    datePublicationDonneesExecution: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
+    datePublicationDonneesExecution: date = Field(ge=date_min)
     depensesInvestissement: float = Field(ge=0)
     tarifs: list[dict[str, TarifSchema]]
 
@@ -148,12 +157,12 @@ class ConcessionSchema(BaseModel):
     autoriteConcedante: AutoriteConcedanteSchema
     nature: NatureConcession
     objet: str = Field(max_length=1_000)
-    procedure: ProcedureConcession  # requis par la norme
+    procedure: ProcedureConcession
     dureeMois: int = Field(ge=1)
-    dateSignature: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    datePublicationDonnees: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    dateDebutExecution: str = Field(pattern=r"\d{4}-\d{2}-\d{2}")
-    valeurGlobale: float = Field(ge=0)
+    dateSignature: date = Field(ge=date_min)
+    datePublicationDonnees: date = Field(ge=date_min)
+    dateDebutExecution: date = Field(ge=date_min)
+    valeurGlobale: float = Field(ge=1)
     montantSubventionPublique: float = Field(ge=0)
     donneesExecution: list[dict[str, DonneeExecutionSchema]] = []
     concessionnaires: list[dict[str, ConcessionnaireSchema]]
