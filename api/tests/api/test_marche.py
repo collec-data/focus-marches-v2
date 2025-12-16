@@ -15,7 +15,8 @@ from tests.factories import (
 
 
 def test_list_marche(client):
-    MarcheFactory.create_batch(30)
+    ac = MarcheFactory()
+    MarcheFactory.create_batch(29)
     marche_recherche = MarcheFactory(
         objet="Achat d'ordinateurs",
         cpv="456",
@@ -30,6 +31,7 @@ def test_list_marche(client):
         considerations_sociales=[CritereSocialFactory()],
         considerations_environnementales=[CritereEnvFactory()],
         techniques_achat=[TechniqueAchatFactory()],
+        uid_accord_cadre=ac.uid,
     )
 
     response = client.get("/marche")
@@ -53,6 +55,7 @@ def test_list_marche(client):
             "montant_min": 42,
             "duree_max": 6,
             "duree_min": 6,
+            "accord_cadre_uid": ac.uid,
             "offset": 0,
             "limit": 100,
         },

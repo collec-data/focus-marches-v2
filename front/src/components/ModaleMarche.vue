@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue';
 
-import { getMarche, type MarcheDto } from '@/client';
+import { getListeMarches, getMarche, type MarcheAllegeDto, ModaliteExecution, TechniqueAchat, type MarcheDto } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 
@@ -9,12 +9,20 @@ const marcheUid = defineModel<number | null>();
 
 const marcheDetaille = ref<Partial<MarcheDto>>();
 const showModale = computed(() => marcheDetaille.value != null);
+const marchesSubsequents = ref<Partial<MarcheAllegeDto[]>>([]);
 
 watchEffect(() => {
     if (marcheUid.value) {
         getMarche({ path: { uid: marcheUid.value } }).then((response) => {
             if (response.data) {
                 marcheDetaille.value = response.data;
+                if (response.data.techniques_achat?.includes(TechniqueAchat.ACCORD_CADRE) && response.data.modalites_execution?.includes(ModaliteExecution.MARCHÉS_SUBSÉQUENTS)) {
+                    getListeMarches({ query: { accord_cadre_uid: response.data.uid } }).then((response) => {
+                        if (response.data) {
+                            marchesSubsequents.value = response.data;
+                        }
+                    });
+                }
             }
         });
     }
@@ -23,6 +31,7 @@ watchEffect(() => {
 function hideMarcheModal() {
     marcheUid.value = null;
     marcheDetaille.value = undefined;
+    marchesSubsequents.value = [];
 }
 </script>
 
@@ -108,9 +117,31 @@ function hideMarcheModal() {
                     <div class="key">Objet</div>
                     <p>{{ marcheDetaille?.objet }}</p>
                 </div>
-                <div v-if="marcheDetaille?.accord_cadre">
+                <div v-if="marcheDetaille?.techniques_achat?.includes(TechniqueAchat.ACCORD_CADRE) && marcheDetaille.modalites_execution?.includes(ModaliteExecution.MARCHÉS_SUBSÉQUENTS)">
                     <hr />
                     <div class="key">Accord-cadre</div>
+                    <DataTable :value="marchesSubsequents">
+                        <Column field="objet" header="Objet"></Column>
+                        <Column field="cpv" header="CPV"></Column>
+                        <Column field="acheteur.nom" header="Acheteur">
+                            <template #body="{ data }">{{ structureName(data.acheteur) }}</template>
+                        </Column>
+                        <Column field="sous_traitant.nom" header="Fournisseur">
+                            <template #body="{ data }">
+                                <div v-for="titulaire in data.titulaires" :key="titulaire.uid">
+                                    {{ structureName(titulaire) }}&nbsp;<span v-tooltip="getCatEntreprise(titulaire.cat_entreprise)" class="text-sm">[{{ titulaire.cat_entreprise }}]</span>
+                                </div>
+                            </template>
+                        </Column>
+                        <Column field="date_notification" header="Date de notif">
+                            <template #body="{ data }">{{ formatDate(data.date_notification) }}</template>
+                        </Column>
+                        <Column field="montant" header="Montant">
+                            <template #body="{ data }">
+                                {{ formatCurrency(parseFloat(data.montant)) }}
+                            </template>
+                        </Column>
+                    </DataTable>
                 </div>
                 <div v-if="marcheDetaille?.sous_traitance_declaree">
                     <hr />
@@ -127,6 +158,9 @@ function hideMarcheModal() {
                         <Column field="" header="Cat. entreprise">
                             <template #body="{ data }">{{ getCatEntreprise(data.sous_traitant.cat_entreprise) }}</template>
                         </Column>
+                        <Column field="acheteur.nom" header="Acheteur" sortable>
+                            <template #body="{ data }">{{ structureName(data.acheteur) }}</template>
+                        </Column>
                         <Column field="date_notification" header="Date de notif">
                             <template #body="{ data }">{{ formatDate(data.date_notification) }}</template>
                         </Column>
@@ -136,8 +170,8 @@ function hideMarcheModal() {
                             </template>
                         </Column>
                         <Column header="Part montant total">
-                            <template #body="{ data }"> {{ marcheDetaille?.montant ? ((data.montant * 100) / parseFloat(marcheDetaille.montant)).toFixed(2) : '' }}% </template></Column
-                        >
+                            <template #body="{ data }"> {{ marcheDetaille?.montant ? ((data.montant * 100) / parseFloat(marcheDetaille.montant)).toFixed(2) : '' }}% </template>
+                        </Column>
                     </DataTable>
                 </div>
             </div>

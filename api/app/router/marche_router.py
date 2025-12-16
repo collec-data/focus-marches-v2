@@ -140,6 +140,9 @@ def get_liste_marches(
         filtres,
     ).order_by(Marche.date_notification)
 
+    if filtres.accord_cadre_uid is not None:
+        stmt = stmt.where(Marche.uid_accord_cadre == filtres.accord_cadre_uid)
+
     if filtres.offset is not None:
         stmt = stmt.offset(filtres.offset)
 
