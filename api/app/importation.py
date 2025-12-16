@@ -7,7 +7,6 @@ import json
 import logging
 import time
 from collections.abc import Callable
-from datetime import date, datetime
 from decimal import Decimal
 from functools import cache
 from typing import Any
@@ -53,6 +52,7 @@ from app.models.dto_importation import (
     ConcessionnaireSchema,
     ConcessionSchema,
     DonneeExecutionSchema,
+    MarcheAncienSchema,
     MarcheSchema,
     ModificationActeSousTraitanceSchema,
     ModificationConcessionSchema,
@@ -98,9 +98,6 @@ class ImportateurDecp:
             self.load_lieux()
             # pas de chargement des accords cadres car
             # on vide cette table avant chaque ré-import
-
-    def cast_jour(self, data: str) -> date:
-        return datetime.fromisoformat(data)
 
     def load_structures(self) -> None:
         structures = self._session.execute(select(Structure)).scalars()
@@ -174,8 +171,14 @@ class ImportateurDecp:
 
     def marche_transformer(
         self,
-        data: MarcheSchema,
+        objet: dict[str, Any],
     ) -> None:
+        data: MarcheSchema | MarcheAncienSchema
+        if objet.get("dateNotification") and int(objet["dateNotification"][:4]) >= 2024:
+            data = MarcheSchema.model_validate(objet)
+        else:
+            data = MarcheAncienSchema.model_validate(objet)
+
         marche = Marche(
             id=data.id,
             acheteur=self.set_acheteur(
@@ -220,12 +223,8 @@ class ImportateurDecp:
             ),
             duree_mois=data.dureeMois,
             duree_mois_initiale=data.dureeMois,
-            date_notification=self.cast_jour(data.dateNotification),
-            date_publication=(
-                self.cast_jour(data.datePublicationDonnees)
-                if data.datePublicationDonnees
-                else None
-            ),
+            date_notification=data.dateNotification,
+            date_publication=(data.datePublicationDonnees),
             montant=data.montant,
             montant_initial=data.montant,
             type_prix=[
@@ -286,8 +285,8 @@ class ImportateurDecp:
                 ),
                 duree_mois=dacte.dureeMois,
                 duree_mois_initiale=dacte.dureeMois,
-                date_notification=self.cast_jour(dacte.dateNotification),
-                date_publication=self.cast_jour(dacte.datePublicationDonnees),
+                date_notification=dacte.dateNotification,
+                date_publication=dacte.datePublicationDonnees,
                 montant=dacte.montant,
                 montant_initial=dacte.montant,
                 variation_prix=dacte.variationPrix.db_value,
@@ -316,10 +315,8 @@ class ImportateurDecp:
                 )
             modif_sous_traitance = ModificationSousTraitance(
                 duree_mois=dmodif.dureeMois,
-                date_notif=self.cast_jour(
-                    dmodif.dateNotificationModificationSousTraitance
-                ),
-                date_publication=self.cast_jour(dmodif.datePublicationDonnees),
+                date_notif=dmodif.dateNotificationModificationSousTraitance,
+                date_publication=dmodif.datePublicationDonnees,
                 montant=dmodif.montant,
             )
             index_actes_sous_traitance[dmodif.id].modifications.append(
@@ -351,10 +348,8 @@ class ImportateurDecp:
             modif_marche = ModificationMarche(
                 id=modif.id,
                 duree_mois=modif.dureeMois,
-                date_notification=self.cast_jour(modif.dateNotificationModification),
-                date_publication=self.cast_jour(
-                    modif.datePublicationDonneesModification
-                ),
+                date_notification=modif.dateNotificationModification,
+                date_publication=modif.datePublicationDonneesModification,
                 montant=modif.montant,
                 titulaires=titulaires,
             )
@@ -371,8 +366,10 @@ class ImportateurDecp:
 
     def concession_transformer(
         self,
-        data: ConcessionSchema,
+        objet: dict[str, Any],
     ) -> None:
+        data = ConcessionSchema.model_validate(objet)
+
         concession = ContratConcession(
             id=data.id,
             autorite_concedante=self.set_acheteur(
@@ -385,9 +382,9 @@ class ImportateurDecp:
             procedure=data.procedure.db_value,
             duree_mois=data.dureeMois,
             duree_mois_initiale=data.dureeMois,
-            date_signature=self.cast_jour(data.dateSignature),
-            date_publication=self.cast_jour(data.datePublicationDonnees),
-            date_debut_execution=self.cast_jour(data.dateDebutExecution),
+            date_signature=data.dateSignature,
+            date_publication=data.datePublicationDonnees,
+            date_debut_execution=data.dateDebutExecution,
             valeur_globale=data.valeurGlobale,
             valeur_globale_initiale=data.valeurGlobale,
             montant_subvention_publique=data.montantSubventionPublique,
@@ -408,7 +405,7 @@ class ImportateurDecp:
         for tmp in data.donneesExecution:
             dde: DonneeExecutionSchema = tmp["donneesAnnuelles"]
             de = DonneeExecution(
-                date_publication=self.cast_jour(dde.datePublicationDonneesExecution),
+                date_publication=dde.datePublicationDonneesExecution,
                 depenses_investissement=dde.depensesInvestissement,
             )
             for tmp_dt in dde.tarifs:
@@ -431,12 +428,8 @@ class ImportateurDecp:
             data_modification: ModificationConcessionSchema = tmp_dm["modification"]
             modif_concession = ModificationConcession(
                 id=data_modification.id,
-                date_signature=self.cast_jour(
-                    data_modification.dateSignatureModification
-                ),
-                date_publication=self.cast_jour(
-                    data_modification.datePublicationDonneesModification
-                ),
+                date_signature=data_modification.dateSignatureModification,
+                date_publication=data_modification.datePublicationDonneesModification,
                 duree_mois=data_modification.dureeMois,
                 valeur_globale=data_modification.valeurGlobale,
             )
@@ -473,8 +466,7 @@ class ImportateurDecp:
         self,
         file: str,
         item_path: str,
-        schema: type[MarcheSchema] | type[ConcessionSchema],
-        transformer: Callable[[ConcessionSchema], Any] | Callable[[MarcheSchema], Any],
+        transformer: Callable[[dict[str, Any]], Any],
         batch_commit_size: int = 50_000,
     ) -> None:
         # (ré)Initialisation des valeurs de suivi
@@ -488,9 +480,7 @@ class ImportateurDecp:
             liste = ijson.items(f, f"{item_path}.item")  # flux objet par objet
             for objet in liste:
                 try:
-                    transformer(
-                        schema.model_validate(objet)  # type: ignore
-                    )
+                    transformer(objet)
                     self._valid_objects += 1
                 except (ValidationError, CustomValidationError) as e:
                     self._session.add(self.build_entite_erreur(e, objet))
@@ -520,7 +510,6 @@ class ImportateurDecp:
         self._importer(
             file=file,
             item_path="marches.marche",
-            schema=MarcheSchema,
             transformer=self.marche_transformer,
             batch_commit_size=batch_commit_size,
         )
@@ -533,7 +522,6 @@ class ImportateurDecp:
         self._importer(
             file=file,
             item_path="marches.contrat-concession",
-            schema=ConcessionSchema,
             transformer=self.concession_transformer,
             batch_commit_size=batch_commit_size,
         )

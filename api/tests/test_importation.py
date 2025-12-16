@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 from decimal import Decimal
 
 from sqlalchemy import select
@@ -7,11 +7,6 @@ from app.importation import ImportateurDecp
 from app.models.db import ContratConcession, DecpMalForme, Marche
 from app.models.enums import TypeCodeLieu
 from tests.factories import LieuFactory
-
-
-def test_cast_jour():
-    i = ImportateurDecp(None, preload_db=False)
-    assert i.cast_jour("2020-05-15") == datetime(2020, 5, 15)
 
 
 def test_get_or_create_lieu(db):

@@ -1,367 +1,236 @@
 {
-    "marches": {
-        "marche": [
-            {
-                "id": "2021T00000",
-                "acheteur": {
-                    "id": "13579135791357"
-                },
-                "nature": "Marché",
-                "objet": "Lorem ipsum dolor",
-                "codeCPV": "12341234",
-                "techniques": {
-                    "technique": [
-                        "Accord-cadre"
-                    ]
-                },
-                "modalitesExecution": {
-                    "modaliteExecution": [
-                        "Sans objet"
-                    ]
-                },
-                "marcheInnovant": true,
-                "ccag": "Travaux",
-                "offresRecues": 5,
-                "attributionAvance": true,
-                "tauxAvance": 0.5,
-                "typeGroupementOperateurs": "Pas de groupement",
-                "sousTraitanceDeclaree": true,
-                "procedure": "Dialogue compétitif",
-                "lieuExecution": {
-                    "code": "35",
-                    "typeCode": "Code département"
-                },
-                "dureeMois": 99,
-                "dateNotification": "2042-12-01",
-                "datePublicationDonnees": "2042-12-02",
-                "montant": 6.66E7,
-                "typesPrix": {
-                    "typePrix": [
-                        "Définitif révisable"
-                    ]
-                },
-                "formePrix": "Forfaitaire",
-                "titulaires": [
-                    {
-                        "titulaire": {
-                            "typeIdentifiant": "SIRET",
-                            "id": "12345678991230"
-                        }
-                    }
-                ],
-                "considerationsSociales": {
-                    "considerationSociale": [
-                        "Pas de considération sociale"
-                    ]
-                },
-                "considerationsEnvironnementales": {
-                    "considerationEnvironnementale": [
-                        "Critère environnemental"
-                    ]
-                },
-                "modifications": [
-                    {
-                        "modification": {
-                            "id": 2,
-                            "dateNotificationModification": "2021-01-15",
-                            "datePublicationDonneesModification": "2025-01-16",
-                            "montant": 11111.0,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "12345678991230"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "modification": {
-                            "id": 1,
-                            "dateNotificationModification": "2025-01-01",
-                            "datePublicationDonneesModification": "2025-01-02",
-                            "montant": 3027.97,
-                            "dureeMois": 11,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "12345678991230"
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ],
-                "actesSousTraitance": [
-                    {
-                        "acteSousTraitance": {
-                            "id": 1010,
-                            "sousTraitant": {
-                                "typeIdentifiant": "SIRET",
-                                "id": "12365478962145"
-                            },
-                            "dateNotification": "2025-06-01",
-                            "datePublicationDonnees": "2025-06-03",
-                            "montant": 5.66E7,
-                            "dureeMois": 8,
-                            "variationPrix": "Actualisable"
-                        }
-                    }
-                ],
-                "modificationsActesSousTraitance": [
-                    {
-                        "modificationActeSousTraitance": {
-                            "id": 1010,
-                            "dureeMois": 10,
-                            "dateNotificationModificationSousTraitance": "2025-07-01",
-                            "montant": 5.86E7,
-                            "datePublicationDonnees": "2025-07-03"
-                        }
-                    },
-                    {
-                        "modificationActeSousTraitance": {
-                            "id": 1010,
-                            "dureeMois": 20,
-                            "dateNotificationModificationSousTraitance": "2025-08-01",
-                            "montant": 5.9E7,
-                            "datePublicationDonnees": "2025-08-03"
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "2021S00001",
-                "acheteur": {
-                    "id": "25561337400065"
-                },
-                "nature": "Marché",
-                "objet": "Exploitation de l'Ecosite de la Lande du Matz à Sarzeau (56) : prestations de broyage et compostage de déchets végétaux, de transfert d'OMr et de gestion de la post-exploitation d'une ISDND - Relance suite à déclaration sans suite pour motif d'intérêt gén",
-                "codeCPV": "90500000",
-                "techniques": {
-                    "technique": [
-                        "Sans objet"
-                    ]
-                },
-                "modalitesExecution": {
-                    "modaliteExecution": [
-                        "Sans objet"
-                    ]
-                },
-                "marcheInnovant": false,
-                "ccag": "Fournitures courantes et services",
-                "offresRecues": 4,
-                "attributionAvance": false,
-                "tauxAvance": 0.0,
-                "typeGroupementOperateurs": "Pas de groupement",
-                "sousTraitanceDeclaree": false,
-                "procedure": "Appel d'offres ouvert",
-                "lieuExecution": {
-                    "code": "56",
-                    "typeCode": "Code département"
-                },
-                "dureeMois": 49,
-                "dateNotification": "2021-05-10",
-                "datePublicationDonnees": "2024-06-22",
-                "montant": 2044926.96,
-                "typesPrix": {
-                    "typePrix": [
-                        "Définitif révisable"
-                    ]
-                },
-                "formePrix": "Unitaire",
-                "titulaires": [
-                    {
-                        "titulaire": {
-                            "typeIdentifiant": "SIRET",
-                            "id": "34426370200641"
-                        }
-                    }
-                ],
-                "considerationsSociales": {
-                    "considerationSociale": [
-                        "Pas de considération sociale"
-                    ]
-                },
-                "considerationsEnvironnementales": {
-                    "considerationEnvironnementale": [
-                        "Pas de considération environnementale"
-                    ]
-                },
-                "modifications": [
-                    {
-                        "modification": {
-                            "id": 1,
-                            "dateNotificationModification": "2021-12-17",
-                            "datePublicationDonneesModification": "2025-06-03",
-                            "montant": 88386.0,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "34426370200641"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "modification": {
-                            "id": 3,
-                            "dateNotificationModification": "2021-09-16",
-                            "datePublicationDonneesModification": "2025-06-03",
-                            "montant": 13860.07,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "34426370200641"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "modification": {
-                            "id": 2,
-                            "dateNotificationModification": "2025-02-18",
-                            "datePublicationDonneesModification": "2025-06-03",
-                            "montant": 511231.0074,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "34426370200641"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "modification": {
-                            "id": 4,
-                            "dateNotificationModification": "2023-03-16",
-                            "datePublicationDonneesModification": "2025-06-03",
-                            "montant": 0.0,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "34426370200641"
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
-            },
-            {
-                "id": "2021S00005",
-                "acheteur": {
-                    "id": "44504262500050"
-                },
-                "nature": "Marché",
-                "objet": "ACCORD-CADRE DE MAITRISE D’OEUVRE POUR L’AMENAGEMENT DE LA ZAC DE HEDE - MARCHE SUBSEQUENT N°2",
-                "codeCPV": "71000000",
-                "techniques": {
-                    "technique": [
-                        "Sans objet"
-                    ]
-                },
-                "modalitesExecution": {
-                    "modaliteExecution": [
-                        "Sans objet"
-                    ]
-                },
-                "marcheInnovant": false,
-                "ccag": "Prestations intellectuelles",
-                "offresRecues": 1,
-                "attributionAvance": false,
-                "tauxAvance": 0.0,
-                "typeGroupementOperateurs": "Pas de groupement",
-                "sousTraitanceDeclaree": false,
-                "lieuExecution": {
-                    "code": "35",
-                    "typeCode": "Code département"
-                },
-                "dureeMois": 36,
-                "dateNotification": "2021-11-05",
-                "datePublicationDonnees": "2025-06-03",
-                "montant": 3987.07,
-                "typesPrix": {
-                    "typePrix": []
-                },
-                "formePrix": "Forfaitaire",
-                "titulaires": [
-                    {
-                        "titulaire": {
-                            "typeIdentifiant": "SIRET",
-                            "id": "47791023600058"
-                        }
-                    }
-                ],
-                "considerationsSociales": {
-                    "considerationSociale": [
-                        "Pas de considération sociale"
-                    ]
-                },
-                "considerationsEnvironnementales": {
-                    "considerationEnvironnementale": [
-                        "Pas de considération environnementale"
-                    ]
-                },
-                "modifications": [
-                    {
-                        "modification": {
-                            "id": 2,
-                            "dateNotificationModification": "2021-12-08",
-                            "datePublicationDonneesModification": "2025-06-19",
-                            "montant": 0.0,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "47791023600058"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "modification": {
-                            "id": 3,
-                            "dateNotificationModification": "2025-07-04",
-                            "datePublicationDonneesModification": "2025-07-05",
-                            "montant": 0.0,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "47791023600058"
-                                    }
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "modification": {
-                            "id": 1,
-                            "dateNotificationModification": "2021-12-08",
-                            "datePublicationDonneesModification": "2025-06-19",
-                            "montant": 243.67,
-                            "titulaires": [
-                                {
-                                    "titulaire": {
-                                        "typeIdentifiant": "SIRET",
-                                        "id": "47791023600058"
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                ]
+  "marches": {
+    "marche": [
+      {
+        "id": "2021T00000",
+        "acheteur": {
+          "id": "13579135791357"
+        },
+        "nature": "Marché",
+        "objet": "Lorem ipsum dolor",
+        "codeCPV": "12341234",
+        "techniques": {
+          "technique": ["Accord-cadre"]
+        },
+        "modalitesExecution": {
+          "modaliteExecution": ["Sans objet"]
+        },
+        "marcheInnovant": true,
+        "ccag": "Travaux",
+        "offresRecues": 5,
+        "attributionAvance": true,
+        "tauxAvance": 0.5,
+        "typeGroupementOperateurs": "Pas de groupement",
+        "sousTraitanceDeclaree": true,
+        "procedure": "Dialogue compétitif",
+        "lieuExecution": {
+          "code": "35",
+          "typeCode": "Code département"
+        },
+        "dureeMois": 99,
+        "dateNotification": "2042-12-01",
+        "datePublicationDonnees": "2042-12-02",
+        "montant": 6.66e7,
+        "typesPrix": {
+          "typePrix": ["Définitif révisable"]
+        },
+        "formePrix": "Forfaitaire",
+        "titulaires": [
+          {
+            "titulaire": {
+              "typeIdentifiant": "SIRET",
+              "id": "12345678991230"
             }
+          }
+        ],
+        "considerationsSociales": {
+          "considerationSociale": ["Pas de considération sociale"]
+        },
+        "considerationsEnvironnementales": {
+          "considerationEnvironnementale": ["Critère environnemental"]
+        },
+        "modifications": [
+          {
+            "modification": {
+              "id": 2,
+              "dateNotificationModification": "2021-01-15",
+              "datePublicationDonneesModification": "2025-01-16",
+              "montant": 11111.0,
+              "titulaires": [
+                {
+                  "titulaire": {
+                    "typeIdentifiant": "SIRET",
+                    "id": "12345678991230"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "modification": {
+              "id": 1,
+              "dateNotificationModification": "2025-01-01",
+              "datePublicationDonneesModification": "2025-01-02",
+              "montant": 3027.97,
+              "dureeMois": 11,
+              "titulaires": [
+                {
+                  "titulaire": {
+                    "typeIdentifiant": "SIRET",
+                    "id": "12345678991230"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "actesSousTraitance": [
+          {
+            "acteSousTraitance": {
+              "id": 1010,
+              "sousTraitant": {
+                "typeIdentifiant": "SIRET",
+                "id": "12365478962145"
+              },
+              "dateNotification": "2025-06-01",
+              "datePublicationDonnees": "2025-06-03",
+              "montant": 5.66e7,
+              "dureeMois": 8,
+              "variationPrix": "Actualisable"
+            }
+          }
+        ],
+        "modificationsActesSousTraitance": [
+          {
+            "modificationActeSousTraitance": {
+              "id": 1010,
+              "dureeMois": 10,
+              "dateNotificationModificationSousTraitance": "2025-07-01",
+              "montant": 5.86e7,
+              "datePublicationDonnees": "2025-07-03"
+            }
+          },
+          {
+            "modificationActeSousTraitance": {
+              "id": 1010,
+              "dureeMois": 20,
+              "dateNotificationModificationSousTraitance": "2025-08-01",
+              "montant": 5.9e7,
+              "datePublicationDonnees": "2025-08-03"
+            }
+          }
         ]
-    }
+      },
+      {
+        "id": "2024T00001",
+        "acheteur": { "id": "12345678978945" },
+        "nature": "Marché",
+        "objet": "Lorem ipsum dolor",
+        "codeCPV": "90500000",
+        "procedure": "Procédure adaptée",
+        "techniques": { "technique": ["Sans objet"] },
+        "modalitesExecution": { "modaliteExecution": ["Sans objet"] },
+        "marcheInnovant": false,
+        "ccag": "Travaux",
+        "offresRecues": 2,
+        "attributionAvance": false,
+        "tauxAvance": 0.0,
+        "typeGroupementOperateurs": "Pas de groupement",
+        "sousTraitanceDeclaree": false,
+        "lieuExecution": { "code": "29", "typeCode": "Code département" },
+        "dureeMois": 10,
+        "dateNotification": "2024-01-08",
+        "datePublicationDonnees": "2024-01-09",
+        "montant": 1000.0,
+        "typesPrix": { "typePrix": [] },
+        "formePrix": "Forfaitaire",
+        "titulaires": [
+          {
+            "titulaire": { "typeIdentifiant": "SIRET", "id": "45678945678978" }
+          }
+        ],
+        "considerationsSociales": {
+          "considerationSociale": ["Pas de considération sociale"]
+        },
+        "considerationsEnvironnementales": {
+          "considerationEnvironnementale": [
+            "Pas de considération environnementale"
+          ]
+        },
+        "modifications": [
+          {
+            "modification": {
+              "id": 1,
+              "dateNotificationModification": "2025-01-10",
+              "datePublicationDonneesModification": "2025-06-10",
+              "montant": 16292.69,
+              "titulaires": [
+                {
+                  "titulaire": {
+                    "typeIdentifiant": "SIRET",
+                    "id": "45678945678978"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "2024T00003",
+        "acheteur": { "id": "12345678978945" },
+        "nature": "Marché",
+        "objet": "Lorem ipsum dolor",
+        "codeCPV": "71000000",
+        "techniques": { "technique": ["Sans objet"] },
+        "modalitesExecution": { "modaliteExecution": ["Sans objet"] },
+        "marcheInnovant": false,
+        "ccag": "Pas de CCAG",
+        "offresRecues": 1,
+        "attributionAvance": false,
+        "tauxAvance": 0.0,
+        "typeGroupementOperateurs": "Pas de groupement",
+        "sousTraitanceDeclaree": false,
+        "procedure": "Procédure adaptée",
+        "lieuExecution": { "code": "44", "typeCode": "Code département" },
+        "dureeMois": 9,
+        "dateNotification": "2024-01-01",
+        "datePublicationDonnees": "2024-01-02",
+        "montant": 19254.66,
+        "typesPrix": { "typePrix": ["Définitif actualisable"] },
+        "formePrix": "Forfaitaire",
+        "titulaires": [
+          {
+            "titulaire": { "typeIdentifiant": "SIRET", "id": "45678945678978" }
+          }
+        ],
+        "considerationsSociales": {
+          "considerationSociale": ["Pas de considération sociale"]
+        },
+        "considerationsEnvironnementales": {
+          "considerationEnvironnementale": [
+            "Pas de considération environnementale"
+          ]
+        },
+        "modifications": [
+          {
+            "modification": {
+              "id": 1,
+              "dateNotificationModification": "2025-08-01",
+              "datePublicationDonneesModification": "2025-08-02",
+              "montant": 1000.0,
+              "titulaires": [
+                {
+                  "titulaire": {
+                    "typeIdentifiant": "SIRET",
+                    "id": "45678945678978"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  }
 }
