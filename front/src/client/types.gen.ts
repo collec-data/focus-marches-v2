@@ -1189,6 +1189,10 @@ export type GetListeMarchesData = {
          */
         duree_min?: number | null;
         /**
+         * Accord Cadre Uid
+         */
+        accord_cadre_uid?: number | null;
+        /**
          * Limit
          */
         limit?: number | null;
