@@ -131,17 +131,19 @@ def get_liste_marches(
 ) -> list[Marche]:
     acheteur = aliased(Structure)
     titulaires = aliased(Structure)
+    accord_cadre = aliased(Marche)
 
     stmt = application_filtres_etendus(
         select(Marche)
-        .join(acheteur, Marche.acheteur, isouter=True)
-        .join(titulaires, Marche.titulaires, isouter=True)
-        .join(Marche.actes_sous_traitance, isouter=True),
+        .outerjoin(acheteur, Marche.acheteur)
+        .outerjoin(titulaires, Marche.titulaires)
+        .outerjoin(Marche.actes_sous_traitance)
+        .outerjoin(accord_cadre, Marche.accord_cadre),
         filtres,
     ).order_by(Marche.date_notification)
 
     if filtres.accord_cadre_uid is not None:
-        stmt = stmt.where(Marche.uid_accord_cadre == filtres.accord_cadre_uid)
+        stmt = stmt.where(accord_cadre.uid == filtres.accord_cadre_uid)
 
     if filtres.offset is not None:
         stmt = stmt.offset(filtres.offset)

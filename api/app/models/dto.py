@@ -4,6 +4,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, Json, field_validator
 
+from app.models.db import Marche
 from app.models.enums import (
     CCAG,
     CategorieMarche,
@@ -119,6 +120,12 @@ class MarcheAllegeDto(BaseModel):
     considerations_environnementales_as_str: list[ConsiderationsEnvironnementales] = (
         Field(serialization_alias="considerations_environnementales")
     )
+    accord_cadre: Decimal | None = Field(serialization_alias="montant_max_accord_cadre")
+
+    @field_validator("accord_cadre", mode="before")
+    @classmethod
+    def transform(cls, ac: Marche | None) -> Decimal | None:
+        return ac.montant if ac else None
 
 
 class MarcheDto(BaseModel):
