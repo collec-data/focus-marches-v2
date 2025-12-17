@@ -36,7 +36,8 @@ export const marche: MarcheAllegeDto = {
     montant: '1000',
     titulaires: [{ uid: 4321, identifiant: '00000011111', type_identifiant: 'SIRET', nom: 'Vendeur', vendeur: true, acheteur: false, cat_entreprise: 'PME' }],
     considerations_environnementales: [],
-    considerations_sociales: []
+    considerations_sociales: [],
+    montant_max_accord_cadre: 999999
 };
 
 export const indicateurs: IndicateursDto = {

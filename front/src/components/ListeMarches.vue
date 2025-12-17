@@ -167,11 +167,13 @@ const hiddenCol = computed(() => {
                 <template #body="{ data }">
                     {{ formatCurrency(parseFloat(data.montant)) }}
                 </template>
-                >
             </Column>
             <Column sortable :hidden="hiddenCol.ac">
                 <template #header>
                     <span v-tooltip.bottom="'Montant max si accord cadre'" class="p-datatable-column-title" data-pc-section="columntitle">AC</span>
+                </template>
+                <template #body="{ data }">
+                    {{ data.montant_max_accord_cadre ? formatCurrency(parseFloat(data.montant_max_accord_cadre)) : '' }}
                 </template>
             </Column>
         </DataTable>
