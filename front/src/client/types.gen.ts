@@ -459,6 +459,10 @@ export type MarcheAllegeDto = {
      * Considerations Environnementales
      */
     considerations_environnementales: Array<ConsiderationsEnvironnementales>;
+    /**
+     * Montant Max Accord Cadre
+     */
+    montant_max_accord_cadre: string | null;
 };
 
 /**
@@ -1045,8 +1049,7 @@ export type ValidationError = {
 export const VariationPrix = {
     FERME: 'Ferme',
     ACTUALISABLE: 'Actualisable',
-    RÉVISABLE: 'Révisable',
-    NC: 'NC'
+    RÉVISABLE: 'Révisable'
 } as const;
 
 /**

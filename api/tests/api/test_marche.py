@@ -31,7 +31,7 @@ def test_list_marche(client):
         considerations_sociales=[CritereSocialFactory()],
         considerations_environnementales=[CritereEnvFactory()],
         techniques_achat=[TechniqueAchatFactory()],
-        uid_accord_cadre=ac.uid,
+        accord_cadre=ac,
     )
 
     response = client.get("/marche")
@@ -63,6 +63,7 @@ def test_list_marche(client):
     assert response.status_code == 200
     assert len(response.json()) == 1
     assert response.json()[0]["uid"] == marche_recherche.uid
+    assert response.json()[0]["montant_max_accord_cadre"] == str(ac.montant)
 
 
 def test_procedure_et_filtres_succes(client):

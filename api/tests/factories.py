@@ -93,6 +93,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     titulaires: list[VendeurFactory] = []
     considerations_sociales: list[enums.ConsiderationsSociales] = []
     considerations_environnementales: list[enums.ConsiderationsEnvironnementales] = []
+    accord_cadre: MarcheFactory | None = None
 
 
 class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
