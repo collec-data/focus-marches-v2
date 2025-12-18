@@ -2,7 +2,7 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
-from pydantic import BaseModel, Field, Json, field_validator
+from pydantic import BaseModel, ConfigDict, Field, Json, field_validator
 
 from app.models.db import Marche
 from app.models.enums import (
@@ -36,6 +36,14 @@ class StructureDto(BaseModel):
     latitude: float | None = None
 
 
+class StructureInfogreffeDto(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    annee: int
+    ca: Decimal | None
+    resultat: Decimal | None
+    effectif: int | None
+
+
 class StructureEtendueDto(StructureDto):
     denomination: str | None = None
     sigle: str | None = None
@@ -45,6 +53,7 @@ class StructureEtendueDto(StructureDto):
     effectifs: str | None = None
     date_effectifs: int | None = None
     date_creation: date | None = None
+    infogreffe: list[StructureInfogreffeDto]
 
 
 class ActeSousTraitanceDto(BaseModel):

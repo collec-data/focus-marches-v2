@@ -1,0 +1,5 @@
+denomination;siren;nic;forme_juridique;code_ape;libelle_ape;adresse;code_postal;ville;num_dept;departement;region;code_greffe;greffe;date_immatriculation;date_radiation;statut;geolocalisation;date_de_publication;millesime_1;date_de_cloture_exercice_1;duree_1;ca_1;resultat_1;effectif_1;millesime_2;date_de_cloture_exercice_2;duree_2;ca_2;resultat_2;effectif_2;millesime_3;date_de_cloture_exercice_3;duree_3;ca_3;resultat_3;effectif_3;tranche_ca_millesime_1;tranche_ca_millesime_2;tranche_ca_millesime_3;coordonnees;nom_dpt;code_dpt;nom_reg;code_reg
+SCT1;123456789;11111;;;;;;;;;;;;;;;;;2020;2020-12-31;12;10000;2000;3;2019;2019-12-31;12;;;;2018;2018-12-31;12;;;;;;;;;;;
+SCT2;123456789;22222;;;;;;;;;;;;;;;;;2020;2020-12-31;12;20000;1500;;2019;2019-12-31;12;;;;2018;2018-12-31;12;;;;;;;;;;;
+SCT3;123456789;33333;;;;;;;;;;;;;;;;;2020;2020-12-31;12;;;;2019;2019-12-31;12;15000;1000;2;2018;2018-12-31;12;100000;-10000;;;;;;;;;
+SCT4;123456789;44444;;;;;;;;;;;;;;;;;2020;2020-12-31;12;;;;2019;2019-12-31;12;20000;1500;2;2018;2018-12-31;12;600000;1000;;;;;;;;;

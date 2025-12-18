@@ -22,6 +22,18 @@ class VendeurFactory(StructureFactory):
     vendeur = True
 
 
+class StructureInfogreffeFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = db.StructureInfogreffe
+
+    uid = factory.declarations.Sequence(lambda n: n)
+    structure = factory.declarations.SubFactory(VendeurFactory)
+    annee = factory.faker.Faker("year")
+    ca = factory.faker.Faker("pyfloat")
+    resultat = factory.faker.Faker("pyfloat")
+    effectif = factory.faker.Faker("pyint")
+
+
 class LieuFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.Lieu

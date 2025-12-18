@@ -1,16 +1,19 @@
+import logging
 from datetime import date
 from decimal import Decimal
 
+from api_entreprise.exceptions import ApiEntrepriseClientError
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import desc, func, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import ApiEntrepriseDep, SessionDep
-from app.models.db import Marche, Structure
+from app.models.db import Marche, Structure, StructureInfogreffe
 from app.models.dto import StructureAggMarchesDto, StructureDto, StructureEtendueDto
 from app.models.enums import CategorieMarche
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 @router.get("/", response_model=list[StructureDto])
@@ -126,34 +129,44 @@ def get_structure(
     session: SessionDep,
     api_entreprise: ApiEntrepriseDep,
 ) -> StructureEtendueDto:
-    stmt = select(Structure).where(Structure.uid == uid)
+    stmt = (
+        select(Structure)
+        .outerjoin(Structure.infogreffe)
+        .where(Structure.uid == uid)
+        .order_by(StructureInfogreffe.annee.asc())
+    )
     structure = session.execute(stmt).scalar()
 
     if not structure:
         raise HTTPException(status_code=404, detail="Structure inconnue")
 
-    structure_dto = StructureEtendueDto.model_validate(structure.__dict__)
+    structure_dto = StructureEtendueDto.model_validate(structure, from_attributes=True)
 
     if structure.type_identifiant == "SIRET":
-        details = api_entreprise.donnees_etablissement(structure.identifiant)
-        if details:
-            structure_dto.denomination = (
-                details.unite_legale.personne_morale_attributs.raison_sociale
-            )
-            structure_dto.sigle = details.unite_legale.personne_morale_attributs.sigle
-            structure_dto.adresse = details.adresse_postale_legere
-            structure_dto.cat_juridique = details.unite_legale.forme_juridique.code
-            structure_dto.naf = details.unite_legale.activite_principale.code
-            structure_dto.effectifs = (
-                details.unite_legale.tranche_effectif_salarie.intitule
-            )
-            structure_dto.date_effectifs = int(
-                details.unite_legale.tranche_effectif_salarie.date_reference or "0"
-            )
-            structure_dto.date_creation = (
-                date.fromtimestamp(float(details.date_creation))
-                if details.date_creation
-                else None
-            )
+        try:
+            details = api_entreprise.donnees_etablissement(structure.identifiant)
+            if details:
+                structure_dto.denomination = (
+                    details.unite_legale.personne_morale_attributs.raison_sociale
+                )
+                structure_dto.sigle = (
+                    details.unite_legale.personne_morale_attributs.sigle
+                )
+                structure_dto.adresse = details.adresse_postale_legere
+                structure_dto.cat_juridique = details.unite_legale.forme_juridique.code
+                structure_dto.naf = details.unite_legale.activite_principale.code
+                structure_dto.effectifs = (
+                    details.unite_legale.tranche_effectif_salarie.intitule
+                )
+                structure_dto.date_effectifs = int(
+                    details.unite_legale.tranche_effectif_salarie.date_reference or "0"
+                )
+                structure_dto.date_creation = (
+                    date.fromtimestamp(float(details.date_creation))
+                    if details.date_creation
+                    else None
+                )
+        except ApiEntrepriseClientError as e:
+            logger.error(f"API entreprise - {str(e)}")
 
     return structure_dto
