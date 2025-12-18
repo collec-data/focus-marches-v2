@@ -38,7 +38,7 @@ email-validator==2.3.0
     #   pydantic
 factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
-faker==38.2.0
+faker==38.3.0
     # via factory-boy
 fastapi[standard]==0.124.4
     # via focus-marche-v2 (pyproject.toml)
