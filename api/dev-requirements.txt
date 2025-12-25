@@ -173,7 +173,7 @@ testcontainers[postgres]==4.13.3
     # via focus-marche-v2 (pyproject.toml)
 typeguard==4.4.4
     # via marshmallow-dataclass
-typer==0.20.0
+typer==0.21.0
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
