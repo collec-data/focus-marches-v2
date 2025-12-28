@@ -34,7 +34,7 @@ email-validator==2.3.0
     #   pydantic
 fastapi[standard]==0.125.0
     # via focus-marche-v2 (pyproject.toml)
-fastapi-cli[standard]==0.0.16
+fastapi-cli[standard]==0.0.20
     # via fastapi
 fastapi-cloud-cli==0.7.0
     # via fastapi-cli
@@ -66,7 +66,7 @@ markdown-it-py==4.0.0
     # via rich
 markupsafe==3.0.3
     # via jinja2
-marshmallow==3.26.1
+marshmallow==3.26.2
     # via
     #   api-entreprise
     #   focus-marche-v2 (pyproject.toml)
@@ -101,7 +101,7 @@ python-dotenv==1.2.1
     # via
     #   pydantic-settings
     #   uvicorn
-python-multipart==0.0.20
+python-multipart==0.0.21
     # via fastapi
 pyyaml==6.0.3
     # via uvicorn
@@ -115,7 +115,7 @@ rich==14.2.0
     # via
     #   rich-toolkit
     #   typer
-rich-toolkit==0.17.0
+rich-toolkit==0.17.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
