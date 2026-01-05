@@ -2,20 +2,26 @@
 
 import type { GetConcessionResponse, GetListeConcessionsResponse, GetListeMarchesResponse, GetMarcheResponse, GetStructureResponse } from './types.gen';
 
-const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
-    data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => acteSousTraitanceDtoSchemaResponseTransformer(item));
-    data.date_notification = new Date(data.date_notification);
-    return data;
-};
-
 const acteSousTraitanceDtoSchemaResponseTransformer = (data: any) => {
     data.date_notification = new Date(data.date_notification);
     data.date_publication = new Date(data.date_publication);
     return data;
 };
 
+const marcheAllegeDtoSchemaResponseTransformer = (data: any) => {
+    data.actes_sous_traitance = data.actes_sous_traitance.map((item: any) => acteSousTraitanceDtoSchemaResponseTransformer(item));
+    data.date_notification = new Date(data.date_notification);
+    return data;
+};
+
 export const getListeMarchesResponseTransformer = async (data: any): Promise<GetListeMarchesResponse> => {
     data = data.map((item: any) => marcheAllegeDtoSchemaResponseTransformer(item));
+    return data;
+};
+
+const modificationMarcheDtoSchemaResponseTransformer = (data: any) => {
+    data.date_notification = new Date(data.date_notification);
+    data.date_publication = new Date(data.date_publication);
     return data;
 };
 
@@ -32,14 +38,13 @@ const marcheDtoSchemaResponseTransformer = (data: any) => {
     return data;
 };
 
-const modificationMarcheDtoSchemaResponseTransformer = (data: any) => {
-    data.date_notification = new Date(data.date_notification);
-    data.date_publication = new Date(data.date_publication);
+export const getMarcheResponseTransformer = async (data: any): Promise<GetMarcheResponse> => {
+    data = marcheDtoSchemaResponseTransformer(data);
     return data;
 };
 
-export const getMarcheResponseTransformer = async (data: any): Promise<GetMarcheResponse> => {
-    data = marcheDtoSchemaResponseTransformer(data);
+const donneeExecutionDtoSchemaResponseTransformer = (data: any) => {
+    data.date_publication = new Date(data.date_publication);
     return data;
 };
 
@@ -50,11 +55,6 @@ const contratConcessionDtoSchemaResponseTransformer = (data: any) => {
     if (data.donnees_execution) {
         data.donnees_execution = data.donnees_execution.map((item: any) => donneeExecutionDtoSchemaResponseTransformer(item));
     }
-    return data;
-};
-
-const donneeExecutionDtoSchemaResponseTransformer = (data: any) => {
-    data.date_publication = new Date(data.date_publication);
     return data;
 };
 
