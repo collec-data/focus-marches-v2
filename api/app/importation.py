@@ -645,7 +645,20 @@ def load_infogreffe(
         existant = 0
         structures_infos = []
 
-        for row in csv.reader(csvfile, delimiter=";"):
+        reader = csv.reader(csvfile, delimiter=";")
+
+        headers = next(reader)
+        if (
+            headers[19] != "millesime_1"
+            or headers[25] != "millesime_2"
+            or headers[31] != "millesime_3"
+        ):
+            log.error(
+                "Le fichier CSV n'a pas la structure attendue. Importation annulée"
+            )
+            return
+
+        for row in reader:
             total += 1
             siret = row[1] + row[2]
 
