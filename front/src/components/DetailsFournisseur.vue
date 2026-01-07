@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type StructureEtendueDto } from '@/client';
-import { formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
+import { formatCurrency, formatDate, formatNumber, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { ref, watchEffect } from 'vue';
 
 import type { PropType } from 'vue';
@@ -90,48 +90,18 @@ watchEffect(() => {
                             </table>
                         </TabPanel>
                         <TabPanel value="infogreffe">
-                            <table class="w-full">
-                                <thead>
-                                    <tr>
-                                        <th>Année</th>
-                                        <th>2020</th>
-                                        <th>2021</th>
-                                        <th>2022</th>
-                                        <th>2023</th>
-                                        <th>2024</th>
-                                        <th>2025</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th>Chiffre d'affaires</th>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Résultat</th>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <th>Effectif</th>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <DataTable :value="vendeur.infogreffe">
+                                <Column field="annee" header="Année"></Column>
+                                <Column field="ca" header="Chiffre d'affaires">
+                                    <template #body="{ data }">{{ formatCurrency(parseFloat(data.ca)) }}</template>
+                                </Column>
+                                <Column field="resultat" header="Résultat">
+                                    <template #body="{ data }">{{ formatCurrency(parseFloat(data.resultat)) }}</template>
+                                </Column>
+                                <Column field="effectif" header="Effectif">
+                                    <template #body="{ data }">{{ formatNumber(data.effectif) }}</template>
+                                </Column>
+                            </DataTable>
                             <p class="text-sm">
                                 L'accès aux données de certaines entreprises est confidentiel et n'est pas communiqué par Infogreffe. Voir la fiche complète sur
                                 <Button
@@ -139,7 +109,7 @@ watchEffect(() => {
                                     label="infogreffe"
                                     aria-label="profil infogreffe"
                                     as="a"
-                                    href="https://www.infogreffe.fr/infogreffe/ficheIdentite.do?siren="
+                                    :href="'https://www.infogreffe.fr/infogreffe/ficheIdentite.do?siren=' + vendeur.identifiant?.substring(0, 9)"
                                     target="_blank"
                                     rel="noopener"
                                     severity="info"

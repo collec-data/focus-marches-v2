@@ -940,6 +940,32 @@ export type StructureEtendueDto = {
      * Date Creation
      */
     date_creation?: Date | null;
+    /**
+     * Infogreffe
+     */
+    infogreffe: Array<StructureInfogreffeDto>;
+};
+
+/**
+ * StructureInfogreffeDto
+ */
+export type StructureInfogreffeDto = {
+    /**
+     * Annee
+     */
+    annee: number;
+    /**
+     * Ca
+     */
+    ca: string | null;
+    /**
+     * Resultat
+     */
+    resultat: string | null;
+    /**
+     * Effectif
+     */
+    effectif: number | null;
 };
 
 /**

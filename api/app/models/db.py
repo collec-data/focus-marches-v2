@@ -61,6 +61,19 @@ class Structure(Base):
     )
     longitude: Mapped[float | None] = mapped_column(default=None)
     latitude: Mapped[float | None] = mapped_column(default=None)
+    infogreffe: Mapped[list["StructureInfogreffe"]] = relationship(
+        back_populates="structure"
+    )
+
+
+class StructureInfogreffe(Base):
+    uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    uid_structure: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
+    structure: Mapped[Structure] = relationship(back_populates="infogreffe")
+    annee: Mapped[int]
+    ca: Mapped[Decimal | None]
+    resultat: Mapped[Decimal | None]
+    effectif: Mapped[int | None]
 
 
 class ModificationSousTraitance(Base):

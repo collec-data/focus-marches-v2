@@ -1,3 +1,4 @@
+import csv
 import os
 import sys
 
@@ -6,7 +7,7 @@ sys.path.append(os.getcwd())
 import json
 import logging
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Generator
 from decimal import Decimal
 from functools import cache
 from typing import Any
@@ -41,6 +42,7 @@ from app.models.db import (
     ModificationMarche,
     ModificationSousTraitance,
     Structure,
+    StructureInfogreffe,
     Tarif,
     TechniqueAchatMarche,
     concession_structure_table,
@@ -633,6 +635,102 @@ def structures() -> None:
                 )
 
         session.commit()
+
+
+def load_infogreffe(
+    file_path: str, structures: dict[str, int], batch_size: int = 500
+) -> Generator[list[StructureInfogreffe], Any, None]:
+    with rich.progress.open(file_path, "r") as csvfile:
+        total = 0
+        existant = 0
+        structures_infos = []
+
+        reader = csv.reader(csvfile, delimiter=";")
+
+        headers = next(reader)
+        if (
+            headers[19] != "millesime_1"
+            or headers[25] != "millesime_2"
+            or headers[31] != "millesime_3"
+        ):
+            log.error(
+                "Le fichier CSV n'a pas la structure attendue. Importation annulée"
+            )
+            return
+
+        for row in reader:
+            total += 1
+            siret = row[1] + row[2]
+
+            if siret in structures:
+                existant += 1
+
+                if row[22] or row[23] or row[24]:
+                    structures_infos.append(
+                        StructureInfogreffe(
+                            uid_structure=structures[siret],
+                            annee=int(row[19]),
+                            ca=Decimal(row[22]) if row[22] else None,
+                            resultat=Decimal(row[23]) if row[23] else None,
+                            effectif=int(row[24]) if row[24] else None,
+                        )
+                    )
+
+                if row[28] or row[29] or row[30]:
+                    structures_infos.append(
+                        StructureInfogreffe(
+                            uid_structure=structures[siret],
+                            annee=int(row[25]),
+                            ca=Decimal(row[28]) if row[28] else None,
+                            resultat=Decimal(row[29]) if row[29] else None,
+                            effectif=int(row[30]) if row[30] else None,
+                        )
+                    )
+
+                if row[34] or row[35] or row[36]:
+                    structures_infos.append(
+                        StructureInfogreffe(
+                            uid_structure=structures[siret],
+                            annee=int(row[31]),
+                            ca=Decimal(row[34]) if row[34] else None,
+                            resultat=Decimal(row[35]) if row[35] else None,
+                            effectif=int(row[36]) if row[36] else None,
+                        )
+                    )
+
+                if not existant % batch_size:
+                    log.info(f"💾 Commit de {batch_size} structure")
+                    yield structures_infos
+                    structures_infos = []
+
+    log.info(f"💾 Commit de {len(structures_infos)} structures")
+    log.info(f"🧮 Résultat : {existant} entrées utiles {total} au total")
+    yield structures_infos
+
+
+@app.command()
+def infogreffe(file_path: str) -> None:
+    with get_engine().connect() as connexion:
+        connexion.execute(
+            text(
+                f"TRUNCATE TABLE {str(StructureInfogreffe.__tablename__)} RESTART IDENTITY"
+            )
+        )
+        connexion.commit()
+    with Session(get_engine()) as session:
+        structures = {
+            structure[0]: structure[1]
+            for structure in session.execute(
+                select(Structure.identifiant, Structure.uid)
+            ).all()
+        }
+        if len(structures):
+            log.info(f"{len(structures)} structures détectées")
+            for batch in load_infogreffe(file_path, structures):
+                session.add_all(batch)
+                session.commit()
+        else:
+            log.error("Aucune structure détectée. Il faut d'abord importer des DECPs.")
 
 
 if __name__ == "__main__":

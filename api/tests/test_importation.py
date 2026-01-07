@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from sqlalchemy import select
 
-from app.importation import ImportateurDecp
+from app.importation import ImportateurDecp, load_infogreffe
 from app.models.db import ContratConcession, DecpMalForme, Marche
 from app.models.enums import TypeCodeLieu
 from tests.factories import LieuFactory
@@ -155,3 +155,31 @@ def test_importation_erreur(db):
     decp_mal_formes = list(db.execute(select(DecpMalForme)).scalars())
     assert len(decp_mal_formes) == 1
     assert len(decp_mal_formes[0].erreurs) > 0
+
+
+def test_load_infogreffe_succes():
+    structures = {
+        "12345678911111": 1111,
+        "12345678922222": 2222,
+        "12345678944444": 4444,
+    }
+
+    iterator = load_infogreffe("tests/files/infogreffe.csv", structures, 2)
+
+    batch1 = next(iterator)
+    assert len(batch1) == 2
+    assert batch1[0].annee == 2020
+    assert batch1[0].ca == 10000
+    assert batch1[0].resultat == 2000
+    assert batch1[0].uid_structure == 1111
+    assert batch1[0].effectif == 3
+    assert batch1[1].annee == 2020
+    assert batch1[1].ca == 20000
+    assert batch1[1].resultat == 1500
+    assert batch1[1].effectif is None
+    assert batch1[1].uid_structure == 2222
+
+    batch2 = next(iterator)
+    assert len(batch2) == 2
+    assert batch2[0].uid_structure == 4444
+    assert batch2[1].uid_structure == 4444

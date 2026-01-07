@@ -22,42 +22,62 @@ Utiliser Visual Studio Code et installer les extensions recommandées (extension
 
 ## Importer des données
 
-### Megalis
+### Import des DECPS depuis data.gouv
 
-La commande suivante importe dans le répertoire ./data les [données DECP de Mégalis de 2020 à 2025](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-megalis-bretagne-schema-2024/) depuis la plateforme data.gouv.fr.
-
-```bash
-mkdir data && \
-for url in https://www.data.gouv.fr/api/1/datasets/r/ea387298-b344-45dc-9a19-043f13df1f69 https://www.data.gouv.fr/api/1/datasets/r/3a9073a7-4062-49ff-a4b8-d4721705a462 https://www.data.gouv.fr/api/1/datasets/r/40679992-a5e7-4761-b5ba-9775e77fd133 https://www.data.gouv.fr/api/1/datasets/r/2fbb7b58-4a6b-47ca-b528-4b9dea053477 https://www.data.gouv.fr/api/1/datasets/r/da0339ac-5709-4a6b-87fa-bb9251bb371e https://www.data.gouv.fr/api/1/datasets/r/0e79013c-6764-4af4-9f2e-c757d876a666; \
-do curl -L ${url} -o "data/${url: -36}.json"; done
-```
+Les fichiers sont à télécharger et à déplacer dans le dossier `api/data`. Si besoin le créer avec la commande `mkdir data`. Il suffit ensuite d'exécuter, depuis `api/`, la commande correspondant au profil acheteur.
 
 L'import au sein de Focus Marchés est ensuite réalisé en appelant le script python :
 
 ```bash
-python app/importation.py
+python app/importation.py decps
 ```
 
-### [ARNIA](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-arnia-1/)
+#### [Megalis](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-megalis-bretagne-schema-2024/)
+
+```bash
+for url in https://www.data.gouv.fr/api/1/datasets/r/ea387298-b344-45dc-9a19-043f13df1f69 https://www.data.gouv.fr/api/1/datasets/r/3a9073a7-4062-49ff-a4b8-d4721705a462 https://www.data.gouv.fr/api/1/datasets/r/40679992-a5e7-4761-b5ba-9775e77fd133 https://www.data.gouv.fr/api/1/datasets/r/2fbb7b58-4a6b-47ca-b528-4b9dea053477 https://www.data.gouv.fr/api/1/datasets/r/da0339ac-5709-4a6b-87fa-bb9251bb371e https://www.data.gouv.fr/api/1/datasets/r/0e79013c-6764-4af4-9f2e-c757d876a666; \
+do curl -L ${url} -o "data/${url: -36}.json"; done
+```
+
+#### [ARNIA](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-arnia-1/)
 
 ```bash
 for url in https://www.data.gouv.fr/api/1/datasets/r/f2ca0c44-ee8e-42ba-86a2-e83572c1b0d0 https://www.data.gouv.fr/api/1/datasets/r/b6e959fd-9e9d-4dfb-ba54-65b5ddf49881 https://www.data.gouv.fr/api/1/datasets/r/0647e31d-29c5-4adc-8480-23d207eec2bc https://www.data.gouv.fr/api/1/datasets/r/c9071fda-c613-4aa0-ae6a-e73dfca7ec69 https://www.data.gouv.fr/api/1/datasets/r/a136ac8f-7d5b-4bf2-b3de-7919e644aeae https://www.data.gouv.fr/api/1/datasets/r/79746469-5ba6-4955-9bb7-e5e2fdbb2472; \
 do curl -L ${url} -o "data/${url: -36}.json"; done
 ```
 
-### [RECIA](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-gip-recia/)
+#### [RECIA](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-gip-recia/)
 ```bash
 for url in https://www.data.gouv.fr/api/1/datasets/r/c7b06c4e-9d31-460a-8bb3-be9caa16ff8a https://www.data.gouv.fr/api/1/datasets/r/dd24af89-7422-4a60-9a68-ceb0345ea474 https://www.data.gouv.fr/api/1/datasets/r/0a3078ea-e2eb-41be-8fd6-025054e9ee2d https://www.data.gouv.fr/api/1/datasets/r/f6af4031-e00a-4729-8525-3e6a733540d2 https://www.data.gouv.fr/api/1/datasets/r/5f0f1d6c-634f-4cb6-b502-dfe833763936 https://www.data.gouv.fr/api/1/datasets/r/79688911-246a-49e6-9401-dffe5ac2a63c; \
 do curl -L ${url} -o "data/${url: -36}.json"; done
 ```
 
 
-### [Fichiers consolidés nationnal annuel](https://www.data.gouv.fr/datasets/donnees-essentielles-de-la-commande-publique-fichiers-consolides/)
+#### [Fichiers consolidés nationnal annuel](https://www.data.gouv.fr/datasets/donnees-essentielles-de-la-commande-publique-fichiers-consolides/)
 ```bash
 for url in https://www.data.gouv.fr/api/1/datasets/r/d00a6a5a-beef-442e-8aee-5867f47a87d0 https://www.data.gouv.fr/api/1/datasets/r/4fafdaff-b697-4494-9523-e9f56916fea8 https://www.data.gouv.fr/api/1/datasets/r/59ba0edb-cf94-4bf1-a546-61f561553917 https://www.data.gouv.fr/api/1/datasets/r/16962018-5c31-4296-9454-5998585496d2  ; \
 do curl -L ${url} -o "data/${url: -36}.json"; done
 ```
 
+### Importer les données d'infogreffe (données financières)
+
+La première étape est de récupérer le dernier jeu de données au format JSON depuis le site datainfogreffe. La liste des jeux de données est disponible à cette adresse [https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/](https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/). Une inscription (gratuite) est nécessaire pour pouvoir télécharger le fichier.
+
+```bash
+python app/importation.py infogreffe {le_chemin_du_fichier}
+```
+
+**Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.
+
+### Synchroniser les noms et localisations de structures
+
+Les noms et les localisations de structures sont récupérées depuis l'instance Numih France de l'API-Entreprise, avec la commande suivante :
+
+```bash
+python app/importation.py structures
+```
+
+**Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.
 
 ## Tâches courantes
 

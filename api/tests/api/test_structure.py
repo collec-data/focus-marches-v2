@@ -1,5 +1,12 @@
+from api_entreprise.exceptions import ApiEntrepriseClientError
+
 from app.dependencies import get_api_entreprise
-from tests.factories import AcheteurFactory, MarcheFactory, VendeurFactory
+from tests.factories import (
+    AcheteurFactory,
+    MarcheFactory,
+    StructureInfogreffeFactory,
+    VendeurFactory,
+)
 
 
 def test_list_structures(client):
@@ -159,11 +166,35 @@ def test_get_structure(client, mocker):
     client.app.dependency_overrides[get_api_entreprise] = lambda: api_entreprise_mock
 
     acheteur = AcheteurFactory(identifiant="9999")
+    ig = StructureInfogreffeFactory(structure=acheteur)
+
     response = client.get(f"/structure/{acheteur.uid}")
 
     assert response.status_code == 200
     assert response.json()["sigle"] == "ME"
+    assert response.json()["infogreffe"] == [
+        {
+            "annee": int(ig.annee),
+            "ca": str(ig.ca),
+            "resultat": str(ig.resultat),
+            "effectif": ig.effectif,
+        }
+    ]
+
     api_entreprise_mock.donnees_etablissement.assert_called_with(acheteur.identifiant)
+
+
+def test_get_structure_api_entreprise_en_erreur(client, mocker):
+    api_entreprise_mock = mocker.Mock()
+    api_entreprise_mock.donnees_etablissement.side_effect = ApiEntrepriseClientError()
+    client.app.dependency_overrides[get_api_entreprise] = lambda: api_entreprise_mock
+
+    acheteur = AcheteurFactory(identifiant="9999")
+
+    response = client.get(f"/structure/{acheteur.uid}")
+
+    assert response.status_code == 200
+    assert response.json()["adresse"] is None
 
 
 def test_get_structure_does_not_exists(client):
