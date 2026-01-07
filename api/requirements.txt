@@ -6,7 +6,7 @@
 #
 annotated-types==0.7.0
     # via pydantic
-anyio==4.12.0
+anyio==4.12.1
     # via
     #   httpx
     #   starlette
@@ -133,7 +133,7 @@ starlette==0.50.0
     # via fastapi
 typeguard==4.4.4
     # via marshmallow-dataclass
-typer==0.21.0
+typer==0.21.1
     # via
     #   fastapi-cli
     #   fastapi-cloud-cli
