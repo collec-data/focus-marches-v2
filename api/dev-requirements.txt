@@ -178,7 +178,7 @@ typer==0.21.1
     #   fastapi-cli
     #   fastapi-cloud-cli
     #   focus-marche-v2 (pyproject.toml)
-types-requests==2.32.4.20250913
+types-requests==2.32.4.20260107
     # via focus-marche-v2 (pyproject.toml)
 typing-extensions==4.15.0
     # via
@@ -201,7 +201,7 @@ typing-inspection==0.4.2
     #   pydantic-settings
 tzdata==2025.3
     # via faker
-urllib3==2.6.2
+urllib3==2.6.3
     # via
     #   docker
     #   requests
