@@ -1,22 +1,15 @@
 <script setup lang="ts">
-import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listStructures, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
+import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
+import { StructureType } from '@/service/enums';
 import { formatCurrency, formatDate, getCatEntreprise, getNow, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 import type { LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
-import type { AutoCompleteCompleteEvent } from 'primevue';
 
 const marches = ref<MarcheAllegeDto[]>([]);
 
-const acheteurs = ref<StructureDto[]>([]);
-const fournisseurs = ref<StructureDto[]>([]);
-
 const options_achat_durable: string[] = (Object.values(ConsiderationsEnvironnementales) as string[]).concat(Object.values(ConsiderationsSociales) as string[]).filter((o) => !o.includes('Pas de'));
-
-const filterOptions = {
-    ignoreCase: true
-};
 
 interface departement {
     value: string;
@@ -36,30 +29,6 @@ function getDepartementsRecenses() {
 onMounted(() => {
     getDepartementsRecenses();
 });
-
-function searchAcheteur(e: AutoCompleteCompleteEvent) {
-    if (e.query.length > 1) {
-        listStructures({ query: { nom: e.query.toUpperCase(), is_acheteur: true } }).then((response) => {
-            if (response.data) {
-                acheteurs.value = response.data;
-            }
-        });
-    } else {
-        acheteurs.value = [];
-    }
-}
-
-function searchFournisseur(e: AutoCompleteCompleteEvent) {
-    if (e.query.length > 1) {
-        listStructures({ query: { nom: e.query.toUpperCase(), is_vendeur: true } }).then((response) => {
-            if (response.data) {
-                fournisseurs.value = response.data;
-            }
-        });
-    } else {
-        fournisseurs.value = [];
-    }
-}
 
 const filtres = ref({
     acheteur: null as null | StructureDto,
@@ -160,23 +129,10 @@ const marcheUid = ref(null);
             <form @submit="search">
                 <div class="flex flex-row gap-5 mb-5">
                     <div class="basis-1/3">
-                        <label for="acheteur">Acheteur</label>
-                        <AutoComplete
-                            v-model="filtres.acheteur"
-                            :suggestions="acheteurs"
-                            optionLabel="nom"
-                            inputId="acheteur"
-                            name="acheteur"
-                            placeholder="Organisme qui a créé la consultation"
-                            showClear
-                            fluid
-                            :filterOptions
-                            @complete="searchAcheteur"
-                        />
+                        <StructureSearchAutoComplete v-model="filtres.acheteur" :structureType="StructureType.Acheteur" />
                     </div>
                     <div class="basis-1/3">
-                        <label for="fournisseur">Fournisseur</label>
-                        <AutoComplete v-model="filtres.fournisseur" :suggestions="fournisseurs" optionLabel="nom" inputId="fournisseur" name="fournisseur" placeholder="Entité" showClear fluid :filterOptions @complete="searchFournisseur" />
+                        <StructureSearchAutoComplete v-model="filtres.fournisseur" :structureType="StructureType.Fournisseur" />
                     </div>
                     <div class="basis-1/3">
                         <label for="objet">Objet</label>
