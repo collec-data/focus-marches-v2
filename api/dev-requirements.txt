@@ -95,7 +95,7 @@ packaging==25.0
     # via
     #   marshmallow
     #   pytest
-pathspec==1.0.1
+pathspec==1.0.2
     # via mypy
 pluggy==1.6.0
     # via
@@ -157,7 +157,7 @@ rich-toolkit==0.17.1
     #   fastapi-cloud-cli
 rignore==0.7.6
     # via fastapi-cloud-cli
-ruff==0.14.10
+ruff==0.14.11
     # via focus-marche-v2 (pyproject.toml)
 sentry-sdk==2.49.0
     # via fastapi-cloud-cli
