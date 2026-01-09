@@ -268,6 +268,11 @@ export type DecpMalFormeDto = {
      * Erreurs
      */
     erreurs: Array<ErreurDto>;
+    structure: StructureDto | null;
+    /**
+     * Date Creation
+     */
+    date_creation: Date | null;
 };
 
 /**
@@ -1103,6 +1108,18 @@ export type GetErreursImportData = {
          * Type
          */
         type?: string | null;
+        /**
+         * Uid Structure
+         */
+        uid_structure?: number | null;
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
     };
     url: '/erreurs-import/';
 };
@@ -1130,9 +1147,31 @@ export type GetErreursImportResponse = GetErreursImportResponses[keyof GetErreur
 export type GetStatsErreursData = {
     body?: never;
     path?: never;
-    query?: never;
+    query?: {
+        /**
+         * Date Debut
+         */
+        date_debut?: Date | null;
+        /**
+         * Date Fin
+         */
+        date_fin?: Date | null;
+        /**
+         * Uid Structure
+         */
+        uid_structure?: number | null;
+    };
     url: '/erreurs-import/stats';
 };
+
+export type GetStatsErreursErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetStatsErreursError = GetStatsErreursErrors[keyof GetStatsErreursErrors];
 
 export type GetStatsErreursResponses = {
     /**
