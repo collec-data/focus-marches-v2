@@ -12,8 +12,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AchatDurable: typeof import('./src/components/dashboard/AchatDurable.vue')['default']
-    Acheteurs: typeof import('./src/components/dashboard/Acheteurs.vue')['default']
     AutoComplete: typeof import('primevue/autocomplete')['default']
+    Badge: typeof import('primevue/badge')['default']
     BoutonIframe: typeof import('./src/components/BoutonIframe.vue')['default']
     Button: typeof import('primevue/button')['default']
     CarteAcheteursFournisseurs: typeof import('./src/components/dashboard/CarteAcheteursFournisseurs.vue')['default']
