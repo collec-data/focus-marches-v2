@@ -113,7 +113,7 @@ class MarcheAllegeDto(BaseModel):
     id: str
     acheteur: StructureDto
     objet: str
-    cpv: str = Field(
+    cpv: CPVDto = Field(
         description="Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))"
     )
     categorie_as_str: CategorieMarche = Field(serialization_alias="categorie")
@@ -143,7 +143,7 @@ class MarcheDto(BaseModel):
     acheteur: StructureDto
     nature_as_str: NatureMarche = Field(serialization_alias="nature")
     objet: str
-    cpv: str = Field(
+    cpv: CPVDto = Field(
         description="Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))"
     )
     categorie_as_str: CategorieMarche = Field(serialization_alias="categorie")
@@ -370,3 +370,8 @@ class ConsiderationsSocialeDto(BaseModel):
     @classmethod
     def transform_soc(cls, v: int) -> ConsiderationsSociales:
         return ConsiderationsSociales.from_db_value(v)
+
+
+class CPVDto(BaseModel):
+    code: int
+    libelle: str

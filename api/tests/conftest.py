@@ -13,6 +13,7 @@ from tests.factories import (
     ClauseEnvFactory,
     ClauseSocialeFactory,
     ConcessionFactory,
+    CPVFactory,
     CritereEnvFactory,
     CritereSocialFactory,
     DecpMalFormeFactory,
@@ -97,6 +98,7 @@ def set_factory_db(db):
         ClauseEnvFactory,
         TechniqueAchatFactory,
         StructureInfogreffeFactory,
+        CPVFactory,
     ]:
         my_factory._meta.sqlalchemy_session = db
 

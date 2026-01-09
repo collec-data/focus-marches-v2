@@ -75,6 +75,14 @@ class TechniqueAchatFactory(factory.alchemy.SQLAlchemyModelFactory):
     technique = enums.TechniqueAchat.CONCOURS.db_value
 
 
+class CPVFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = db.CPV
+
+    code = factory.declarations.Sequence(lambda n: n)
+    libelle = factory.faker.Faker("word")
+
+
 class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.Marche
@@ -84,7 +92,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     acheteur = factory.declarations.SubFactory(AcheteurFactory)
     nature = enums.NatureMarche.MARCHE.db_value
     objet = "Lorem ipsum dolor"
-    cpv = "1234"
+    cpv = factory.declarations.SubFactory(CPVFactory)
     categorie = enums.CategorieMarche.SERVICES.db_value
     techniques_achat: list[enums.TechniqueAchat] = []
     modalites_execution: list[enums.ModaliteExecution] = []
