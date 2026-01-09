@@ -151,9 +151,10 @@ def test_importation_concession_succes(db):
 def test_importation_erreur(db):
     i = ImportateurDecp(session=db)
     i.importer_marches(file="tests/files/liste_pour_erreurs.json")
+    i.importer_concessions(file="tests/files/liste_pour_erreurs.json")
 
     decp_mal_formes = list(db.execute(select(DecpMalForme)).scalars())
-    assert len(decp_mal_formes) == 1
+    assert len(decp_mal_formes) == 4
     assert len(decp_mal_formes[0].erreurs) > 0
 
 

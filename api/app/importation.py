@@ -1,6 +1,8 @@
 import csv
 import os
 import sys
+from datetime import date
+from enum import Enum
 
 sys.path.append(os.getcwd())
 
@@ -71,6 +73,11 @@ logging.basicConfig(
 log = logging.getLogger("rich")
 
 
+class TypeContrat(Enum):
+    MARCHE = "marche"
+    CONCESSION = "concession"
+
+
 class CustomValidationError(Exception):
     def __init__(
         self, message: str = "", errors: list[dict[str, str | list[str]]] = []
@@ -135,6 +142,10 @@ class ImportateurDecp:
          - self._cache_structures qui a été chargé depuis la BDD à
            l'initialisation de l'importateur
         Si aucun des cas ci-dessus n'a trouvé la structure, alors on la créé.
+
+        ATTENTION : le cache ne fonctionne qu'en cas d'appel exactement
+        identique, passer `1` ou `id=1` en paramètre sera considéré
+        comme deux appels différents
         """
         if (id + type_id) in self._cache_structures.keys():
             return self._cache_structures[id + type_id]
@@ -444,14 +455,40 @@ class ImportateurDecp:
         self._session.add(concession)
 
     def build_entite_erreur(
-        self, e: ValidationError | CustomValidationError, o: dict[str, Any]
+        self,
+        e: ValidationError | CustomValidationError,
+        o: dict[str, Any],
+        type_contrat: TypeContrat,
     ) -> DecpMalForme:
         def decimal_serializer(obj):  # type: ignore
             if isinstance(obj, Decimal):
                 return str(obj)
             raise TypeError
 
-        decp = DecpMalForme(decp=json.dumps(o, default=decimal_serializer))
+        structure: Structure | None = None
+
+        if type_contrat == TypeContrat.MARCHE and o.get("acheteur", {}).get("id"):
+            structure = self.get_or_create_structure(id=o["acheteur"]["id"])
+
+        if type_contrat == TypeContrat.CONCESSION and o.get(
+            "autoriteConcedante", {}
+        ).get("id"):
+            structure = self.get_or_create_structure(id=o["autoriteConcedante"]["id"])
+
+        date_creation: str | None = None
+
+        if type_contrat == TypeContrat.MARCHE:
+            date_creation = o.get("dateNotification")
+
+        if type_contrat == TypeContrat.CONCESSION:
+            date_creation = o.get("dateSignature")
+
+        decp = DecpMalForme(
+            decp=json.dumps(o, default=decimal_serializer),
+            structure=structure,
+            date_creation=date.fromisoformat(date_creation) if date_creation else None,
+        )
+
         for erreur in e.errors():
             decp.erreurs.append(
                 Erreur(
@@ -468,6 +505,7 @@ class ImportateurDecp:
         self,
         file: str,
         item_path: str,
+        type_contrat: TypeContrat,
         transformer: Callable[[dict[str, Any]], Any],
         batch_commit_size: int = 50_000,
     ) -> None:
@@ -485,7 +523,7 @@ class ImportateurDecp:
                     transformer(objet)
                     self._valid_objects += 1
                 except (ValidationError, CustomValidationError) as e:
-                    self._session.add(self.build_entite_erreur(e, objet))
+                    self._session.add(self.build_entite_erreur(e, objet, type_contrat))
                     self._invalid_objects += 1
 
                 batch_size += 1
@@ -514,6 +552,7 @@ class ImportateurDecp:
             item_path="marches.marche",
             transformer=self.marche_transformer,
             batch_commit_size=batch_commit_size,
+            type_contrat=TypeContrat.MARCHE,
         )
 
     def importer_concessions(
@@ -526,6 +565,7 @@ class ImportateurDecp:
             item_path="marches.contrat-concession",
             transformer=self.concession_transformer,
             batch_commit_size=batch_commit_size,
+            type_contrat=TypeContrat.CONCESSION,
         )
 
 

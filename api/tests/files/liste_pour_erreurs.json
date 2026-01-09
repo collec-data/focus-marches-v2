@@ -1,9 +1,27 @@
 {
-    "marches": {
-        "marche": [
-            {
-                "nature": "Marché"
-            }
-        ]
-    }
+  "marches": {
+    "marche": [
+      {
+        "nature": "Marché"
+      },
+
+      {
+        "nature": "Marché",
+        "acheteur": {
+          "id": "123456789"
+        },
+        "dateNotification": "2042-12-01",
+        "montant": 999.99
+      }
+    ],
+    "contrat-concession": [
+      {
+        "autoriteConcedante": {
+          "id": "12345678912345"
+        },
+        "dateSignature": "2025-01-10"
+      },
+      {}
+    ]
+  }
 }
