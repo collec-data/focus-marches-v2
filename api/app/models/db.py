@@ -361,6 +361,7 @@ class ContratConcession(Base):
 
 class Erreur(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    decp: Mapped["DecpMalForme"] = relationship()
     uid_decp: Mapped[int] = mapped_column(ForeignKey("decp_mal_forme.uid"))
     type: Mapped[str]
     localisation: Mapped[str]
@@ -370,4 +371,9 @@ class Erreur(Base):
 class DecpMalForme(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     decp: Mapped[str]
-    erreurs: Mapped[list[Erreur]] = relationship()
+    erreurs: Mapped[list[Erreur]] = relationship(back_populates="decp")
+    uid_structure: Mapped[int | None] = mapped_column(
+        ForeignKey(Structure.uid), default=None
+    )
+    structure: Mapped[Structure | None] = relationship()
+    date_creation: Mapped[date | None]

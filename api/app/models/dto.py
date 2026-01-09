@@ -243,6 +243,8 @@ class DecpMalFormeDto(BaseModel):
     uid: int
     decp: Json[dict[str, Any]]
     erreurs: list[ErreurDto]
+    structure: StructureDto | None
+    date_creation: date | None
 
 
 class StatsErreursDto(BaseModel):
