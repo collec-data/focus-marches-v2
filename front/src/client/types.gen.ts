@@ -55,6 +55,20 @@ export const Ccag = {
 export type Ccag = typeof Ccag[keyof typeof Ccag];
 
 /**
+ * CPVDto
+ */
+export type CpvDto = {
+    /**
+     * Code
+     */
+    code: number;
+    /**
+     * Libelle
+     */
+    libelle: string;
+};
+
+/**
  * CategorieMarche
  */
 export const CategorieMarche = {
@@ -426,11 +440,9 @@ export type MarcheAllegeDto = {
      */
     objet: string;
     /**
-     * Cpv
-     *
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
-    cpv: string;
+    cpv: CpvDto;
     categorie: CategorieMarche;
     /**
      * Sous Traitance Declaree
@@ -538,11 +550,9 @@ export type MarcheDto = {
      */
     objet: string;
     /**
-     * Cpv
-     *
      * Nomenclature européenne permettant d'identifier les catégories de biens et de service faisant l'objet du marché (http://simap.ted.europa.eu/web/simap/cpv). Exemple: 45112500 (même si toléré, il préférable d'omettre le caractère de contrôle (-9))
      */
-    cpv: string;
+    cpv: CpvDto;
     categorie: CategorieMarche;
     /**
      * Techniques Achat
@@ -2083,3 +2093,35 @@ export type GetLieuxResponses = {
 };
 
 export type GetLieuxResponse = GetLieuxResponses[keyof GetLieuxResponses];
+
+export type ListCpvData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Libelle
+         */
+        libelle?: string | null;
+    };
+    url: '/cpv/';
+};
+
+export type ListCpvErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type ListCpvError = ListCpvErrors[keyof ListCpvErrors];
+
+export type ListCpvResponses = {
+    /**
+     * Response List Cpv
+     *
+     * Successful Response
+     */
+    200: Array<CpvDto>;
+};
+
+export type ListCpvResponse = ListCpvResponses[keyof ListCpvResponses];
