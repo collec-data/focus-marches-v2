@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import { listStructures, type StructureDto } from '@/client';
-import { StructureType } from '@/service/enums';
 import { structureName } from '@/service/HelpersService';
 import type { AutoCompleteCompleteEvent } from 'primevue';
 import { computed, ref, useId } from 'vue';
 
 const model = defineModel<StructureDto>();
 
-const props = defineProps<{ structureType: StructureType }>();
+const props = defineProps<{ structureType: 'acheteur' | 'fournisseur' }>();
 
 const id = useId();
 const name = computed(() => props.structureType);
@@ -23,10 +22,10 @@ function searchStructure(e: AutoCompleteCompleteEvent) {
             nom = nom.substring(6);
         }
         const query = { nom: nom };
-        if (props.structureType == StructureType.Acheteur) {
+        if (props.structureType == 'acheteur') {
             query['is_acheteur'] = true;
         }
-        if (props.structureType == StructureType.Fournisseur) {
+        if (props.structureType == 'fournisseur') {
             query['is_vendeur'] = true;
         }
         listStructures({ query: query }).then((response) => {

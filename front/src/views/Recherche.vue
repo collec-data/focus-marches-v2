@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
-import { StructureType } from '@/service/enums';
 import { formatCurrency, formatDate, getCatEntreprise, getNow, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
@@ -129,10 +128,10 @@ const marcheUid = ref(null);
             <form @submit="search">
                 <div class="flex flex-row gap-5 mb-5">
                     <div class="basis-1/3">
-                        <StructureSearchAutoComplete v-model="filtres.acheteur" :structureType="StructureType.Acheteur" />
+                        <StructureSearchAutoComplete v-model="filtres.acheteur" structureType="acheteur" />
                     </div>
                     <div class="basis-1/3">
-                        <StructureSearchAutoComplete v-model="filtres.fournisseur" :structureType="StructureType.Fournisseur" />
+                        <StructureSearchAutoComplete v-model="filtres.fournisseur" structureType="fournisseur" />
                     </div>
                     <div class="basis-1/3">
                         <label for="objet">Objet</label>

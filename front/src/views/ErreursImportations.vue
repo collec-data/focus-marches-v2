@@ -4,7 +4,6 @@ import { onMounted, ref } from 'vue';
 
 import type { DecpMalFormeDto, StatsErreursDto, StructureDto } from '@/client';
 import StructureSearchAutoComplete from '@/components/StructureSearchAutoComplete.vue';
-import { StructureType } from '@/service/enums';
 import { formatDate, formatNumber, getNow, structureName } from '@/service/HelpersService';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -68,7 +67,7 @@ function loadDecps(localisation: string, type: string) {
     });
 }
 
-function search(event: SubmitEvent) {
+function search() {
     const query = {
         ...route.query,
         dateMin: filtres.value.date_min ? filtres.value.date_min.toISOString().substring(0, 10) : undefined,
@@ -80,7 +79,6 @@ function search(event: SubmitEvent) {
         params: route.params,
         query: query
     });
-    event.preventDefault();
     listDecpMalFormes.value = [];
     fetchStats();
 }
@@ -90,10 +88,10 @@ function search(event: SubmitEvent) {
     <main className="card">
         <h1>Erreurs lors de l'importation</h1>
         <Panel header="Filtrer les erreurs d'importation (optionnel)" class="mb-5">
-            <form @submit="search">
+            <form @submit.prevent="search">
                 <div class="flex flex-row gap-5 mb-5">
                     <div class="basis-1/3">
-                        <StructureSearchAutoComplete v-model="filtres.acheteur" :structureType="StructureType.Acheteur" />
+                        <StructureSearchAutoComplete v-model="filtres.acheteur" structureType="acheteur" />
                     </div>
                     <div class="basis-1/3">
                         <label for="date_min">Date min.</label>
