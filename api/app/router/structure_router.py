@@ -4,7 +4,7 @@ from decimal import Decimal
 
 from api_entreprise.exceptions import ApiEntrepriseClientError
 from fastapi import APIRouter, HTTPException
-from sqlalchemy import desc, func, select
+from sqlalchemy import desc, func, or_, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import ApiEntrepriseDep, SessionDep
@@ -32,7 +32,9 @@ def list_structures(
         stmt = stmt.where(Structure.vendeur)
 
     if nom:
-        stmt = stmt.where(Structure.nom.contains(nom))
+        stmt = stmt.where(
+            or_(Structure.nom.contains(nom), Structure.identifiant.contains(nom))
+        )
 
     return list(session.execute(stmt).scalars())
 

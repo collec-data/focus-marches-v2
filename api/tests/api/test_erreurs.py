@@ -3,7 +3,7 @@ from tests.factories import DecpMalFormeFactory
 
 def test_list_erreurs(client):
     localisation = "lorem.ipsum.dolor"
-    DecpMalFormeFactory(erreurs__0__localisation=localisation)
+    decp = DecpMalFormeFactory(erreurs__0__localisation=localisation)
     DecpMalFormeFactory.create_batch(3)
 
     response = client.get("/erreurs-import", params={"limit": 2, "offset": 1})
@@ -20,6 +20,21 @@ def test_list_erreurs(client):
     assert response.status_code == 200
     assert len(response.json()) == 1
 
+    response = client.get(
+        "/erreurs-import",
+        params={
+            "localisation": localisation,
+            "type": "Erreur générique",
+            "uid_structure": decp.structure.uid,
+            "date_debut": decp.date_creation,
+            "date_fin": decp.date_creation,
+        },
+    )
+
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    assert response.json()[0]["uid"] == decp.uid
+
 
 def test_get_stats_aucune_erreur(client):
     response = client.get("/erreurs-import/stats")
@@ -33,11 +48,11 @@ def test_get_stats(client):
     # On va utiliser la première pour tester l'agrégation sur la localisation
     # et la seconde pour l'agrégation sur le message d'erreur
 
-    DecpMalFormeFactory.create_batch(
+    one_decp = DecpMalFormeFactory.create_batch(
         5,
         erreurs__0__localisation="montant",
         erreurs__1__message="Erreur Une",
-    )
+    )[0]
     DecpMalFormeFactory.create_batch(
         1,
         erreurs__0__localisation="montant",
@@ -48,6 +63,7 @@ def test_get_stats(client):
         erreurs__0__localisation="durée",
         erreurs__1__message="Erreur Trois",
     )
+
     response = client.get("/erreurs-import/stats")
 
     assert response.status_code == 200
@@ -83,3 +99,19 @@ def test_get_stats(client):
             "type": "Erreur générique",
         },
     ]
+
+    response = client.get(
+        "/erreurs-import/stats",
+        params={
+            "uid_structure": one_decp.structure.uid,
+            "date_debut": one_decp.date_creation,
+            "date_fin": one_decp.date_creation,
+        },
+    )
+
+    assert response.status_code == 200
+    # on a un unique DECP qui correspond à tout les critères
+    # et il contient deux erreurs différentes
+    assert len(response.json()) == 2
+    assert response.json()[0]["nombre"] == 1
+    assert response.json()[1]["nombre"] == 1

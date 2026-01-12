@@ -12,8 +12,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AchatDurable: typeof import('./src/components/dashboard/AchatDurable.vue')['default']
-    Acheteurs: typeof import('./src/components/dashboard/Acheteurs.vue')['default']
     AutoComplete: typeof import('primevue/autocomplete')['default']
+    Badge: typeof import('primevue/badge')['default']
     BoutonIframe: typeof import('./src/components/BoutonIframe.vue')['default']
     Button: typeof import('primevue/button')['default']
     CarteAcheteursFournisseurs: typeof import('./src/components/dashboard/CarteAcheteursFournisseurs.vue')['default']
@@ -52,6 +52,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('primevue/select')['default']
     SelectButton: typeof import('primevue/selectbutton')['default']
+    StructureSearchAutoComplete: typeof import('./src/components/StructureSearchAutoComplete.vue')['default']
     Tab: typeof import('primevue/tab')['default']
     TabList: typeof import('primevue/tablist')['default']
     TabPanel: typeof import('primevue/tabpanel')['default']

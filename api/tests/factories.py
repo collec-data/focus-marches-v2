@@ -143,7 +143,9 @@ class DecpMalFormeFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.DecpMalForme
 
-    decp = factory.declarations.LazyFunction(list)
+    decp = "{}"
     erreurs = factory.declarations.List(
         [factory.declarations.SubFactory(ErreurFactory) for _ in range(2)]
     )
+    structure = factory.declarations.SubFactory(AcheteurFactory)
+    date_creation = factory.faker.Faker("date")
