@@ -169,7 +169,7 @@ sqlalchemy==2.0.45
     # via focus-marche-v2 (pyproject.toml)
 starlette==0.50.0
     # via fastapi
-testcontainers[postgres]==4.13.3
+testcontainers[postgres]==4.14.0
     # via focus-marche-v2 (pyproject.toml)
 typeguard==4.4.4
     # via marshmallow-dataclass
