@@ -2,6 +2,7 @@ import logging
 from datetime import date
 from decimal import Decimal
 
+from api_entreprise.api import ApiEntreprise
 from api_entreprise.exceptions import ApiEntrepriseClientError
 from fastapi import APIRouter, HTTPException
 from sqlalchemy import desc, func, or_, select
@@ -10,7 +11,7 @@ from sqlalchemy.orm import aliased
 from app.dependencies import ApiEntrepriseDep, SessionDep
 from app.models.db import Marche, Structure, StructureInfogreffe
 from app.models.dto import StructureAggMarchesDto, StructureDto, StructureEtendueDto
-from app.models.enums import CategorieMarche
+from app.models.enums import CategorieMarche, IdentifiantStructure
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -125,23 +126,10 @@ def list_vendeurs(
     ]
 
 
-@router.get("/{uid}", response_model=StructureEtendueDto)
-def get_structure(
-    uid: int,
-    session: SessionDep,
-    api_entreprise: ApiEntrepriseDep,
+def complete_structure_etendue(
+    structure: Structure, api_entreprise: ApiEntreprise
 ) -> StructureEtendueDto:
-    stmt = (
-        select(Structure)
-        .outerjoin(Structure.infogreffe)
-        .where(Structure.uid == uid)
-        .order_by(StructureInfogreffe.annee.asc())
-    )
-    structure = session.execute(stmt).scalar()
-
-    if not structure:
-        raise HTTPException(status_code=404, detail="Structure inconnue")
-
+    # structure_dto = StructureEtendueDto.model_validate(structure.__dict__)
     structure_dto = StructureEtendueDto.model_validate(structure, from_attributes=True)
 
     if structure.type_identifiant == "SIRET":
@@ -172,3 +160,45 @@ def get_structure(
             logger.error(f"API entreprise - {str(e)}")
 
     return structure_dto
+
+
+@router.get("/{uid}", response_model=StructureEtendueDto)
+def get_structure(
+    uid: int,
+    session: SessionDep,
+    api_entreprise: ApiEntrepriseDep,
+) -> StructureEtendueDto:
+    stmt = (
+        select(Structure)
+        .outerjoin(Structure.infogreffe)
+        .where(Structure.uid == uid)
+        .order_by(StructureInfogreffe.annee.asc())
+    )
+    structure = session.execute(stmt).scalar()
+
+    if not structure:
+        raise HTTPException(status_code=404, detail="Structure inconnue")
+
+    return complete_structure_etendue(structure, api_entreprise)
+
+
+@router.get("/{type_id}/{id}", response_model=StructureEtendueDto)
+def get_structure_id(
+    type_id: IdentifiantStructure,
+    id: str,
+    session: SessionDep,
+    api_entreprise: ApiEntrepriseDep,
+) -> StructureEtendueDto:
+    stmt = (
+        select(Structure)
+        .outerjoin(Structure.infogreffe)
+        .where(Structure.identifiant == id)
+        .where(Structure.type_identifiant == type_id)
+        .order_by(StructureInfogreffe.annee.asc())
+    )
+    structure = session.execute(stmt).scalar()
+
+    if not structure:
+        raise HTTPException(status_code=404, detail="Structure inconnue")
+
+    return complete_structure_etendue(structure, api_entreprise)
