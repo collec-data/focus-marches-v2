@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getListeMarches } from '@/client';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { computed, onMounted, ref, watch } from 'vue';
@@ -8,8 +9,9 @@ import type { MarcheAllegeDto } from '@/client';
 
 const props = defineProps({
     nomStructure: { type: String },
-    acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null },
+    acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
+    vendeurUid: { type: [Number, null], default: null },
     dateMin: { type: [Date, null], default: null },
     dateMax: { type: [Date, null], default: null }
 });
@@ -24,19 +26,22 @@ const filters = ref({
 
 const listeMarches = ref<Array<MarcheAllegeDto>>([]);
 
-function fetchData() {
-    getListeMarches({
-        query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: props.acheteurUid,
-            vendeur_uid: props.vendeurUid
-        }
-    }).then((response) => {
-        if (response.data) {
-            listeMarches.value = response.data;
-        }
-    });
+async function fetchData() {
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    if (acheteurUid || props.vendeurUid) {
+        getListeMarches({
+            query: {
+                date_debut: props.dateMin,
+                date_fin: props.dateMax,
+                acheteur_uid: acheteurUid,
+                vendeur_uid: props.vendeurUid
+            }
+        }).then((response) => {
+            if (response.data) {
+                listeMarches.value = response.data;
+            }
+        });
+    }
 }
 
 onMounted(() => {
@@ -179,7 +184,7 @@ const hiddenCol = computed(() => {
                 </template>
             </Column>
         </DataTable>
-        <BoutonIframe v-if="acheteurUid" :acheteurUid path="marches" name="La liste des marchés publics passés" />
+        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="marches" name="La liste des marchés publics passés" />
     </section>
 
     <ModaleMarche v-model="marcheUid" />

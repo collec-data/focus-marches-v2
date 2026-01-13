@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { getMarchesParProcedure } from '@/client';
-import { getDurationInMonths, longLabelsBreaker } from '@/service/HelpersService';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
+import { okabe_ito } from '@/service/GraphColorsService';
+import { getDurationInMonths, getNow, longLabelsBreaker } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 import Graph from '../Graph.vue';
 
 import type { MarcheProcedureDto } from '@/client';
-import { okabe_ito } from '@/service/GraphColorsService';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
-    acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null },
-    dateMin: { type: Date, required: true },
-    dateMax: { type: Date, required: true }
+    acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
+    vendeurUid: { type: [Number, null], default: null },
+    dateMin: { type: Date, required: false, default: new Date(settings.date_min) },
+    dateMax: { type: Date, required: false, default: getNow() }
 });
 
 const montantData = ref<Partial<PlotData>[]>();
@@ -45,21 +47,24 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<P
     ];
 }
 
-function fetchData() {
-    getMarchesParProcedure({
-        query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: props.acheteurUid,
-            vendeur_uid: props.vendeurUid
-        }
-    }).then((data) => {
-        if (data.data) {
-            let raw_data = transform(data.data);
-            montantData.value = makeGraph(raw_data.procedure, raw_data.montant);
-            nombreData.value = makeGraph(raw_data.procedure, raw_data.nombre);
-        }
-    });
+async function fetchData() {
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    if (acheteurUid || props.vendeurUid || !props.acheteurSiret) {
+        getMarchesParProcedure({
+            query: {
+                date_debut: props.dateMin,
+                date_fin: props.dateMax,
+                acheteur_uid: props.acheteurUid,
+                vendeur_uid: props.vendeurUid
+            }
+        }).then((data) => {
+            if (data.data) {
+                let raw_data = transform(data.data);
+                montantData.value = makeGraph(raw_data.procedure, raw_data.montant);
+                nombreData.value = makeGraph(raw_data.procedure, raw_data.nombre);
+            }
+        });
+    }
 }
 
 onMounted(() => {
@@ -86,7 +91,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             <Graph :data="nombreData" :layout />
         </div>
         <div class="col-span-12">
-            <BoutonIframe v-if="acheteurUid" :acheteurUid path="procedure-marches" name="La répartition des marchés publics par procédure suivie, sous forme de graphique" />
+            <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="procedure-marches" name="La répartition des marchés publics par procédure suivie, sous forme de graphique" />
         </div>
     </Fluid>
 </template>

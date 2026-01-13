@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import type { IndicateursDto } from '@/client';
 import { getIndicateurs } from '@/client';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { formatCurrency, formatNumber } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
+
+import type { IndicateursDto } from '@/client';
+
 const props = defineProps({
-    acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null },
+    acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
+    vendeurUid: { type: [Number, null], default: null },
     dateMin: { type: [Date, null], default: null },
     dateMax: { type: [Date, null], default: null },
     query: {
@@ -18,20 +22,23 @@ const props = defineProps({
 
 const indicateurs = ref({} as IndicateursDto);
 
-function fetchData() {
-    getIndicateurs({
-        query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: props.acheteurUid,
-            vendeur_uid: props.vendeurUid,
-            ...props.query
-        }
-    }).then((data) => {
-        if (data.data) {
-            indicateurs.value = data.data;
-        }
-    });
+async function fetchData() {
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    if (acheteurUid || props.vendeurUid || props.query) {
+        getIndicateurs({
+            query: {
+                date_debut: props.dateMin,
+                date_fin: props.dateMax,
+                acheteur_uid: acheteurUid,
+                vendeur_uid: props.vendeurUid,
+                ...props.query
+            }
+        }).then((data) => {
+            if (data.data) {
+                indicateurs.value = data.data;
+            }
+        });
+    }
 }
 
 watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid, () => props.query], () => {
@@ -103,7 +110,7 @@ onMounted(() => {
                 <div class="value">{{ formatNumber(indicateurs.nb_innovant) }}</div>
             </div>
         </div>
-        <BoutonIframe v-if="acheteurUid" :acheteurUid path="indicateurs" name="Des indicateurs sur les marchés publics passés" />
+        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="indicateurs" name="Des indicateurs sur les marchés publics passés" />
     </section>
 </template>
 
