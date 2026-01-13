@@ -35,20 +35,20 @@ python app/importation.py decps
 #### [Megalis](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-megalis-bretagne-schema-2024/)
 
 ```bash
-for url in https://www.data.gouv.fr/api/1/datasets/r/ea387298-b344-45dc-9a19-043f13df1f69 https://www.data.gouv.fr/api/1/datasets/r/3a9073a7-4062-49ff-a4b8-d4721705a462 https://www.data.gouv.fr/api/1/datasets/r/40679992-a5e7-4761-b5ba-9775e77fd133 https://www.data.gouv.fr/api/1/datasets/r/2fbb7b58-4a6b-47ca-b528-4b9dea053477 https://www.data.gouv.fr/api/1/datasets/r/da0339ac-5709-4a6b-87fa-bb9251bb371e https://www.data.gouv.fr/api/1/datasets/r/0e79013c-6764-4af4-9f2e-c757d876a666; \
+for url in https://www.data.gouv.fr/api/1/datasets/r/ea387298-b344-45dc-9a19-043f13df1f69 https://www.data.gouv.fr/api/1/datasets/r/3a9073a7-4062-49ff-a4b8-d4721705a462 https://www.data.gouv.fr/api/1/datasets/r/40679992-a5e7-4761-b5ba-9775e77fd133 https://www.data.gouv.fr/api/1/datasets/r/2fbb7b58-4a6b-47ca-b528-4b9dea053477 https://www.data.gouv.fr/api/1/datasets/r/da0339ac-5709-4a6b-87fa-bb9251bb371e https://www.data.gouv.fr/api/1/datasets/r/0e79013c-6764-4af4-9f2e-c757d876a666 https://www.data.gouv.fr/api/1/datasets/r/5b67f1cb-d8f4-491d-a15f-77cccc65456c; \
 do curl -L ${url} -o "data/${url: -36}.json"; done
 ```
 
 #### [ARNIA](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-arnia-1/)
 
 ```bash
-for url in https://www.data.gouv.fr/api/1/datasets/r/f2ca0c44-ee8e-42ba-86a2-e83572c1b0d0 https://www.data.gouv.fr/api/1/datasets/r/b6e959fd-9e9d-4dfb-ba54-65b5ddf49881 https://www.data.gouv.fr/api/1/datasets/r/0647e31d-29c5-4adc-8480-23d207eec2bc https://www.data.gouv.fr/api/1/datasets/r/c9071fda-c613-4aa0-ae6a-e73dfca7ec69 https://www.data.gouv.fr/api/1/datasets/r/a136ac8f-7d5b-4bf2-b3de-7919e644aeae https://www.data.gouv.fr/api/1/datasets/r/79746469-5ba6-4955-9bb7-e5e2fdbb2472; \
+for url in https://www.data.gouv.fr/api/1/datasets/r/f2ca0c44-ee8e-42ba-86a2-e83572c1b0d0 https://www.data.gouv.fr/api/1/datasets/r/b6e959fd-9e9d-4dfb-ba54-65b5ddf49881 https://www.data.gouv.fr/api/1/datasets/r/0647e31d-29c5-4adc-8480-23d207eec2bc https://www.data.gouv.fr/api/1/datasets/r/c9071fda-c613-4aa0-ae6a-e73dfca7ec69 https://www.data.gouv.fr/api/1/datasets/r/a136ac8f-7d5b-4bf2-b3de-7919e644aeae https://www.data.gouv.fr/api/1/datasets/r/79746469-5ba6-4955-9bb7-e5e2fdbb2472 https://www.data.gouv.fr/api/1/datasets/r/35ad0b16-c341-4d1b-a909-53f5e09d3c13; \
 do curl -L ${url} -o "data/${url: -36}.json"; done
 ```
 
 #### [RECIA](https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-gip-recia/)
 ```bash
-for url in https://www.data.gouv.fr/api/1/datasets/r/c7b06c4e-9d31-460a-8bb3-be9caa16ff8a https://www.data.gouv.fr/api/1/datasets/r/dd24af89-7422-4a60-9a68-ceb0345ea474 https://www.data.gouv.fr/api/1/datasets/r/0a3078ea-e2eb-41be-8fd6-025054e9ee2d https://www.data.gouv.fr/api/1/datasets/r/f6af4031-e00a-4729-8525-3e6a733540d2 https://www.data.gouv.fr/api/1/datasets/r/5f0f1d6c-634f-4cb6-b502-dfe833763936 https://www.data.gouv.fr/api/1/datasets/r/79688911-246a-49e6-9401-dffe5ac2a63c; \
+for url in https://www.data.gouv.fr/api/1/datasets/r/c7b06c4e-9d31-460a-8bb3-be9caa16ff8a https://www.data.gouv.fr/api/1/datasets/r/dd24af89-7422-4a60-9a68-ceb0345ea474 https://www.data.gouv.fr/api/1/datasets/r/0a3078ea-e2eb-41be-8fd6-025054e9ee2d https://www.data.gouv.fr/api/1/datasets/r/f6af4031-e00a-4729-8525-3e6a733540d2 https://www.data.gouv.fr/api/1/datasets/r/5f0f1d6c-634f-4cb6-b502-dfe833763936 https://www.data.gouv.fr/api/1/datasets/r/79688911-246a-49e6-9401-dffe5ac2a63c https://www.data.gouv.fr/api/1/datasets/r/f9dae08d-9d65-4071-b5a7-2b8d32504ba8; \
 do curl -L ${url} -o "data/${url: -36}.json"; done
 ```
 
