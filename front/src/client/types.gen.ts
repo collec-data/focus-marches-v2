@@ -362,6 +362,25 @@ export type HttpValidationError = {
 };
 
 /**
+ * IdentifiantStructure
+ */
+export const IdentifiantStructure = {
+    SIRET: 'SIRET',
+    TVA: 'TVA',
+    TAHITI: 'TAHITI',
+    RIDET: 'RIDET',
+    FRWF: 'FRWF',
+    IREP: 'IREP',
+    UE: 'UE',
+    HORS_UE: 'HORS-UE'
+} as const;
+
+/**
+ * IdentifiantStructure
+ */
+export type IdentifiantStructure = typeof IdentifiantStructure[keyof typeof IdentifiantStructure];
+
+/**
  * IndicateursDto
  */
 export type IndicateursDto = {
@@ -1209,11 +1228,11 @@ export type GetListeMarchesData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
         /**
          * Objet
          */
@@ -1317,11 +1336,11 @@ export type GetMarchesParProcedureData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/procedure';
 };
@@ -1361,11 +1380,11 @@ export type GetMarchesParNatureData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/nature';
 };
@@ -1405,11 +1424,11 @@ export type GetMarchesParCcagData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/ccag';
 };
@@ -1449,11 +1468,11 @@ export type GetIndicateursData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
         /**
          * Objet
          */
@@ -1579,11 +1598,11 @@ export type GetCategoriesData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/categorie';
 };
@@ -1623,11 +1642,11 @@ export type GetConsiderationsData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/consideration';
 };
@@ -1667,11 +1686,11 @@ export type GetConsiderationsEnvironnementaleData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/consideration/environnementale';
 };
@@ -1711,11 +1730,11 @@ export type GetConsiderationsSocialeData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/consideration/sociale';
 };
@@ -1755,11 +1774,11 @@ export type GetConsiderationsEnvEtSocialeData = {
         /**
          * Acheteur Uid
          */
-        acheteur_uid?: string | null;
+        acheteur_uid?: number | null;
         /**
          * Vendeur Uid
          */
-        vendeur_uid?: string | null;
+        vendeur_uid?: number | null;
     };
     url: '/marche/consideration/combine';
 };
@@ -2061,6 +2080,37 @@ export type GetStructureResponses = {
 };
 
 export type GetStructureResponse = GetStructureResponses[keyof GetStructureResponses];
+
+export type GetStructureIdData = {
+    body?: never;
+    path: {
+        type_id: IdentifiantStructure;
+        /**
+         * Id
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/structure/{type_id}/{id}';
+};
+
+export type GetStructureIdErrors = {
+    /**
+     * Validation Error
+     */
+    422: HttpValidationError;
+};
+
+export type GetStructureIdError = GetStructureIdErrors[keyof GetStructureIdErrors];
+
+export type GetStructureIdResponses = {
+    /**
+     * Successful Response
+     */
+    200: StructureEtendueDto;
+};
+
+export type GetStructureIdResponse = GetStructureIdResponses[keyof GetStructureIdResponses];
 
 export type GetLieuxData = {
     body?: never;
