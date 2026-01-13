@@ -16,8 +16,8 @@ from app.models.enums import (
 class FiltreTemporelStructure(BaseModel):
     date_debut: date | None = None
     date_fin: date | None = None
-    acheteur_uid: str | None = None
-    vendeur_uid: str | None = None
+    acheteur_uid: int | None = None
+    vendeur_uid: int | None = None
 
 
 class FiltreMarchesEtendus(FiltreTemporelStructure):
