@@ -9,6 +9,7 @@ from tests.factories import (
     CPVFactory,
     CritereEnvFactory,
     CritereSocialFactory,
+    LieuFactory,
     MarcheFactory,
     TechniqueAchatFactory,
     VendeurFactory,
@@ -246,19 +247,16 @@ def test_departements(client):
     MarcheFactory.create_batch(
         5,
         montant=10,
-        lieu__code="35",
-        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+        lieu=LieuFactory(code="35", type_code=enums.TypeCodeLieu.DEP.db_value),
     )
     MarcheFactory.create_batch(
         2,
         montant=33,
-        lieu__code="29",
-        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+        lieu=LieuFactory(code="29", type_code=enums.TypeCodeLieu.DEP.db_value),
     )
 
     # pas un département, ne doit pas être comptabilisé
-    MarcheFactory.create_batch(
-        1,
+    MarcheFactory(
         montant=1000,
         lieu__code="123",
         lieu__type_code=enums.TypeCodeLieu.COMMUNE.db_value,
@@ -274,18 +272,17 @@ def test_departements(client):
 
 
 def test_marche_departement_categorie(client):
+    illeetvilaine = LieuFactory(code="35", type_code=enums.TypeCodeLieu.DEP.db_value)
     MarcheFactory(
         montant=1000,
         categorie=enums.CategorieMarche.TRAVAUX.db_value,
-        lieu__code="35",
-        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+        lieu=illeetvilaine,
     )
 
     MarcheFactory(
         montant=2000,
         categorie=enums.CategorieMarche.TRAVAUX.db_value,
-        lieu__code="35",
-        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+        lieu=illeetvilaine,
     )
 
     MarcheFactory(
@@ -298,8 +295,7 @@ def test_marche_departement_categorie(client):
     MarcheFactory(
         montant=6000,
         categorie=enums.CategorieMarche.FOURNITURES.db_value,
-        lieu__code="35",
-        lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
+        lieu=illeetvilaine,
     )
 
     response = client.get("marche/categorie-departement")
