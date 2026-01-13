@@ -2,11 +2,12 @@ from decimal import Decimal
 from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query
-from sqlalchemy import Row, Select, asc, desc, distinct, func, select
+from sqlalchemy import Row, Select, String, asc, cast, desc, distinct, func, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import SessionDep
 from app.models.db import (
+    CPV,
     ConsiderationEnvMarche,
     ConsiderationSocialeMarche,
     Lieu,
@@ -73,7 +74,7 @@ def application_filtres_etendus(
         stmt = stmt.where(Marche.objet.contains(f.objet))
 
     if f.cpv:
-        stmt = stmt.where(Marche.cpv.startswith(f.cpv))
+        stmt = stmt.join(Marche.cpv).where(cast(CPV.code, String).startswith(f.cpv))
 
     if f.code_lieu:
         stmt = (
@@ -138,7 +139,8 @@ def get_liste_marches(
         .outerjoin(acheteur, Marche.acheteur)
         .outerjoin(titulaires, Marche.titulaires)
         .outerjoin(Marche.actes_sous_traitance)
-        .outerjoin(accord_cadre, Marche.accord_cadre),
+        .outerjoin(accord_cadre, Marche.accord_cadre)
+        .outerjoin(Marche.cpv),
         filtres,
     ).order_by(Marche.date_notification)
 
@@ -549,7 +551,7 @@ def get_considerations_env_et_sociale(
 
 @router.get("/{uid}", response_model=MarcheDto)
 def get_marche(uid: int, session: SessionDep) -> Marche:
-    stmt = select(Marche).where(Marche.uid == uid)
+    stmt = select(Marche).outerjoin(Marche.cpv).where(Marche.uid == uid)
     marche = session.execute(stmt).scalar()
 
     if not marche:

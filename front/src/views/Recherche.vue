@@ -1,14 +1,33 @@
 <script setup lang="ts">
-import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
+import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listCpv, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { formatCurrency, formatDate, getCatEntreprise, getNow, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
-import type { LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
+import type { CpvDto, LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
+import type { AutoCompleteCompleteEvent } from 'primevue';
 
 const marches = ref<MarcheAllegeDto[]>([]);
 
 const options_achat_durable: string[] = (Object.values(ConsiderationsEnvironnementales) as string[]).concat(Object.values(ConsiderationsSociales) as string[]).filter((o) => !o.includes('Pas de'));
+
+const filterOptions = {
+    ignoreCase: true
+};
+
+const codes_cpv = ref<CpvDto[]>([]);
+
+function searchCpv(e: AutoCompleteCompleteEvent) {
+    if (e.query.length > 2) {
+        listCpv({ query: { libelle: e.query } }).then((response) => {
+            if (response.data) {
+                codes_cpv.value = response.data;
+            }
+        });
+    } else {
+        codes_cpv.value = [];
+    }
+}
 
 interface departement {
     value: string;
@@ -33,7 +52,8 @@ const filtres = ref({
     acheteur: null as null | StructureDto,
     fournisseur: null as null | StructureDto,
     objet: null,
-    cpv: null,
+    code_cpv: null,
+    cpv: null as null | CpvDto,
     code_lieu: null,
     forme_prix: null,
     type_marche: null,
@@ -56,7 +76,7 @@ function fetchData() {
         acheteur_uid: filtres.value.acheteur?.uid,
         vendeur_uid: filtres.value.fournisseur?.uid,
         objet: filtres.value.objet,
-        cpv: filtres.value.cpv,
+        cpv: filtres.value.code_cpv || filtres.value.cpv?.code,
         code_lieu: filtres.value.code_lieu,
         type_marche: filtres.value.type_marche,
         forme_prix: filtres.value.forme_prix,
@@ -141,11 +161,22 @@ const marcheUid = ref(null);
                 <div v-if="recherche_avancee" class="flex flex-row gap-5 mb-5">
                     <div class="basis-1/3">
                         <label for="code_cpv">Code CPV</label>
-                        <InputText v-model="filtres.cpv" inputId="code_cpv" name="code_cpv" placeholder="Ex: 45 ou 4511 ou 451125..." fluid></InputText>
+                        <InputText v-model="filtres.code_cpv" inputId="code_cpv" name="code_cpv" placeholder="Ex: 45 ou 4511 ou 451125..." fluid></InputText>
                     </div>
                     <div class="basis-1/3">
                         <label for="libelle_cpv">Libellé CPV</label>
-                        <InputText inputId="libelle_cpv" name="libelle_cpv" placeholder="Ex: ordinateur, tablette" fluid disabled></InputText>
+                        <AutoComplete
+                            v-model="filtres.cpv"
+                            :suggestions="codes_cpv"
+                            optionLabel="libelle"
+                            inputId="libelle_cpv"
+                            name="libelle_cpv"
+                            placeholder="Ex: ordinateur, tablette"
+                            showClear
+                            fluid
+                            :filterOptions
+                            @complete="searchCpv"
+                        ></AutoComplete>
                     </div>
                     <div class="basis-1/3">
                         <label for="lieu">Lieu</label>
@@ -233,7 +264,9 @@ const marcheUid = ref(null);
                         <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" />
                     </template>
                 </Column>
-                <Column field="cpv" header="CPV" sortable></Column>
+                <Column field="cpv" header="CPV" sortable>
+                    <template #body="{ data }">{{ data.cpv.code + ' ' + data.cpv.libelle }}</template>
+                </Column>
                 <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
                 <Column field="acheteur.nom" header="Acheteur" sortable>
                     <template #body="{ data }">{{ structureName(data.acheteur) }}</template>

@@ -114,7 +114,9 @@ const hiddenCol = computed(() => {
             <Column header="Détails">
                 <template #body="{ data }"> <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" /> </template
             ></Column>
-            <Column field="cpv" header="CPV" sortable :hidden="hiddenCol.cpv"></Column>
+            <Column field="cpv" header="CPV" sortable :hidden="hiddenCol.cpv">
+                <template #body="{ data }">{{ data.cpv.code + ' ' + data.cpv.libelle }}</template>
+            </Column>
             <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
             <Column v-if="acheteurUid == null" field="acheteur.nom" header="Acheteur" sortable>
                 <template #body="{ data }">{{ structureName(data.acheteur) }}</template>

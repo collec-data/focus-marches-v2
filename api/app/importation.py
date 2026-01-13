@@ -30,6 +30,7 @@ from app.db import get_engine
 from app.dependencies import get_api_entreprise
 from app.helpers import categorisation
 from app.models.db import (
+    CPV,
     ActeSousTraitance,
     Base,
     ConsiderationEnvMarche,
@@ -201,7 +202,7 @@ class ImportateurDecp:
             ),
             nature=data.nature.db_value,
             objet=data.objet,
-            cpv=data.codeCPV,
+            code_cpv=data.codeCPV,
             categorie=categorisation.CPV2categorie(data.codeCPV).db_value,
             modalites_execution=[
                 mod.db_value
@@ -576,6 +577,10 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
         engine = get_engine()
         Base.metadata.drop_all(engine)
         Base.metadata.create_all(engine)
+
+        with Session(get_engine()) as session:
+            session.add_all(import_cpv("cpv_2008_fr.csv"))
+            session.commit()
     else:
         log.info(
             "🧹 Suppression partielle de la base de données (lieux et structures conservés)"
@@ -771,6 +776,18 @@ def infogreffe(file_path: str) -> None:
                 session.commit()
         else:
             log.error("Aucune structure détectée. Il faut d'abord importer des DECPs.")
+
+
+def import_cpv(file_path: str) -> list[CPV]:
+    log.info("Import des codes CPV dans la base de données")
+    entities: list[CPV] = []
+    with rich.progress.open(file_path, "r", encoding="latin-1") as csvfile:
+        iterator = csv.reader(csvfile, delimiter=";")
+        next(iterator)  # ignore header
+        for row in iterator:
+            entities.append(CPV(code=row[0][:8], libelle=row[1]))
+    log.info(f"{len(entities)} codes importés")
+    return entities
 
 
 if __name__ == "__main__":

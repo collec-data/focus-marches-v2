@@ -6,6 +6,7 @@ from tests.factories import (
     AcheteurFactory,
     ClauseEnvFactory,
     ClauseSocialeFactory,
+    CPVFactory,
     CritereEnvFactory,
     CritereSocialFactory,
     MarcheFactory,
@@ -19,7 +20,7 @@ def test_list_marche(client):
     MarcheFactory.create_batch(29)
     marche_recherche = MarcheFactory(
         objet="Achat d'ordinateurs",
-        cpv="456",
+        cpv=CPVFactory(code="456"),
         lieu__code="123",
         lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
         forme_prix=enums.FormePrix.FORFAITAIRE.db_value,

@@ -186,7 +186,8 @@ class Marche(Base):
     uid_acheteur: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
     nature: Mapped[int]  # enum NatureMarche
     objet: Mapped[str] = mapped_column(Text())  # max 1k
-    cpv: Mapped[str]
+    code_cpv: Mapped[int] = mapped_column(ForeignKey("cpv.code"))
+    cpv: Mapped[CPV] = relationship()
     categorie: Mapped[int]  # enum CategorieMarche
     techniques_achat: Mapped[list[TechniqueAchatMarche]] = relationship()
     modalites_execution: Mapped[list[int]] = mapped_column(
@@ -377,3 +378,9 @@ class DecpMalForme(Base):
     )
     structure: Mapped[Structure | None] = relationship()
     date_creation: Mapped[date | None]
+
+
+class CPV(Base):
+    __tablename__ = "cpv"  # type: ignore
+    code: Mapped[int] = mapped_column(primary_key=True)
+    libelle: Mapped[str]

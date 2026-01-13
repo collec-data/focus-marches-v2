@@ -6,7 +6,7 @@ from sqlalchemy import select
 from app.importation import ImportateurDecp, load_infogreffe
 from app.models.db import ContratConcession, DecpMalForme, Marche
 from app.models.enums import TypeCodeLieu
-from tests.factories import LieuFactory
+from tests.factories import CPVFactory, LieuFactory
 
 
 def test_get_or_create_lieu(db):
@@ -25,6 +25,8 @@ def test_get_or_create_lieu(db):
 
 
 def test_importation_marche_succes(db):
+    CPVFactory(code="12341234")
+
     i = ImportateurDecp(session=db)
     i.importer_marches(file="tests/files/liste_marches_valides.json")
 
@@ -41,7 +43,7 @@ def test_importation_marche_succes(db):
     assert marche1.acheteur.acheteur is True
     assert marche1.nature == 1
     assert marche1.objet == "Lorem ipsum dolor"
-    assert marche1.cpv == "12341234"
+    assert marche1.cpv.code == 12341234
     assert len(marche1.techniques_achat) == 1
     assert marche1.techniques_achat[0].technique == 1
     assert marche1.modalites_execution == []

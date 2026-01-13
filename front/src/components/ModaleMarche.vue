@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watchEffect } from 'vue';
 
-import { getListeMarches, getMarche, type MarcheAllegeDto, ModaliteExecution, TechniqueAchat, type MarcheDto } from '@/client';
+import { getListeMarches, getMarche, ModaliteExecution, TechniqueAchat, type MarcheAllegeDto, type MarcheDto } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 
@@ -110,7 +110,7 @@ function hideMarcheModal() {
                 <hr />
                 <div class="mt-5">
                     <div class="key">Code CPV</div>
-                    <div class="value">{{ marcheDetaille?.cpv }}</div>
+                    <div class="value">{{ marcheDetaille?.cpv?.code + ' ' + marcheDetaille?.cpv?.libelle }}</div>
                 </div>
                 <hr />
                 <div>
