@@ -12,6 +12,7 @@ RUN apk add --no-cache build-base \
   && apk add --no-cache curl
 
 COPY ./app /code/app
+COPY ./cpv_2008_fr.csv /code/cpv_2008_fr.csv
 
 # EXPOSE
 CMD [ "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80" ]
