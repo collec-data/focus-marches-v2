@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { getMarchesParCcag } from '@/client';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { MarcheCcagDto } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
-import { TabList } from 'primevue';
 
 const props = defineProps({
-    acheteurUid: { type: [String, null], default: null },
+    acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
     dateMin: { type: [Date, null], default: null },
     dateMax: { type: [Date, null], default: null }
 });
@@ -53,18 +54,21 @@ function transform(input: Array<MarcheCcagDto>): idatas {
     return output;
 }
 
-function fetchData() {
-    getMarchesParCcag({
-        query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: props.acheteurUid
-        }
-    }).then((response) => {
-        if (response.data) {
-            datas.value = transform(response.data);
-        }
-    });
+async function fetchData() {
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    if (acheteurUid) {
+        getMarchesParCcag({
+            query: {
+                date_debut: props.dateMin,
+                date_fin: props.dateMax,
+                acheteur_uid: acheteurUid
+            }
+        }).then((response) => {
+            if (response.data) {
+                datas.value = transform(response.data);
+            }
+        });
+    }
 }
 
 onMounted(() => {
@@ -124,6 +128,6 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
                 </TabPanel>
             </TabPanels>
         </Tabs>
-        <BoutonIframe v-if="acheteurUid" :acheteurUid path="ccag-marches" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
+        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="ccag-marches" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
     </section>
 </template>

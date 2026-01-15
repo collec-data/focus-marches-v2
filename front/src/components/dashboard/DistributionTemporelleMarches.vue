@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { getListeMarches } from '@/client';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
+import { getNow } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
-import type { MarcheAllegeDto } from '@/client';
+import { getListeMarches, type MarcheAllegeDto } from '@/client';
 import type { PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
-    acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null },
+    acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
+    vendeurUid: { type: [Number, null], default: null },
     dateMin: { type: Date, required: true },
     dateMax: { type: Date, required: true },
     query: {
@@ -23,7 +25,7 @@ const layout = {
     margin: { t: 0, r: 0, l: 60, b: 50 },
     xaxis: {
         type: 'date',
-        range: [props.dateMin.toISOString().substring(0, 10), props.dateMax.toISOString().substring(0, 10)],
+        range: [(props.dateMin ? props.dateMin : new Date(settings.date_min)).toISOString().substring(0, 10), (props.dateMax ? props.dateMax : getNow()).toISOString().substring(0, 10)],
         title: { text: 'DATE' }
     },
     yaxis: { title: { text: 'MONTANT (€)' } }
@@ -84,20 +86,23 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     }
     return traces;
 }
-function fetchData() {
-    getListeMarches({
-        query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: props.acheteurUid,
-            vendeur_uid: props.vendeurUid,
-            ...props.query
-        }
-    }).then((response) => {
-        if (response.data) {
-            data.value = transform(response.data);
-        }
-    });
+async function fetchData() {
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    if (acheteurUid || props.vendeurUid || props.query) {
+        getListeMarches({
+            query: {
+                date_debut: props.dateMin,
+                date_fin: props.dateMax,
+                acheteur_uid: acheteurUid,
+                vendeur_uid: props.vendeurUid,
+                ...props.query
+            }
+        }).then((response) => {
+            if (response.data) {
+                data.value = transform(response.data);
+            }
+        });
+    }
 }
 
 watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid, () => props.query], () => {
@@ -132,6 +137,6 @@ onMounted(() => {
                 </div>
             </div>
         </details>
-        <BoutonIframe v-if="acheteurUid" :acheteurUid path="distribution-marches" name="La distribution des marchés dans le temps, sous forme de graphique" />
+        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="distribution-marches" name="La distribution des marchés dans le temps, sous forme de graphique" />
     </section>
 </template>

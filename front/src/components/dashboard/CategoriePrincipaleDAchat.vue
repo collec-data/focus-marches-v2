@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { getCategories } from '@/client';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
+import { bright_okabe_ito } from '@/service/GraphColorsService';
 import { formatCurrency, formatNumber } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { CategoriesDto } from '@/client';
-import { bright_okabe_ito } from '@/service/GraphColorsService';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
-    acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null },
+    acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
+    vendeurUid: { type: [Number, null], default: null },
     dateMin: { type: [Date, null], default: null },
     dateMax: { type: [Date, null], default: null }
 });
@@ -84,19 +86,22 @@ function transform(input: CategoriesDto[]): idatas {
     return output;
 }
 
-function fetchData() {
-    getCategories({
-        query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: props.acheteurUid,
-            vendeur_uid: props.vendeurUid
-        }
-    }).then((response) => {
-        if (response.data) {
-            data.value = transform(response.data);
-        }
-    });
+async function fetchData() {
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    if (acheteurUid || props.vendeurUid || !props.acheteurSiret) {
+        getCategories({
+            query: {
+                date_debut: props.dateMin,
+                date_fin: props.dateMax,
+                acheteur_uid: acheteurUid,
+                vendeur_uid: props.vendeurUid
+            }
+        }).then((response) => {
+            if (response.data) {
+                data.value = transform(response.data);
+            }
+        });
+    }
 }
 
 onMounted(() => {
@@ -151,7 +156,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             </div>
         </div>
         <div class="col-span-12">
-            <BoutonIframe v-if="acheteurUid" :acheteurUid path="categorie-marches" name="La répartition des marchés publics par catégorie, sous forme de graphique" />
+            <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="categorie-marches" name="La répartition des marchés publics par catégorie, sous forme de graphique" />
         </div>
     </section>
 </template>

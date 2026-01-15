@@ -5,12 +5,11 @@ import { breakLongLabel } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { ConsiderationDto, ConsiderationsEnvDto, ConsiderationsSocialeDto } from '@/client';
-import type Plotly from 'plotly.js-dist';
 import type { PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
-    acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null },
+    acheteurUid: { type: [Number, null], default: null },
+    vendeurUid: { type: [Number, null], default: null },
     dateMin: { type: Date, required: true },
     dateMax: { type: Date, required: true }
 });
@@ -42,7 +41,7 @@ function transform(input: Array<ConsiderationsEnvDto | ConsiderationsSocialeDto 
     return output;
 }
 
-const dataAnnuel = ref<Plotly.Data[]>([]);
+const dataAnnuel = ref<Partial<PlotData>[]>([]);
 const layoutAnnuel = { barmode: 'stack', margin: { t: 0, l: 0 } };
 
 const dataGlobal = ref<Partial<PlotData>[]>([]);
@@ -72,7 +71,7 @@ function fetchData() {
         if (response.data) {
             const totaux: dataInterface = { values: [], labels: [] };
             dataAnnuel.value = (() => {
-                const result = [] as Plotly.Data[];
+                const result = [] as Partial<PlotData>[];
                 for (let [k, e] of response.data.entries()) {
                     let initialValue = 0;
                     totaux.labels.push(breakLongLabel(e.consideration, 16));

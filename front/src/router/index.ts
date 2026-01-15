@@ -52,17 +52,17 @@ const router = createRouter({
             props: { boutonWidget: false },
             children: [
                 {
-                    path: 'acheteur/:uid',
+                    path: 'acheteur/:siret',
                     component: () => import('@/components/DetailsAcheteur.vue'),
                     props: (route) => ({
-                        acheteurUid: route.params.uid
+                        acheteurSiret: route.params.siret
                     })
                 },
                 {
                     path: 'indicateurs',
                     component: () => import('@/components/dashboard/IndicateursCles.vue'),
                     props: (route) => ({
-                        acheteurUid: route.query.acheteurUid,
+                        acheteurSiret: route.query.siret,
                         vendeurUid: route.query.vendeurUid,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
@@ -72,7 +72,7 @@ const router = createRouter({
                     path: 'marches',
                     component: () => import('@/components/ListeMarches.vue'),
                     props: (route) => ({
-                        acheteurUid: route.query.acheteurUid,
+                        acheteurSiret: route.query.siret,
                         vendeurUid: route.query.vendeurUid,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
@@ -82,7 +82,7 @@ const router = createRouter({
                     path: 'distribution-marches',
                     component: () => import('@/components/dashboard/DistributionTemporelleMarches.vue'),
                     props: (route) => ({
-                        acheteurUid: route.query.acheteurUid,
+                        acheteurSiret: route.query.siret,
                         vendeurUid: route.query.vendeurUid,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
@@ -92,7 +92,7 @@ const router = createRouter({
                     path: 'nature-marches',
                     component: () => import('@/components/dashboard/NatureContrats.vue'),
                     props: (route) => ({
-                        acheteurUid: route.query.acheteurUid,
+                        acheteurSiret: route.query.siret,
                         vendeurUid: route.query.vendeurUid,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
@@ -102,7 +102,7 @@ const router = createRouter({
                     path: 'procedure-marches',
                     component: () => import('@/components/dashboard/Procedure.vue'),
                     props: (route) => ({
-                        acheteurUid: route.query.acheteurUid,
+                        acheteurSiret: route.query.siret,
                         vendeurUid: route.query.vendeurUid,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
@@ -112,7 +112,7 @@ const router = createRouter({
                     path: 'ccag-marches',
                     component: () => import('@/components/dashboard/CCAG.vue'),
                     props: (route) => ({
-                        acheteurUid: route.query.acheteurUid,
+                        acheteurSiret: route.query.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
@@ -121,7 +121,7 @@ const router = createRouter({
                     path: 'categorie-marches',
                     component: () => import('@/components/dashboard/CategoriePrincipaleDAchat.vue'),
                     props: (route) => ({
-                        acheteurUid: route.query.acheteurUid,
+                        acheteurSiret: route.query.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })

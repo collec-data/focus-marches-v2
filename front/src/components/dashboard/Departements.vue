@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { getMarchesParDepartement } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
+import { okabe_ito } from '@/service/GraphColorsService';
 import { onMounted, ref } from 'vue';
 
 import type { MarcheDepartementDto } from '@/client';
-import { okabe_ito } from '@/service/GraphColorsService';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
 const montaData = ref<Partial<PlotData>[]>();

@@ -1,12 +1,39 @@
+import pytest
 from api_entreprise.exceptions import ApiEntrepriseClientError
 
 from app.dependencies import get_api_entreprise
+from app.models import enums
 from tests.factories import (
     AcheteurFactory,
     MarcheFactory,
     StructureInfogreffeFactory,
     VendeurFactory,
 )
+
+
+@pytest.fixture
+def api_entreprise_mock(mocker):
+    data_mock = mocker.Mock()
+    data_mock.unite_legale.personne_morale_attributs.raison_sociale = "Mon entreprise"
+    data_mock.unite_legale.personne_morale_attributs.sigle = "ME"
+    data_mock.unite_legale.forme_juridique.code = "1234"
+    data_mock.adresse_postale_legere = "Rennes"
+    data_mock.unite_legale.activite_principale.code = "00.00Z"
+    data_mock.unite_legale.tranche_effectif_salarie.intitule = "20 à 40"
+    data_mock.unite_legale.tranche_effectif_salarie.date_reference = "2025"
+    data_mock.date_creation = "123456"
+
+    api_entreprise_mock = mocker.Mock()
+    api_entreprise_mock.donnees_etablissement.return_value = data_mock
+
+    return api_entreprise_mock
+
+
+@pytest.fixture
+def opendatasoft_mock(mocker):
+    ods_mock = mocker.Mock()
+    ods_mock.getCoordonnees.return_value = {"lon": 1, "lat": 2}
+    return ods_mock
 
 
 def test_list_structures(client):
@@ -150,19 +177,7 @@ def test_list_vendeurs(client):
     assert response.json()[0]["structure"]["uid"] == vendeurs[1].uid
 
 
-def test_get_structure(client, mocker):
-    data_mock = mocker.Mock()
-    data_mock.unite_legale.personne_morale_attributs.raison_sociale = "Mon entreprise"
-    data_mock.unite_legale.personne_morale_attributs.sigle = "ME"
-    data_mock.unite_legale.forme_juridique.code = "1234"
-    data_mock.adresse_postale_legere = "Rennes"
-    data_mock.unite_legale.activite_principale.code = "00.00Z"
-    data_mock.unite_legale.tranche_effectif_salarie.intitule = "20 à 40"
-    data_mock.unite_legale.tranche_effectif_salarie.date_reference = "2025"
-    data_mock.date_creation = "123456"
-
-    api_entreprise_mock = mocker.Mock()
-    api_entreprise_mock.donnees_etablissement.return_value = data_mock
+def test_get_structure(client, api_entreprise_mock):
     client.app.dependency_overrides[get_api_entreprise] = lambda: api_entreprise_mock
 
     acheteur = AcheteurFactory(identifiant="9999")
@@ -199,6 +214,31 @@ def test_get_structure_api_entreprise_en_erreur(client, mocker):
 
 def test_get_structure_does_not_exists(client):
     response = client.get("/structure/123456")
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Structure inconnue"
+
+
+def test_get_structure_by_id(client, api_entreprise_mock, opendatasoft_mock):
+    client.app.dependency_overrides[get_api_entreprise] = lambda: api_entreprise_mock
+
+    acheteur = AcheteurFactory(identifiant="9999")
+
+    response = client.get(
+        f"/structure/{acheteur.type_identifiant}/{acheteur.identifiant}"
+    )
+
+    assert response.status_code == 200
+    assert response.json()["identifiant"] == acheteur.identifiant
+    assert response.json()["type_identifiant"] == acheteur.type_identifiant
+
+
+def test_get_structure_by_id_not_found(client):
+    acheteur = AcheteurFactory(identifiant="9999")
+
+    response = client.get(
+        f"/structure/{enums.IdentifiantStructure.UE.value}/{acheteur.identifiant}"
+    )
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Structure inconnue"

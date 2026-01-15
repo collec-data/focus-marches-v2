@@ -8,7 +8,7 @@ import { mockRouter } from '../mocks.ts';
 expect.extend(toHaveNoViolations);
 
 it('details acheteur has no accessibility violation', async () => {
-    await mockRouter({ uid: '42' });
+    await mockRouter({ uid: 42 });
     const { container, unmount } = render(DetailsAcheteur, { propsData: { acheteur: {} as StructureEtendueDto } });
     const results = await axe(container);
     expect(results).toHaveNoViolations();

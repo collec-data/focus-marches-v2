@@ -2,8 +2,8 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import { getConcessionResponseTransformer, getErreursImportResponseTransformer, getListeConcessionsResponseTransformer, getListeMarchesResponseTransformer, getMarcheResponseTransformer, getStructureResponseTransformer } from './transformers.gen';
-import type { GetCategorieDepartementData, GetCategorieDepartementResponses, GetCategoriesData, GetCategoriesErrors, GetCategoriesResponses, GetConcessionData, GetConcessionErrors, GetConcessionResponses, GetConsiderationsData, GetConsiderationsEnvEtSocialeData, GetConsiderationsEnvEtSocialeErrors, GetConsiderationsEnvEtSocialeResponses, GetConsiderationsEnvironnementaleData, GetConsiderationsEnvironnementaleErrors, GetConsiderationsEnvironnementaleResponses, GetConsiderationsErrors, GetConsiderationsResponses, GetConsiderationsSocialeData, GetConsiderationsSocialeErrors, GetConsiderationsSocialeResponses, GetErreursImportData, GetErreursImportErrors, GetErreursImportResponses, GetIndicateursData, GetIndicateursErrors, GetIndicateursResponses, GetLieuxData, GetLieuxErrors, GetLieuxResponses, GetListeConcessionsData, GetListeConcessionsErrors, GetListeConcessionsResponses, GetListeMarchesData, GetListeMarchesErrors, GetListeMarchesResponses, GetMarcheData, GetMarcheErrors, GetMarcheResponses, GetMarchesParCcagData, GetMarchesParCcagErrors, GetMarchesParCcagResponses, GetMarchesParDepartementData, GetMarchesParDepartementResponses, GetMarchesParNatureData, GetMarchesParNatureErrors, GetMarchesParNatureResponses, GetMarchesParProcedureData, GetMarchesParProcedureErrors, GetMarchesParProcedureResponses, GetStatsErreursData, GetStatsErreursErrors, GetStatsErreursResponses, GetStructureData, GetStructureErrors, GetStructureResponses, ListAcheteursData, ListAcheteursErrors, ListAcheteursResponses, ListCpvData, ListCpvErrors, ListCpvResponses, ListStructuresData, ListStructuresErrors, ListStructuresResponses, ListVendeursData, ListVendeursErrors, ListVendeursResponses } from './types.gen';
+import { getConcessionResponseTransformer, getErreursImportResponseTransformer, getListeConcessionsResponseTransformer, getListeMarchesResponseTransformer, getMarcheResponseTransformer, getStructureIdResponseTransformer, getStructureResponseTransformer } from './transformers.gen';
+import type { GetCategorieDepartementData, GetCategorieDepartementResponses, GetCategoriesData, GetCategoriesErrors, GetCategoriesResponses, GetConcessionData, GetConcessionErrors, GetConcessionResponses, GetConsiderationsData, GetConsiderationsEnvEtSocialeData, GetConsiderationsEnvEtSocialeErrors, GetConsiderationsEnvEtSocialeResponses, GetConsiderationsEnvironnementaleData, GetConsiderationsEnvironnementaleErrors, GetConsiderationsEnvironnementaleResponses, GetConsiderationsErrors, GetConsiderationsResponses, GetConsiderationsSocialeData, GetConsiderationsSocialeErrors, GetConsiderationsSocialeResponses, GetErreursImportData, GetErreursImportErrors, GetErreursImportResponses, GetIndicateursData, GetIndicateursErrors, GetIndicateursResponses, GetLieuxData, GetLieuxErrors, GetLieuxResponses, GetListeConcessionsData, GetListeConcessionsErrors, GetListeConcessionsResponses, GetListeMarchesData, GetListeMarchesErrors, GetListeMarchesResponses, GetMarcheData, GetMarcheErrors, GetMarcheResponses, GetMarchesParCcagData, GetMarchesParCcagErrors, GetMarchesParCcagResponses, GetMarchesParDepartementData, GetMarchesParDepartementResponses, GetMarchesParNatureData, GetMarchesParNatureErrors, GetMarchesParNatureResponses, GetMarchesParProcedureData, GetMarchesParProcedureErrors, GetMarchesParProcedureResponses, GetStatsErreursData, GetStatsErreursErrors, GetStatsErreursResponses, GetStructureData, GetStructureErrors, GetStructureIdData, GetStructureIdErrors, GetStructureIdResponses, GetStructureResponses, ListAcheteursData, ListAcheteursErrors, ListAcheteursResponses, ListCpvData, ListCpvErrors, ListCpvResponses, ListStructuresData, ListStructuresErrors, ListStructuresResponses, ListVendeursData, ListVendeursErrors, ListVendeursResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -145,6 +145,15 @@ export const listVendeurs = <ThrowOnError extends boolean = false>(options?: Opt
 export const getStructure = <ThrowOnError extends boolean = false>(options: Options<GetStructureData, ThrowOnError>) => (options.client ?? client).get<GetStructureResponses, GetStructureErrors, ThrowOnError>({
     responseTransformer: getStructureResponseTransformer,
     url: '/structure/{uid}',
+    ...options
+});
+
+/**
+ * Get Structure Id
+ */
+export const getStructureId = <ThrowOnError extends boolean = false>(options: Options<GetStructureIdData, ThrowOnError>) => (options.client ?? client).get<GetStructureIdResponses, GetStructureIdErrors, ThrowOnError>({
+    responseTransformer: getStructureIdResponseTransformer,
+    url: '/structure/{type_id}/{id}',
     ...options
 });
 

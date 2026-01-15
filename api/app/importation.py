@@ -196,9 +196,7 @@ class ImportateurDecp:
         marche = Marche(
             id=data.id,
             acheteur=self.set_acheteur(
-                self.get_or_create_structure(
-                    id=data.acheteur.id,
-                )
+                self.get_or_create_structure(id=data.acheteur.id, type_id="SIRET")
             ),
             nature=data.nature.db_value,
             objet=data.objet,
@@ -249,8 +247,8 @@ class ImportateurDecp:
             titulaires=[
                 self.set_vendeur(
                     self.get_or_create_structure(
-                        t["titulaire"].id,
-                        t["titulaire"].typeIdentifiant,
+                        id=t["titulaire"].id,
+                        type_id=t["titulaire"].typeIdentifiant,
                     )
                 )
                 for t in data.titulaires
@@ -293,8 +291,8 @@ class ImportateurDecp:
                 id=dacte.id,
                 sous_traitant=self.set_vendeur(
                     self.get_or_create_structure(
-                        type_id=dacte.sousTraitant.typeIdentifiant,
                         id=dacte.sousTraitant.id,
+                        type_id=dacte.sousTraitant.typeIdentifiant,
                     )
                 ),
                 duree_mois=dacte.dureeMois,
@@ -388,7 +386,7 @@ class ImportateurDecp:
             id=data.id,
             autorite_concedante=self.set_acheteur(
                 self.get_or_create_structure(
-                    id=data.autoriteConcedante.id,
+                    id=data.autoriteConcedante.id, type_id="SIRET"
                 )
             ),
             nature=data.nature.db_value,
@@ -469,12 +467,16 @@ class ImportateurDecp:
         structure: Structure | None = None
 
         if type_contrat == TypeContrat.MARCHE and o.get("acheteur", {}).get("id"):
-            structure = self.get_or_create_structure(id=o["acheteur"]["id"])
+            structure = self.get_or_create_structure(
+                id=o["acheteur"]["id"], type_id="SIRET"
+            )
 
         if type_contrat == TypeContrat.CONCESSION and o.get(
             "autoriteConcedante", {}
         ).get("id"):
-            structure = self.get_or_create_structure(id=o["autoriteConcedante"]["id"])
+            structure = self.get_or_create_structure(
+                id=o["autoriteConcedante"]["id"], type_id="SIRET"
+            )
 
         date_creation: str | None = None
 

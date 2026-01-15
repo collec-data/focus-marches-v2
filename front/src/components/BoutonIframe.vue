@@ -8,7 +8,7 @@ const { layoutConfig } = useLayout();
 const props = defineProps({
     path: String,
     name: { type: String },
-    acheteurUid: { type: [String, null] }
+    acheteurSiret: { type: [String, null] }
 });
 
 const route = useRoute();
@@ -22,7 +22,7 @@ async function genUrl() {
     }
 
     const query = new URLSearchParams({
-        ...(props.acheteurUid ? { acheteurUid: props.acheteurUid } : null),
+        ...(props.acheteurSiret ? { siret: props.acheteurSiret } : null),
         ...route.query,
         ...layoutParams
     }).toString();

@@ -2,7 +2,7 @@ import re
 from datetime import date
 from decimal import Decimal
 
-from sqlalchemy import Column, ForeignKey, String, Table, Text
+from sqlalchemy import Column, ForeignKey, String, Table, Text, UniqueConstraint
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import (
@@ -64,6 +64,8 @@ class Structure(Base):
     infogreffe: Mapped[list["StructureInfogreffe"]] = relationship(
         back_populates="structure"
     )
+
+    __table_args__ = (UniqueConstraint("identifiant", "type_identifiant"),)
 
 
 class StructureInfogreffe(Base):
@@ -140,6 +142,8 @@ class Lieu(Base):
     @hybrid_property
     def type_code_as_str(self) -> TypeCodeLieu:
         return TypeCodeLieu.from_db_value(self.type_code)
+
+    __table_args__ = (UniqueConstraint("code", "type_code"),)
 
 
 class Tarif(Base):

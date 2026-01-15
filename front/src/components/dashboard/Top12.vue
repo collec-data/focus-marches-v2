@@ -9,8 +9,8 @@ import type { Layout, PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
     type: String,
-    acheteurUid: { type: [String, null], default: null },
-    vendeurUid: { type: [String, null], default: null },
+    acheteurUid: { type: [Number, null], default: null },
+    vendeurUid: { type: [Number, null], default: null },
     dateMin: { type: Date, required: true },
     dateMax: { type: Date, required: true }
 });
@@ -70,8 +70,8 @@ function fetchData(categorie: CategorieMarche | undefined = undefined, exhaustif
     (props.type == 'acheteurs' ? listAcheteurs : listVendeurs)({
         query: {
             limit: exhaustif ? null : 12,
-            acheteur_uid: props.acheteurUid ? parseInt(props.acheteurUid) : null,
-            vendeur_uid: props.vendeurUid ? parseInt(props.vendeurUid) : null,
+            acheteur_uid: props.acheteurUid,
+            vendeur_uid: props.vendeurUid,
             date_debut: props.dateMin,
             date_fin: props.dateMax,
             categorie: categorie
