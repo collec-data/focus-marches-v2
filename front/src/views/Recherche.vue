@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listCpv, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
+import { exportMarchesCSV, exportMarchesPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatDate, getCatEntreprise, getMonthAsString, getNow, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
@@ -259,6 +260,14 @@ const marcheUid = ref(null);
             <h2 class="title">Toutes les données de votre recherche</h2>
             <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
             <DataTable v-if="marches.length" :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+                <template #header>
+                    <div class="flex flex-row">
+                        <div class="basis-1/2 flex gap-1">
+                            <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportMarchesCSV(marches)" />
+                            <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportMarchesPdf(marches, 'Liste des marchés')" />
+                        </div>
+                    </div>
+                </template>
                 <Column header="Détails">
                     <template #body="{ data }">
                         <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" />
