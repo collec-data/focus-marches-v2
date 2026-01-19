@@ -36,9 +36,31 @@ const stats = ref({
     services: { montant_total: 0, nombre_total: 0 }
 });
 
+function getNextMonth(date: string): string {
+    let [year, month] = date.split('-').map((e) => parseInt(e));
+    if (month == 12) {
+        month = 1;
+        year = year + 1;
+    } else {
+        month = month + 1;
+    }
+    return year + '-' + month;
+}
+
+function getPreviousMonth(date: string): string {
+    let [year, month] = date.split('-').map((e) => parseInt(e));
+    if (month == 1) {
+        month = 12;
+        year = year - 1;
+    } else {
+        month = month - 1;
+    }
+    return year + '-' + month.toString().padStart(2, '0');
+}
+
 function transform(input: CategoriesDto[]): idatas {
     const output = <idatas>{
-        services: [{ x: [], y: [], type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: bright_okabe_ito[3] }, fillcolor: bright_okabe_ito[3] }],
+        services: [{ x: [] as string[], y: [] as number[], type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: bright_okabe_ito[3] }, fillcolor: bright_okabe_ito[3] }],
         travaux: [{ x: [], y: [], type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: bright_okabe_ito[0] }, fillcolor: bright_okabe_ito[0] }],
         fournitures: [{ x: [], y: [], type: 'scatter', fill: 'tozeroy', mode: 'lines', line: { color: bright_okabe_ito[6] }, fillcolor: bright_okabe_ito[6] }]
     };
@@ -52,8 +74,35 @@ function transform(input: CategoriesDto[]): idatas {
         services: { montant_total: 0, nombre_total: 0 }
     };
 
+    // will be used to track gap between two values, and add 0 values to get a nice chart
+    const previousByType = { services: null as null | CategoriesDto, travaux: null as null | CategoriesDto, fournitures: null as null | CategoriesDto, tout: null as null | CategoriesDto };
+
     for (let line of input) {
         const key = line.categorie.toLowerCase();
+
+        const previousMonth = getPreviousMonth(line.mois);
+
+        if (!previousByType[key] || previousByType[key].mois != previousMonth) {
+            // set null value after previous line
+            if (previousByType[key]) {
+                output[key][0].y.push(0);
+                output[key][0].x.push(getNextMonth(previousByType[key].mois));
+            }
+
+            // set null value before current line
+            output[key][0].y.push(0);
+            output[key][0].x.push(previousMonth);
+        }
+
+        if (!previousByType.tout || (previousByType.tout.mois != previousMonth && !total_mensuel[previousMonth])) {
+            // set null value after previous line
+            if (previousByType.tout) {
+                total_mensuel[getNextMonth(previousByType.tout.mois)] = 0;
+            }
+
+            // set null value before current line
+            total_mensuel[previousMonth] = 0;
+        }
 
         output[key][0].y.push(parseFloat(line.montant));
         output[key][0].x.push(line.mois);
@@ -68,6 +117,20 @@ function transform(input: CategoriesDto[]): idatas {
         stats.value[key].nombre_total += line.nombre;
         stats.value.montant_total += parseFloat(line.montant);
         stats.value.nombre_total += line.nombre;
+
+        previousByType[key] = line;
+        previousByType.tout = line;
+    }
+
+    // set lasts values for nice chart end
+    for (let key of ['services', 'fournitures', 'travaux']) {
+        if (previousByType[key]) {
+            output[key][0].y.push(0);
+            output[key][0].x.push(getNextMonth(previousByType[key].mois));
+        }
+    }
+    if (previousByType.tout) {
+        total_mensuel[getNextMonth(previousByType.tout.mois)] = 0;
     }
 
     const total = <Partial<PlotData>>{
