@@ -2,7 +2,7 @@
 import { getCategories } from '@/client';
 import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { bright_okabe_ito } from '@/service/GraphColorsService';
-import { formatCurrency, formatNumber } from '@/service/HelpersService';
+import { formatCurrency, formatNumber, getNow } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { CategoriesDto } from '@/client';
@@ -22,7 +22,11 @@ interface idatas {
     fournitures: Partial<PlotData>[];
 }
 const data = ref<Partial<idatas>>({});
-const layout = { showlegend: false, margin: { t: 0, r: 0, b: 20 }, xaxis: { type: 'date' } } as Partial<Layout>;
+const layout = {
+    showlegend: false,
+    margin: { t: 0, r: 0, b: 20 },
+    xaxis: { type: 'date', range: [(props.dateMin ? props.dateMin : new Date(settings.date_min)).toISOString().substring(0, 10), (props.dateMax ? props.dateMax : getNow()).toISOString().substring(0, 10)] }
+} as Partial<Layout>;
 
 const stats = ref({
     montant_total: 0,

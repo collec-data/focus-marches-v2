@@ -49,7 +49,10 @@ function transform(input: Array<MarcheNatureDto>) {
 const marcheData = ref<Partial<Plotly.PlotData>[]>();
 const partenariatData = ref<Partial<Plotly.Data>[]>();
 const defenseData = ref<Partial<Plotly.Data>[]>();
-const layout = { margin: { t: 0, r: 0, b: 20 } } as Partial<Plotly.Layout>;
+const layout = {
+    margin: { t: 0, r: 0, b: 20 },
+    xaxis: { type: 'date', range: [(props.dateMin ? props.dateMin : new Date(settings.date_min)).toISOString().substring(0, 10), (props.dateMax ? props.dateMax : getNow()).toISOString().substring(0, 10)] }
+} as Partial<Plotly.Layout>;
 const config = { displayModeBar: false } as Partial<Plotly.Config>;
 
 function makeGraph(labels: Array<string | null>, data: Array<number>, color: string): Array<Partial<Plotly.PlotData>> {
