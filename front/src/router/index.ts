@@ -1,5 +1,6 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import WidgetLayout from '@/layout/WidgetLayout.vue';
+import { apropos, mentions_legales } from '@/service/markdownsLoader';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -43,6 +44,18 @@ const router = createRouter({
                     path: 'erreurs-importation',
                     name: "Erreur à l'importation",
                     component: () => import('@/views/ErreursImportations.vue')
+                },
+                {
+                    path: '/a-propos',
+                    name: 'a propos',
+                    props: () => ({ content: apropos }),
+                    component: () => import('@/views/pages/PageMarkdown.vue')
+                },
+                {
+                    path: '/mentions-legales',
+                    name: 'mentions legales',
+                    props: () => ({ content: mentions_legales }),
+                    component: () => import('@/views/pages/PageMarkdown.vue')
                 }
             ]
         },

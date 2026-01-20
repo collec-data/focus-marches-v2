@@ -9,6 +9,7 @@ import PrimeVue from 'primevue/config';
 import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 import Tooltip from 'primevue/tooltip';
+import { loadMarkdowns } from './service/markdownsLoader';
 
 import '@/assets/styles.scss';
 
@@ -31,3 +32,5 @@ app.use(ConfirmationService);
 app.directive('tooltip', Tooltip);
 
 app.mount('#app');
+
+loadMarkdowns();
