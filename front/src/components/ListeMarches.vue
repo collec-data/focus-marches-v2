@@ -99,6 +99,11 @@ const hiddenCol = computed(() => {
             :rowsPerPageOptions="[10, 25, 50]"
             :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
         >
+            <template #empty>
+                <div class="text-center">
+                    <Badge size="xlarge" severity="info">Aucun marché</Badge>
+                </div>
+            </template>
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2 flex gap-1">

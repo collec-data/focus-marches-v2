@@ -43,6 +43,11 @@ const concessionUid = ref(null);
     <section>
         <h2>Contrat-concessions</h2>
         <DataTable :value="listeConcessions" sortField="date_notification" :sortOrder="-1" size="small" stripedRows :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+            <template #empty>
+                <div class="text-center">
+                    <Badge size="xlarge" severity="info">Aucune concession</Badge>
+                </div>
+            </template>
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2 flex gap-1">

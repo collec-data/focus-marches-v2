@@ -108,6 +108,11 @@ function search() {
         <div>
             <h2>Statistiques</h2>
             <DataTable :value="stats" scrollable scrollHeight="30rem" sortField="nombre" :sortOrder="-1">
+                <template #empty>
+                    <div class="text-center">
+                        <Badge size="xlarge" severity="info">Aucune erreur</Badge>
+                    </div>
+                </template>
                 <Column header="DECPs">
                     <template #body="{ data }">
                         <Button icon="pi pi-search" severity="secondary" aria-label="Voir les DECPs concernés par cette erreur" @click="loadDecps(data.localisation, data.type)" />
