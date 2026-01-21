@@ -91,7 +91,7 @@ mypy-extensions==1.1.0
     # via
     #   mypy
     #   typing-inspect
-packaging==25.0
+packaging==26.0
     # via
     #   marshmallow
     #   pytest

@@ -77,7 +77,7 @@ mdurl==0.1.2
     # via markdown-it-py
 mypy-extensions==1.1.0
     # via typing-inspect
-packaging==25.0
+packaging==26.0
     # via marshmallow
 psycopg2-binary==2.9.11
     # via focus-marche-v2 (pyproject.toml)
