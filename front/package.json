@@ -16,6 +16,8 @@
     "dependencies": {
         "@primeuix/themes": "^2.0.0",
         "@tailwindcss/postcss": "^4.1.14",
+        "jspdf": "^4.0.0",
+        "jspdf-autotable": "^5.0.2",
         "leaflet": "^1.9.4",
         "plotly.js-dist": "^3.1.1",
         "plotly.js-locales": "^3.3.0",

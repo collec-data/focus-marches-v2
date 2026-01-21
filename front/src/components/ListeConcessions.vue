@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { type ContratConcessionDto, getListeConcessions } from '@/client';
+import { exportConcessionsCSV, exportConcessionsPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
@@ -42,6 +43,14 @@ const concessionUid = ref(null);
     <section>
         <h2>Contrat-concessions</h2>
         <DataTable :value="listeConcessions" sortField="date_notification" :sortOrder="-1" size="small" stripedRows :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+            <template #header>
+                <div class="flex flex-row">
+                    <div class="basis-1/2 flex gap-1">
+                        <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportConcessionsCSV(listeConcessions)" />
+                        <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportConcessionsPdf(listeConcessions, 'Liste des concessions')" />
+                    </div>
+                </div>
+            </template>
             <Column header="Détails">
                 <template #body="{ data }"> <Button label="Voir" aria-label="Voir les détails de la concessions" @click="concessionUid = data.uid" /> </template
             ></Column>

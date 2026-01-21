@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { getListeMarches } from '@/client';
+import { exportMarchesCSV, exportMarchesPdf } from '@/service/ExportDatatableService';
 import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
@@ -100,8 +101,9 @@ const hiddenCol = computed(() => {
         >
             <template #header>
                 <div class="flex flex-row">
-                    <div class="basis-1/2">
-                        <Button disabled icon="pi pi-external-link" label="Export" />
+                    <div class="basis-1/2 flex gap-1">
+                        <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportMarchesCSV(listeMarches)" />
+                        <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportMarchesPdf(listeMarches, 'Liste des marchés de ' + nomStructure)" />
                     </div>
                     <div class="basis-1/2 flex justify-end">
                         <IconField class="w-fit">

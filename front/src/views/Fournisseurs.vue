@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { listVendeurs } from '@/client';
+import { exportStructuresCSV, exportStructuresPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatNumber, getOpsnRegion, structureName } from '@/service/HelpersService';
 import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
@@ -42,8 +43,9 @@ onMounted(() => {
         >
             <template #header>
                 <div class="flex flex-row">
-                    <div class="basis-1/2">
-                        <Button disabled icon="pi pi-external-link" label="Export" />
+                    <div class="basis-1/2 flex gap-1">
+                        <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportStructuresCSV(fournisseurs, 'fournisseurs')" />
+                        <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportStructuresPdf(fournisseurs, 'Liste des fournisseurs du profil acheteur de ' + getOpsnRegion(), 'fournisseurs')" />
                     </div>
                     <div class="basis-1/2 flex justify-end">
                         <IconField class="w-fit">
