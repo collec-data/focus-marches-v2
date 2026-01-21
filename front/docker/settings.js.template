@@ -5,4 +5,5 @@ var settings = {
   date_min: "${DATE_MIN}",
   opsn: "${OPSN}",
   region: "${REGION}",
+  departements: "${DEPARTEMENTS}",
 };
