@@ -38,6 +38,7 @@ const pluginSettingsTemplating = (templatePath: string): Plugin => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+    publicDir: 'src/public',
     plugins: [
         vue(),
         pluginSettingsTemplating('docker/settings.js.template'),
