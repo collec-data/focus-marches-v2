@@ -2,11 +2,11 @@
 import { getCategories } from '@/client';
 import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { bright_okabe_ito } from '@/service/GraphColorsService';
-import { formatCurrency, formatNumber, getNow } from '@/service/HelpersService';
-import { onMounted, ref, watch } from 'vue';
+import { formatCurrency, formatNumber, getMonthAsString, getNow } from '@/service/HelpersService';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import type { CategoriesDto } from '@/client';
-import type { Layout, PlotData } from 'plotly.js-dist';
+import type { PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
     acheteurUid: { type: [Number, null], default: null },
@@ -22,11 +22,11 @@ interface idatas {
     fournitures: Partial<PlotData>[];
 }
 const data = ref<Partial<idatas>>({});
-const layout = {
+const layout = computed(() => ({
     showlegend: false,
     margin: { t: 0, r: 0, b: 20 },
-    xaxis: { type: 'date', range: [(props.dateMin ? props.dateMin : new Date(settings.date_min)).toISOString().substring(0, 10), (props.dateMax ? props.dateMax : getNow()).toISOString().substring(0, 10)] }
-} as Partial<Layout>;
+    xaxis: { type: 'date', range: [getMonthAsString(props.dateMin || new Date(settings.date_min)), getMonthAsString(props.dateMax || getNow())] }
+}));
 
 const stats = ref({
     montant_total: 0,

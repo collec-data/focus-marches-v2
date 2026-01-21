@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listCpv, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
-import { formatCurrency, formatDate, getCatEntreprise, getNow, structureName } from '@/service/HelpersService';
+import { formatCurrency, formatDate, getCatEntreprise, getMonthAsString, getNow, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
 import type { CpvDto, LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
@@ -88,8 +88,8 @@ function fetchData() {
         montant_max: filtres.value.montant_max,
         duree_min: filtres.value.duree_min,
         duree_max: filtres.value.duree_max,
-        date_debut: filtres.value.date_min.toISOString().substring(0, 10),
-        date_fin: filtres.value.date_max.toISOString().substring(0, 10)
+        date_debut: getMonthAsString(filtres.value.date_min),
+        date_fin: getMonthAsString(filtres.value.date_max)
     };
     getListeMarches({
         query: {

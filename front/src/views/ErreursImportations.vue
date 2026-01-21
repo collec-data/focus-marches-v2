@@ -4,7 +4,7 @@ import { onMounted, ref } from 'vue';
 
 import type { DecpMalFormeDto, StatsErreursDto, StructureDto } from '@/client';
 import StructureSearchAutoComplete from '@/components/StructureSearchAutoComplete.vue';
-import { formatDate, formatNumber, getNow, structureName } from '@/service/HelpersService';
+import { formatDate, formatNumber, getMonthAsString, getNow, structureName } from '@/service/HelpersService';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -70,8 +70,8 @@ function loadDecps(localisation: string, type: string) {
 function search() {
     const query = {
         ...route.query,
-        dateMin: filtres.value.date_min ? filtres.value.date_min.toISOString().substring(0, 10) : undefined,
-        dateMax: filtres.value.date_max ? filtres.value.date_max.toISOString().substring(0, 10) : undefined,
+        dateMin: filtres.value.date_min ? getMonthAsString(filtres.value.date_min) : undefined,
+        dateMax: filtres.value.date_max ? getMonthAsString(filtres.value.date_max) : undefined,
         uid_structure: filtres.value.acheteur ? filtres.value.acheteur.uid : undefined
     };
     router.push({

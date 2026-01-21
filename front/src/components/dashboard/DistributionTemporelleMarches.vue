@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { getAcheteurUid } from '@/service/GetAcheteurService';
-import { getNow } from '@/service/HelpersService';
-import { onMounted, ref, watch } from 'vue';
+import { getMonthAsString, getNow } from '@/service/HelpersService';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import { getListeMarches, type MarcheAllegeDto } from '@/client';
 import type { PlotData } from 'plotly.js-dist';
@@ -21,15 +21,15 @@ const props = defineProps({
 });
 
 const data = ref<Partial<PlotData>[]>();
-const layout = {
+const layout = computed(() => ({
     margin: { t: 0, r: 0, l: 60, b: 50 },
     xaxis: {
         type: 'date',
-        range: [(props.dateMin ? props.dateMin : new Date(settings.date_min)).toISOString().substring(0, 10), (props.dateMax ? props.dateMax : getNow()).toISOString().substring(0, 10)],
+        range: [getMonthAsString(props.dateMin || new Date(settings.date_min)), getMonthAsString(props.dateMax || getNow())],
         title: { text: 'DATE' }
     },
     yaxis: { title: { text: 'MONTANT (€)' } }
-};
+}));
 
 function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     const common_data = { mode: 'markers' as PlotData['mode'] };

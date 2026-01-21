@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { getConsiderations, getConsiderationsEnvEtSociale, getConsiderationsEnvironnementale, getConsiderationsSociale } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { breakLongLabel, getNow } from '@/service/HelpersService';
-import { onMounted, ref, watch } from 'vue';
+import { breakLongLabel, getMonthAsString, getNow } from '@/service/HelpersService';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import type { ConsiderationDto, ConsiderationsEnvDto, ConsiderationsSocialeDto } from '@/client';
 import type { PlotData } from 'plotly.js-dist';
@@ -42,11 +42,11 @@ function transform(input: Array<ConsiderationsEnvDto | ConsiderationsSocialeDto 
 }
 
 const dataAnnuel = ref<Partial<PlotData>[]>([]);
-const layoutAnnuel = {
+const layoutAnnuel = computed(() => ({
     barmode: 'stack',
     margin: { t: 0, l: 0 },
-    xaxis: { type: 'date', range: [(props.dateMin ? props.dateMin : new Date(settings.date_min)).toISOString().substring(0, 10), (props.dateMax ? props.dateMax : getNow()).toISOString().substring(0, 10)] }
-};
+    xaxis: { type: 'date', range: [getMonthAsString(props.dateMin || new Date(settings.date_min)), getMonthAsString(props.dateMax || getNow())] }
+}));
 
 const dataGlobal = ref<Partial<PlotData>[]>([]);
 const dataEnv = ref<Partial<PlotData>[]>([]);
