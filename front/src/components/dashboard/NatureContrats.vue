@@ -2,8 +2,8 @@
 import { getMarchesParNature } from '@/client';
 import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { formatCurrency, getDurationInMonths, getNow } from '@/service/HelpersService';
-import { onMounted, ref, watch } from 'vue';
+import { formatCurrency, getDurationInMonths, getMonthAsString, getNow } from '@/service/HelpersService';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import type { MarcheNatureDto } from '@/client';
 import type Plotly from 'plotly.js-dist';
@@ -49,7 +49,10 @@ function transform(input: Array<MarcheNatureDto>) {
 const marcheData = ref<Partial<Plotly.PlotData>[]>();
 const partenariatData = ref<Partial<Plotly.Data>[]>();
 const defenseData = ref<Partial<Plotly.Data>[]>();
-const layout = { margin: { t: 0, r: 0, b: 20 } } as Partial<Plotly.Layout>;
+const layout = computed(() => ({
+    margin: { t: 0, r: 0, b: 20 },
+    xaxis: { type: 'date', range: [getMonthAsString(props.dateMin || new Date(settings.date_min)), getMonthAsString(props.dateMax || getNow())] }
+}));
 const config = { displayModeBar: false } as Partial<Plotly.Config>;
 
 function makeGraph(labels: Array<string | null>, data: Array<number>, color: string): Array<Partial<Plotly.PlotData>> {

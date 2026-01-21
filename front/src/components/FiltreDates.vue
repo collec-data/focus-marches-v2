@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getMonthAsString } from '@/service/HelpersService';
 import { ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -21,8 +22,8 @@ function updateDateLimits(event: SubmitEvent) {
         params: route.params,
         query: {
             ...route.query,
-            dateMin: dates.value.min ? dates.value.min.toISOString().substring(0, 10) : null,
-            dateMax: dates.value.max ? dates.value.max.toISOString().substring(0, 10) : null
+            dateMin: dates.value.min ? getMonthAsString(dates.value.min) : null,
+            dateMax: dates.value.max ? getMonthAsString(dates.value.max) : null
         }
     });
     event.preventDefault();

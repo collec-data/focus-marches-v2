@@ -20,6 +20,10 @@ export const formatDate = (value: Date) => {
     });
 };
 
+export function getMonthAsString(date: Date): string {
+    return date.toISOString().substring(0, 10);
+}
+
 function getLastElement(a: Array<string>): string {
     return a[a.length - 1];
 }
