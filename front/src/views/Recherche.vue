@@ -259,7 +259,12 @@ const marcheUid = ref(null);
         <section>
             <h2 class="title">Toutes les données de votre recherche</h2>
             <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
-            <DataTable v-if="marches.length" :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+            <DataTable :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+                <template #empty>
+                    <div class="text-center">
+                        <Badge size="xlarge" severity="info">Aucun marché pour cette sélection</Badge>
+                    </div>
+                </template>
                 <template #header>
                     <div class="flex flex-row">
                         <div class="basis-1/2 flex gap-1">

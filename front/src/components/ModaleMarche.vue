@@ -121,6 +121,11 @@ function hideMarcheModal() {
                     <hr />
                     <div class="key">Accord-cadre</div>
                     <DataTable :value="marchesSubsequents">
+                        <template #empty>
+                            <div class="text-center">
+                                <Badge size="xlarge" severity="info">Aucun marché subséquent</Badge>
+                            </div>
+                        </template>
                         <Column field="objet" header="Objet"></Column>
                         <Column field="cpv" header="CPV"></Column>
                         <Column field="acheteur.nom" header="Acheteur">
@@ -143,10 +148,15 @@ function hideMarcheModal() {
                         </Column>
                     </DataTable>
                 </div>
-                <div v-if="marcheDetaille?.sous_traitance_declaree">
+                <div v-if="marcheDetaille?.sous_traitance_declaree || marcheDetaille?.actes_sous_traitance?.length">
                     <hr />
                     <div class="key">Sous-traitance</div>
                     <DataTable :value="marcheDetaille.actes_sous_traitance">
+                        <template #empty>
+                            <div class="text-center">
+                                <Badge size="xlarge" severity="info">Pas d'actes de sous-traitance</Badge>
+                            </div>
+                        </template>
                         <Column field="sous_traitant.nom" header="Fournisseur">
                             <template #body="{ data }">
                                 <RouterLink :to="'/fournisseur/' + data.uid">
