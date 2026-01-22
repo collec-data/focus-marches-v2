@@ -48,6 +48,7 @@ declare module 'vue' {
     NatureContrats: typeof import('./src/components/dashboard/NatureContrats.vue')['default']
     Panel: typeof import('primevue/panel')['default']
     Procedure: typeof import('./src/components/dashboard/Procedure.vue')['default']
+    ProgressSpinner: typeof import('primevue/progressspinner')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('primevue/select')['default']
