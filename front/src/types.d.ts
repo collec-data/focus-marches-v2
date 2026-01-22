@@ -11,6 +11,7 @@ type Settings = {
     date_min: string;
     opsn: string;
     region: string;
+    departements: string;
 };
 
 declare var settings: Settings;

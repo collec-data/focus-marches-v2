@@ -30,7 +30,7 @@ config.global.stubs = {
     RouterLink: RouterLinkStub
 };
 
-vi.stubGlobal('settings', { date_min: new Date('2020-01-01'), opsn: 'OPSN', region: 'REGION' });
+vi.stubGlobal('settings', { date_min: new Date('2020-01-01'), opsn: 'OPSN', region: 'REGION', departements: '56,35' });
 
 vi.mock('vue-router');
 

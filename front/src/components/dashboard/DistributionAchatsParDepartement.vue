@@ -21,9 +21,11 @@ const data = ref<Partial<SankeyData>[]>([
         }
     }
 ]);
-const layout = { margin: { l: 0, t: 0, b: 0, r: 0 } };
+const layout = { margin: { l: 0, t: 0, b: 20, r: 0 } };
 
 onMounted(() => {
+    const departementsRegion = settings.departements.split(',');
+
     getCategorieDepartement().then((response) => {
         if (response.data) {
             function getOrCreateLabel(label: string): number {
@@ -34,12 +36,20 @@ onMounted(() => {
                 }
                 return indice;
             }
+            let montantAutresRegionsBySource = { Travaux: 0, Fournitures: 0, Services: 0 };
             for (let line of response.data) {
-                if (parseFloat(line.montant) > 1_000_000) {
+                if (departementsRegion.includes(line.code)) {
                     data.value[0].link?.value?.push(parseFloat(line.montant));
                     data.value[0].link?.source?.push(getOrCreateLabel(line.categorie));
                     data.value[0].link?.target?.push(getOrCreateLabel('(' + line.code + ') ' + getNomDepartement(line.code)));
+                } else {
+                    montantAutresRegionsBySource[line.categorie] += parseFloat(line.montant);
                 }
+            }
+            for (const [k, v] of Object.entries(montantAutresRegionsBySource)) {
+                data.value[0].link?.value?.push(v);
+                data.value[0].link?.source?.push(getOrCreateLabel(k));
+                data.value[0].link?.target?.push(getOrCreateLabel('Départements hors région'));
             }
         }
     });
