@@ -79,10 +79,10 @@ function fetchData(categorie: CategorieMarche | undefined = undefined, exhaustif
     }).then((response) => {
         if (response.data) {
             if (exhaustif) {
-                listeExhaustiveStructures.value = response.data;
+                listeExhaustiveStructures.value = response.data.items;
             } else {
-                listeStructures.value[categorie ? categorie.toLowerCase() : 'tout'] = response.data;
-                let rawData = transform(response.data);
+                listeStructures.value[categorie ? categorie.toLowerCase() : 'tout'] = response.data.items;
+                let rawData = transform(response.data.items);
                 data.value[categorie ? categorie.toLowerCase() : 'tout'] = [
                     {
                         x: rawData.structures,

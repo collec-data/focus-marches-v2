@@ -13,6 +13,11 @@ from app.models.enums import (
 )
 
 
+class PaginationParams(BaseModel):
+    limit: int | None = Field(ge=0, default=None)
+    offset: int = Field(ge=0, default=0)
+
+
 class FiltreTemporelStructure(BaseModel):
     date_debut: date | None = None
     date_fin: date | None = None
@@ -38,15 +43,11 @@ class FiltreMarchesEtendus(FiltreTemporelStructure):
     duree_min: int | None = Field(ge=0, default=None)
 
 
-class FiltresListeMarches(FiltreMarchesEtendus):
+class FiltresListeMarches(FiltreMarchesEtendus, PaginationParams):
     accord_cadre_uid: int | None = Field(default=None)
-    limit: int | None = Field(default=None, gt=0)
-    offset: int | None = Field(default=None, ge=0)
 
 
-class FiltreListesConcessions(BaseModel):
-    limit: int | None = Field(default=None, gt=0)
-    offset: int | None = Field(default=None, ge=0)
+class FiltreListesConcessions(PaginationParams):
     date_debut: date | None = None
     date_fin: date | None = None
     autorite_concedante_uid: str | None = None

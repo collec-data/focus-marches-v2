@@ -792,6 +792,20 @@ export const NatureMarche = {
 export type NatureMarche = typeof NatureMarche[keyof typeof NatureMarche];
 
 /**
+ * PaginatedStructureAggMarchesDto
+ */
+export type PaginatedStructureAggMarchesDto = {
+    /**
+     * Total
+     */
+    total: number;
+    /**
+     * Items
+     */
+    items: Array<StructureAggMarchesDto>;
+};
+
+/**
  * ProcedureConcession
  */
 export const ProcedureConcession = {
@@ -1001,6 +1015,20 @@ export type StructureInfogreffeDto = {
      */
     effectif: number | null;
 };
+
+/**
+ * StructuresAggChamps
+ */
+export const StructuresAggChamps = {
+    MONTANT: 'montant',
+    NB_CONTRATS: 'nb_contrats',
+    NOM: 'nom'
+} as const;
+
+/**
+ * StructuresAggChamps
+ */
+export type StructuresAggChamps = typeof StructuresAggChamps[keyof typeof StructuresAggChamps];
 
 /**
  * TarifDto
@@ -1218,6 +1246,14 @@ export type GetListeMarchesData = {
     path?: never;
     query?: {
         /**
+         * Limit
+         */
+        limit?: number | null;
+        /**
+         * Offset
+         */
+        offset?: number;
+        /**
          * Date Debut
          */
         date_debut?: Date | null;
@@ -1289,14 +1325,6 @@ export type GetListeMarchesData = {
          * Accord Cadre Uid
          */
         accord_cadre_uid?: number | null;
-        /**
-         * Limit
-         */
-        limit?: number | null;
-        /**
-         * Offset
-         */
-        offset?: number | null;
     };
     url: '/marche/';
 };
@@ -1844,7 +1872,7 @@ export type GetListeConcessionsData = {
         /**
          * Offset
          */
-        offset?: number | null;
+        offset?: number;
         /**
          * Date Debut
          */
@@ -1964,6 +1992,10 @@ export type ListAcheteursData = {
          */
         limit?: number | null;
         /**
+         * Offset
+         */
+        offset?: number;
+        /**
          * Date Debut
          */
         date_debut?: Date | null;
@@ -1972,13 +2004,22 @@ export type ListAcheteursData = {
          */
         date_fin?: Date | null;
         /**
-         * Vendeur Uid
-         */
-        vendeur_uid?: number | null;
-        /**
          * Categorie
          */
         categorie?: CategorieMarche | null;
+        champs_ordre?: StructuresAggChamps;
+        /**
+         * Ordre
+         */
+        ordre?: number;
+        /**
+         * Filtre
+         */
+        filtre?: string | null;
+        /**
+         * Vendeur Uid
+         */
+        vendeur_uid?: number | null;
     };
     url: '/structure/acheteur';
 };
@@ -1994,11 +2035,9 @@ export type ListAcheteursError = ListAcheteursErrors[keyof ListAcheteursErrors];
 
 export type ListAcheteursResponses = {
     /**
-     * Response List Acheteurs
-     *
      * Successful Response
      */
-    200: Array<StructureAggMarchesDto>;
+    200: PaginatedStructureAggMarchesDto;
 };
 
 export type ListAcheteursResponse = ListAcheteursResponses[keyof ListAcheteursResponses];
@@ -2012,9 +2051,9 @@ export type ListVendeursData = {
          */
         limit?: number | null;
         /**
-         * Acheteur Uid
+         * Offset
          */
-        acheteur_uid?: number | null;
+        offset?: number;
         /**
          * Date Debut
          */
@@ -2027,6 +2066,19 @@ export type ListVendeursData = {
          * Categorie
          */
         categorie?: CategorieMarche | null;
+        champs_ordre?: StructuresAggChamps;
+        /**
+         * Ordre
+         */
+        ordre?: number;
+        /**
+         * Filtre
+         */
+        filtre?: string | null;
+        /**
+         * Acheteur Uid
+         */
+        acheteur_uid?: number | null;
     };
     url: '/structure/vendeur';
 };
@@ -2042,11 +2094,9 @@ export type ListVendeursError = ListVendeursErrors[keyof ListVendeursErrors];
 
 export type ListVendeursResponses = {
     /**
-     * Response List Vendeurs
-     *
      * Successful Response
      */
-    200: Array<StructureAggMarchesDto>;
+    200: PaginatedStructureAggMarchesDto;
 };
 
 export type ListVendeursResponse = ListVendeursResponses[keyof ListVendeursResponses];

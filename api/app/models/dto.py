@@ -319,12 +319,6 @@ class MarcheCategorieDepartementDto(BaseModel):
         return CategorieMarche.from_db_value(v)
 
 
-class StructureAggMarchesDto(BaseModel):
-    structure: StructureDto
-    montant: Decimal
-    nb_contrats: int
-
-
 class CategoriesDto(BaseModel):
     categorie: CategorieMarche
     mois: str

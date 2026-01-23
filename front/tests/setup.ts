@@ -41,10 +41,10 @@ export const restHandlers = [
         return HttpResponse.json(indicateurs);
     }),
     http.get(baseUrl + 'structure/acheteur', () => {
-        return HttpResponse.json([structure]);
+        return HttpResponse.json({ items: [structure], total: 1 });
     }),
     http.get(baseUrl + 'structure/vendeur', () => {
-        return HttpResponse.json([structure]);
+        return HttpResponse.json({ items: [structure], total: 1 });
     }),
     http.get(baseUrl + 'structure/42', () => {
         return HttpResponse.json(structure);

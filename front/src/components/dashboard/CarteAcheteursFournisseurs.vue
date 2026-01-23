@@ -25,7 +25,6 @@ function fetchData() {
     if (acheteur.value.uid || vendeur.value.uid) {
         (acheteur.value.uid ? listVendeurs : listAcheteurs)({
             query: {
-                limit: null,
                 acheteur_uid: acheteur.value ? acheteur.value.uid : null,
                 vendeur_uid: vendeur.value ? vendeur.value.uid : null,
                 date_debut: props.dateMin,
@@ -38,7 +37,7 @@ function fetchData() {
                     marker.remove();
                 });
                 markers = [];
-                response.data.forEach((structure) => {
+                response.data.items.forEach((structure) => {
                     if (structure.structure.latitude && structure.structure.longitude) {
                         const coordonnees = [structure.structure.latitude, structure.structure.longitude];
                         markers.push(L.marker(coordonnees, { icon: icon }).addTo(toRaw(initialMap.value)).bindPopup(structureName(structure.structure)));
