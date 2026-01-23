@@ -48,6 +48,10 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
 onMounted(() => {
     fetchData();
 });
+
+function removeNnbsp(text: string): string {
+    return text.replaceAll(String.fromCharCode(8239), ' ');
+}
 </script>
 
 <template>
@@ -67,47 +71,47 @@ onMounted(() => {
             <div class="indicateur">
                 <i class="pi pi-receipt"></i>
                 <div class="label">NB DE CONTRATS</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_contrats) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_contrats).toString()) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-calculator"></i>
                 <div class="label">MONTANT TOTAL</div>
-                <div class="value">{{ indicateurs.montant_total ? formatCurrency(parseFloat(indicateurs.montant_total)) : '' }}</div>
+                <div class="value">{{ removeNnbsp(indicateurs.montant_total ? formatCurrency(parseFloat(indicateurs.montant_total)) : '') }}</div>
             </div>
             <div v-if="acheteurUid == null" class="indicateur">
                 <i class="pi pi-users"></i>
                 <div class="label">NB ACHETEURS</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_acheteurs) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_acheteurs).toString()) }}</div>
             </div>
             <div v-if="vendeurUid == null" class="indicateur">
                 <i class="pi pi-users"></i>
                 <div class="label">NB FOURNISSEURS</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_fournisseurs) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_fournisseurs).toString()) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-sitemap"></i>
                 <div class="label">NB CONTRATS AVEC SOUS TRAITANCE</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_sous_traitance) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_sous_traitance).toString()) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-star"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS ENVIRONNEMENTALES ET SOCIALES</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_considerations_sociale_env) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_considerations_sociale_env).toString()) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-globe"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS ENVIRONNEMENTALES</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_considerations_env) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_considerations_env).toString()) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-eye"></i>
                 <div class="label">NB CONTRATS AVEC DES CONSIDERATIONS SOCIALES</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_considerations_sociales) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_considerations_sociales).toString()) }}</div>
             </div>
             <div class="indicateur">
                 <i class="pi pi-lightbulb"></i>
                 <div class="label">NB CONTRATS INNOVANTS</div>
-                <div class="value">{{ formatNumber(indicateurs.nb_innovant) }}</div>
+                <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_innovant).toString()) }}</div>
             </div>
         </div>
         <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="indicateurs" name="Des indicateurs sur les marchés publics passés" />
@@ -125,7 +129,8 @@ onMounted(() => {
 }
 
 .value {
-    font-weight: 900;
+    font-size: large;
+    word-spacing: 0.3rem;
 }
 
 .pi {
