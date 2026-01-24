@@ -111,7 +111,7 @@ redis==4.6.0
     #   focus-marche-v2 (pyproject.toml)
 requests==2.32.5
     # via api-entreprise
-rich==14.2.0
+rich==14.3.1
     # via
     #   rich-toolkit
     #   typer
