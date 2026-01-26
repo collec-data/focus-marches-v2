@@ -38,7 +38,7 @@ fastapi-cli[standard]==0.0.20
     # via fastapi
 fastapi-cloud-cli==0.11.0
     # via fastapi-cli
-greenlet==3.3.0
+greenlet==3.3.1
     # via sqlalchemy
 h11==0.16.0
     # via
@@ -101,7 +101,7 @@ python-dotenv==1.2.1
     # via
     #   pydantic-settings
     #   uvicorn
-python-multipart==0.0.21
+python-multipart==0.0.22
     # via fastapi
 pyyaml==6.0.3
     # via uvicorn
