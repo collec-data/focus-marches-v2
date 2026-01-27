@@ -2,27 +2,64 @@
 import { listVendeurs } from '@/client';
 import { exportStructuresCSV, exportStructuresPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatNumber, getOpsnRegion, structureName } from '@/service/HelpersService';
-import { FilterMatchMode } from '@primevue/core/api';
 import { onMounted, ref } from 'vue';
 
-import type { StructureAggMarchesDto } from '@/client';
+import type { StructureAggMarchesDto, StructuresAggChamps } from '@/client';
+import { rowsPerPageOptions, useApiSideDataTable } from '@/service/DataTableHelper';
 
-const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    'structure.nom': { value: null, matchMode: FilterMatchMode.IN },
-    nb_contrats: { value: null, matchMode: FilterMatchMode.EQUALS },
-    montant: { value: null, matchMode: FilterMatchMode.EQUALS }
-});
+const { search, totalRecords, loading, rows, page, first, sortOrder, sortField, onPageChange, onSort } = useApiSideDataTable(fetchData);
 
 const fournisseurs = ref<Array<StructureAggMarchesDto>>([]);
 
-onMounted(() => {
-    listVendeurs().then((response) => {
+function fetchData() {
+    loading.value = true;
+
+    listVendeurs({
+        query: {
+            limit: rows.value,
+            offset: page.value * rows.value,
+            ordre: sortOrder.value,
+            champs_ordre: sortField.value as StructuresAggChamps,
+            filtre: search.value.toUpperCase()
+        }
+    }).then((response) => {
         if (response.data) {
-            fournisseurs.value = response.data;
+            fournisseurs.value = response.data.items;
+            totalRecords.value = response.data.total;
+        }
+        loading.value = false;
+    });
+}
+
+onMounted(() => {
+    fetchData();
+});
+
+async function fetchAndExportAllData() {
+    const response = await listVendeurs({
+        query: {
+            ordre: sortOrder.value,
+            champs_ordre: sortField.value as StructuresAggChamps,
+            filtre: search.value.toUpperCase()
         }
     });
-});
+    return response.data;
+}
+
+async function exportCSV() {
+    const data = await fetchAndExportAllData();
+    if (data) {
+        exportStructuresCSV(data.items, 'fournisseurs');
+    }
+}
+async function exportPDF() {
+    const data = await fetchAndExportAllData();
+    if (data) {
+        exportStructuresPdf(data.items, 'Liste des fournisseurs du profil acheteur de ' + getOpsnRegion(), 'fournisseurs');
+    } else {
+        console.error("La liste complète des fournisseurs n'a pas pu être récupérée");
+    }
+}
 </script>
 
 <template>
@@ -30,39 +67,43 @@ onMounted(() => {
         <h1>Les fournisseurs répertoriés dans les profils d'acheteur de {{ getOpsnRegion() }}</h1>
         <p>Cliquez sur chaque élement de la liste pour découvrir le profil détaillé du titulaire. Le montant affiché correspond au total des contrats gagnés par le titulaire. La table est triée alphabetiquement par la dénomination des titulaires.</p>
         <DataTable
-            v-model:filters="filters"
             :value="fournisseurs"
-            :globalFilterFields="['structure.nom', 'montant', 'nb_contrats']"
-            sortField="structure.nom"
-            :sortOrder="1"
-            removableSort
             stripedRows
             paginator
-            :rows="25"
-            :rowsPerPageOptions="[10, 25, 50]"
+            lazy
+            :loading
+            :rows
+            :rowsPerPageOptions
+            :totalRecords
+            :first
+            :sortField
+            :sortOrder
+            @page="(onPageChange($event), fetchData())"
+            @update:rows="rows = $event"
+            @sort="(onSort($event), fetchData())"
         >
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2 flex gap-1">
-                        <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportStructuresCSV(fournisseurs, 'fournisseurs')" />
-                        <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportStructuresPdf(fournisseurs, 'Liste des fournisseurs du profil acheteur de ' + getOpsnRegion(), 'fournisseurs')" />
+                        <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportCSV()" />
+                        <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportPDF()" />
                     </div>
                     <div class="basis-1/2 flex justify-end">
                         <IconField class="w-fit">
                             <InputIcon>
                                 <i class="pi pi-search" />
                             </InputIcon>
-                            <InputText v-model="filters['global'].value" placeholder="Keyword Search" />
+                            <InputText v-model="search" placeholder="Nom ou SIRET" />
                         </IconField>
                     </div>
                 </div>
             </template>
-            <Column field="structure.identifiant" header="Annuaire">
+            <Column field="" header="Annuaire">
                 <template #body="slotProps">
                     <Button icon="pi pi-search" aria-label="Annuaire" as="a" :href="'https://annuaire-entreprises.data.gouv.fr/etablissement/' + slotProps.data.structure.identifiant" target="_blank" rel="noopener" />
                 </template>
             </Column>
-            <Column field="structure" header="Nom" sortable>
+            <Column field="nom" header="Nom" sortable>
                 <template #body="slotProps">
                     <RouterLink :to="'/fournisseur/' + slotProps.data.structure.uid">
                         <Button :label="structureName(slotProps.data.structure)" as="a" variant="link" />

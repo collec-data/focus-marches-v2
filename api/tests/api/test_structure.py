@@ -75,45 +75,48 @@ def test_list_acheteurs(client):
     response = client.get("/structure/acheteur", params={"limit": 2})
     assert response.status_code == 200
 
-    assert response.json() == [
-        {
-            "montant": "20",
-            "nb_contrats": 1,
-            "structure": {
-                "acheteur": True,
-                "cat_entreprise": None,
-                "identifiant": acheteurs[1].identifiant,
-                "nom": None,
-                "type_identifiant": acheteurs[1].type_identifiant,
-                "uid": acheteurs[1].uid,
-                "vendeur": False,
-                "latitude": None,
-                "longitude": None,
+    assert response.json() == {
+        "items": [
+            {
+                "montant": "20",
+                "nb_contrats": 1,
+                "structure": {
+                    "acheteur": True,
+                    "cat_entreprise": None,
+                    "identifiant": acheteurs[1].identifiant,
+                    "nom": None,
+                    "type_identifiant": acheteurs[1].type_identifiant,
+                    "uid": acheteurs[1].uid,
+                    "vendeur": False,
+                    "latitude": None,
+                    "longitude": None,
+                },
             },
-        },
-        {
-            "montant": "10",
-            "nb_contrats": 2,
-            "structure": {
-                "acheteur": True,
-                "cat_entreprise": None,
-                "identifiant": acheteurs[0].identifiant,
-                "nom": None,
-                "type_identifiant": acheteurs[0].type_identifiant,
-                "uid": acheteurs[0].uid,
-                "vendeur": False,
-                "latitude": None,
-                "longitude": None,
+            {
+                "montant": "10",
+                "nb_contrats": 2,
+                "structure": {
+                    "acheteur": True,
+                    "cat_entreprise": None,
+                    "identifiant": acheteurs[0].identifiant,
+                    "nom": None,
+                    "type_identifiant": acheteurs[0].type_identifiant,
+                    "uid": acheteurs[0].uid,
+                    "vendeur": False,
+                    "latitude": None,
+                    "longitude": None,
+                },
             },
-        },
-    ]
+        ],
+        "total": 3,
+    }
 
     response = client.get("/structure/acheteur", params={"vendeur_uid": titulaire2.uid})
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert {
-        response.json()[0]["structure"]["uid"],
-        response.json()[1]["structure"]["uid"],
+        response.json()["items"][0]["structure"]["uid"],
+        response.json()["items"][1]["structure"]["uid"],
     } == {acheteurs[0].uid, acheteurs[2].uid}
 
     response = client.get(
@@ -125,7 +128,7 @@ def test_list_acheteurs(client):
         },
     )
     assert response.status_code == 200
-    assert len(response.json()) == 1
+    assert len(response.json()["items"]) == 1
 
 
 def test_list_vendeurs(client):
@@ -141,7 +144,7 @@ def test_list_vendeurs(client):
 
     assert response.status_code == 200
 
-    data = response.json()
+    data = response.json()["items"]
 
     assert len(data) == 3
     assert data[0]["structure"]["identifiant"] == vendeurs[0].identifiant
@@ -158,10 +161,10 @@ def test_list_vendeurs(client):
 
     response = client.get("/structure/vendeur", params={"acheteur_uid": acheteur.uid})
     assert response.status_code == 200
-    assert len(response.json()) == 2
+    assert len(response.json()["items"]) == 2
     assert {
-        response.json()[0]["structure"]["uid"],
-        response.json()[1]["structure"]["uid"],
+        response.json()["items"][0]["structure"]["uid"],
+        response.json()["items"][1]["structure"]["uid"],
     } == {vendeurs[0].uid, vendeurs[1].uid}
 
     response = client.get(
@@ -173,8 +176,8 @@ def test_list_vendeurs(client):
         },
     )
     assert response.status_code == 200
-    assert len(response.json()) == 1
-    assert response.json()[0]["structure"]["uid"] == vendeurs[1].uid
+    assert len(response.json()["items"]) == 1
+    assert response.json()["items"][0]["structure"]["uid"] == vendeurs[1].uid
 
 
 def test_get_structure(client, api_entreprise_mock):

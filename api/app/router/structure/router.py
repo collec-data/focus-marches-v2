@@ -1,17 +1,27 @@
 import logging
 from datetime import date
 from decimal import Decimal
+from typing import Annotated
 
 from api_entreprise.api import ApiEntreprise
 from api_entreprise.exceptions import ApiEntrepriseClientError
-from fastapi import APIRouter, HTTPException
-from sqlalchemy import desc, func, or_, select
+from fastapi import APIRouter, HTTPException, Query
+from sqlalchemy import asc, desc, distinct, func, or_, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import ApiEntrepriseDep, SessionDep
 from app.models.db import Marche, Structure, StructureInfogreffe
-from app.models.dto import StructureAggMarchesDto, StructureDto, StructureEtendueDto
-from app.models.enums import CategorieMarche, IdentifiantStructure
+from app.models.dto import (
+    StructureDto,
+    StructureEtendueDto,
+)
+from app.models.enums import IdentifiantStructure
+from app.router.structure.models import (
+    PaginatedStructureAggMarchesDto,
+    ParamsAcheteurs,
+    ParamsVendeurs,
+    StructuresAggChamps,
+)
 
 router = APIRouter()
 logger = logging.getLogger(__name__)
@@ -40,15 +50,11 @@ def list_structures(
     return list(session.execute(stmt).scalars())
 
 
-@router.get("/acheteur", response_model=list[StructureAggMarchesDto])
+@router.get("/acheteur", response_model=PaginatedStructureAggMarchesDto)
 def list_acheteurs(
     session: SessionDep,
-    limit: int | None = None,
-    date_debut: date | None = None,
-    date_fin: date | None = None,
-    vendeur_uid: int | None = None,
-    categorie: CategorieMarche | None = None,
-) -> list[dict[str, Decimal | Structure]]:
+    params: Annotated[ParamsAcheteurs, Query()],
+) -> dict[str, int | list[dict[str, Decimal | Structure]]]:
     stmt = (
         select(
             Structure,
@@ -58,42 +64,67 @@ def list_acheteurs(
         .join(Structure.marches_acheteurs)
         .where(Structure.acheteur.is_(True))
     )
+    total = (
+        select(func.count(distinct(Structure.uid)).label("total"))
+        .join(Structure.marches_acheteurs)
+        .where(Structure.acheteur.is_(True))
+    )
 
-    if vendeur_uid:
+    if params.vendeur_uid:
         titulaires = aliased(Structure)
         stmt = stmt.outerjoin(titulaires, Marche.titulaires).where(
-            titulaires.uid == vendeur_uid
+            titulaires.uid == params.vendeur_uid
+        )
+        total = total.outerjoin(titulaires, Marche.titulaires).where(
+            titulaires.uid == params.vendeur_uid
         )
 
-    if categorie:
-        stmt = stmt.where(Marche.categorie == categorie.db_value)
+    if params.filtre is not None and params.filtre != "":
+        stmt = stmt.where(
+            or_(
+                Structure.identifiant.contains(params.filtre),
+                Structure.nom.contains(params.filtre),
+            )
+        )
 
-    if date_debut:
-        stmt = stmt.where(Marche.date_notification >= date_debut)
+    if params.categorie:
+        stmt = stmt.where(Marche.categorie == params.categorie.db_value)
+        total = total.where(Marche.categorie == params.categorie.db_value)
 
-    if date_fin:
-        stmt = stmt.where(Marche.date_notification <= date_fin)
+    if params.date_debut:
+        stmt = stmt.where(Marche.date_notification >= params.date_debut)
+        total = total.where(Marche.date_notification >= params.date_debut)
 
-    stmt = stmt.group_by(Structure.uid).order_by(desc("montant"))
+    if params.date_fin:
+        stmt = stmt.where(Marche.date_notification <= params.date_fin)
+        total = total.where(Marche.date_notification <= params.date_fin)
 
-    if limit:
-        stmt = stmt.limit(limit)
+    stmt = stmt.group_by(Structure.uid)
 
-    return [
-        {"structure": structure, "montant": montant, "nb_contrats": nb_contrats}
-        for structure, montant, nb_contrats in session.execute(stmt).all()
-    ]
+    if params.champs_ordre == StructuresAggChamps.NOM:
+        stmt = stmt.order_by((asc if params.ordre > 0 else desc)(Structure.nom))
+    else:
+        stmt = stmt.order_by((asc if params.ordre > 0 else desc)(params.champs_ordre))
+
+    stmt = stmt.offset(params.offset)
+
+    if params.limit:
+        stmt = stmt.limit(params.limit)
+
+    return {
+        "items": [
+            {"structure": structure, "montant": montant, "nb_contrats": nb_contrats}
+            for structure, montant, nb_contrats in session.execute(stmt).all()
+        ],
+        "total": session.execute(total).scalar_one(),
+    }
 
 
-@router.get("/vendeur", response_model=list[StructureAggMarchesDto])
+@router.get("/vendeur", response_model=PaginatedStructureAggMarchesDto)
 def list_vendeurs(
     session: SessionDep,
-    limit: int | None = None,
-    acheteur_uid: int | None = None,
-    date_debut: date | None = None,
-    date_fin: date | None = None,
-    categorie: CategorieMarche | None = None,
-) -> list[dict[str, Structure | Decimal | int]]:
+    params: Annotated[ParamsVendeurs, Query()],
+) -> dict[str, int | list[dict[str, Decimal | Structure]]]:
     stmt = (
         select(
             Structure,
@@ -103,33 +134,60 @@ def list_vendeurs(
         .join(Structure.marches_vendeur)
         .where(Structure.vendeur.is_(True))
     )
-    if acheteur_uid:
-        stmt = stmt.where(Marche.uid_acheteur == acheteur_uid)
+    total = (
+        select(func.count(distinct(Structure.uid)).label("total"))
+        .join(Structure.marches_vendeur)
+        .where(Structure.vendeur.is_(True))
+    )
 
-    if categorie:
-        stmt = stmt.where(Marche.categorie == categorie.db_value)
+    if params.filtre is not None and params.filtre != "":
+        stmt = stmt.where(
+            or_(
+                Structure.identifiant.contains(params.filtre),
+                Structure.nom.contains(params.filtre),
+            )
+        )
 
-    if date_debut:
-        stmt = stmt.where(Marche.date_notification >= date_debut)
+    if params.acheteur_uid:
+        stmt = stmt.where(Marche.uid_acheteur == params.acheteur_uid)
+        total = total.where(Marche.uid_acheteur == params.acheteur_uid)
 
-    if date_fin:
-        stmt = stmt.where(Marche.date_notification <= date_fin)
+    if params.categorie:
+        stmt = stmt.where(Marche.categorie == params.categorie.db_value)
+        total = total.where(Marche.categorie == params.categorie.db_value)
 
-    stmt = stmt.group_by(Structure.uid).order_by(desc("montant"))
+    if params.date_debut:
+        stmt = stmt.where(Marche.date_notification >= params.date_debut)
+        total = total.where(Marche.date_notification >= params.date_debut)
 
-    if limit:
-        stmt = stmt.limit(limit)
+    if params.date_fin:
+        stmt = stmt.where(Marche.date_notification <= params.date_fin)
+        total = total.where(Marche.date_notification <= params.date_fin)
 
-    return [
-        {"structure": structure, "montant": montant, "nb_contrats": nb_contrats}
-        for structure, montant, nb_contrats in session.execute(stmt)
-    ]
+    stmt = stmt.group_by(Structure.uid)
+
+    if params.champs_ordre == StructuresAggChamps.NOM:
+        stmt = stmt.order_by((asc if params.ordre > 0 else desc)(Structure.nom))
+    else:
+        stmt = stmt.order_by((asc if params.ordre > 0 else desc)(params.champs_ordre))
+
+    stmt = stmt.offset(params.offset)
+
+    if params.limit:
+        stmt = stmt.limit(params.limit)
+
+    return {
+        "items": [
+            {"structure": structure, "montant": montant, "nb_contrats": nb_contrats}
+            for structure, montant, nb_contrats in session.execute(stmt).all()
+        ],
+        "total": session.execute(total).scalar_one(),
+    }
 
 
 def complete_structure_etendue(
     structure: Structure, api_entreprise: ApiEntreprise
 ) -> StructureEtendueDto:
-    # structure_dto = StructureEtendueDto.model_validate(structure.__dict__)
     structure_dto = StructureEtendueDto.model_validate(structure, from_attributes=True)
 
     if structure.type_identifiant == "SIRET":
