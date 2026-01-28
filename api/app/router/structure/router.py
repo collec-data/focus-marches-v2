@@ -86,6 +86,12 @@ def list_acheteurs(
                 Structure.nom.contains(params.filtre),
             )
         )
+        total = total.where(
+            or_(
+                Structure.identifiant.contains(params.filtre),
+                Structure.nom.contains(params.filtre),
+            )
+        )
 
     if params.categorie:
         stmt = stmt.where(Marche.categorie == params.categorie.db_value)
@@ -142,6 +148,12 @@ def list_vendeurs(
 
     if params.filtre is not None and params.filtre != "":
         stmt = stmt.where(
+            or_(
+                Structure.identifiant.contains(params.filtre),
+                Structure.nom.contains(params.filtre),
+            )
+        )
+        total = total.where(
             or_(
                 Structure.identifiant.contains(params.filtre),
                 Structure.nom.contains(params.filtre),
