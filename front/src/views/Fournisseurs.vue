@@ -65,7 +65,10 @@ async function exportPDF() {
 <template>
     <main className="card">
         <h1>Les fournisseurs répertoriés dans les profils d'acheteur de {{ getOpsnRegion() }}</h1>
-        <p>Cliquez sur chaque élement de la liste pour découvrir le profil détaillé du titulaire. Le montant affiché correspond au total des contrats gagnés par le titulaire. La table est triée alphabetiquement par la dénomination des titulaires.</p>
+        <p>
+            Cliquez sur chaque élement de la liste pour découvrir le profil détaillé du titulaire. Le montant affiché correspond au total des contrats gagnés par le titulaire. La table est triée alphabetiquement par la dénomination des titulaires.
+            Certains fournisseurs peuvent être classés en [ND] , c'est-à-dire en données non diffusables ou non diffusibles.
+        </p>
         <DataTable
             :value="fournisseurs"
             stripedRows

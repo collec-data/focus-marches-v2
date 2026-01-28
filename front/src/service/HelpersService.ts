@@ -58,10 +58,10 @@ export function structureName(structure: Partial<StructureDto> | Partial<Structu
     if (structure.nom && structure.nom != '[ND]') {
         return structure.nom;
     }
-    if (structure.type_identifiant && structure.identifiant) {
-        return structure.type_identifiant + ':' + structure.identifiant;
+    if (structure.type_identifiant == 'SIRET' && structure.identifiant) {
+        return '[ND] SIRET' + ':' + structure.identifiant;
     }
-    return '';
+    return structure.type_identifiant + ':' + structure.identifiant;
 }
 
 export function getNow(): Date {
