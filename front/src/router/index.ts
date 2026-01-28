@@ -62,79 +62,109 @@ const router = createRouter({
         {
             path: '/widget/',
             component: WidgetLayout,
-            props: { boutonWidget: false },
+            props: {},
             children: [
                 {
                     path: 'acheteur/:siret',
+                    component: () => import('@/views/Acheteur.vue'),
+                    props: (route) => ({
+                        siret: route.params.siret
+                    })
+                },
+                {
+                    path: 'acheteur/:siret/details',
                     component: () => import('@/components/DetailsAcheteur.vue'),
                     props: (route) => ({
                         acheteurSiret: route.params.siret
                     })
                 },
                 {
-                    path: 'indicateurs',
+                    path: 'acheteur/:siret/indicateurs',
                     component: () => import('@/components/dashboard/IndicateursCles.vue'),
                     props: (route) => ({
-                        acheteurSiret: route.query.siret,
-                        vendeurUid: route.query.vendeurUid,
+                        acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
                 },
                 {
-                    path: 'marches',
+                    path: 'acheteur/:siret/marches',
                     component: () => import('@/components/ListeMarches.vue'),
                     props: (route) => ({
-                        acheteurSiret: route.query.siret,
-                        vendeurUid: route.query.vendeurUid,
+                        acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
                 },
                 {
-                    path: 'distribution-marches',
+                    path: 'acheteur/:siret/marches/distribution',
                     component: () => import('@/components/dashboard/DistributionTemporelleMarches.vue'),
                     props: (route) => ({
-                        acheteurSiret: route.query.siret,
-                        vendeurUid: route.query.vendeurUid,
+                        acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
                 },
                 {
-                    path: 'nature-marches',
+                    path: 'acheteur/:siret/marches/nature',
                     component: () => import('@/components/dashboard/NatureContrats.vue'),
                     props: (route) => ({
-                        acheteurSiret: route.query.siret,
-                        vendeurUid: route.query.vendeurUid,
+                        acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
                 },
                 {
-                    path: 'procedure-marches',
+                    path: 'acheteur/:siret/marches/procedure',
                     component: () => import('@/components/dashboard/Procedure.vue'),
                     props: (route) => ({
-                        acheteurSiret: route.query.siret,
-                        vendeurUid: route.query.vendeurUid,
+                        acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
                 },
                 {
-                    path: 'ccag-marches',
+                    path: 'acheteur/:siret/marches/ccag',
                     component: () => import('@/components/dashboard/CCAG.vue'),
                     props: (route) => ({
-                        acheteurSiret: route.query.siret,
+                        acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })
                 },
                 {
-                    path: 'categorie-marches',
+                    path: 'acheteur/:siret/marches/categorie',
                     component: () => import('@/components/dashboard/CategoriePrincipaleDAchat.vue'),
                     props: (route) => ({
-                        acheteurSiret: route.query.siret,
+                        acheteurSiret: route.params.siret,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
+                    path: 'acheteur/:siret/marches/top12',
+                    component: () => import('@/components/dashboard/Top12.vue'),
+                    props: (route) => ({
+                        acheteurSiret: route.params.siret,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax,
+                        type: 'fournisseurs'
+                    })
+                },
+                {
+                    path: 'acheteur/:siret/marches/achat-durable',
+                    component: () => import('@/components/dashboard/AchatDurable.vue'),
+                    props: (route) => ({
+                        acheteurSiret: route.params.siret,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
+                    path: 'acheteur/:siret/concessions',
+                    component: () => import('@/components/ListeConcessions.vue'),
+                    props: (route) => ({
+                        autoriteConcedanteSiret: route.params.siret,
                         dateMin: route.query.dateMin,
                         dateMax: route.query.dateMax
                     })

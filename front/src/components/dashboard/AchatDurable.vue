@@ -5,10 +5,12 @@ import { breakLongLabel, getMonthAsString, getNow } from '@/service/HelpersServi
 import { computed, onMounted, ref, watch } from 'vue';
 
 import type { ConsiderationDto, ConsiderationsEnvDto, ConsiderationsSocialeDto } from '@/client';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
 import type { PlotData } from 'plotly.js-dist';
 
 const props = defineProps({
     acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
     vendeurUid: { type: [Number, null], default: null },
     dateMin: { type: Date, required: true },
     dateMax: { type: Date, required: true }
@@ -53,12 +55,16 @@ const dataEnv = ref<Partial<PlotData>[]>([]);
 const dataSocial = ref<Partial<PlotData>[]>([]);
 const dataSocialEnv = ref<Partial<PlotData>[]>([]);
 
-function fetchData() {
+async function fetchData() {
+    if (props.acheteurUid == -1) {
+        return;
+    }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
     const y2024 = new Date(Date.UTC(2024, 1, 1));
     const query = {
         date_debut: props.dateMin > y2024 ? props.dateMin : y2024,
         date_fin: props.dateMax,
-        acheteur_uid: props.acheteurUid,
+        acheteur_uid: acheteurUid,
         vendeur_uid: props.vendeurUid
     };
     getConsiderationsEnvironnementale({ query: query }).then((response) => {
@@ -132,5 +138,6 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
                 <Graph :data="dataSocialEnv" />
             </div>
         </div>
+        <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/achat-durable'" name="La répartition des marchés publics par nature, sous forme de graphique" />
     </section>
 </template>

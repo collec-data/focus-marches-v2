@@ -67,24 +67,25 @@ function makeGraph(labels: Array<string | null>, data: Array<number>, color: str
 }
 
 async function fetchData() {
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    if (acheteurUid || props.vendeurUid || !props.acheteurSiret) {
-        getMarchesParNature({
-            query: {
-                date_debut: props.dateMin,
-                date_fin: props.dateMax,
-                acheteur_uid: acheteurUid,
-                vendeur_uid: props.vendeurUid
-            }
-        }).then((data) => {
-            if (data.data) {
-                let rawData = transform(data.data);
-                marcheData.value = makeGraph(rawData[0].labels, rawData[0].values, okabe_ito[0]);
-                partenariatData.value = makeGraph(rawData[1].labels, rawData[1].values, okabe_ito[1]);
-                defenseData.value = makeGraph(rawData[2].labels, rawData[2].values, okabe_ito[2]);
-            }
-        });
+    if (props.acheteurUid == -1) {
+        return;
     }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    getMarchesParNature({
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: acheteurUid,
+            vendeur_uid: props.vendeurUid
+        }
+    }).then((data) => {
+        if (data.data) {
+            let rawData = transform(data.data);
+            marcheData.value = makeGraph(rawData[0].labels, rawData[0].values, okabe_ito[0]);
+            partenariatData.value = makeGraph(rawData[1].labels, rawData[1].values, okabe_ito[1]);
+            defenseData.value = makeGraph(rawData[2].labels, rawData[2].values, okabe_ito[2]);
+        }
+    });
 }
 
 onMounted(() => {
@@ -146,7 +147,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
                 </div>
             </div>
         </details>
-        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="nature-marches" name="La répartition des marchés publics par nature, sous forme de graphique" />
+        <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/nature'" name="La répartition des marchés publics par nature, sous forme de graphique" />
     </section>
 </template>
 

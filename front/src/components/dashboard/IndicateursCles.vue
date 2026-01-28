@@ -23,22 +23,23 @@ const props = defineProps({
 const indicateurs = ref({} as IndicateursDto);
 
 async function fetchData() {
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    if (acheteurUid || props.vendeurUid || props.query) {
-        getIndicateurs({
-            query: {
-                date_debut: props.dateMin,
-                date_fin: props.dateMax,
-                acheteur_uid: acheteurUid,
-                vendeur_uid: props.vendeurUid,
-                ...props.query
-            }
-        }).then((data) => {
-            if (data.data) {
-                indicateurs.value = data.data;
-            }
-        });
+    if (props.acheteurUid == -1) {
+        return;
     }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    getIndicateurs({
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: acheteurUid,
+            vendeur_uid: props.vendeurUid,
+            ...props.query
+        }
+    }).then((data) => {
+        if (data.data) {
+            indicateurs.value = data.data;
+        }
+    });
 }
 
 watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid, () => props.query], () => {
@@ -114,7 +115,7 @@ function removeNnbsp(text: string): string {
                 <div class="value">{{ removeNnbsp(formatNumber(indicateurs.nb_innovant).toString()) }}</div>
             </div>
         </div>
-        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="indicateurs" name="Des indicateurs sur les marchés publics passés" />
+        <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/indicateurs'" name="Des indicateurs sur les marchés publics passés" />
     </section>
 </template>
 
