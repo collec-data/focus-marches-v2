@@ -64,7 +64,10 @@ async function exportPDF() {
 <template>
     <main className="card">
         <h1>Les organismes du profil d'acheteur de {{ getOpsnRegion() }}</h1>
-        <p>Cliquez sur chaque élement de la liste pour découvrir le profil détaillé de l'acheteur. Le montant affiché correspond au total des marchés passés par cet acheteur. La table est triée alphabetiquement par les organismes.</p>
+        <p>
+            Cliquez sur chaque élement de la liste pour découvrir le profil détaillé de l'acheteur. Le montant affiché correspond au total des marchés passés par cet acheteur. La table est triée alphabetiquement par les organismes. Certains acheteurs
+            peuvent être classés en [ND] , c'est-à-dire en données non diffusables ou non diffusibles.
+        </p>
         <DataTable
             :value="acheteurs"
             stripedRows
