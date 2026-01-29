@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { listAcheteurs, listVendeurs, type StructureEtendueDto } from '@/client';
-import { structureName } from '@/service/HelpersService';
+import { getStructureId, listAcheteurs, listVendeurs, type StructureEtendueDto } from '@/client';
+import { getNow, structureName } from '@/service/HelpersService';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { onMounted, type PropType, ref, toRaw, useId, watch, watchEffect } from 'vue';
+import { onMounted, type PropType, ref, toRaw, useId, watch } from 'vue';
 
 const props = defineProps({
     acheteur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) },
+    acheteurSiret: { type: [String, null], default: null },
     vendeur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) },
-    dateMin: { type: Date, required: true },
-    dateMax: { type: Date, required: true }
+    dateMin: { type: Date, required: true, default: new Date(settings.date_min) },
+    dateMax: { type: Date, required: true, default: getNow() }
 });
 
 const acheteur = ref<Partial<StructureEtendueDto>>(props.acheteur);
@@ -20,6 +21,16 @@ const initialMap = ref();
 
 let mainMarker: null | L.marker = null;
 let markers: Array<L.marker> = [];
+
+function fetchFromSiret(siret: string) {
+    getStructureId({ path: { id: siret, type_id: 'SIRET' } }).then((response) => {
+        if (response.data) {
+            acheteur.value = response.data;
+            setMainStructure(response.data, 'acheteur');
+            fetchData();
+        }
+    });
+}
 
 function fetchData() {
     if (acheteur.value.uid || vendeur.value.uid) {
@@ -49,6 +60,7 @@ function fetchData() {
 }
 
 onMounted(() => {
+    // Init map, no data set at this point
     initialMap.value = L.map(mapId).setView([46.23, 2.2], 5);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -63,39 +75,33 @@ onMounted(() => {
     };
     legend.addTo(initialMap.value);
 
-    fetchData();
+    // iframe mode, we get the siret
+    if (props.acheteurSiret) fetchFromSiret(props.acheteurSiret);
 });
+
+function setMainStructure(structure: Partial<StructureEtendueDto>, type: 'acheteur' | 'vendeur') {
+    if (initialMap.value && structure.latitude) {
+        const coordonnees = [structure.latitude, structure.longitude];
+        if (mainMarker) mainMarker.remove();
+        mainMarker = L.marker(coordonnees, { icon: L.divIcon({ className: 'lf-' + type + '-icon', iconSize: [30, 30] }), zIndexOffset: 10000 })
+            .addTo(toRaw(initialMap.value))
+            .bindPopup(structureName(structure));
+    }
+}
 
 watch([() => props.dateMin, () => props.dateMax], () => {
     fetchData();
 });
 
-watchEffect(() => {
+watch([() => props.acheteur], () => {
     acheteur.value = props.acheteur;
-    if (initialMap.value && acheteur.value.latitude) {
-        const coordonnees = [acheteur.value.latitude, acheteur.value.longitude];
-        if (mainMarker) {
-            mainMarker.remove();
-        }
-        mainMarker = L.marker(coordonnees, { icon: L.divIcon({ className: 'lf-acheteur-icon', iconSize: [30, 30] }), zIndexOffset: 10000 })
-            .addTo(toRaw(initialMap.value))
-            .bindPopup(structureName(acheteur.value));
-    }
+    setMainStructure(props.acheteur, 'acheteur');
     fetchData();
 });
 
-watchEffect(() => {
+watch([() => props.vendeur], () => {
     vendeur.value = props.vendeur;
-    if (initialMap.value && vendeur.value.latitude) {
-        const coordonnees = [vendeur.value.latitude, vendeur.value.longitude];
-        if (mainMarker) {
-            mainMarker.remove();
-        }
-        mainMarker = L.marker(coordonnees, { icon: L.divIcon({ className: 'lf-vendeur-icon', iconSize: [30, 30] }), zIndexOffset: 10000 })
-            .addTo(toRaw(initialMap.value))
-            .bindPopup(structureName(vendeur.value));
-    }
-
+    setMainStructure(props.vendeur, 'vendeur');
     fetchData();
 });
 </script>
@@ -104,6 +110,7 @@ watchEffect(() => {
     <section>
         <h2>La localisation des {{ acheteur.uid ? 'fournisseurs' : 'acheteurs' }}</h2>
         <div :id="mapId" style="min-height: 30rem; max-width: 60rem; margin: 0 auto"></div>
+        <BoutonIframe v-if="acheteur.identifiant" :path="'acheteur/' + acheteur.identifiant + '/fournisseurs/carte'" name="La répartition géographique des fournisseurs" />
     </section>
 </template>
 

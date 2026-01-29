@@ -161,6 +161,15 @@ const router = createRouter({
                     })
                 },
                 {
+                    path: 'acheteur/:siret/fournisseurs/carte',
+                    component: () => import('@/components/dashboard/CarteAcheteursFournisseurs.vue'),
+                    props: (route) => ({
+                        acheteurSiret: route.params.siret,
+                        dateMin: route.query.dateMin,
+                        dateMax: route.query.dateMax
+                    })
+                },
+                {
                     path: 'acheteur/:siret/concessions',
                     component: () => import('@/components/ListeConcessions.vue'),
                     props: (route) => ({
