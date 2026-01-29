@@ -333,7 +333,7 @@ class CategoriesDto(BaseModel):
 
 class ConsiderationAnnuelleDto(BaseModel):
     nombre: int
-    annee: str
+    annee: int
 
 
 class ConsiderationsGlobalDto(BaseModel):

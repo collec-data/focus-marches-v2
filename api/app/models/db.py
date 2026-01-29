@@ -3,6 +3,7 @@ from datetime import date
 from decimal import Decimal
 
 from sqlalchemy import Column, ForeignKey, String, Table, Text, UniqueConstraint
+from sqlalchemy.dialects.mysql import DECIMAL
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import (
@@ -49,12 +50,12 @@ marche_titulaire_table = Table(
 
 class Structure(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    identifiant: Mapped[str]
-    type_identifiant: Mapped[str]
-    nom: Mapped[str | None] = mapped_column(default=None)
+    identifiant: Mapped[str] = mapped_column(String(50))
+    type_identifiant: Mapped[str] = mapped_column(String(10))
+    nom: Mapped[str | None] = mapped_column(String(100), default=None)
     vendeur: Mapped[bool] = mapped_column(default=False)
     acheteur: Mapped[bool] = mapped_column(default=False)
-    cat_entreprise: Mapped[str | None] = mapped_column(default=None)
+    cat_entreprise: Mapped[str | None] = mapped_column(String(10), default=None)
     marches_acheteurs: Mapped[list["Marche"]] = relationship(back_populates="acheteur")
     marches_vendeur: Mapped[list["Marche"]] = relationship(
         back_populates="titulaires", secondary=marche_titulaire_table
@@ -73,8 +74,8 @@ class StructureInfogreffe(Base):
     uid_structure: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
     structure: Mapped[Structure] = relationship(back_populates="infogreffe")
     annee: Mapped[int]
-    ca: Mapped[Decimal | None]
-    resultat: Mapped[Decimal | None]
+    ca: Mapped[Decimal | None] = mapped_column(DECIMAL(12, 2), default=None)
+    resultat: Mapped[Decimal | None] = mapped_column(DECIMAL(12, 2), default=None)
     effectif: Mapped[int | None]
 
 
@@ -86,7 +87,7 @@ class ModificationSousTraitance(Base):
     duree_mois: Mapped[int | None]
     date_notif: Mapped[date]
     date_publication: Mapped[date]
-    montant: Mapped[Decimal | None]
+    montant: Mapped[Decimal | None] = mapped_column(DECIMAL(12, 2), default=None)
 
 
 class ActeSousTraitance(Base):
@@ -99,8 +100,8 @@ class ActeSousTraitance(Base):
     duree_mois_initiale: Mapped[int | None]
     date_notification: Mapped[date]
     date_publication: Mapped[date]
-    montant: Mapped[Decimal]
-    montant_initial: Mapped[Decimal]
+    montant: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
+    montant_initial: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
     variation_prix: Mapped[int | None]  # enum VariationPrix
     modifications: Mapped[list[ModificationSousTraitance]] = relationship()
 
@@ -128,7 +129,7 @@ class ModificationMarche(Base):
     duree_mois: Mapped[int | None]
     date_notification: Mapped[date]
     date_publication: Mapped[date]
-    montant: Mapped[Decimal | None]
+    montant: Mapped[Decimal | None] = mapped_column(DECIMAL(12, 2))
     titulaires: Mapped[list[Structure]] = relationship(
         secondary=modification_titulaire_table
     )  # **
@@ -136,7 +137,7 @@ class ModificationMarche(Base):
 
 class Lieu(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    code: Mapped[str]
+    code: Mapped[str] = mapped_column(String(10))
     type_code: Mapped[int]
 
     @hybrid_property
@@ -151,8 +152,8 @@ class Tarif(Base):
     uid_donnee_execution: Mapped[int] = mapped_column(
         ForeignKey("donnee_execution.uid")
     )
-    intitule: Mapped[str]
-    tarif: Mapped[Decimal]
+    intitule: Mapped[str] = mapped_column(String(255))
+    tarif: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
 
 
 class DonneeExecution(Base):
@@ -161,7 +162,7 @@ class DonneeExecution(Base):
         ForeignKey("contrat_concession.uid")
     )
     date_publication: Mapped[date]
-    depenses_investissement: Mapped[Decimal]  # nbr
+    depenses_investissement: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
     tarifs: Mapped[list[Tarif]] = relationship()
 
 
@@ -185,7 +186,7 @@ class TechniqueAchatMarche(Base):
 
 class Marche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    id: Mapped[str]
+    id: Mapped[str] = mapped_column(String(16))
     acheteur: Mapped[Structure] = relationship()  # 1*
     uid_acheteur: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
     nature: Mapped[int]  # enum NatureMarche
@@ -203,7 +204,7 @@ class Marche(Base):
     ccag: Mapped[int | None]
     offres_recues: Mapped[int | None]
     attribution_avance: Mapped[bool]
-    taux_avance: Mapped[Decimal]
+    taux_avance: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
     type_groupement_operateurs: Mapped[int | None]  # enum TypeGroupementOperateur
     sous_traitance_declaree: Mapped[bool]
     actes_sous_traitance: Mapped[list[ActeSousTraitance]] = relationship()
@@ -214,14 +215,14 @@ class Marche(Base):
     duree_mois_initiale: Mapped[int]
     date_notification: Mapped[date]
     date_publication: Mapped[date | None]
-    montant: Mapped[Decimal]
-    montant_initial: Mapped[Decimal]
+    montant: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
+    montant_initial: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
     type_prix: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )  # enum TypePrix
     forme_prix: Mapped[int | None]  # enum FormePrix
-    origine_ue: Mapped[Decimal | None]
-    origine_france: Mapped[Decimal | None]
+    origine_ue: Mapped[Decimal | None] = mapped_column(DECIMAL(12, 2))
+    origine_france: Mapped[Decimal | None] = mapped_column(DECIMAL(12, 2))
     titulaires: Mapped[list[Structure]] = relationship(
         secondary=marche_titulaire_table
     )  # **
@@ -296,7 +297,7 @@ class ModificationConcession(Base):
     date_signature: Mapped[date]
     date_publication: Mapped[date]
     duree_mois: Mapped[int | None] = mapped_column(default=None)
-    valeur_globale: Mapped[Decimal | None] = mapped_column(default=None)
+    valeur_globale: Mapped[Decimal | None] = mapped_column(DECIMAL(12, 2), default=None)
 
 
 concession_structure_table = Table(
@@ -309,7 +310,7 @@ concession_structure_table = Table(
 
 class ContratConcession(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    id: Mapped[str]  # interne propre à l'acheteur donc pas utilisable en pk
+    id: Mapped[str] = mapped_column(String(16))
     autorite_concedante: Mapped[Structure] = relationship()  # 1*
     uid_autorite: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
     nature: Mapped[int | None]  # enum NatureConcession
@@ -320,9 +321,9 @@ class ContratConcession(Base):
     date_signature: Mapped[date]
     date_publication: Mapped[date]
     date_debut_execution: Mapped[date]
-    valeur_globale: Mapped[Decimal]
-    valeur_globale_initiale: Mapped[Decimal]
-    montant_subvention_publique: Mapped[Decimal]
+    valeur_globale: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
+    valeur_globale_initiale: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
+    montant_subvention_publique: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
     donnees_execution: Mapped[list[DonneeExecution]] = relationship()  # *1
     concessionnaires: Mapped[list[Structure]] = relationship(
         secondary=concession_structure_table
@@ -368,14 +369,14 @@ class Erreur(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     decp: Mapped["DecpMalForme"] = relationship()
     uid_decp: Mapped[int] = mapped_column(ForeignKey("decp_mal_forme.uid"))
-    type: Mapped[str]
-    localisation: Mapped[str]
-    message: Mapped[str]
+    type: Mapped[str] = mapped_column(String(50))
+    localisation: Mapped[str] = mapped_column(String(100))
+    message: Mapped[str] = mapped_column(String(255))
 
 
 class DecpMalForme(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    decp: Mapped[str]
+    decp: Mapped[str] = mapped_column(Text())
     erreurs: Mapped[list[Erreur]] = relationship(back_populates="decp")
     uid_structure: Mapped[int | None] = mapped_column(
         ForeignKey(Structure.uid), default=None
@@ -387,4 +388,4 @@ class DecpMalForme(Base):
 class CPV(Base):
     __tablename__ = "cpv"  # type: ignore
     code: Mapped[int] = mapped_column(primary_key=True)
-    libelle: Mapped[str]
+    libelle: Mapped[str] = mapped_column(String(255))

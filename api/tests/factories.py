@@ -7,7 +7,7 @@ class StructureFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.Structure
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     identifiant = factory.declarations.Sequence(lambda n: str(n))
     type_identifiant = "SIRET"
     vendeur = False
@@ -26,11 +26,15 @@ class StructureInfogreffeFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.StructureInfogreffe
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     structure = factory.declarations.SubFactory(VendeurFactory)
     annee = factory.faker.Faker("year")
-    ca = factory.faker.Faker("pyfloat")
-    resultat = factory.faker.Faker("pyfloat")
+    ca = factory.faker.Faker(
+        "pydecimal", right_digits=2, min_value=0, max_value=1000000000
+    )
+    resultat = factory.faker.Faker(
+        "pydecimal", right_digits=2, min_value=-1000000000, max_value=1000000000
+    )
     effectif = factory.faker.Faker("pyint")
 
 
@@ -38,7 +42,7 @@ class LieuFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.Lieu
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     code = factory.declarations.Sequence(lambda n: str(n))
     type_code = enums.TypeCodeLieu.DEP.db_value
 
@@ -47,7 +51,7 @@ class CritereSocialFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.ConsiderationSocialeMarche
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     consideration = enums.ConsiderationsSociales.CRITERE.db_value
 
 
@@ -59,7 +63,7 @@ class CritereEnvFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.ConsiderationEnvMarche
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     consideration = enums.ConsiderationsEnvironnementales.CRITERE.db_value
 
 
@@ -71,7 +75,7 @@ class TechniqueAchatFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.TechniqueAchatMarche
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     technique = enums.TechniqueAchat.CONCOURS.db_value
 
 
@@ -79,7 +83,7 @@ class CPVFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.CPV
 
-    code = factory.declarations.Sequence(lambda n: n)
+    code = factory.declarations.Sequence(lambda n: n + 1)
     libelle = factory.faker.Faker("word")
 
 
@@ -87,7 +91,7 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.Marche
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     id = factory.declarations.Sequence(lambda n: str(n))
     acheteur = factory.declarations.SubFactory(AcheteurFactory)
     nature = enums.NatureMarche.MARCHE.db_value
@@ -107,8 +111,12 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     duree_mois = 1
     duree_mois_initiale = 1
     date_notification = factory.faker.Faker("date")
-    montant = factory.faker.Faker("pyint")
-    montant_initial = factory.faker.Faker("pyint")
+    montant = factory.faker.Faker(
+        "pydecimal", right_digits=2, min_value=0, max_value=1000000000
+    )
+    montant_initial = factory.faker.Faker(
+        "pydecimal", right_digits=2, min_value=0, max_value=1000000000
+    )
     type_prix: list[enums.TypePrix] = []
     titulaires: list[VendeurFactory] = []
     considerations_sociales: list[enums.ConsiderationsSociales] = []
@@ -120,7 +128,7 @@ class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
     class Meta:
         model = db.ContratConcession
 
-    uid = factory.declarations.Sequence(lambda n: n)
+    uid = factory.declarations.Sequence(lambda n: n + 1)
     id = factory.declarations.Sequence(lambda n: str(n))
     autorite_concedante = factory.declarations.SubFactory(AcheteurFactory)
     objet = "Lorem ipsum dolor"

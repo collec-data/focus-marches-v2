@@ -2,7 +2,6 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from testcontainers.postgres import PostgresContainer
 
 from app.config import Config, get_config
 from app.dependencies import get_api_entreprise, get_db
@@ -25,14 +24,7 @@ from tests.factories import (
     TechniqueAchatFactory,
     VendeurFactory,
 )
-
-
-class FocusPostgresContainer(PostgresContainer):
-    def __init__(self):
-        self.__image_name = "postgres:latest"
-        return super(FocusPostgresContainer, self).__init__(
-            image=self.__image_name, driver="psycopg2"
-        )
+from tests.mariadb_testcontainer import MariaDBContainer
 
 
 @pytest.fixture
@@ -105,9 +97,7 @@ def set_factory_db(db):
 
 @pytest.fixture(scope="session", autouse=True)
 def db_url():
-    """Ensure that PG database is up and responsive."""
+    """Ensure that database is up and responsive."""
 
-    container = FocusPostgresContainer()
-    container.start()
-    yield container.get_connection_url()
-    container.stop()
+    with MariaDBContainer() as container:
+        yield container.get_connection_url().replace("localhost", "127.0.0.1")

@@ -10,6 +10,7 @@ api-quality:
   variables:
     FORCE_COLOR: true
   script:
+    - apk add build-base mariadb mariadb-dev
     - python3 -m venv .venv
     - source .venv/bin/activate
     - cd api

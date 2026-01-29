@@ -78,7 +78,7 @@ def test_list_acheteurs(client):
     assert response.json() == {
         "items": [
             {
-                "montant": "20",
+                "montant": "20.00",
                 "nb_contrats": 1,
                 "structure": {
                     "acheteur": True,
@@ -93,7 +93,7 @@ def test_list_acheteurs(client):
                 },
             },
             {
-                "montant": "10",
+                "montant": "10.00",
                 "nb_contrats": 2,
                 "structure": {
                     "acheteur": True,
@@ -149,15 +149,15 @@ def test_list_vendeurs(client):
     assert len(data) == 3
     assert data[0]["structure"]["identifiant"] == vendeurs[0].identifiant
     assert data[0]["nb_contrats"] == 3
-    assert data[0]["montant"] == "13"
+    assert data[0]["montant"] == "13.00"
 
     assert data[1]["structure"]["identifiant"] == vendeurs[1].identifiant
     assert data[1]["nb_contrats"] == 2
-    assert data[1]["montant"] == "5"
+    assert data[1]["montant"] == "5.00"
 
     assert data[2]["structure"]["identifiant"] == vendeurs[2].identifiant
     assert data[2]["nb_contrats"] == 1
-    assert data[2]["montant"] == "3"
+    assert data[2]["montant"] == "3.00"
 
     response = client.get("/structure/vendeur", params={"acheteur_uid": acheteur.uid})
     assert response.status_code == 200

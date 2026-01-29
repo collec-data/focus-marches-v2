@@ -20,6 +20,12 @@ pip install pip-tools
 
 Utiliser Visual Studio Code et installer les extensions recommandées (extension Python).
 
+
+Il peut être nécessaire d'installer le paquet mariadb sur sa machine
+```
+sudo apt install libmariadb3 libmariadb-dev
+```
+
 ## Importer des données
 
 ### Import des DECPS depuis data.gouv
