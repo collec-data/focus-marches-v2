@@ -10,8 +10,8 @@ const props = defineProps({
     acheteurUid: { type: [Number, null], default: null },
     acheteurSiret: { type: [String, null], default: null },
     vendeurUid: { type: [Number, null], default: null },
-    dateMin: { type: Date, required: true, default: new Date(settings.date_min) },
-    dateMax: { type: Date, required: true, default: getNow() },
+    dateMin: { type: Date, default: new Date(settings.date_min) },
+    dateMax: { type: Date, default: getNow() },
     query: {
         type: Object,
         default: () => {
