@@ -10,8 +10,8 @@ const props = defineProps({
     acheteurUid: { type: [Number, null], default: null },
     acheteurSiret: { type: [String, null], default: null },
     vendeurUid: { type: [Number, null], default: null },
-    dateMin: { type: Date, required: true },
-    dateMax: { type: Date, required: true },
+    dateMin: { type: Date, required: true, default: new Date(settings.date_min) },
+    dateMax: { type: Date, required: true, default: getNow() },
     query: {
         type: Object,
         default: () => {
@@ -87,22 +87,23 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     return traces;
 }
 async function fetchData() {
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    if (acheteurUid || props.vendeurUid || props.query) {
-        getListeMarches({
-            query: {
-                date_debut: props.dateMin,
-                date_fin: props.dateMax,
-                acheteur_uid: acheteurUid,
-                vendeur_uid: props.vendeurUid,
-                ...props.query
-            }
-        }).then((response) => {
-            if (response.data) {
-                data.value = transform(response.data);
-            }
-        });
+    if (props.acheteurUid == -1) {
+        return;
     }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    getListeMarches({
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: acheteurUid,
+            vendeur_uid: props.vendeurUid,
+            ...props.query
+        }
+    }).then((response) => {
+        if (response.data) {
+            data.value = transform(response.data);
+        }
+    });
 }
 
 watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid, () => props.query], () => {
@@ -137,6 +138,6 @@ onMounted(() => {
                 </div>
             </div>
         </details>
-        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="distribution-marches" name="La distribution des marchés dans le temps, sous forme de graphique" />
+        <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/distribution'" name="La distribution des marchés dans le temps, sous forme de graphique" />
     </section>
 </template>

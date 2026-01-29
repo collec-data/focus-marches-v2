@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { CategorieMarche, listAcheteurs, listVendeurs } from '@/client';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { breakLongLabel, formatCurrency, formatNumber, getDurationInMonths, structureName } from '@/service/HelpersService';
+import { breakLongLabel, formatCurrency, formatNumber, getDurationInMonths, getNow, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
@@ -10,9 +11,10 @@ import type { Layout, PlotData } from 'plotly.js-dist';
 const props = defineProps({
     type: String,
     acheteurUid: { type: [Number, null], default: null },
+    acheteurSiret: { type: [String, null], default: null },
     vendeurUid: { type: [Number, null], default: null },
-    dateMin: { type: Date, required: true },
-    dateMax: { type: Date, required: true }
+    dateMin: { type: Date, required: true, default: new Date(settings.date_min) },
+    dateMax: { type: Date, required: true, default: getNow() }
 });
 
 const listeStructures = ref({
@@ -66,11 +68,15 @@ function transform(input: Array<StructureAggMarchesDto>) {
     return output;
 }
 
-function fetchData(categorie: CategorieMarche | undefined = undefined, exhaustif: boolean = false) {
+async function fetchData(categorie: CategorieMarche | undefined = undefined, exhaustif: boolean = false) {
+    if (props.acheteurUid == -1) {
+        return;
+    }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
     (props.type == 'acheteurs' ? listAcheteurs : listVendeurs)({
         query: {
             limit: exhaustif ? null : 12,
-            acheteur_uid: props.acheteurUid,
+            acheteur_uid: acheteurUid,
             vendeur_uid: props.vendeurUid,
             date_debut: props.dateMin,
             date_fin: props.dateMax,
@@ -204,6 +210,7 @@ function openModale() {
         <div class="flex flex-wrap">
             <Button :label="btn_label" variant="text" severity="secondary" icon="pi pi-list" aria-label="Voir la liste des structures" @click="openModale" />
         </div>
+        <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/top12'" name="Le top12 des fournisseurs" />
     </section>
     <Dialog :visible="showModale" modal :header="btn_label" class="max-w-full" @update:visible="showModale = false">
         <DataTable :value="listeExhaustiveStructures" sortField="structure.nom" :sortOrder="1" removableSort stripedRows paginator :rows="10">

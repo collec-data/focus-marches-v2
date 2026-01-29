@@ -154,21 +154,22 @@ function transform(input: CategoriesDto[]): idatas {
 }
 
 async function fetchData() {
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    if (acheteurUid || props.vendeurUid || !props.acheteurSiret) {
-        getCategories({
-            query: {
-                date_debut: props.dateMin,
-                date_fin: props.dateMax,
-                acheteur_uid: acheteurUid,
-                vendeur_uid: props.vendeurUid
-            }
-        }).then((response) => {
-            if (response.data) {
-                data.value = transform(response.data);
-            }
-        });
+    if (props.acheteurUid == -1) {
+        return;
     }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    getCategories({
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: acheteurUid,
+            vendeur_uid: props.vendeurUid
+        }
+    }).then((response) => {
+        if (response.data) {
+            data.value = transform(response.data);
+        }
+    });
 }
 
 onMounted(() => {
@@ -223,7 +224,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             </div>
         </div>
         <div class="col-span-12">
-            <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="categorie-marches" name="La répartition des marchés publics par catégorie, sous forme de graphique" />
+            <BoutonIframe v-if="acheteurSiret" :path="'/acheteur/' + acheteurSiret + 'marches/categorie'" name="La répartition des marchés publics par catégorie, sous forme de graphique" />
         </div>
     </section>
 </template>

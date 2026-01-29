@@ -28,21 +28,22 @@ const filters = ref({
 const listeMarches = ref<Array<MarcheAllegeDto>>([]);
 
 async function fetchData() {
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    if (acheteurUid || props.vendeurUid) {
-        getListeMarches({
-            query: {
-                date_debut: props.dateMin,
-                date_fin: props.dateMax,
-                acheteur_uid: acheteurUid,
-                vendeur_uid: props.vendeurUid
-            }
-        }).then((response) => {
-            if (response.data) {
-                listeMarches.value = response.data;
-            }
-        });
+    if (props.acheteurUid == -1) {
+        return;
     }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    getListeMarches({
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: acheteurUid,
+            vendeur_uid: props.vendeurUid
+        }
+    }).then((response) => {
+        if (response.data) {
+            listeMarches.value = response.data;
+        }
+    });
 }
 
 onMounted(() => {
@@ -191,7 +192,7 @@ const hiddenCol = computed(() => {
                 </template>
             </Column>
         </DataTable>
-        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="marches" name="La liste des marchés publics passés" />
+        <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches'" name="La liste des marchés publics passés" />
     </section>
 
     <ModaleMarche v-model="marcheUid" />

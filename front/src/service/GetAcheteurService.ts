@@ -1,7 +1,7 @@
 import { getStructureId } from '@/client';
 
 export async function getAcheteurUid(acheteurUid: number | undefined | null, acheteurSiret: string | undefined | null): Promise<number | null> {
-    if (acheteurUid) {
+    if (acheteurUid && acheteurUid >= 0) {
         return acheteurUid;
     }
     if (acheteurSiret) {

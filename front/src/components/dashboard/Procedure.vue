@@ -48,23 +48,24 @@ function makeGraph(labels: Array<string | null>, data: Array<number>): Partial<P
 }
 
 async function fetchData() {
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    if (acheteurUid || props.vendeurUid || !props.acheteurSiret) {
-        getMarchesParProcedure({
-            query: {
-                date_debut: props.dateMin,
-                date_fin: props.dateMax,
-                acheteur_uid: props.acheteurUid,
-                vendeur_uid: props.vendeurUid
-            }
-        }).then((data) => {
-            if (data.data) {
-                let raw_data = transform(data.data);
-                montantData.value = makeGraph(raw_data.procedure, raw_data.montant);
-                nombreData.value = makeGraph(raw_data.procedure, raw_data.nombre);
-            }
-        });
+    if (props.acheteurUid == -1) {
+        return;
     }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    getMarchesParProcedure({
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: acheteurUid,
+            vendeur_uid: props.vendeurUid
+        }
+    }).then((data) => {
+        if (data.data) {
+            let raw_data = transform(data.data);
+            montantData.value = makeGraph(raw_data.procedure, raw_data.montant);
+            nombreData.value = makeGraph(raw_data.procedure, raw_data.nombre);
+        }
+    });
 }
 
 onMounted(() => {
@@ -91,7 +92,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             <Graph :data="nombreData" :layout />
         </div>
         <div class="col-span-12">
-            <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="procedure-marches" name="La répartition des marchés publics par procédure suivie, sous forme de graphique" />
+            <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/procedure'" name="La répartition des marchés publics par procédure suivie, sous forme de graphique" />
         </div>
     </Fluid>
 </template>

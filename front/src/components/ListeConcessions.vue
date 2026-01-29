@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { type ContratConcessionDto, getListeConcessions } from '@/client';
 import { exportConcessionsCSV, exportConcessionsPdf } from '@/service/ExportDatatableService';
+import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
 
 const props = defineProps({
-    autoriteConcedanteUid: { type: [String, null], default: null },
+    autoriteConcedanteUid: { type: [Number, null], default: null },
+    autoriteConcedanteSiret: { type: [String, null], default: null },
     concessionnaireUid: { type: [String, null], default: null },
     dateMin: { type: [Date, null], default: null },
     dateMax: { type: [Date, null], default: null }
@@ -13,12 +15,17 @@ const props = defineProps({
 
 const listeConcessions = ref<Array<ContratConcessionDto>>([]);
 
-function fetchData() {
+async function fetchData() {
+    if (props.autoriteConcedanteUid == -1) {
+        return;
+    }
+    const autoriteConcedanteUid = await getAcheteurUid(props.autoriteConcedanteUid, props.autoriteConcedanteSiret);
+
     getListeConcessions({
         query: {
             date_debut: props.dateMin,
             date_fin: props.dateMax,
-            autorite_concedante_uid: props.autoriteConcedanteUid,
+            autorite_concedante_uid: autoriteConcedanteUid?.toString(),
             concessionnaire_uid: props.concessionnaireUid
         }
     }).then((response) => {
@@ -79,6 +86,7 @@ const concessionUid = ref(null);
                 </template>
             </Column>
         </DataTable>
+        <BoutonIframe v-if="autoriteConcedanteSiret" :path="'acheteur/' + autoriteConcedanteSiret + '/concessions'" name="La liste des concession passées" />
     </section>
     <ModaleConcession v-model="concessionUid" />
 </template>

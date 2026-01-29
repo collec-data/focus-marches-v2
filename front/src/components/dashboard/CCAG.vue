@@ -55,20 +55,21 @@ function transform(input: Array<MarcheCcagDto>): idatas {
 }
 
 async function fetchData() {
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    if (acheteurUid) {
-        getMarchesParCcag({
-            query: {
-                date_debut: props.dateMin,
-                date_fin: props.dateMax,
-                acheteur_uid: acheteurUid
-            }
-        }).then((response) => {
-            if (response.data) {
-                datas.value = transform(response.data);
-            }
-        });
+    if (props.acheteurUid == -1) {
+        return;
     }
+    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
+    getMarchesParCcag({
+        query: {
+            date_debut: props.dateMin,
+            date_fin: props.dateMax,
+            acheteur_uid: acheteurUid
+        }
+    }).then((response) => {
+        if (response.data) {
+            datas.value = transform(response.data);
+        }
+    });
 }
 
 onMounted(() => {
@@ -128,6 +129,6 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
                 </TabPanel>
             </TabPanels>
         </Tabs>
-        <BoutonIframe v-if="props.acheteurSiret" :acheteurSiret="props.acheteurSiret" path="ccag-marches" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
+        <BoutonIframe v-if="acheteurSiret" :path="'/acheteur/' + acheteurSiret + '/marches/ccag'" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
     </section>
 </template>
