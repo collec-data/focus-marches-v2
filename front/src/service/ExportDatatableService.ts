@@ -56,7 +56,14 @@ function formatConcessionsList(concessions: ContratConcessionDto[]): Array<any> 
 }
 
 function exportCSV(rows: Array<Array<any>>, columns: Array<string>, file_name: string) {
-    const csvContent = 'data:text/csv;charset=utf-8,' + columns.map((c) => '"' + c + '"').join(',') + '\n' + rows.map((r) => r.map((e) => '"' + e.toString().replace('"', '""') + '"').join(',')).join('\n');
+    const csvContent =
+        'data:text/csv;charset=utf-8,' +
+        columns
+            .map((e) => e.replace('\n', ''))
+            .map((c) => '"' + c + '"')
+            .join(',') +
+        '\n' +
+        rows.map((row) => row.map((cell) => '"' + cell.toString().replace('\n', '').replace('"', '""') + '"').join(',')).join('\n');
     const encodedUri = encodeURI(csvContent);
     const a = document.createElement('a');
     a.href = encodedUri;
