@@ -9,8 +9,8 @@ const props = defineProps({
     acheteur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) },
     acheteurSiret: { type: [String, null], default: null },
     vendeur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) },
-    dateMin: { type: Date, required: true, default: new Date(settings.date_min) },
-    dateMax: { type: Date, required: true, default: getNow() }
+    dateMin: { type: Date, default: new Date(settings.date_min) },
+    dateMax: { type: Date, default: getNow() }
 });
 
 const acheteur = ref<Partial<StructureEtendueDto>>(props.acheteur);
