@@ -224,7 +224,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             </div>
         </div>
         <div class="col-span-12">
-            <BoutonIframe v-if="acheteurSiret" :path="'/acheteur/' + acheteurSiret + 'marches/categorie'" name="La répartition des marchés publics par catégorie, sous forme de graphique" />
+            <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/categorie'" name="La répartition des marchés publics par catégorie, sous forme de graphique" />
         </div>
     </section>
 </template>
