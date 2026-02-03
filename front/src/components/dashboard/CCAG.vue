@@ -129,6 +129,6 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
                 </TabPanel>
             </TabPanels>
         </Tabs>
-        <BoutonIframe v-if="acheteurSiret" :path="'/acheteur/' + acheteurSiret + '/marches/ccag'" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
+        <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/ccag'" name="La répartition des marchés publics par clause administrative utilisée, sous forme de graphique" />
     </section>
 </template>
