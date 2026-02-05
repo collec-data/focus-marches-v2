@@ -308,9 +308,11 @@ class ImportateurDecp:
 
         for tmp_dma in sorted(
             data.modificationsActesSousTraitance,
-            key=lambda x: x[
-                "modificationActeSousTraitance"
-            ].dateNotificationModificationSousTraitance,
+            key=lambda x: (
+                x[
+                    "modificationActeSousTraitance"
+                ].dateNotificationModificationSousTraitance
+            ),
         ):
             dmodif: ModificationActeSousTraitanceSchema = tmp_dma[
                 "modificationActeSousTraitance"
