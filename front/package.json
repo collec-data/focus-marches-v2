@@ -27,7 +27,7 @@
         "primevue": "^4.3.1",
         "tailwindcss-primeui": "^0.6.0",
         "vue": "^3.4.34",
-        "vue-router": "^4.4.0"
+        "vue-router": "^5.0.0"
     },
     "devDependencies": {
         "@hey-api/openapi-ts": "^0.91.0",
