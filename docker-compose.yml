@@ -1,6 +1,6 @@
 services:
   db:
-    image: mariadb:latest@sha256:b53f2fd9615cd21f004e59fdabd5a1cadb19c74fcf376a14b35e6767d3382ecf
+    image: mariadb:latest@sha256:e487701b1f7e3f47319fe005b417c72becb67824a58b7bd35c6505f070f66dcd
     restart: always
     shm_size: 128mb
     environment:
