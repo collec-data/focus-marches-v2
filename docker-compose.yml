@@ -1,11 +1,12 @@
 services:
   db:
-    image: postgres:latest@sha256:3bb77a07b9ce8b8de0fe6d9b063adf20b9cca1068a1bcdc054cac71a69ce0ca6
+    image: mariadb:latest@sha256:b53f2fd9615cd21f004e59fdabd5a1cadb19c74fcf376a14b35e6767d3382ecf
     restart: always
     shm_size: 128mb
     environment:
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD : ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
     ports:
-      - 5432:5432
+      - 3306:3306

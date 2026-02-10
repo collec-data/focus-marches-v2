@@ -51,7 +51,7 @@ def test_importation_marche_succes(db):
     assert marche1.ccag == 1
     assert marche1.offres_recues == 5
     assert marche1.attribution_avance is True
-    assert marche1.taux_avance == 0.5
+    assert marche1.taux_avance == Decimal(0.5)
     assert marche1.type_groupement_operateurs is None
     assert marche1.sous_traitance_declaree is True
     assert marche1.procedure == 5

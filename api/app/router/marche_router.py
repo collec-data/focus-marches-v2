@@ -184,7 +184,7 @@ def get_marches_par_nature(
         application_filtres(
             select(
                 Marche.nature,
-                func.to_char(Marche.date_notification, "YYYY-MM").label("mois"),
+                func.date_format(Marche.date_notification, "%Y-%m").label("mois"),
                 func.sum(Marche.montant).label("montant"),
                 func.count(Marche.uid).label("nombre"),
             ),
@@ -362,13 +362,14 @@ def get_categories(
                 Marche.categorie,
                 func.sum(Marche.montant).label("montant"),
                 func.count(Marche.id).label("nombre"),
-                func.to_char(Marche.date_notification, "YYYY-MM").label("mois"),
+                func.date_format(Marche.date_notification, "%Y-%m").label("mois"),
             ),
             filtres,
         )
         .group_by(Marche.categorie)
         .group_by("mois")
         .order_by("mois")
+        .order_by(Marche.categorie)
     )
 
     return list(session.execute(stmt).all())
@@ -382,7 +383,7 @@ def get_considerations(
         application_filtres(
             select(
                 func.count(Marche.uid).label("nombre"),
-                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+                func.year(Marche.date_notification).label("annee"),
             ),
             filtres,
         )
@@ -397,7 +398,7 @@ def get_considerations(
         application_filtres(
             select(
                 func.count(Marche.uid).label("nombre"),
-                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+                func.year(Marche.date_notification).label("annee"),
             ),
             filtres,
         )
@@ -411,7 +412,7 @@ def get_considerations(
         application_filtres(
             select(
                 func.count(Marche.uid).label("nombre"),
-                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+                func.year(Marche.date_notification).label("annee"),
             ),
             filtres,
         )
@@ -425,7 +426,7 @@ def get_considerations(
         application_filtres(
             select(
                 func.count(Marche.uid).label("nombre"),
-                func.to_char(Marche.date_notification, "YYYY").label("annee"),
+                func.year(Marche.date_notification).label("annee"),
             ),
             filtres,
         )

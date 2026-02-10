@@ -1,4 +1,6 @@
 from datetime import date
+from decimal import Decimal
+
 from pydantic import BaseModel, Field, field_validator
 
 from app.models.enums import (
@@ -18,7 +20,6 @@ from app.models.enums import (
     TypePrix,
     VariationPrix,
 )
-
 
 date_min = date(2000, 1, 1)
 
@@ -45,7 +46,7 @@ class ModificationMarcheSchema(BaseModel):
     dateNotificationModification: date = Field(ge=date_min)
     datePublicationDonneesModification: date = Field(ge=date_min)
     dureeMois: int | None = Field(ge=1, default=None)
-    montant: float | None = Field(ge=1, default=None)
+    montant: Decimal | None = Field(ge=1, default=None)
     titulaires: list[dict[str, TitulaireSchema]] | None = None
 
 
@@ -55,7 +56,7 @@ class ActeSousTraitanceSchema(BaseModel):
     dureeMois: int = Field(ge=1)
     dateNotification: date = Field(ge=date_min)
     datePublicationDonnees: date = Field(ge=date_min)
-    montant: float = Field(ge=1)
+    montant: Decimal = Field(ge=1)
     variationPrix: VariationPrix
 
 
@@ -63,7 +64,7 @@ class ModificationActeSousTraitanceSchema(BaseModel):
     id: int = Field(ge=1)
     dureeMois: int | None = Field(ge=1, default=None)
     dateNotificationModificationSousTraitance: date = Field(ge=date_min)
-    montant: float | None = Field(ge=1, default=None)
+    montant: Decimal | None = Field(ge=1, default=None)
     datePublicationDonnees: date = Field(ge=date_min)
 
     @field_validator("dureeMois", mode="before")
@@ -83,16 +84,16 @@ class MarcheCommunSchema(BaseModel):
     techniques: dict[str, list[TechniqueAchat]]
     modalitesExecution: dict[str, list[ModaliteExecution]]
     idAccordCadre: str | None = None
-    tauxAvance: float | None = Field(ge=0, le=1, default=None)
+    tauxAvance: Decimal | None = Field(ge=0, le=1, default=None)
     actesSousTraitance: list[dict[str, ActeSousTraitanceSchema]] = []
     lieuExecution: LieuExecutionSchema
     dureeMois: int = Field(ge=1)
     dateNotification: date = Field(ge=date_min)
     datePublicationDonnees: date = Field(ge=date_min)
-    montant: float = Field(ge=1)
+    montant: Decimal = Field(ge=1)
     typesPrix: dict[str, list[TypePrix]]
-    origineUE: float | None = Field(ge=0, le=1, default=None)
-    origineFrance: float | None = Field(ge=0, le=1, default=None)
+    origineUE: Decimal | None = Field(ge=0, le=1, default=None)
+    origineFrance: Decimal | None = Field(ge=0, le=1, default=None)
     titulaires: list[dict[str, TitulaireSchema]]
     considerationsSociales: dict[str, list[ConsiderationsSociales]]
     considerationsEnvironnementales: dict[str, list[ConsiderationsEnvironnementales]]
@@ -138,17 +139,17 @@ class ModificationConcessionSchema(BaseModel):
     dateSignatureModification: date = Field(ge=date_min)
     datePublicationDonneesModification: date = Field(ge=date_min)
     dureeMois: int | None = Field(ge=1, default=None)
-    valeurGlobale: float | None = Field(ge=0, default=None)
+    valeurGlobale: Decimal | None = Field(ge=0, default=None)
 
 
 class TarifSchema(BaseModel):
     intituleTarif: str = Field(max_length=256)
-    tarif: float = Field(ge=0)
+    tarif: Decimal = Field(ge=0)
 
 
 class DonneeExecutionSchema(BaseModel):
     datePublicationDonneesExecution: date = Field(ge=date_min)
-    depensesInvestissement: float = Field(ge=0)
+    depensesInvestissement: Decimal = Field(ge=0)
     tarifs: list[dict[str, TarifSchema]]
 
 
@@ -162,8 +163,8 @@ class ConcessionSchema(BaseModel):
     dateSignature: date = Field(ge=date_min)
     datePublicationDonnees: date = Field(ge=date_min)
     dateDebutExecution: date = Field(ge=date_min)
-    valeurGlobale: float = Field(ge=1)
-    montantSubventionPublique: float = Field(ge=0)
+    valeurGlobale: Decimal = Field(ge=1)
+    montantSubventionPublique: Decimal = Field(ge=0)
     donneesExecution: list[dict[str, DonneeExecutionSchema]] = []
     concessionnaires: list[dict[str, ConcessionnaireSchema]]
     considerationsSociales: dict[str, list[ConsiderationsSociales]]

@@ -21,13 +21,13 @@ def test_list_marche(client):
     MarcheFactory.create_batch(29)
     marche_recherche = MarcheFactory(
         objet="Achat d'ordinateurs",
-        cpv=CPVFactory(code="456"),
+        cpv=CPVFactory(code=456),
         lieu__code="123",
         lieu__type_code=enums.TypeCodeLieu.DEP.db_value,
         forme_prix=enums.FormePrix.FORFAITAIRE.db_value,
         nature=enums.NatureMarche.DEFSEC.db_value,
         procedure=enums.ProcedureMarche.COMPETITIF.db_value,
-        montant=42,
+        montant=Decimal(42),
         duree_mois=6,
         categorie=enums.CategorieMarche.FOURNITURES.db_value,
         considerations_sociales=[CritereSocialFactory()],
@@ -101,7 +101,9 @@ def test_procedure_et_filtres_succes(client):
         titulaires=[vendeur],
         date_notification=date(2025, 1, 1),
     )  # ...car acheteur différent
-    MarcheFactory.create(acheteur=acheteur)  # car vendeur différent
+    MarcheFactory.create(
+        acheteur=acheteur, date_notification=date(1999, 1, 1)
+    )  # car vendeur différent
     MarcheFactory.create(
         date_notification=date(2000, 1, 1),
         titulaires=[vendeur],
@@ -125,9 +127,9 @@ def test_procedure_et_filtres_succes(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"procedure": "Procédure adaptée", "montant": "6", "nombre": 2},
-        {"procedure": "Appel d'offres ouvert", "montant": "12", "nombre": 3},
-        {"procedure": None, "montant": "5", "nombre": 0},
+        {"procedure": None, "montant": "5.00", "nombre": 0},
+        {"procedure": "Procédure adaptée", "montant": "6.00", "nombre": 2},
+        {"procedure": "Appel d'offres ouvert", "montant": "12.00", "nombre": 3},
     ]
 
 
@@ -143,9 +145,9 @@ def test_nature_succes(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"mois": "2025-11", "nature": 1, "montant": "5", "nombre": 1},
-        {"mois": "2025-12", "nature": 1, "montant": "7", "nombre": 2},
-        {"mois": "2025-12", "nature": 2, "montant": "1", "nombre": 1},
+        {"mois": "2025-11", "nature": 1, "montant": "5.00", "nombre": 1},
+        {"mois": "2025-12", "nature": 1, "montant": "7.00", "nombre": 2},
+        {"mois": "2025-12", "nature": 2, "montant": "1.00", "nombre": 1},
     ]
 
 
@@ -164,14 +166,14 @@ def test_ccag_succes(client):
     assert response.json() == [
         {
             "ccag": "Maitrise d'œuvre",
-            "montant": "16",
+            "montant": "16.00",
             "nombre": 8,
             "categorie": "Services",
         },
-        {"ccag": "Travaux", "montant": "10", "nombre": 10, "categorie": "Services"},
+        {"ccag": "Travaux", "montant": "10.00", "nombre": 10, "categorie": "Services"},
         {
             "ccag": "Maitrise d'œuvre",
-            "montant": "9",
+            "montant": "9.00",
             "nombre": 1,
             "categorie": "Travaux",
         },
@@ -230,7 +232,7 @@ def test_indicateurs_succes(client):
 
     assert response.status_code == 200
     assert response.json() == {
-        "montant_total": "5400",
+        "montant_total": "5400.00",
         "nb_acheteurs": 45,
         "nb_contrats": 54,
         "nb_fournisseurs": 3,
@@ -266,8 +268,8 @@ def test_departements(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"code": "35", "montant": "50", "nombre": 5},
-        {"code": "29", "montant": "66", "nombre": 2},
+        {"code": "35", "montant": "50.00", "nombre": 5},
+        {"code": "29", "montant": "66.00", "nombre": 2},
     ]
 
 
@@ -302,9 +304,9 @@ def test_marche_departement_categorie(client):
 
     assert response.status_code == 200
     assert response.json() == [
-        {"categorie": "Travaux", "code": "35", "montant": "3000"},
-        {"categorie": "Travaux", "code": "44", "montant": "5000"},
-        {"categorie": "Fournitures", "code": "35", "montant": "6000"},
+        {"categorie": "Travaux", "code": "35", "montant": "3000.00"},
+        {"categorie": "Travaux", "code": "44", "montant": "5000.00"},
+        {"categorie": "Fournitures", "code": "35", "montant": "6000.00"},
     ]
 
 
@@ -334,9 +336,9 @@ def test_categories(client):
     assert response.status_code == 200
     data = response.json()
     assert data == [
-        {"categorie": "Travaux", "mois": "2025-01", "montant": "10", "nombre": 1},
-        {"categorie": "Travaux", "mois": "2025-02", "montant": "3", "nombre": 2},
-        {"categorie": "Fournitures", "mois": "2025-02", "montant": "4", "nombre": 1},
+        {"categorie": "Travaux", "mois": "2025-01", "montant": "10.00", "nombre": 1},
+        {"categorie": "Travaux", "mois": "2025-02", "montant": "3.00", "nombre": 2},
+        {"categorie": "Fournitures", "mois": "2025-02", "montant": "4.00", "nombre": 1},
     ]
 
 
@@ -372,19 +374,19 @@ def test_get_consideration(client):
     assert response.json() == [
         {
             "consideration": "Aucune considération",
-            "data": [{"nombre": 1, "annee": "2025"}],
+            "data": [{"nombre": 1, "annee": 2025}],
         },
         {
             "consideration": "Considération sociale uniquement",
-            "data": [{"nombre": 1, "annee": "2025"}],
+            "data": [{"nombre": 1, "annee": 2025}],
         },
         {
             "consideration": "Considération environnementale uniquement",
-            "data": [{"nombre": 2, "annee": "2025"}],
+            "data": [{"nombre": 2, "annee": 2025}],
         },
         {
             "consideration": "Considération sociale et environnementale",
-            "data": [{"nombre": 1, "annee": "2025"}],
+            "data": [{"nombre": 1, "annee": 2025}],
         },
     ]
 
@@ -410,8 +412,8 @@ def test_get_consideration_environnementale(client):
     assert response.status_code == 200
     assert response.json() == [
         {"consideration": "Pas de considération environnementale", "nombre": 1},
-        {"consideration": "Clause environnementale", "nombre": 1},
         {"consideration": "Critère environnemental", "nombre": 2},
+        {"consideration": "Clause environnementale", "nombre": 1},
     ]
 
 
@@ -436,8 +438,8 @@ def test_get_consideration_sociale(client):
     assert response.status_code == 200
     assert response.json() == [
         {"consideration": "Pas de considération sociale", "nombre": 1},
-        {"consideration": "Clause sociale", "nombre": 1},
         {"consideration": "Critère social", "nombre": 2},
+        {"consideration": "Clause sociale", "nombre": 1},
     ]
 
 
