@@ -1,3 +1,7 @@
+configs:
+  dotenv:
+    file: .env
+
 services:
   db:
     image: mariadb:latest@sha256:e487701b1f7e3f47319fe005b417c72becb67824a58b7bd35c6505f070f66dcd
@@ -8,5 +12,25 @@ services:
       MARIADB_PASSWORD : ${MARIADB_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${MARIADB_PASSWORD}
       MARIADB_DATABASE: ${MARIADB_DATABASE}
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
     ports:
       - 3306:3306
+      
+  api:
+    build: ./api
+    image: focus-marches-v2-api
+    ports:
+      - 8000:80
+    environment:
+      DATABASE_URL: mariadb+mariadbconnector://${MARIADB_USER}:${MARIADB_PASSWORD}@db:3306/${MARIADB_DATABASE}
+    configs:
+      - source: dotenv
+        target: /.env
+
+  front:
+    build: ./front
+    image: focus-marches-v2-front
+    ports:
+      - 80:80
+    env_file: ".env"
