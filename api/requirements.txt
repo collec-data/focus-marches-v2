@@ -126,7 +126,7 @@ starlette==0.50.0
     # via fastapi
 typeguard==4.4.4
     # via marshmallow-dataclass
-typer==0.21.1
+typer==0.23.0
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
