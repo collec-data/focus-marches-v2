@@ -3,6 +3,4 @@ __pycache__/
 
 .venv/
 
-data/
-
 .coverage

@@ -17,6 +17,8 @@ class Config(BaseSettings):
     API_ENTREPRISE_URL: str
     API_ENTREPRISE_TOKEN: str
 
+    SOURCES: str
+
 
 @lru_cache
 def get_config() -> Config:
