@@ -1,20 +1,21 @@
-import csv
 import os
 import sys
-from datetime import date
-from enum import Enum
 
 sys.path.append(os.getcwd())
 
+import csv
 import json
 import logging
 import time
 from collections.abc import Callable, Generator
+from datetime import date
 from decimal import Decimal
+from enum import Enum
 from functools import cache
 from typing import Any
 
 import ijson
+import requests
 import rich
 import rich.progress
 import typer
@@ -613,31 +614,38 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
             )
             connexion.commit()
 
-    WORKING_PATH: str = "./data/"
+    sources: list[str] = get_config().SOURCES.split(" ")
+    RAW_FILE = "./raw_data.json"
+    CLEANED_FILE = "./data.json"
+    log.info(f"📂 {len(sources)} sources détectées")
 
     with Session(get_engine()) as session:
         importateur = ImportateurDecp(session=session)
 
-        for raw_file in track(os.listdir(WORKING_PATH)):
-            if raw_file == "tmp":
-                continue
-
-            log.info(f"📂 Détection de {WORKING_PATH}{raw_file}")
+        for source in track(sources):
+            log.info(f"🌐 Téléchargement de {source}")
+            response = requests.get(source, stream=True)
+            response.raise_for_status()
+            with open(RAW_FILE, "wb") as handle:
+                for block in response.iter_content(1024):
+                    handle.write(block)
 
             log.info("✨ Nettoyage du JSON")
-            tmp: str = f"{WORKING_PATH}tmp"
-            f = open(tmp, "w")
-            with open(f"{WORKING_PATH}{raw_file}", "r", errors="ignore") as myFile:
-                for line in myFile:
-                    line = line.replace("NaN", "null")
-                    f.write(line)
-            f.close()
+            with open(CLEANED_FILE, "w") as cf:
+                with open(f"{RAW_FILE}", "r", errors="ignore") as myFile:
+                    for line in myFile:
+                        line = line.replace("NaN", "null")
+                        cf.write(line)
+            os.remove(RAW_FILE)
 
             log.info("🔄 Import des marchés")
-            importateur.importer_marches(file=tmp)
+            importateur.importer_marches(file=CLEANED_FILE)
 
             log.info("🔄 Import des concessions")
-            importateur.importer_concessions(file=tmp)
+            importateur.importer_concessions(file=CLEANED_FILE)
+
+            log.info("🧹 Suppression du fichier téléchargé")
+            os.remove(CLEANED_FILE)
 
 
 @app.command()
