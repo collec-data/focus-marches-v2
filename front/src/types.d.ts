@@ -12,6 +12,7 @@ type Settings = {
     opsn: string;
     region: string;
     departements: string;
+    color: string;
 };
 
 declare var settings: Settings;
