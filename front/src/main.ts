@@ -12,15 +12,19 @@ import Tooltip from 'primevue/tooltip';
 import { loadMarkdowns } from './service/markdownsLoader';
 
 import '@/assets/styles.scss';
+import { definePreset } from '@primeuix/themes';
+import { getPaletteByName } from './service/ConfiguratorService';
 
 client.setConfig({ baseUrl: settings.api.base });
+
+const EnvPreset = definePreset(Aura, { semantic: { primary: getPaletteByName(settings.color) } });
 
 const app = createApp(App);
 
 app.use(router);
 app.use(PrimeVue, {
     theme: {
-        preset: Aura,
+        preset: EnvPreset,
         options: {
             darkModeSelector: '.app-dark'
         }

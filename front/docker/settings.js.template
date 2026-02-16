@@ -6,4 +6,5 @@ var settings = {
   opsn: "${OPSN}",
   region: "${REGION}",
   departements: "${DEPARTEMENTS}",
+  color: "${FRONT_THEME_COLOR}",
 };
