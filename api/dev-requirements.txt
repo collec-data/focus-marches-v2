@@ -165,7 +165,7 @@ starlette==0.50.0
     # via fastapi
 testcontainers==4.14.1
     # via focus-marche-v2 (pyproject.toml)
-typeguard==4.4.4
+typeguard==4.5.0
     # via marshmallow-dataclass
 typer==0.23.0
     # via
