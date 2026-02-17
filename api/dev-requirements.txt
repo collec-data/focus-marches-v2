@@ -167,7 +167,7 @@ testcontainers==4.14.1
     # via focus-marche-v2 (pyproject.toml)
 typeguard==4.5.0
     # via marshmallow-dataclass
-typer==0.23.2
+typer==0.24.0
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
