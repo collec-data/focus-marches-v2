@@ -369,8 +369,8 @@ class Erreur(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     decp: Mapped["DecpMalForme"] = relationship()
     uid_decp: Mapped[int] = mapped_column(ForeignKey("decp_mal_forme.uid"))
-    type: Mapped[str] = mapped_column(String(50))
-    localisation: Mapped[str] = mapped_column(String(100))
+    type: Mapped[str] = mapped_column(String(100))
+    localisation: Mapped[str] = mapped_column(String(255))
     message: Mapped[str] = mapped_column(String(255))
 
 
