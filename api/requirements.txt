@@ -33,7 +33,7 @@ email-validator==2.3.0
     # via fastapi
 fastapi[standard-no-fastapi-cloud-cli]==0.129.0
     # via focus-marche-v2 (pyproject.toml)
-fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.21
+fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.23
     # via fastapi
 greenlet==3.3.1
     # via sqlalchemy
@@ -126,7 +126,7 @@ starlette==0.50.0
     # via fastapi
 typeguard==4.5.0
     # via marshmallow-dataclass
-typer==0.23.1
+typer==0.23.2
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
