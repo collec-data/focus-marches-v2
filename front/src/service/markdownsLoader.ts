@@ -6,7 +6,7 @@ async function loadAPropos() {
 }
 
 async function loadMentionsLegales() {
-    mentions_legales = await (await fetch('/mentions-legales.md')).text();
+    mentions_legales = await (await fetch(settings.mentions_legales || '/mentions-legales.md')).text();
 }
 
 export function loadMarkdowns() {

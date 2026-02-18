@@ -7,7 +7,7 @@ defineProps({ content: { type: String, required: true } });
 <template>
     <main className="card">
         <div :class="$style.markdown_content">
-            <div id="mentionslegales" v-html="marked(content)"></div>
+            <div id="markdown_content" v-html="marked(content)"></div>
         </div>
     </main>
 </template>

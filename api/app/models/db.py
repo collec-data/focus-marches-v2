@@ -52,7 +52,7 @@ class Structure(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     identifiant: Mapped[str] = mapped_column(String(50))
     type_identifiant: Mapped[str] = mapped_column(String(10))
-    nom: Mapped[str | None] = mapped_column(String(500), default=None)
+    nom: Mapped[str | None] = mapped_column(String(255), default=None)
     vendeur: Mapped[bool] = mapped_column(default=False)
     acheteur: Mapped[bool] = mapped_column(default=False)
     cat_entreprise: Mapped[str | None] = mapped_column(String(10), default=None)
