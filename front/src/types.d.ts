@@ -13,6 +13,7 @@ type Settings = {
     region: string;
     departements: string;
     color: string;
+    mentions_legales: string;
 };
 
 declare var settings: Settings;

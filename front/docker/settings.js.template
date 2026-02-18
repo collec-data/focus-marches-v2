@@ -7,4 +7,5 @@ var settings = {
   region: "${REGION}",
   departements: "${DEPARTEMENTS}",
   color: "${FRONT_THEME_COLOR}",
+  mentions_legales: "${MENTIONS_LEGALES}",
 };

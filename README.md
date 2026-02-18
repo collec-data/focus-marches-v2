@@ -40,6 +40,8 @@ Créer le fichier `.env`, en le recopiant depuis `.env.default` :
 cp .env.default .env
 ```
 
+Copier les éventuelles favicon et mentions légales dans `./front/src/public/` à la place des fichier existants.
+
 Puis compléter le [`.env`](.env) pour configurer et personnaliser l'instance. Ci-dessous une description des paramètres importants
 
 | Variable | Valeurs possibles | Description |
@@ -113,6 +115,7 @@ REGION=Bretagne
 DEPARTEMENTS=22,29,35,56
 FRONT_THEME_COLOR=blue
 SOURCES=https://www.data.gouv.fr/api/1/datasets/r/ea387298-b344-45dc-9a19-043f13df1f69 https://www.data.gouv.fr/api/1/datasets/r/3a9073a7-4062-49ff-a4b8-d4721705a462 https://www.data.gouv.fr/api/1/datasets/r/40679992-a5e7-4761-b5ba-9775e77fd133 https://www.data.gouv.fr/api/1/datasets/r/2fbb7b58-4a6b-47ca-b528-4b9dea053477 https://www.data.gouv.fr/api/1/datasets/r/da0339ac-5709-4a6b-87fa-bb9251bb371e https://www.data.gouv.fr/api/1/datasets/r/0e79013c-6764-4af4-9f2e-c757d876a666 https://www.data.gouv.fr/api/1/datasets/r/5b67f1cb-d8f4-491d-a15f-77cccc65456c
+MENTIONS_LEGALES="megalis-mentions-legales.md"
 ```
 
 ```
@@ -135,4 +138,5 @@ REGION=Bourgogne-Franche-Comté
 DEPARTEMENTS=21,71,90,58,89,39,25,70
 FRONT_THEME_COLOR=orange
 SOURCES=https://www.data.gouv.fr/api/1/datasets/r/f2ca0c44-ee8e-42ba-86a2-e83572c1b0d0 https://www.data.gouv.fr/api/1/datasets/r/b6e959fd-9e9d-4dfb-ba54-65b5ddf49881 https://www.data.gouv.fr/api/1/datasets/r/0647e31d-29c5-4adc-8480-23d207eec2bc https://www.data.gouv.fr/api/1/datasets/r/c9071fda-c613-4aa0-ae6a-e73dfca7ec69 https://www.data.gouv.fr/api/1/datasets/r/a136ac8f-7d5b-4bf2-b3de-7919e644aeae https://www.data.gouv.fr/api/1/datasets/r/79746469-5ba6-4955-9bb7-e5e2fdbb2472 https://www.data.gouv.fr/api/1/datasets/r/35ad0b16-c341-4d1b-a909-53f5e09d3c13
+MENTIONS_LEGALES="arnia-mentions-legales.md"
 ```
