@@ -677,8 +677,9 @@ def structures() -> None:
                     structure.cat_entreprise = details["unite_legale"].get(
                         "categorie_entreprise"
                     )
-                    structure.longitude = details["coordonnees"][0]
-                    structure.latitude = details["coordonnees"][1]
+                    if details["coordonnees"]:
+                        structure.longitude = details["coordonnees"][0]
+                        structure.latitude = details["coordonnees"][1]
                     session.add(structure)
                     log.debug(structure.nom)
                     nb += 1
