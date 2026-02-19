@@ -199,7 +199,7 @@ urllib3==2.6.3
     #   requests
     #   testcontainers
     #   types-requests
-uvicorn[standard]==0.40.0
+uvicorn[standard]==0.41.0
     # via
     #   fastapi
     #   fastapi-cli
