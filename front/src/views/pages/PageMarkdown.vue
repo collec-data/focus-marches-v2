@@ -1,13 +1,20 @@
 <script lang="ts" setup>
 import { marked } from 'marked';
+import { type Ref, ref, watch } from 'vue';
 
-defineProps({ content: { type: String, required: true } });
+const props = defineProps<{ content: Ref<string | null> }>();
+const html_content = ref(props.content.value);
+
+// in case the markdown file is not downloaded at the page load, keep watching and update later
+watch([() => props.content.value], () => {
+    html_content.value = props.content.value;
+});
 </script>
 
 <template>
     <main className="card">
         <div :class="$style.markdown_content">
-            <div id="markdown_content" v-html="marked(content)"></div>
+            <div v-if="html_content" id="markdown_content" v-html="marked(html_content)"></div>
         </div>
     </main>
 </template>

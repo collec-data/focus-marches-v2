@@ -62,7 +62,7 @@ Ces données sont publiées sous la [Licence Ouverte Version 2.0 - Etalab](https
 
 Le téléchargement des données se fait librement sur le portail opendata national : <https://www.data.gouv.fr/datasets/donnees-essentielles-du-profil-acheteur-megalis-bretagne-schema-arretes-2022>
 
-## Données utilisées A VERIFIER PAR Numih France
+## Données utilisées
 
 - Données essentielles de la commande publique du profil d'acheteur de Mégalis Bretagne. Licence Ouverte / Open Licence version 2.0 .
 - Base des entreprises et de leur établissements (SIREN, SIRET). Licence Ouverte / Open Licence version 2.0
