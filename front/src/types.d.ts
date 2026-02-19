@@ -14,6 +14,7 @@ type Settings = {
     departements: string;
     color: string;
     mentions_legales: string;
+    favicon: string | undefined;
 };
 
 declare var settings: Settings;
