@@ -92,3 +92,8 @@ export const getCatEntreprise = (cat: string | undefined | null) => {
             return '-';
     }
 };
+
+export function setFaviconFromSettings() {
+    const favicon = document.querySelector("link[rel*='icon']") as HTMLAnchorElement;
+    if (favicon && settings.favicon) favicon.href = '/' + settings.favicon;
+}

@@ -14,6 +14,7 @@ import { loadMarkdowns } from './service/markdownsLoader';
 import '@/assets/styles.scss';
 import { definePreset } from '@primeuix/themes';
 import { getPaletteByName } from './service/ConfiguratorService';
+import { setFaviconFromSettings } from './service/HelpersService';
 
 client.setConfig({ baseUrl: settings.api.base });
 
@@ -37,4 +38,5 @@ app.directive('tooltip', Tooltip);
 
 app.mount('#app');
 
+setFaviconFromSettings();
 loadMarkdowns();

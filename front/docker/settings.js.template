@@ -8,4 +8,5 @@ var settings = {
   departements: "${DEPARTEMENTS}",
   color: "${FRONT_THEME_COLOR}",
   mentions_legales: "${MENTIONS_LEGALES}",
+  favicon: "${FAVICON}",
 };
