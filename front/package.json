@@ -40,7 +40,7 @@
         "@vitest/coverage-v8": "^4.0.0",
         "autoprefixer": "^10.4.19",
         "baseline-browser-mapping": "^2.9.2",
-        "eslint": "^9.36.0",
+        "eslint": "^10.0.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-vue": "^10.0.5",
         "eslint-plugin-vuejs-accessibility": "^2.4.1",
