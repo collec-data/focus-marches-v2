@@ -111,7 +111,7 @@ pydantic-core==2.41.5
     # via pydantic
 pydantic-extra-types==2.11.0
     # via fastapi
-pydantic-settings==2.13.0
+pydantic-settings==2.13.1
     # via
     #   fastapi
     #   focus-marche-v2 (pyproject.toml)
@@ -149,7 +149,7 @@ requests==2.32.5
     # via
     #   api-entreprise
     #   docker
-rich==14.3.2
+rich==14.3.3
     # via
     #   rich-toolkit
     #   typer
@@ -165,7 +165,7 @@ starlette==0.50.0
     # via fastapi
 testcontainers==4.14.1
     # via focus-marche-v2 (pyproject.toml)
-typeguard==4.5.0
+typeguard==4.5.1
     # via marshmallow-dataclass
 typer==0.24.0
     # via
