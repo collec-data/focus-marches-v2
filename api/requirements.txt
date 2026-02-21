@@ -31,11 +31,11 @@ dnspython==2.8.0
     # via email-validator
 email-validator==2.3.0
     # via fastapi
-fastapi[standard-no-fastapi-cloud-cli]==0.129.0
+fastapi[standard-no-fastapi-cloud-cli]==0.129.2
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.23
     # via fastapi
-greenlet==3.3.1
+greenlet==3.3.2
     # via sqlalchemy
 h11==0.16.0
     # via
@@ -126,7 +126,7 @@ starlette==0.50.0
     # via fastapi
 typeguard==4.5.1
     # via marshmallow-dataclass
-typer==0.24.0
+typer==0.24.1
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)

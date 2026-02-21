@@ -39,11 +39,11 @@ factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
 faker==40.4.0
     # via factory-boy
-fastapi[standard-no-fastapi-cloud-cli]==0.129.0
+fastapi[standard-no-fastapi-cloud-cli]==0.129.2
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.23
     # via fastapi
-greenlet==3.3.1
+greenlet==3.3.2
     # via sqlalchemy
 h11==0.16.0
     # via
@@ -155,7 +155,7 @@ rich==14.3.3
     #   typer
 rich-toolkit==0.19.4
     # via fastapi-cli
-ruff==0.15.1
+ruff==0.15.2
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
@@ -167,7 +167,7 @@ testcontainers==4.14.1
     # via focus-marche-v2 (pyproject.toml)
 typeguard==4.5.1
     # via marshmallow-dataclass
-typer==0.24.0
+typer==0.24.1
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
