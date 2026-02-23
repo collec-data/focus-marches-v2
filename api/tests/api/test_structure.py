@@ -29,13 +29,6 @@ def api_entreprise_mock(mocker):
     return api_entreprise_mock
 
 
-@pytest.fixture
-def opendatasoft_mock(mocker):
-    ods_mock = mocker.Mock()
-    ods_mock.getCoordonnees.return_value = {"lon": 1, "lat": 2}
-    return ods_mock
-
-
 def test_list_structures(client):
     AcheteurFactory.create_batch(9)
     AcheteurFactory(nom="COMMUNAUTE DE COMMUNE DE ")
@@ -180,6 +173,32 @@ def test_list_vendeurs(client):
     assert response.json()["items"][0]["structure"]["uid"] == vendeurs[1].uid
 
 
+def test_list_acheteurs_vendeurs_structures_ND_alphabetiquement_a_la_fin(client):
+    titulaires = VendeurFactory.create_batch(3) + [
+        VendeurFactory(nom="Meilleur vendeur")
+    ]
+    acheteurs = AcheteurFactory.create_batch(3) + [
+        AcheteurFactory(nom="Meilleur acheteur")
+    ]
+    for i in range(len(titulaires)):
+        MarcheFactory.create_batch(
+            1, acheteur=acheteurs[i], montant=5, titulaires=[titulaires[i]]
+        )
+
+    response = client.get(
+        "/structure/acheteur", params={"ordre": 1, "champs_ordre": "nom"}
+    )
+    assert response.status_code == 200
+    print(response.json()["items"][0])
+    assert response.json()["items"][0]["structure"]["nom"] == "Meilleur acheteur"
+
+    response = client.get(
+        "/structure/vendeur", params={"ordre": 1, "champs_ordre": "nom"}
+    )
+    assert response.status_code == 200
+    assert response.json()["items"][0]["structure"]["nom"] == "Meilleur vendeur"
+
+
 def test_get_structure(client, api_entreprise_mock):
     client.app.dependency_overrides[get_api_entreprise] = lambda: api_entreprise_mock
 
@@ -222,7 +241,7 @@ def test_get_structure_does_not_exists(client):
     assert response.json()["detail"] == "Structure inconnue"
 
 
-def test_get_structure_by_id(client, api_entreprise_mock, opendatasoft_mock):
+def test_get_structure_by_id(client, api_entreprise_mock):
     client.app.dependency_overrides[get_api_entreprise] = lambda: api_entreprise_mock
 
     acheteur = AcheteurFactory(identifiant="9999")

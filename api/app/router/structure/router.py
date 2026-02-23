@@ -108,7 +108,8 @@ def list_acheteurs(
     stmt = stmt.group_by(Structure.uid)
 
     if params.champs_ordre == StructuresAggChamps.NOM:
-        stmt = stmt.order_by((asc if params.ordre > 0 else desc)(Structure.nom))
+        ordre = asc if params.ordre > 0 else desc
+        stmt = stmt.order_by(ordre(Structure.nom.is_(None)), ordre(Structure.nom))
     else:
         stmt = stmt.order_by((asc if params.ordre > 0 else desc)(params.champs_ordre))
 
@@ -179,7 +180,8 @@ def list_vendeurs(
     stmt = stmt.group_by(Structure.uid)
 
     if params.champs_ordre == StructuresAggChamps.NOM:
-        stmt = stmt.order_by((asc if params.ordre > 0 else desc)(Structure.nom))
+        ordre = asc if params.ordre > 0 else desc
+        stmt = stmt.order_by(ordre(Structure.nom.is_(None)), ordre(Structure.nom))
     else:
         stmt = stmt.order_by((asc if params.ordre > 0 else desc)(params.champs_ordre))
 
