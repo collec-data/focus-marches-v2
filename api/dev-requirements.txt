@@ -37,7 +37,7 @@ email-validator==2.3.0
     # via fastapi
 factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
-faker==40.4.0
+faker==40.5.1
     # via factory-boy
 fastapi[standard-no-fastapi-cloud-cli]==0.131.0
     # via focus-marche-v2 (pyproject.toml)
