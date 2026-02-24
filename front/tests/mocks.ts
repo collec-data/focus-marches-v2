@@ -1,4 +1,4 @@
-export async function mockRouter(params): Promise<void> {
+export async function mockRouter(params: any): Promise<void> {
     const VueRouter = await import('vue-router');
     VueRouter.useRoute.mockReturnValue({
         params: params,
