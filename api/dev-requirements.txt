@@ -41,7 +41,7 @@ faker==40.5.1
     # via factory-boy
 fastapi[standard-no-fastapi-cloud-cli]==0.132.0
     # via focus-marche-v2 (pyproject.toml)
-fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.23
+fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.24
     # via fastapi
 greenlet==3.3.2
     # via sqlalchemy
@@ -153,13 +153,13 @@ rich==14.3.3
     # via
     #   rich-toolkit
     #   typer
-rich-toolkit==0.19.4
+rich-toolkit==0.19.7
     # via fastapi-cli
 ruff==0.15.2
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
-sqlalchemy==2.0.46
+sqlalchemy==2.0.47
     # via focus-marche-v2 (pyproject.toml)
 starlette==0.50.0
     # via fastapi
