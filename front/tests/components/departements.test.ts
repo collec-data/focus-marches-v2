@@ -1,6 +1,6 @@
 import { render } from '@testing-library/vue';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import { expect, it, vi } from 'vitest';
+import { expect, it } from 'vitest';
 import Departements from '../../src/components/dashboard/Departements.vue';
 
 expect.extend(toHaveNoViolations);

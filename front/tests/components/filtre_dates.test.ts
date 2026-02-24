@@ -1,6 +1,6 @@
 import { render } from '@testing-library/vue';
 import { axe, toHaveNoViolations } from 'jest-axe';
-import { expect, it, vi } from 'vitest';
+import { expect, it } from 'vitest';
 import FiltreDates from '../../src/components/FiltreDates.vue';
 
 expect.extend(toHaveNoViolations);

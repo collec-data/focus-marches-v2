@@ -2,14 +2,16 @@ import {
     CategorieMarche,
     type CategoriesDto,
     Ccag,
-    ConsiderationsSociales,
+    type ConsiderationDto,
+    type ConsiderationsEnvDto,
     ConsiderationsEnvironnementales,
     type ConsiderationsMensuelleDto,
-    type ConsiderationsEnvDto,
     type ConsiderationsSocialeDto,
-    type ConsiderationDto,
+    ConsiderationsSociales,
+    type ContratConcessionDto,
     type DecpMalFormeDto,
     type IndicateursDto,
+    type LieuDto,
     type MarcheAllegeDto,
     type MarcheCategorieDepartementDto,
     type MarcheCcagDto,
@@ -17,10 +19,8 @@ import {
     type MarcheNatureDto,
     type MarcheProcedureDto,
     ProcedureMarche,
-    StatsErreursDto,
-    type StructureAggMarchesDto,
-    type ContratConcessionDto,
-    type LieuDto
+    type StatsErreursDto,
+    type StructureAggMarchesDto
 } from '../src/client/types.gen.ts';
 
 export const marche: MarcheAllegeDto = {
