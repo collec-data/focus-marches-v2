@@ -1,13 +1,13 @@
 import pluginJs from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier/flat';
 import pluginVue from 'eslint-plugin-vue';
+import pluginVueA11y from 'eslint-plugin-vuejs-accessibility';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import pluginVueA11y from 'eslint-plugin-vuejs-accessibility';
 
 export default [
     {
-        ignores: ['dist/', 'tests/', 'postcss.config.js', 'src/client/', '**/*.d.ts', '*.config.ts', '*.config.mjs']
+        ignores: ['dist/', 'postcss.config.js', 'src/client/', '**/*.d.ts', '*.config.ts', '*.config.mjs']
     },
     {
         files: ['**/*.{js,mjs,cjs,ts,vue}']

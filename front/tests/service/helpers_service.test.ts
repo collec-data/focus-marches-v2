@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { longLabelsBreaker, structureName, getDurationInMonths, formatBoolean, getOpsnRegion } from '../../src/service/HelpersService.ts';
+import { formatBoolean, getDurationInMonths, getOpsnRegion, longLabelsBreaker, structureName } from '../../src/service/HelpersService.ts';
 
 it('break long strings', async () => {
     expect(longLabelsBreaker(['Lorem ipsum dolor', null, 'Looooooooooooooorem'], 13)).toStrictEqual(['Lorem ipsum<br>dolor', null, 'Looooooooooooooorem']);
