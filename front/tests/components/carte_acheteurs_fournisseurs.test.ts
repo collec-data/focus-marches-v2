@@ -6,14 +6,14 @@ import CarteAcheteursFournisseurs from '../../src/components/dashboard/CarteAche
 expect.extend(toHaveNoViolations);
 
 it('Achat durable has no accessibility violation', async () => {
-    const { container, unmount } = render(CarteAcheteursFournisseurs, { propsData: { acheteur: { uid: 42 } as StructureEtendueDto, dateMin: new Date('2020-01-01'), dateMax: new Date('2026-01-01') } });
+    const { container, unmount } = render(CarteAcheteursFournisseurs, { propsData: { acheteur: { uid: 42 }, dateMin: new Date('2020-01-01'), dateMax: new Date('2026-01-01') } });
     const results = await axe(container);
     expect(results).toHaveNoViolations();
     unmount();
 });
 
 it('Achat durable has no accessibility violation', async () => {
-    const { container, unmount } = render(CarteAcheteursFournisseurs, { propsData: { vendeur: { uid: 42 } as StructureEtendueDto, dateMin: new Date('2020-01-01'), dateMax: new Date('2026-01-01') } });
+    const { container, unmount } = render(CarteAcheteursFournisseurs, { propsData: { vendeur: { uid: 42 }, dateMin: new Date('2020-01-01'), dateMax: new Date('2026-01-01') } });
     const results = await axe(container);
     expect(results).toHaveNoViolations();
     unmount();

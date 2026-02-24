@@ -5,7 +5,7 @@ import {
     type ConsiderationDto,
     type ConsiderationsEnvDto,
     ConsiderationsEnvironnementales,
-    type ConsiderationsMensuelleDto,
+    type ConsiderationsGlobalDto,
     type ConsiderationsSocialeDto,
     ConsiderationsSociales,
     type ContratConcessionDto,
@@ -29,7 +29,7 @@ export const marche: MarcheAllegeDto = {
     acheteur: { uid: 42, identifiant: '000000', type_identifiant: 'SIRET', nom: 'Acheteur', vendeur: false, acheteur: true, cat_entreprise: 'GE' },
     objet: 'Lorem ipsum dolor',
     categorie: 'Services',
-    cpv: '123456',
+    cpv: { code: 123456, libelle: 'lorem' },
     sous_traitance_declaree: false,
     actes_sous_traitance: [],
     date_notification: new Date('2025-01-01'),
@@ -37,7 +37,8 @@ export const marche: MarcheAllegeDto = {
     titulaires: [{ uid: 4321, identifiant: '00000011111', type_identifiant: 'SIRET', nom: 'Vendeur', vendeur: true, acheteur: false, cat_entreprise: 'PME' }],
     considerations_environnementales: [],
     considerations_sociales: [],
-    montant_max_accord_cadre: 999999
+    montant_max_accord_cadre: '999999',
+    duree_mois: 6
 };
 
 export const indicateurs: IndicateursDto = {
@@ -65,8 +66,8 @@ export const nature: MarcheNatureDto[] = [
 ];
 
 export const procedures: MarcheProcedureDto[] = [
-    { procedure: ProcedureMarche.APPEL_D_OFFRES_OUVERT, montant: '100.00', nombre: 1 },
-    { procedure: ProcedureMarche.APPEL_D_OFFRES_RESTREINT, montant: '200.00', nombre: 3 }
+    { procedure: ProcedureMarche["APPEL_D'OFFRES_OUVERT"], montant: '100.00', nombre: 1 },
+    { procedure: ProcedureMarche["APPEL_D'OFFRES_RESTREINT"], montant: '200.00', nombre: 3 }
 ];
 
 export const departements: MarcheDepartementDto[] = [
@@ -86,11 +87,13 @@ export const erreurs: DecpMalFormeDto[] = [
     {
         uid: 123,
         decp: {},
-        erreurs: [{ uid: 456, type: 'missing', localisation: '.', message: 'attribut manquant' }]
+        erreurs: [{ uid: 456, type: 'missing', localisation: '.', message: 'attribut manquant' }],
+        structure: structure.structure,
+        date_creation: new Date('2025-01-01')
     }
 ];
 
-export const erreursStats: StatsErreursDto[] = [{ erreur: 'Field required', nombre: 1263, localisation: 'offresRecues' }];
+export const erreursStats: StatsErreursDto[] = [{ erreur: 'Field required', type: 'missing', nombre: 1263, localisation: 'offresRecues' }];
 
 export const ccag: MarcheCcagDto[] = [{ ccag: Ccag.TRAVAUX, montant: '10000', nombre: 123, categorie: CategorieMarche.TRAVAUX }];
 
@@ -101,24 +104,24 @@ export const categories: CategoriesDto[] = [
     { categorie: 'Fournitures', mois: '2021-01', montant: '654789.2', nombre: 1 }
 ];
 
-export const concession: ContratConcessionDto = [
+export const concession: Array<ContratConcessionDto> = [
     {
         uid: 10,
         id: '2025S123456',
-        autorite_concedante: { uid: 42, identifiant: '123456789', type_identifiant: 'SIRET', nom: 'Autorité', vendeur: false, acheteur: true },
+        autorite_concedante: { uid: 42, identifiant: '123456789', type_identifiant: 'SIRET', nom: 'Autorité', vendeur: false, acheteur: true, cat_entreprise: 'PME' },
         nature: 'Délégation de service public',
         objet: 'Lorem ipsum dolor',
         procedure: 'Procédure négociée ouverte',
         duree_mois: 42,
         duree_mois_initiale: 40,
-        date_signature: '2025-01-01',
-        date_publication: '2025-01-10',
-        date_debut_execution: '2025-01-30',
+        date_signature: new Date('2025-01-01'),
+        date_publication: new Date('2025-01-10'),
+        date_debut_execution: new Date('2025-01-30'),
         valeur_globale: '1000000.00',
         valeur_globale_initiale: '900000.00',
         montant_subvention_publique: '10.0',
         donnees_execution: [],
-        concessionnaires: [{ uid: 24, identifiant: '987654321', type_identifiant: 'SIRET', nom: 'Concessionnaire', vendeur: true, acheteur: false }],
+        concessionnaires: [{ uid: 24, identifiant: '987654321', type_identifiant: 'SIRET', nom: 'Concessionnaire', vendeur: true, acheteur: false, cat_entreprise: 'PME' }],
         considerations_sociales: [],
         considerations_environnementales: []
     }
@@ -150,7 +153,7 @@ export const consideration_combine: ConsiderationDto[] = [
     { consideration: 'Pas de considérations', nombre: 3 }
 ];
 
-export const considerations: ConsiderationsMensuelleDto[] = [
+export const considerations: ConsiderationsGlobalDto[] = [
     {
         consideration: 'Aucune considération',
         data: [
