@@ -102,6 +102,16 @@ export type CategoriesDto = {
 };
 
 /**
+ * ConfDto
+ */
+export type ConfDto = {
+    /**
+     * Dernier Import
+     */
+    dernier_import?: string | null;
+};
+
+/**
  * ConsiderationAnnuelleDto
  */
 export type ConsiderationAnnuelleDto = {
@@ -112,7 +122,7 @@ export type ConsiderationAnnuelleDto = {
     /**
      * Annee
      */
-    annee: string;
+    annee: number;
 };
 
 /**
@@ -1129,6 +1139,16 @@ export type ValidationError = {
      * Error Type
      */
     type: string;
+    /**
+     * Input
+     */
+    input?: unknown;
+    /**
+     * Context
+     */
+    ctx?: {
+        [key: string]: unknown;
+    };
 };
 
 /**
@@ -2225,3 +2245,19 @@ export type ListCpvResponses = {
 };
 
 export type ListCpvResponse = ListCpvResponses[keyof ListCpvResponses];
+
+export type GetConfData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/conf/';
+};
+
+export type GetConfResponses = {
+    /**
+     * Successful Response
+     */
+    200: ConfDto;
+};
+
+export type GetConfResponse = GetConfResponses[keyof GetConfResponses];

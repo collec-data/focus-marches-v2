@@ -30,6 +30,7 @@ from app.config import get_config
 from app.db import get_engine
 from app.dependencies import get_api_entreprise
 from app.helpers import categorisation
+from app.helpers.conf import set_dernier_import
 from app.models.db import (
     CPV,
     ActeSousTraitance,
@@ -646,6 +647,8 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
 
             log.info("🧹 Suppression du fichier téléchargé")
             os.remove(CLEANED_FILE)
+
+        set_dernier_import(session)
 
 
 @app.command()

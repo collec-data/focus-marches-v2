@@ -12,6 +12,7 @@ from tests.factories import (
     ClauseEnvFactory,
     ClauseSocialeFactory,
     ConcessionFactory,
+    ConfFactory,
     CPVFactory,
     CritereEnvFactory,
     CritereSocialFactory,
@@ -37,6 +38,7 @@ def client(db, db_url):
             DATABASE_URL=db_url,
             API_ENTREPRISE_URL="https://api.entreprise",
             API_ENTREPRISE_TOKEN="MySecret",
+            SOURCES="",
         )
 
     app.dependency_overrides[get_db] = get_session_override
@@ -91,6 +93,7 @@ def set_factory_db(db):
         TechniqueAchatFactory,
         StructureInfogreffeFactory,
         CPVFactory,
+        ConfFactory,
     ]:
         my_factory._meta.sqlalchemy_session = db
 
