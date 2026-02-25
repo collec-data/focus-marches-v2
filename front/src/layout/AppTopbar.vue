@@ -1,20 +1,37 @@
-<script setup>
+<script setup lang="ts">
 import { useLayout } from '@/layout/composables/layout';
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
 import AppConfigurator from './AppConfigurator.vue';
+import AppMenu from './AppMenu.vue';
 
-const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
+const { toggleMenu, menuMobileActive, toggleDarkMode, isDarkTheme } = useLayout();
+
+const route = useRoute();
+
+watch(
+    () => route.path,
+    () => {
+        if (menuMobileActive.value) toggleMenu();
+    }
+);
 </script>
 
 <template>
     <header class="layout-topbar">
-        <div class="layout-topbar-logo-container">
-            <button class="layout-menu-button layout-topbar-action" type="button" aria-label="Ouvrir le menu" @click="toggleMenu">
+        <div class="layout-topbar-first-container">
+            <div class="layout-topbar-logo-container">
+                <router-link to="/" class="layout-topbar-logo">
+                    <img id="topbar_logo" src="@/assets/images/logo.png" alt="" />
+                </router-link>
+            </div>
+
+            <button class="layout-topbar-menu-button layout-topbar-action" type="button" @click="toggleMenu">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/" class="layout-topbar-logo">
-                <span>Focus Marchés V2</span>
-            </router-link>
         </div>
+
+        <AppMenu></AppMenu>
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
@@ -34,14 +51,6 @@ const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
                     <AppConfigurator />
                 </div>
             </div>
-
-            <button
-                v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                class="layout-topbar-menu-button layout-topbar-action"
-                type="button"
-            >
-                <i class="pi pi-ellipsis-v"></i>
-            </button>
         </div>
     </header>
 </template>

@@ -9,12 +9,6 @@ const { layoutConfig, isDarkTheme } = useLayout();
 const preset = ref(layoutConfig.preset);
 const presetOptions = ref(Object.keys(presets));
 
-const menuMode = ref(layoutConfig.menuMode);
-const menuModeOptions = ref([
-    { label: 'Statique', value: 'static' },
-    { label: 'Survol', value: 'overlay' }
-]);
-
 function updateColors(type, color) {
     if (type === 'primary') {
         layoutConfig.primary = color.name;
@@ -35,10 +29,6 @@ function applyTheme(type, color) {
 
 function onPresetChange() {
     changePreset(layoutConfig, preset.value);
-}
-
-function onMenuModeChange() {
-    layoutConfig.menuMode = menuMode.value;
 }
 </script>
 
@@ -81,10 +71,6 @@ function onMenuModeChange() {
             <div class="flex flex-col gap-2">
                 <span class="text-sm text-muted-color font-semibold">Thème</span>
                 <SelectButton v-model="preset" :options="presetOptions" :allowEmpty="false" @change="onPresetChange" />
-            </div>
-            <div class="flex flex-col gap-2">
-                <span class="text-sm text-muted-color font-semibold">Affichage du menu</span>
-                <SelectButton v-model="menuMode" :options="menuModeOptions" :allowEmpty="false" optionLabel="label" optionValue="value" @change="onMenuModeChange" />
             </div>
         </div>
     </div>

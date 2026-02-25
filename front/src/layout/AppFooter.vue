@@ -7,7 +7,10 @@ import { getOpsnRegion } from '@/service/HelpersService';
         <div>
             <h2 class="text-center">A propos de cet outil</h2>
             <div class="columns-2">
-                <p>Cet outil est alimenté avec les données du profil d'acheteur de la salle de marchés de {{ getOpsnRegion() }}.</p>
+                <p>
+                    Cet outil est alimenté avec les données du profil d'acheteur de la salle de marchés de {{ getOpsnRegion() }}. Certaines données peuvent manquer suite à des
+                    <RouterLink to="/erreurs-importation"> <Button icon="pi pi-fw pi-exclamation-triangle" label="Erreurs d'importation" aria-label="Erreurs d'importation" variant="link"></Button> </RouterLink>
+                </p>
                 <p>
                     En savoir plus sur l'outil Focus Marchés sur notre page
                     <RouterLink to="/a-propos"> <Button icon="pi pi-fw pi-info-circle" label="A propos de Focus Marchés v2" aria-label="A propos de Focus Marchés v2" variant="link"></Button> </RouterLink>.

@@ -1,36 +1,22 @@
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 
 export interface layoutConfigInterface {
     preset: string;
     primary: string;
     surface: null | string;
     darkTheme: boolean;
-    menuMode: string;
 }
 
 const layoutConfig = reactive<layoutConfigInterface>({
     preset: 'Aura',
     primary: 'emerald',
     surface: null,
-    darkTheme: false,
-    menuMode: 'static'
+    darkTheme: false
 });
 
-const layoutState = reactive({
-    staticMenuDesktopInactive: false,
-    overlayMenuActive: false,
-    profileSidebarVisible: false,
-    configSidebarVisible: false,
-    staticMenuMobileActive: false,
-    menuHoverActive: false,
-    activeMenuItem: null
-});
+const menuMobileActive = ref(false);
 
 export function useLayout() {
-    const setActiveMenuItem = (item) => {
-        layoutState.activeMenuItem = item.value || item;
-    };
-
     const toggleDarkMode = () => {
         if (!document.startViewTransition) {
             executeDarkModeToggle();
@@ -47,18 +33,10 @@ export function useLayout() {
     };
 
     const toggleMenu = () => {
-        if (layoutConfig.menuMode === 'overlay') {
-            layoutState.overlayMenuActive = !layoutState.overlayMenuActive;
-        }
-
-        if (window.innerWidth > 991) {
-            layoutState.staticMenuDesktopInactive = !layoutState.staticMenuDesktopInactive;
-        } else {
-            layoutState.staticMenuMobileActive = !layoutState.staticMenuMobileActive;
-        }
+        menuMobileActive.value = !menuMobileActive.value;
     };
 
-    const isSidebarActive = computed(() => layoutState.overlayMenuActive || layoutState.staticMenuMobileActive);
+    const isSidebarActive = computed(() => menuMobileActive.value);
 
     const isDarkTheme = computed(() => layoutConfig.darkTheme);
 
@@ -68,13 +46,12 @@ export function useLayout() {
 
     return {
         layoutConfig,
-        layoutState,
+        menuMobileActive,
         toggleMenu,
         isSidebarActive,
         isDarkTheme,
         getPrimary,
         getSurface,
-        setActiveMenuItem,
         toggleDarkMode
     };
 }
