@@ -1,30 +1,23 @@
 <script setup>
 import { ref } from 'vue';
 
-import AppMenuItem from './AppMenuItem.vue';
-
-const model = ref([
-    {
-        items: [
-            { label: 'Accueil', icon: 'pi pi-fw pi-home', to: '/' },
-            { label: 'Acheteurs', icon: 'pi pi-fw pi-building', to: '/acheteurs' },
-            { label: 'Fournisseurs', icon: 'pi pi-fw pi-briefcase', to: '/fournisseurs' },
-            { label: 'Recherche', icon: 'pi pi-fw pi-search', to: '/recherche' },
-            { label: 'Erreurs importation', icon: 'pi pi-fw pi-exclamation-triangle', to: '/erreurs-importation' }
-        ]
-    }
+const items = ref([
+    { label: 'Accueil', icon: 'pi pi-fw pi-home', to: '/' },
+    { label: 'Acheteurs', icon: 'pi pi-fw pi-building', to: '/acheteurs' },
+    { label: 'Fournisseurs', icon: 'pi pi-fw pi-briefcase', to: '/fournisseurs' },
+    { label: 'Recherche', icon: 'pi pi-fw pi-search', to: '/recherche' }
 ]);
 </script>
 
 <template>
     <nav aria-label="Menu">
         <ul class="layout-menu">
-            <template v-for="(item, i) in model" :key="item">
-                <AppMenuItem v-if="!item.separator" :item="item" :index="i"></AppMenuItem>
-                <li v-if="item.separator" class="menu-separator"></li>
-            </template>
+            <li v-for="item in items" :key="item.label" class="layout-menu-item">
+                <router-link :to="item.to" @click="itemClick($event, item, index)">
+                    <i :class="item.icon" class="layout-menuitem-icon"></i>
+                    <span class="layout-menuitem-text">{{ item.label }}</span>
+                </router-link>
+            </li>
         </ul>
     </nav>
 </template>
-
-<style lang="scss" scoped></style>

@@ -31,19 +31,9 @@
                     0px 0px 2px rgba(0, 0, 0, 0.05),
                     0px 1px 4px rgba(0, 0, 0, 0.08);
             }
-
-            &.layout-overlay-active {
-                .layout-sidebar {
-                    transform: translateX(0);
-                }
-            }
         }
 
         &.layout-static {
-            .layout-main-container {
-                margin-left: 22rem;
-            }
-
             &.layout-static-inactive {
                 .layout-sidebar {
                     transform: translateX(-100%);

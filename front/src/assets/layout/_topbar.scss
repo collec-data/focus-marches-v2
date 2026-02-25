@@ -3,35 +3,31 @@
 .layout-topbar {
     position: fixed;
     height: 4rem;
-    z-index: 997;
+    z-index: 999;
     left: 0;
     top: 0;
     width: 100%;
-    padding: 0 2rem;
+    padding: 1rem 2rem;
     background-color: var(--surface-card);
     transition: left var(--layout-section-transition-duration);
     display: flex;
     align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px #00000016;
+
+    .layout-topbar-first-container {
+        display: flex;
+    }
 
     .layout-topbar-logo-container {
-        width: 20rem;
         display: flex;
-        align-items: center;
     }
 
     .layout-topbar-logo {
         display: inline-flex;
-        align-items: center;
-        font-size: 1.5rem;
-        border-radius: var(--content-border-radius);
-        color: var(--text-color);
-        font-weight: 500;
-        gap: 0.5rem;
-
-        svg {
+        img {
             width: 3rem;
         }
-
         &:focus-visible {
             @include focused();
         }
@@ -71,16 +67,11 @@
         }
     }
 
-    .layout-menu-button {
-        margin-right: 0.5rem;
-    }
-
     .layout-topbar-menu-button {
         display: none;
     }
 
     .layout-topbar-actions {
-        margin-left: auto;
         display: flex;
         gap: 1rem;
     }
@@ -96,21 +87,31 @@
     }
 }
 
-@media (max-width: 991px) {
+@media (max-width: 800px) {
     .layout-topbar {
-        padding: 0 2rem;
+        height: fit-content;
+        padding: 1rem 2rem;
+        flex-direction: column;
+
+        .layout-topbar-first-container {
+            width: 100%;
+        }
 
         .layout-topbar-logo-container {
             width: auto;
         }
 
-        .layout-menu-button {
-            margin-left: 0;
-            margin-right: 0.5rem;
+        .layout-topbar-menu-button {
+            margin-left: auto;
         }
 
         .layout-topbar-menu-button {
             display: inline-flex;
+        }
+
+        .layout-topbar-actions {
+            display: none;
+            padding-bottom: 2rem;
         }
 
         .layout-topbar-menu {
@@ -155,6 +156,10 @@
         .layout-topbar-menu-content {
             flex-direction: column;
         }
+    }
+
+    .layout-mobile-active .layout-topbar-actions {
+        display: flex;
     }
 }
 
