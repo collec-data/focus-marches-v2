@@ -165,3 +165,11 @@ class DecpMalFormeFactory(factory.alchemy.SQLAlchemyModelFactory):
     )
     structure = factory.declarations.SubFactory(AcheteurFactory)
     date_creation = factory.faker.Faker("date")
+
+
+class ConfFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = db.Conf
+
+    clef = factory.faker.Faker("string")
+    valeur = factory.faker.Faker("string")

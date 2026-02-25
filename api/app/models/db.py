@@ -389,3 +389,8 @@ class CPV(Base):
     __tablename__ = "cpv"  # type: ignore
     code: Mapped[int] = mapped_column(primary_key=True)
     libelle: Mapped[str] = mapped_column(String(255))
+
+
+class Conf(Base):
+    clef: Mapped[str] = mapped_column(String(255), primary_key=True)
+    valeur: Mapped[str] = mapped_column(String(255))
