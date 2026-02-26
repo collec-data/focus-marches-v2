@@ -43,8 +43,8 @@ class Base(DeclarativeBase):
 marche_titulaire_table = Table(
     "marche_titulaire_table",
     Base.metadata,
-    Column("uid_marche", ForeignKey("marche.uid")),
-    Column("uid_titulaire", ForeignKey("structure.uid")),
+    Column("uid_marche", ForeignKey("marche.uid", name="marche_fk")),
+    Column("uid_titulaire", ForeignKey("structure.uid", name="titulaire_fk")),
 )
 
 
@@ -82,7 +82,7 @@ class StructureInfogreffe(Base):
 class ModificationSousTraitance(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uid_acte_sous_traitance: Mapped[int] = mapped_column(
-        ForeignKey("acte_sous_traitance.uid")
+        ForeignKey("acte_sous_traitance.uid", name="acte_fk")
     )
     duree_mois: Mapped[int | None]
     date_notif: Mapped[date]
@@ -92,10 +92,12 @@ class ModificationSousTraitance(Base):
 
 class ActeSousTraitance(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid", name="marche_fk"))
     id: Mapped[int]  # unique par marché, dans l'ordre de création
     sous_traitant: Mapped[Structure] = relationship()  # 1*
-    uid_sous_traitant: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
+    uid_sous_traitant: Mapped[int] = mapped_column(
+        ForeignKey("structure.uid", name="sous_traitant_fk")
+    )
     duree_mois: Mapped[int | None]
     duree_mois_initiale: Mapped[int | None]
     date_notification: Mapped[date]
@@ -117,14 +119,17 @@ class ActeSousTraitance(Base):
 modification_titulaire_table = Table(
     "modification_titulaire_table",
     Base.metadata,
-    Column("uid_modification", ForeignKey("modification_marche.uid")),
-    Column("uid_titulaire", ForeignKey("structure.uid")),
+    Column(
+        "uid_modification",
+        ForeignKey("modification_marche.uid", name="modification_fk"),
+    ),
+    Column("uid_titulaire", ForeignKey("structure.uid", name="titulaire_fk")),
 )
 
 
 class ModificationMarche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid", name="marche_fk"))
     id: Mapped[int]  # id unique croissant par marché
     duree_mois: Mapped[int | None]
     date_notification: Mapped[date]
@@ -150,7 +155,7 @@ class Lieu(Base):
 class Tarif(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uid_donnee_execution: Mapped[int] = mapped_column(
-        ForeignKey("donnee_execution.uid")
+        ForeignKey("donnee_execution.uid", name="donnee_execution_fk")
     )
     intitule: Mapped[str] = mapped_column(String(255))
     tarif: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
@@ -159,7 +164,7 @@ class Tarif(Base):
 class DonneeExecution(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     uid_contrat_concession: Mapped[int] = mapped_column(
-        ForeignKey("contrat_concession.uid")
+        ForeignKey("contrat_concession.uid", name="concession_fk")
     )
     date_publication: Mapped[date]
     depenses_investissement: Mapped[Decimal] = mapped_column(DECIMAL(12, 2))
@@ -168,19 +173,19 @@ class DonneeExecution(Base):
 
 class ConsiderationEnvMarche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid", name="marche_fk"))
     consideration: Mapped[int]
 
 
 class ConsiderationSocialeMarche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid", name="marche_fk"))
     consideration: Mapped[int]
 
 
 class TechniqueAchatMarche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid"))
+    uid_marche: Mapped[int] = mapped_column(ForeignKey("marche.uid", name="marche_fk"))
     technique: Mapped[int]
 
 
@@ -188,10 +193,12 @@ class Marche(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     id: Mapped[str] = mapped_column(String(16))
     acheteur: Mapped[Structure] = relationship()  # 1*
-    uid_acheteur: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
+    uid_acheteur: Mapped[int] = mapped_column(
+        ForeignKey("structure.uid", name="acheteur_fk")
+    )
     nature: Mapped[int]  # enum NatureMarche
     objet: Mapped[str] = mapped_column(Text())  # max 1k
-    code_cpv: Mapped[int] = mapped_column(ForeignKey("cpv.code"))
+    code_cpv: Mapped[int] = mapped_column(ForeignKey("cpv.code", name="cpv_fk"))
     cpv: Mapped[CPV] = relationship()
     categorie: Mapped[int]  # enum CategorieMarche
     techniques_achat: Mapped[list[TechniqueAchatMarche]] = relationship()
@@ -199,7 +206,9 @@ class Marche(Base):
         MutableList.as_mutable(PickleType)
     )
     accord_cadre: Mapped["Marche | None"] = relationship()  # 1*
-    uid_accord_cadre: Mapped[None | int] = mapped_column(ForeignKey("marche.uid"))
+    uid_accord_cadre: Mapped[None | int] = mapped_column(
+        ForeignKey("marche.uid", name="accord_cadre_fk")
+    )
     marche_innovant: Mapped[bool]
     ccag: Mapped[int | None]
     offres_recues: Mapped[int | None]
@@ -210,7 +219,7 @@ class Marche(Base):
     actes_sous_traitance: Mapped[list[ActeSousTraitance]] = relationship()
     procedure: Mapped[int | None]  # enum ProcedureMarche
     lieu: Mapped[Lieu] = relationship()  # 1*
-    uid_lieu: Mapped[int | None] = mapped_column(ForeignKey("lieu.uid"))
+    uid_lieu: Mapped[int | None] = mapped_column(ForeignKey("lieu.uid", name="lieu_fk"))
     duree_mois: Mapped[int]
     duree_mois_initiale: Mapped[int]
     date_notification: Mapped[date]
@@ -292,7 +301,9 @@ class Marche(Base):
 
 class ModificationConcession(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    uid_concession: Mapped[int] = mapped_column(ForeignKey("contrat_concession.uid"))
+    uid_concession: Mapped[int] = mapped_column(
+        ForeignKey("contrat_concession.uid", name="concession_fk")
+    )
     id: Mapped[int]  # id unique croissant par concession
     date_signature: Mapped[date]
     date_publication: Mapped[date]
@@ -303,8 +314,12 @@ class ModificationConcession(Base):
 concession_structure_table = Table(
     "concession_structure_table",
     Base.metadata,
-    Column("uid_concession", ForeignKey("contrat_concession.uid")),
-    Column("uid_concessionnaire", ForeignKey("structure.uid")),
+    Column(
+        "uid_concession", ForeignKey("contrat_concession.uid", name="concession_fk")
+    ),
+    Column(
+        "uid_concessionnaire", ForeignKey("structure.uid", name="concessionnaire_fk")
+    ),
 )
 
 
@@ -312,7 +327,9 @@ class ContratConcession(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     id: Mapped[str] = mapped_column(String(16))
     autorite_concedante: Mapped[Structure] = relationship()  # 1*
-    uid_autorite: Mapped[int] = mapped_column(ForeignKey("structure.uid"))
+    uid_autorite: Mapped[int] = mapped_column(
+        ForeignKey("structure.uid", name="autorite_fk")
+    )
     nature: Mapped[int | None]  # enum NatureConcession
     objet: Mapped[str] = mapped_column(String(1_000))
     procedure: Mapped[int]  # enum ProcédureConcession
@@ -368,7 +385,9 @@ class ContratConcession(Base):
 class Erreur(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     decp: Mapped["DecpMalForme"] = relationship()
-    uid_decp: Mapped[int] = mapped_column(ForeignKey("decp_mal_forme.uid"))
+    uid_decp: Mapped[int] = mapped_column(
+        ForeignKey("decp_mal_forme.uid", name="decp_fk")
+    )
     type: Mapped[str] = mapped_column(String(100))
     localisation: Mapped[str] = mapped_column(String(255))
     message: Mapped[str] = mapped_column(String(255))
@@ -379,7 +398,7 @@ class DecpMalForme(Base):
     decp: Mapped[str] = mapped_column(Text())
     erreurs: Mapped[list[Erreur]] = relationship(back_populates="decp")
     uid_structure: Mapped[int | None] = mapped_column(
-        ForeignKey(Structure.uid), default=None
+        ForeignKey(Structure.uid, name=("structure_fk")), default=None
     )
     structure: Mapped[Structure | None] = relationship()
     date_creation: Mapped[date | None]

@@ -592,6 +592,33 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
             "🧹 Suppression partielle de la base de données (lieux et structures conservés)"
         )
         with get_engine().connect() as connexion:
+            fks: list[tuple[str, str]] = [
+                (str(ModificationSousTraitance.__tablename__), "acte_fk"),
+                (str(ActeSousTraitance.__tablename__), "marche_fk"),
+                (str(ActeSousTraitance.__tablename__), "sous_traitant_fk"),
+                (str(ModificationMarche.__tablename__), "marche_fk"),
+                (modification_titulaire_table.name, "modification_fk"),
+                (modification_titulaire_table.name, "titulaire_fk"),
+                (str(Marche.__tablename__), "acheteur_fk"),
+                (str(Marche.__tablename__), "cpv_fk"),
+                (str(Marche.__tablename__), "accord_cadre_fk"),
+                (str(Marche.__tablename__), "lieu_fk"),
+                (str(ConsiderationEnvMarche.__tablename__), "marche_fk"),
+                (str(ConsiderationSocialeMarche.__tablename__), "marche_fk"),
+                (str(TechniqueAchatMarche.__tablename__), "marche_fk"),
+                (marche_titulaire_table.name, "marche_fk"),
+                (marche_titulaire_table.name, "titulaire_fk"),
+                (str(ModificationConcession.__tablename__), "concession_fk"),
+                (concession_structure_table.name, "concession_fk"),
+                (concession_structure_table.name, "concessionnaire_fk"),
+                (str(Tarif.__tablename__), "donnee_execution_fk"),
+                (str(DonneeExecution.__tablename__), "concession_fk"),
+                (str(ContratConcession.__tablename__), "autorite_fk"),
+                (str(Erreur.__tablename__), "decp_fk"),
+                (str(DecpMalForme.__tablename__), "structure_fk"),
+            ]
+            for table, fk in fks:
+                connexion.execute(text(f"ALTER TABLE {table} DROP FOREIGN KEY {fk}"))
             tables: list[str] = [
                 marche_titulaire_table.name,
                 modification_titulaire_table.name,
@@ -602,17 +629,16 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
                 str(ModificationSousTraitance.__tablename__),
                 str(ActeSousTraitance.__tablename__),
                 str(ModificationMarche.__tablename__),
-                str(Tarif.__tablename__),
-                str(DonneeExecution.__tablename__),
                 str(Marche.__tablename__),
                 str(ModificationConcession.__tablename__),
+                str(DonneeExecution.__tablename__),
+                str(Tarif.__tablename__),
                 str(ContratConcession.__tablename__),
                 str(Erreur.__tablename__),
                 str(DecpMalForme.__tablename__),
             ]
-            connexion.execute(
-                text(f"TRUNCATE TABLE {', '.join(tables)} RESTART IDENTITY")
-            )
+            for table in tables:
+                connexion.execute(text(f"TRUNCATE TABLE {table}"))
             connexion.commit()
 
     sources: list[str] = get_config().SOURCES.split(" ")
