@@ -11,7 +11,9 @@ const router = useRouter();
 const route = useRoute();
 
 const stats = ref<Array<StatsErreursDto>>([]);
+const statsLoading = ref(false);
 const listDecpMalFormes = ref<Array<DecpMalFormeDto>>([]);
+const decpsLoading = ref(false);
 
 const filtres = ref({
     acheteur: undefined as undefined | StructureDto,
@@ -27,6 +29,7 @@ function toDate(date: Date | null): Date | null {
 }
 
 function fetchStats() {
+    statsLoading.value = true;
     getStatsErreurs({
         query: {
             date_debut: toDate(filtres.value.date_min),
@@ -37,6 +40,7 @@ function fetchStats() {
         if (response.data) {
             stats.value = response.data;
         }
+        statsLoading.value = false;
     });
 }
 
@@ -52,6 +56,8 @@ onMounted(() => {
 });
 
 function loadDecps(localisation: string, type: string) {
+    listDecpMalFormes.value = [];
+    decpsLoading.value = true;
     getErreursImport({
         query: {
             localisation: localisation,
@@ -64,6 +70,7 @@ function loadDecps(localisation: string, type: string) {
         if (response.data) {
             listDecpMalFormes.value = response.data;
         }
+        decpsLoading.value = false;
     });
 }
 
@@ -107,7 +114,7 @@ function search() {
         </Panel>
         <div>
             <h2>Statistiques</h2>
-            <DataTable :value="stats" scrollable scrollHeight="30rem" sortField="nombre" :sortOrder="-1">
+            <DataTable :value="stats" scrollable scrollHeight="30rem" sortField="nombre" :sortOrder="-1" :loading="statsLoading">
                 <template #empty>
                     <div class="text-center">
                         <Badge size="xlarge" severity="info">Aucune erreur</Badge>
@@ -130,6 +137,9 @@ function search() {
         <div class="mt-10">
             <h2>DECPs en erreur</h2>
             <p v-if="!listDecpMalFormes.length">Clique sur la loupe d'une erreur dans le tableau ci-dessus pour afficher les DECPs concernés</p>
+            <div v-if="decpsLoading" class="text-center">
+                <ProgressSpinner style="width: 5rem; height: 5rem" />
+            </div>
             <Panel v-for="decp in listDecpMalFormes" :key="decp.uid">
                 <template #header>
                     <Badge severity="info" size="large">{{ decp.structure ? structureName(decp.structure) : '' }}</Badge>

@@ -25,9 +25,11 @@ const filters = ref({
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
+const loading = ref(false);
 const listeMarches = ref<Array<MarcheAllegeDto>>([]);
 
 async function fetchData() {
+    loading.value = true;
     if (props.acheteurUid == -1) {
         return;
     }
@@ -42,6 +44,7 @@ async function fetchData() {
     }).then((response) => {
         if (response.data) {
             listeMarches.value = response.data;
+            loading.value = false;
         }
     });
 }
@@ -99,6 +102,7 @@ const hiddenCol = computed(() => {
             :rows="10"
             :rowsPerPageOptions="[10, 25, 50]"
             :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
+            :loading
         >
             <template #empty>
                 <div class="text-center">

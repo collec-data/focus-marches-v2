@@ -30,13 +30,13 @@
         "vue-router": "^5.0.0"
     },
     "devDependencies": {
-        "@eslint/js":"^10.0.1",
+        "@eslint/js": "^10.0.1",
         "@hey-api/openapi-ts": "^0.92.0",
         "@primevue/auto-import-resolver": "^4.3.1",
         "@rushstack/eslint-patch": "^1.8.0",
-        "@testing-library/vue": "^8.1.0",
-        "@types/plotly.js": "^3.0.6",
+        "@testing-library/vue": "^7.0.0",
         "@types/jest-axe": "^3.5.9",
+        "@types/plotly.js": "^3.0.6",
         "@vitejs/plugin-vue": "6.0.4",
         "@vitest/coverage-istanbul": "^4.0.0",
         "@vitest/coverage-v8": "^4.0.0",
