@@ -155,7 +155,7 @@ rich==14.3.3
     #   typer
 rich-toolkit==0.19.7
     # via fastapi-cli
-ruff==0.15.2
+ruff==0.15.4
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
