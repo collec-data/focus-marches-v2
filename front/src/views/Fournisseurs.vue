@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { listVendeurs } from '@/client';
-import { exportStructuresCSV, exportStructuresPdf } from '@/service/ExportDatatableService';
+import { exportStructuresCSV, exportStructuresExcel, exportStructuresPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatNumber, getOpsnRegion, structureName } from '@/service/HelpersService';
 import { onMounted, ref } from 'vue';
 
@@ -46,19 +46,22 @@ async function fetchAndExportAllData() {
     return response.data;
 }
 
+async function exportExcel() {
+    const data = await fetchAndExportAllData();
+    if (data) exportStructuresExcel(data.items, 'fournisseurs');
+    else console.error("La liste complète des fournisseurs n'a pas pu être récupérée");
+}
+
 async function exportCSV() {
     const data = await fetchAndExportAllData();
-    if (data) {
-        exportStructuresCSV(data.items, 'fournisseurs');
-    }
+    if (data) exportStructuresCSV(data.items, 'fournisseurs');
+    else console.error("La liste complète des fournisseurs n'a pas pu être récupérée");
 }
+
 async function exportPDF() {
     const data = await fetchAndExportAllData();
-    if (data) {
-        exportStructuresPdf(data.items, 'Liste des fournisseurs du profil acheteur de ' + getOpsnRegion(), 'fournisseurs');
-    } else {
-        console.error("La liste complète des fournisseurs n'a pas pu être récupérée");
-    }
+    if (data) exportStructuresPdf(data.items, 'Liste des fournisseurs du profil acheteur de ' + getOpsnRegion(), 'fournisseurs');
+    else console.error("La liste complète des fournisseurs n'a pas pu être récupérée");
 }
 </script>
 
@@ -88,7 +91,8 @@ async function exportPDF() {
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2 flex gap-1">
-                        <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportCSV()" />
+                        <Button icon="pi pi-table" label="CSV" severity="secondary" size="small" @click="exportCSV()" />
+                        <Button icon="pi pi-file-excel" label="Excel" severity="secondary" size="small" @click="exportExcel()" />
                         <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportPDF()" />
                     </div>
                     <div class="basis-1/2 flex justify-end">
