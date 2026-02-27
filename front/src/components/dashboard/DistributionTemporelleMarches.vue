@@ -20,6 +20,7 @@ const props = defineProps({
     }
 });
 
+const loading = ref(false);
 const data = ref<Partial<PlotData>[]>();
 const layout = computed(() => ({
     margin: { t: 0, r: 0, l: 60, b: 50 },
@@ -87,6 +88,7 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     return traces;
 }
 async function fetchData() {
+    loading.value = true;
     if (props.acheteurUid == -1) {
         return;
     }
@@ -102,6 +104,7 @@ async function fetchData() {
     }).then((response) => {
         if (response.data) {
             data.value = transform(response.data);
+            loading.value = false;
         }
     });
 }
@@ -119,6 +122,9 @@ onMounted(() => {
     <section>
         <h2>Distribution temporelle des marchés</h2>
         <Graph :data :layout />
+        <div v-if="loading" class="text-center">
+            <ProgressSpinner style="width: 5rem; height: 5rem" />
+        </div>
         <details>
             <summary>💡 Comment lire ce graphique ?</summary>
             <div class="flex flex-row gap-10">

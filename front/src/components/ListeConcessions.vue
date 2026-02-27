@@ -14,8 +14,10 @@ const props = defineProps({
 });
 
 const listeConcessions = ref<Array<ContratConcessionDto>>([]);
+const loading = ref(false);
 
 async function fetchData() {
+    loading.value = true;
     if (props.autoriteConcedanteUid == -1) {
         return;
     }
@@ -32,6 +34,7 @@ async function fetchData() {
         if (response.data) {
             listeConcessions.value = response.data;
         }
+        loading.value = false;
     });
 }
 
@@ -49,7 +52,7 @@ const concessionUid = ref(null);
 <template>
     <section>
         <h2>Contrat-concessions</h2>
-        <DataTable :value="listeConcessions" sortField="date_notification" :sortOrder="-1" size="small" stripedRows :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+        <DataTable :value="listeConcessions" sortField="date_notification" :sortOrder="-1" size="small" stripedRows :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }" :loading>
             <template #empty>
                 <div class="text-center">
                     <Badge size="xlarge" severity="info">Aucune concession</Badge>
