@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type ContratConcessionDto, getListeConcessions } from '@/client';
-import { exportConcessionsCSV, exportConcessionsPdf } from '@/service/ExportDatatableService';
+import { exportConcessionsCSV, exportConcessionsExcel, exportConcessionsPdf } from '@/service/ExportDatatableService';
 import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
 import { onMounted, ref, watch } from 'vue';
@@ -61,7 +61,8 @@ const concessionUid = ref(null);
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2 flex gap-1">
-                        <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportConcessionsCSV(listeConcessions)" />
+                        <Button icon="pi pi-table" label="CSV" severity="secondary" size="small" @click="exportConcessionsCSV(listeConcessions)" />
+                        <Button icon="pi pi-file-excel" label="Excel" severity="secondary" size="small" @click="exportConcessionsExcel(listeConcessions)" />
                         <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportConcessionsPdf(listeConcessions, 'Liste des concessions')" />
                     </div>
                 </div>

@@ -27,7 +27,8 @@
         "primevue": "^4.3.1",
         "tailwindcss-primeui": "^0.6.0",
         "vue": "^3.4.34",
-        "vue-router": "^5.0.0"
+        "vue-router": "^5.0.0",
+        "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",

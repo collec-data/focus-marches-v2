@@ -3,6 +3,16 @@ import autoTable from 'jspdf-autotable';
 import { formatBoolean, formatDate, structureName } from './HelpersService';
 
 import type { ContratConcessionDto, MarcheAllegeDto, StructureAggMarchesDto } from '@/client';
+import { utils, writeFileXLSX } from 'xlsx';
+
+/** Used for excel exports */
+function mapElementToColumnName(element: Array<string>, columns: Array<string>): any {
+    const result = {};
+    for (let i = 0; i < element.length; i++) {
+        result[columns[i]] = element[i];
+    }
+    return result;
+}
 
 const structure_columns = ['Nom', 'Montant', 'Contrats'];
 
@@ -86,6 +96,10 @@ export function exportStructuresCSV(structures: StructureAggMarchesDto[], file_n
     exportCSV(formatStructureList(structures), structure_columns, file_name);
 }
 
+export function exportStructuresExcel(structures: StructureAggMarchesDto[], file_name: string) {
+    writeFileXLSX({ Sheets: { data: utils.json_to_sheet(formatStructureList(structures).map((structure) => mapElementToColumnName(structure, structure_columns))) }, SheetNames: ['data'] }, file_name + '.xlsx');
+}
+
 export function exportMarchesPdf(marches: MarcheAllegeDto[], title: string, file_name: string = 'marches') {
     exportPdf(formatMarchesList(marches), marche_columns, title, file_name, marche_columns_style);
 }
@@ -94,10 +108,18 @@ export function exportMarchesCSV(marches: MarcheAllegeDto[], file_name: string =
     exportCSV(formatMarchesList(marches), marche_columns, file_name);
 }
 
+export function exportMarchesExcel(marches: MarcheAllegeDto[], file_name: string = 'marches') {
+    writeFileXLSX({ Sheets: { data: utils.json_to_sheet(formatMarchesList(marches).map((marche) => mapElementToColumnName(marche, marche_columns))) }, SheetNames: ['data'] }, file_name + '.xlsx');
+}
+
 export function exportConcessionsPdf(concessions: ContratConcessionDto[], title: string, file_name: string = 'concessions') {
     exportPdf(formatConcessionsList(concessions), concession_columns, title, file_name);
 }
 
 export function exportConcessionsCSV(concessions: ContratConcessionDto[], file_name: string = 'concessions') {
     exportCSV(formatConcessionsList(concessions), concession_columns, file_name);
+}
+
+export function exportConcessionsExcel(concessions: ContratConcessionDto[], file_name: string = 'concessions') {
+    writeFileXLSX({ Sheets: { data: utils.json_to_sheet(formatConcessionsList(concessions).map((concession) => mapElementToColumnName(concession, concession_columns))) }, SheetNames: ['data'] }, file_name + '.xlsx');
 }
