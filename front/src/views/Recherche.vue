@@ -8,6 +8,7 @@ import { onMounted, ref } from 'vue';
 import type { CpvDto, LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
 import type { AutoCompleteCompleteEvent } from 'primevue';
 
+const loading = ref(false);
 const marches = ref<MarcheAllegeDto[]>([]);
 
 const options_achat_durable: string[] = (Object.values(ConsiderationsEnvironnementales) as string[]).concat(Object.values(ConsiderationsSociales) as string[]).filter((o) => !o.includes('Pas de'));
@@ -73,6 +74,7 @@ const filtres = ref({
 const query = ref({});
 
 function fetchData() {
+    loading.value = true;
     query.value = {
         acheteur_uid: filtres.value.acheteur?.uid,
         vendeur_uid: filtres.value.fournisseur?.uid,
@@ -99,6 +101,7 @@ function fetchData() {
     }).then((response) => {
         if (response.data) {
             marches.value = response.data;
+            loading.value = false;
         }
     });
 }
@@ -259,7 +262,7 @@ const marcheUid = ref(null);
         <section>
             <h2 class="title">Toutes les données de votre recherche</h2>
             <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
-            <DataTable :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
+            <DataTable :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :loading :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
                 <template #empty>
                     <div class="text-center">
                         <Badge size="xlarge" severity="info">Aucun marché pour cette sélection</Badge>
