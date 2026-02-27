@@ -69,11 +69,25 @@ function exportCSV(rows: Array<Array<any>>, columns: Array<string>, file_name: s
     const csvContent =
         'data:text/csv;charset=utf-8,' +
         columns
-            .map((e) => e.replace('\n', ''))
+            .map((e) => e.replace(/\r?\n|\r/g, ''))
             .map((c) => '"' + c + '"')
             .join(',') +
         '\n' +
-        rows.map((row) => row.map((cell) => '"' + cell.toString().replace('\n', '').replace('"', '""') + '"').join(',')).join('\n');
+        rows
+            .map((row) =>
+                row
+                    .map(
+                        (cell) =>
+                            '"' +
+                            cell
+                                .toString()
+                                .replace(/\r?\n|\r/g, ' ')
+                                .replace('"', '""') +
+                            '"'
+                    )
+                    .join(',')
+            )
+            .join('\n');
     const encodedUri = encodeURI(csvContent);
     const a = document.createElement('a');
     a.href = encodedUri;
