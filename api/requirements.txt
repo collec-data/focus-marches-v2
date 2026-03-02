@@ -53,7 +53,7 @@ idna==3.11
     #   email-validator
     #   httpx
     #   requests
-ijson==3.4.0.post0
+ijson==3.5.0
     # via focus-marche-v2 (pyproject.toml)
 jinja2==3.1.6
     # via fastapi
