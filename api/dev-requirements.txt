@@ -5,7 +5,9 @@
 #    pip-compile --extra=dev --output-file=dev-requirements.txt pyproject.toml
 #
 annotated-doc==0.0.4
-    # via fastapi
+    # via
+    #   fastapi
+    #   typer
 annotated-types==0.7.0
     # via pydantic
 anyio==4.12.1
@@ -13,7 +15,7 @@ anyio==4.12.1
     #   httpx
     #   starlette
     #   watchfiles
-api-entreprise==3.7.2
+api-entreprise==31.0.1
     # via focus-marche-v2 (pyproject.toml)
 certifi==2026.2.25
     # via
@@ -119,10 +121,6 @@ pygments==2.19.2
     # via
     #   pytest
     #   rich
-pyrate-limiter==2.10.0
-    # via
-    #   api-entreprise
-    #   focus-marche-v2 (pyproject.toml)
 pytest==9.0.2
     # via
     #   focus-marche-v2 (pyproject.toml)
@@ -141,10 +139,6 @@ python-multipart==0.0.22
     # via fastapi
 pyyaml==6.0.3
     # via uvicorn
-redis==4.6.0
-    # via
-    #   api-entreprise
-    #   focus-marche-v2 (pyproject.toml)
 requests==2.32.5
     # via
     #   api-entreprise
@@ -184,13 +178,13 @@ typing-extensions==4.15.0
     #   sqlalchemy
     #   testcontainers
     #   typeguard
-    #   typer
     #   typing-inspect
     #   typing-inspection
 typing-inspect==0.9.0
     # via marshmallow-dataclass
 typing-inspection==0.4.2
     # via
+    #   fastapi
     #   pydantic
     #   pydantic-settings
 urllib3==2.6.3

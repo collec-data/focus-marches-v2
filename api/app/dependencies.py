@@ -5,7 +5,6 @@ from api_entreprise.api import ApiEntreprise
 from api_entreprise.models.config import Config as APIEntrepriseConfig
 from api_entreprise.models.context_info import ContextInfo
 from fastapi import Depends
-from pyrate_limiter import Limiter, RequestRate
 from sqlalchemy.orm import Session
 
 from app.config import Config, get_config
@@ -27,7 +26,6 @@ def get_api_entreprise(config: ConfigDep) -> ApiEntreprise:
         base_url=config.API_ENTREPRISE_URL,
         token=config.API_ENTREPRISE_TOKEN,
         default_context_info=ContextInfo(context="", recipient="", object=""),
-        rate_limiter=Limiter(RequestRate(10000, 60)),  # pas besoin de ménager notre API
     )
     return ApiEntreprise(confif_api)
 

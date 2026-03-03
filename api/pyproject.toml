@@ -9,10 +9,8 @@ dependencies = [
     "fastapi[standard-no-fastapi-cloud-cli]",
     "sqlalchemy",
     "ijson",
-    "api-entreprise>=3",
-    "redis~=4.3",
-    "pyrate-limiter~=2.10",
     "marshmallow~=3.19",
+    "api-entreprise>=31",
     "typer~=0.19",
     "mariadb~=1.1.14",
 ]
