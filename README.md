@@ -127,6 +127,7 @@ REGION=Centre-Val de Loire
 DEPARTEMENTS=36,18,37,45,28,41
 FRONT_THEME_COLOR=indigo
 SOURCES=https://www.data.gouv.fr/api/1/datasets/r/c7b06c4e-9d31-460a-8bb3-be9caa16ff8a https://www.data.gouv.fr/api/1/datasets/r/dd24af89-7422-4a60-9a68-ceb0345ea474 https://www.data.gouv.fr/api/1/datasets/r/0a3078ea-e2eb-41be-8fd6-025054e9ee2d https://www.data.gouv.fr/api/1/datasets/r/f6af4031-e00a-4729-8525-3e6a733540d2 https://www.data.gouv.fr/api/1/datasets/r/5f0f1d6c-634f-4cb6-b502-dfe833763936 https://www.data.gouv.fr/api/1/datasets/r/79688911-246a-49e6-9401-dffe5ac2a63c https://www.data.gouv.fr/api/1/datasets/r/f9dae08d-9d65-4071-b5a7-2b8d32504ba8
+MENTIONS_LEGALES="recia-mentions-legales.md"
 ```
 
 ```

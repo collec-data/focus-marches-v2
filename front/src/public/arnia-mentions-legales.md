@@ -6,7 +6,7 @@ Le site Focus Marchés est édité par le GIP ARNiA.
 
 - Directeur de la publication : Nicolas Berthaut
 - Conception et réalisation : ARNiA, téléphone : **0970 609 909**, e-mail : **contact@arnia-bfc.fr**
-- Hébergement : OVH
+- Hébergement : Numih France
 
 ## Protection de la vie privée
 
