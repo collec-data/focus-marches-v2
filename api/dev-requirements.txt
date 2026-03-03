@@ -159,7 +159,7 @@ ruff==0.15.4
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
-sqlalchemy==2.0.47
+sqlalchemy==2.0.48
     # via focus-marche-v2 (pyproject.toml)
 starlette==0.50.0
     # via fastapi
