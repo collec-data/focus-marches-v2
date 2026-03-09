@@ -22,7 +22,7 @@ certifi==2026.2.25
     #   httpcore
     #   httpx
     #   requests
-charset-normalizer==3.4.4
+charset-normalizer==3.4.5
     # via requests
 click==8.3.1
     # via
@@ -149,7 +149,7 @@ rich==14.3.3
     #   typer
 rich-toolkit==0.19.7
     # via fastapi-cli
-ruff==0.15.4
+ruff==0.15.5
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
@@ -203,5 +203,5 @@ watchfiles==1.1.1
     # via uvicorn
 websockets==16.0
     # via uvicorn
-wrapt==2.1.1
+wrapt==2.1.2
     # via testcontainers
