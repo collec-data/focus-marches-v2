@@ -45,7 +45,7 @@ onMounted(() => {
         <Top12 type="acheteurs" :vendeurUid :dateMin :dateMax />
         <CarteAcheteursFournisseurs :vendeur :dateMin :dateMax />
         <DistributionTemporelleMarches :vendeurUid :dateMin :dateMax />
-        <ListeMarches :nomStructure="structureName(vendeur)" :vendeurUid :dateMin :dateMax />
+        <ListeMarches :vendeurUid :dateMin :dateMax />
         <NatureContrats :vendeurUid :dateMin :dateMax />
         <Procedure :vendeurUid :dateMin :dateMax />
         <AchatDurable :vendeurUid :dateMin :dateMax />

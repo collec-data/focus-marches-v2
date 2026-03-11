@@ -76,7 +76,7 @@ const domain = window.location.origin;
         <Top12 type="fournisseurs" :acheteurUid :acheteurSiret :dateMin :dateMax />
         <CarteAcheteursFournisseurs :acheteur :acheteurSiret :dateMin :dateMax />
         <DistributionTemporelleMarches :acheteurUid :acheteurSiret :dateMin :dateMax />
-        <ListeMarches :nomStructure="structureName(acheteur)" :acheteurUid :acheteurSiret :dateMin :dateMax />
+        <ListeMarches :acheteurUid :acheteurSiret :dateMin :dateMax />
         <NatureContrats :acheteurUid :acheteurSiret :dateMin :dateMax />
         <CCAG :acheteurUid :acheteurSiret :dateMin :dateMax />
         <Procedure :acheteurUid :acheteurSiret :dateMin :dateMax />
