@@ -95,11 +95,11 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Montant des contrats par CCAG</h3>
-                            <Graph :data="datas.services?.montants" :layout />
+                            <Graph :data="datas.services?.montants" :layout title="Montant des contrats de service" />
                         </div>
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Nombre de contrats par CCAG</h3>
-                            <Graph :data="datas.services?.nombres" :layout />
+                            <Graph :data="datas.services?.nombres" :layout title="Nombre de contrats de service" />
                         </div>
                     </div>
                 </TabPanel>
@@ -107,11 +107,11 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Montant des contrats par CCAG</h3>
-                            <Graph :data="datas.travaux?.montants" :layout />
+                            <Graph :data="datas.travaux?.montants" :layout title="Montant des contrats de travaux " />
                         </div>
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Nombre de contrats par CCAG</h3>
-                            <Graph :data="datas.travaux?.nombres" :layout />
+                            <Graph :data="datas.travaux?.nombres" :layout title="Nombre de contrats de travaux " />
                         </div>
                     </div>
                 </TabPanel>
@@ -119,11 +119,11 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () =>
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Montant des contrats par CCAG</h3>
-                            <Graph :data="datas.fournitures?.montants" :layout />
+                            <Graph :data="datas.fournitures?.montants" :layout title="Montant des contrats de fournitures" />
                         </div>
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Nombre de contrats par CCAG</h3>
-                            <Graph :data="datas.fournitures?.nombres" :layout />
+                            <Graph :data="datas.fournitures?.nombres" :layout title="Nombre de contrats de fournitures" />
                         </div>
                     </div>
                 </TabPanel>

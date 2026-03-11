@@ -6,7 +6,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const vendeurUid = ref(route.params.uid as string);
+const vendeurUid = ref(parseInt(route.params.uid as string));
 
 const vendeur = ref<Partial<StructureEtendueDto>>({});
 
@@ -18,7 +18,7 @@ const dateMax = computed(() => {
 });
 
 function fetchData() {
-    getStructure({ path: { uid: parseInt(vendeurUid.value) } }).then((response) => {
+    getStructure({ path: { uid: vendeurUid.value } }).then((response) => {
         if (response.data) {
             vendeur.value = response.data;
         }

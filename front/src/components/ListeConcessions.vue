@@ -8,7 +8,7 @@ import { onMounted, ref, watch } from 'vue';
 const props = defineProps({
     autoriteConcedanteUid: { type: [Number, null], default: null },
     autoriteConcedanteSiret: { type: [String, null], default: null },
-    concessionnaireUid: { type: [String, null], default: null },
+    concessionnaireUid: { type: [Number, null], default: null },
     dateMin: { type: [Date, null], default: null },
     dateMax: { type: [Date, null], default: null }
 });
@@ -28,7 +28,7 @@ async function fetchData() {
             date_debut: props.dateMin,
             date_fin: props.dateMax,
             autorite_concedante_uid: autoriteConcedanteUid?.toString(),
-            concessionnaire_uid: props.concessionnaireUid
+            concessionnaire_uid: props.concessionnaireUid?.toString()
         }
     }).then((response) => {
         if (response.data) {

@@ -156,7 +156,7 @@ function openModale() {
                             </tbody>
                         </table>
                         <div class="basis-2/3">
-                            <Graph :data="data.tout" :layout style="min-height: 25rem" />
+                            <Graph :data="data.tout" :layout style="min-height: 25rem" title="Montant des contrats du top 12 toutes catégories confondues" />
                         </div>
                     </div>
                 </TabPanel>
@@ -171,7 +171,7 @@ function openModale() {
                             </tbody>
                         </table>
                         <div class="basis-2/3">
-                            <Graph :data="data.services" :layout style="min-height: 25rem" />
+                            <Graph :data="data.services" :layout style="min-height: 25rem" title="Montant des contrats du top 12 des services" />
                         </div>
                     </div>
                 </TabPanel>
@@ -186,7 +186,7 @@ function openModale() {
                             </tbody>
                         </table>
                         <div class="basis-2/3">
-                            <Graph :data="data.travaux" :layout style="min-height: 25rem" />
+                            <Graph :data="data.travaux" :layout style="min-height: 25rem" title="Montant des contrats du top 12 des travaux" />
                         </div>
                     </div>
                 </TabPanel>
@@ -201,7 +201,7 @@ function openModale() {
                             </tbody>
                         </table>
                         <div class="basis-2/3">
-                            <Graph :data="data.fournitures" :layout style="min-height: 25rem" />
+                            <Graph :data="data.fournitures" :layout style="min-height: 25rem" title="Montant des contrats du top 12 des fournitures" />
                         </div>
                     </div>
                 </TabPanel>

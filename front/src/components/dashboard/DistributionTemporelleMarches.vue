@@ -121,7 +121,7 @@ onMounted(() => {
 <template>
     <section>
         <h2>Distribution temporelle des marchés</h2>
-        <Graph :data :layout />
+        <Graph :data :layout title="Distribution temporelle des marchés" />
         <div v-if="loading" class="text-center">
             <ProgressSpinner style="width: 5rem; height: 5rem" />
         </div>

@@ -84,11 +84,11 @@ onMounted(() => {
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Montant des contrats par département</h3>
-                            <Graph :data="montantRegion" :layout />
+                            <Graph :data="montantRegion" :layout title="Montant des contrats par départements dans la région" />
                         </div>
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Nombre de contrats par département</h3>
-                            <Graph :data="nombreRegion" :layout />
+                            <Graph :data="nombreRegion" :layout title="Nombre de contrats par départements dans la région" />
                         </div>
                     </div>
                 </TabPanel>
@@ -96,11 +96,11 @@ onMounted(() => {
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Montant des contrats par département</h3>
-                            <Graph :data="montantHorsRegion" :layout />
+                            <Graph :data="montantHorsRegion" :layout title="Montant des contrats par département hors région" />
                         </div>
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Nombre de contrats par département</h3>
-                            <Graph :data="nombreHorsRegion" :layout />
+                            <Graph :data="nombreHorsRegion" :layout title="Nombre de contrats par départements hors région" />
                         </div>
                     </div>
                 </TabPanel>

@@ -104,7 +104,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
         <div class="flex flex-row gap-5 flex-wrap">
             <div class="nature basis-md grow shrink">
                 <h3>Marché</h3>
-                <Graph :data="marcheData" :layout :config />
+                <Graph :data="marcheData" :layout :config title="Répartition des contrats de type marchés" />
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[0].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[0].nombre_total }} marchés</li>
@@ -112,7 +112,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             </div>
             <div class="nature basis-md grow shrink">
                 <h3>Marché de partenariat</h3>
-                <Graph :data="partenariatData" :layout :config />
+                <Graph :data="partenariatData" :layout :config title="Répartition des contrats de type marchés de partenariats" />
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[1].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[1].nombre_total }} marchés</li>
@@ -120,7 +120,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             </div>
             <div class="nature basis-md grow shrink">
                 <h3>Marché de défense ou de sécurité</h3>
-                <Graph :data="defenseData" :layout :config />
+                <Graph :data="defenseData" :layout :config title="Répartition des contrats de type marchés de défense ou de sécurité" />
                 <ul>
                     <li><span>Montant</span> {{ formatCurrency(stats[2].montant_total) }}</li>
                     <li><span>Nombre</span> {{ stats[2].nombre_total }} marchés</li>

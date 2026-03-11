@@ -85,11 +85,11 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
         </div>
         <div class="col-span-12 xl:col-span-6">
             <h3>Montant des contrats par procédure</h3>
-            <Graph :data="montantData" :layout />
+            <Graph :data="montantData" :layout title="Montant des contrats par procédure" />
         </div>
         <div class="col-span-12 xl:col-span-6">
             <h3>Nombre des contrats par procédure</h3>
-            <Graph :data="nombreData" :layout />
+            <Graph :data="nombreData" :layout title="Nombre de contrats par procédure" />
         </div>
         <div class="col-span-12">
             <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/procedure'" name="La répartition des marchés publics par procédure suivie, sous forme de graphique" />

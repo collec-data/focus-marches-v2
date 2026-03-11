@@ -189,7 +189,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
         </div>
         <div class="col-span-12 xl:col-span-4">
             <h3>Services</h3>
-            <Graph :data="data.services" :layout />
+            <Graph :data="data.services" :layout title="Distribution temporelle des marchés de services" />
             <div class="grid grid-cols-3 gap-1 text-center">
                 <div class="label">Nombre</div>
                 <div class="categorie">{{ formatNumber(stats.services.nombre_total) }}</div>
@@ -201,7 +201,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
         </div>
         <div class="col-span-12 xl:col-span-4">
             <h3>Travaux</h3>
-            <Graph :data="data.travaux" :layout />
+            <Graph :data="data.travaux" :layout title="Distribution temporelle des marchés de travaux" />
             <div class="grid grid-cols-3 gap-1 text-center">
                 <div class="label">Nombre</div>
                 <div class="categorie">{{ formatNumber(stats.travaux.nombre_total) }}</div>
@@ -213,7 +213,7 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
         </div>
         <div class="col-span-12 xl:col-span-4">
             <h3>Fournitures</h3>
-            <Graph :data="data.fournitures" :layout />
+            <Graph :data="data.fournitures" :layout title="Distribution temporelle des marchés de fournitures" />
             <div class="grid grid-cols-3 gap-1 text-center">
                 <div class="label">Nombre</div>
                 <div class="categorie">{{ formatNumber(stats.fournitures.nombre_total) }}</div>

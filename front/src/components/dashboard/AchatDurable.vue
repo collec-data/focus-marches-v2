@@ -116,26 +116,26 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
         <div class="grid grid-cols-12 gap-8">
             <div class="col-span-12 xl:col-span-6">
                 <h3>Répartition globale par nombre de marchés</h3>
-                <Graph :data="dataGlobal" />
+                <Graph :data="dataGlobal" title="Répartition globale des considérations sociales en environnementales par nombre de marchés" />
             </div>
             <div class="col-span-12 xl:col-span-6">
                 <h3>Evolution dans le temps</h3>
                 <p>(Prise en compte de la date de notification)</p>
-                <Graph :data="dataAnnuel" :layout="layoutAnnuel" />
+                <Graph :data="dataAnnuel" :layout="layoutAnnuel" title="Evolution dans le temps des considérations sociales et environnementales" />
             </div>
         </div>
         <div class="grid grid-cols-12 gap-8">
             <div class="col-span-12 xl:col-span-4">
                 <h3>Nombre de marchés à considérations uniquement environnementales</h3>
-                <Graph :data="dataEnv" />
+                <Graph :data="dataEnv" title="Nombre de marchés à considérations uniquement environnementales" />
             </div>
             <div class="col-span-12 xl:col-span-4">
                 <h3>Nombre de marchés à considérations uniquement sociales</h3>
-                <Graph :data="dataSocial" />
+                <Graph :data="dataSocial" title="Nombre de marchés à considérations uniquement sociales" />
             </div>
             <div class="col-span-12 xl:col-span-4">
                 <h3>Nombre de marchés à considérations environnementales et sociales</h3>
-                <Graph :data="dataSocialEnv" />
+                <Graph :data="dataSocialEnv" title="Nombre de marchés à considérations environnementales et sociales" />
             </div>
         </div>
         <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/achat-durable'" name="La répartition des marchés publics par nature, sous forme de graphique" />

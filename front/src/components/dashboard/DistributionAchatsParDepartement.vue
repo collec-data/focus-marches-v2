@@ -58,7 +58,7 @@ onMounted(() => {
 <template>
     <section>
         <h2 class="title">Distribution des achats par département</h2>
-        <Graph :data :layout />
+        <Graph :data :layout title="Distribution croisée des achats par département et par catégorie d'achat" />
         <details>
             <summary>💡 Comment lire ce graphique ?</summary>
             <div>

@@ -83,6 +83,11 @@ docker exec focus-marche-v2-api-1 sh -c "python app/importation.py decps --impor
 docker exec focus-marche-v2-api-1 sh -c "python app/importation.py structures"
 ```
 
+Une fois l'import initial réalisé, un réimport partiel (marchés uniquement) peut être réalisé régulièrement avec la commande suivante.
+````bash
+docker exec focus-marche-v2-api-1 sh -c "python app/importation.py decps
+```
+
 ## Développement
 
 La base de données peut être lancée via docker avec la commande suivante :
