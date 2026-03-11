@@ -9,7 +9,6 @@ import { computed, onMounted, ref, watch } from 'vue';
 import type { MarcheAllegeDto } from '@/client';
 
 const props = defineProps({
-    nomStructure: { type: String },
     acheteurUid: { type: [Number, null], default: null },
     acheteurSiret: { type: [String, null], default: null },
     vendeurUid: { type: [Number, null], default: null },
@@ -89,8 +88,8 @@ const hiddenCol = computed(() => {
 
 <template>
     <section>
-        <h2 class="title">Tous les marchés de {{ nomStructure }}</h2>
-        <p>Ce tableau affiche les principales informations des marchés de {{ nomStructure }}. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
+        <h2 class="title">Tous les marchés</h2>
+        <p>Ce tableau affiche les principales informations des marchés. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
         <DataTable
             v-model:filters="filters"
             :value="listeMarches"
@@ -113,8 +112,8 @@ const hiddenCol = computed(() => {
                 <div class="flex flex-row">
                     <div class="basis-1/2 flex gap-1">
                         <Button icon="pi pi-table" label="CSV" severity="secondary" size="small" @click="exportMarchesCSV(listeMarches)" />
-                        <Button icon="pi pi-file-excel" label="Excel" severity="secondary" size="small" @click="exportMarchesExcel(listeMarches, 'Liste des marchés de ' + nomStructure)" />
-                        <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportMarchesPdf(listeMarches, 'Liste des marchés de ' + nomStructure)" />
+                        <Button icon="pi pi-file-excel" label="Excel" severity="secondary" size="small" @click="exportMarchesExcel(listeMarches, 'Liste des marchés')" />
+                        <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportMarchesPdf(listeMarches, 'Liste des marchés')" />
                     </div>
                     <div class="basis-1/2 flex justify-end">
                         <IconField class="w-fit">
