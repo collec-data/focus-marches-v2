@@ -104,7 +104,7 @@ python-multipart==0.0.22
     # via fastapi
 pyyaml==6.0.3
     # via uvicorn
-requests==2.32.5
+requests==2.33.0
     # via api-entreprise
 rich==14.3.3
     # via
