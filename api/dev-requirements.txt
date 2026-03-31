@@ -117,7 +117,7 @@ pydantic-settings==2.13.1
     # via
     #   fastapi
     #   focus-marche-v2 (pyproject.toml)
-pygments==2.19.2
+pygments==2.20.0
     # via
     #   pytest
     #   rich
@@ -165,7 +165,7 @@ typer==0.24.1
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
-types-requests==2.32.4.20260324
+types-requests==2.33.0.20260327
     # via focus-marche-v2 (pyproject.toml)
 typing-extensions==4.15.0
     # via
