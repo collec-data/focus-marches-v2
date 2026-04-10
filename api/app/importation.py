@@ -774,7 +774,7 @@ def infogreffe(file_path: str) -> None:
     with get_engine().connect() as connexion:
         connexion.execute(
             text(
-                f"TRUNCATE TABLE {str(StructureInfogreffe.__tablename__)} RESTART IDENTITY"
+                f"TRUNCATE TABLE {str(StructureInfogreffe.__tablename__)}"
             )
         )
         connexion.commit()
