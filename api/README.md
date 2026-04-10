@@ -16,12 +16,12 @@ L'importation est ensuite lancée avec la commande suivante.
 python app/importation.py decps
 ```
 
-### Importer les données d'infogreffe (données financières)
+### Importer les données d'Infogreffe (données financières)
 
-La première étape est de récupérer le dernier jeu de données au format JSON depuis le site datainfogreffe. La liste des jeux de données est disponible à cette adresse [https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/](https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/). Une inscription (gratuite) est nécessaire pour pouvoir télécharger le fichier. L'import est ensuite lancé avec la commande suivante.
+Les données financières des structures déjà présentes dans la base sont récupérées via l'API Datainfogreffe. Les variables `INFOGREFFE_API_KEY` et `INFOGREFFE_DATASET` doivent être renseignées dans le fichier `.env`.
 
 ```bash
-python app/importation.py infogreffe {le_chemin_du_fichier}
+python app/importation.py infogreffe
 ```
 
 **Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.

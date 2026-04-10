@@ -49,6 +49,8 @@ Puis compléter le [`.env`](.env) pour configurer et personnaliser l'instance. C
 | MARIADB_DATA | /var/lib/mysql | |
 | API_ENTREPRISE_URL | https://api.siren.do4c.sib.fr/ | Une URL d'une instance de l'API Siren |
 | API_ENTREPRISE_TOKEN | | Un token d'authentification à l'API Siren |
+| INFOGREFFE_API_KEY | | Un token d'authentification à l'API Datainfogreffe |
+| INFOGREFFE_DATASET | chiffres-cles-2024 | L'identifiant du jeu de données Datainfogreffe à utiliser |
 | DATE_MIN | 2020-01-01 | La borne temporelle minimale en dessous de laquelle les données ne seront pas affichées |
 | OPSN | | Le noms de l'OPSN ou de la structure qui déploie l'instance |
 | REGION | | La région concernée |
