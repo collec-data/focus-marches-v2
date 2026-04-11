@@ -22,9 +22,9 @@ certifi==2026.2.25
     #   httpcore
     #   httpx
     #   requests
-charset-normalizer==3.4.6
+charset-normalizer==3.4.7
     # via requests
-click==8.3.1
+click==8.3.2
     # via
     #   rich-toolkit
     #   typer
@@ -41,7 +41,7 @@ factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
 faker==40.11.1
     # via factory-boy
-fastapi[standard-no-fastapi-cloud-cli]==0.135.2
+fastapi[standard-no-fastapi-cloud-cli]==0.135.3
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.24
     # via fastapi
@@ -111,7 +111,7 @@ pydantic==2.12.5
     #   pydantic-settings
 pydantic-core==2.41.5
     # via pydantic
-pydantic-extra-types==2.11.1
+pydantic-extra-types==2.11.2
     # via fastapi
 pydantic-settings==2.13.1
     # via
@@ -121,7 +121,7 @@ pygments==2.20.0
     # via
     #   pytest
     #   rich
-pytest==9.0.2
+pytest==9.0.3
     # via
     #   focus-marche-v2 (pyproject.toml)
     #   pytest-cov
@@ -135,25 +135,25 @@ python-dotenv==1.2.2
     #   pydantic-settings
     #   testcontainers
     #   uvicorn
-python-multipart==0.0.22
+python-multipart==0.0.26
     # via fastapi
 pyyaml==6.0.3
     # via uvicorn
-requests==2.33.0
+requests==2.33.1
     # via
     #   api-entreprise
     #   docker
-rich==14.3.3
+rich==14.3.4
     # via
     #   rich-toolkit
     #   typer
 rich-toolkit==0.19.7
     # via fastapi-cli
-ruff==0.15.8
+ruff==0.15.10
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
-sqlalchemy==2.0.48
+sqlalchemy==2.0.49
     # via focus-marche-v2 (pyproject.toml)
 starlette==1.0.0
     # via fastapi
@@ -165,7 +165,7 @@ typer==0.24.1
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
-types-requests==2.33.0.20260327
+types-requests==2.33.0.20260408
     # via focus-marche-v2 (pyproject.toml)
 typing-extensions==4.15.0
     # via
