@@ -80,13 +80,13 @@ packaging==26.0
     # via
     #   mariadb
     #   marshmallow
-pydantic==2.12.5
+pydantic==2.13.0
     # via
     #   fastapi
     #   focus-marche-v2 (pyproject.toml)
     #   pydantic-extra-types
     #   pydantic-settings
-pydantic-core==2.41.5
+pydantic-core==2.46.0
     # via pydantic
 pydantic-extra-types==2.11.2
     # via fastapi
