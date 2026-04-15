@@ -77,15 +77,15 @@ L'ultime étape est de charger les données depuis data.gouv avec les commandes 
 
 ```bash
 # import des decps dont les sources ont été renseignées dans le .env
-docker exec focus-marche-v2-api-1 sh -c "python app/importation.py decps --import-de-0"
+docker compose exec api sh -c "python app/importation.py decps --import-de-0"
 
 # synchronisation avec l'API entreprise pour récupérer les noms et localisations de structures
-docker exec focus-marche-v2-api-1 sh -c "python app/importation.py structures"
+docker compose exec api sh -c "python app/importation.py structures"
 ```
 
 Une fois l'import initial réalisé, un réimport partiel (marchés uniquement) peut être réalisé régulièrement avec la commande suivante.
 ````bash
-docker exec focus-marche-v2-api-1 sh -c "python app/importation.py decps
+docker compose exec api sh -c "python app/importation.py decps
 ```
 
 ## Développement
