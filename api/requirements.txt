@@ -76,7 +76,7 @@ mdurl==0.1.2
     # via markdown-it-py
 mypy-extensions==1.1.0
     # via typing-inspect
-packaging==26.0
+packaging==26.1
     # via
     #   mariadb
     #   marshmallow
