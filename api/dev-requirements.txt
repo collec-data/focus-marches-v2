@@ -41,7 +41,7 @@ factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
 faker==40.15.0
     # via factory-boy
-fastapi[standard-no-fastapi-cloud-cli]==0.135.3
+fastapi[standard-no-fastapi-cloud-cli]==0.136.0
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.24
     # via fastapi

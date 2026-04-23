@@ -33,7 +33,7 @@ dnspython==2.8.0
     # via email-validator
 email-validator==2.3.0
     # via fastapi
-fastapi[standard-no-fastapi-cloud-cli]==0.135.3
+fastapi[standard-no-fastapi-cloud-cli]==0.136.0
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.24
     # via fastapi
