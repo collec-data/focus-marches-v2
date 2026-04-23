@@ -144,7 +144,7 @@ typing-inspection==0.4.2
     #   pydantic-settings
 urllib3==2.6.3
     # via requests
-uvicorn[standard]==0.42.0
+uvicorn[standard]==0.46.0
     # via
     #   fastapi
     #   fastapi-cli
