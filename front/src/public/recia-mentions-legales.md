@@ -28,5 +28,5 @@ Le site est hébergé par Numih France. Les serveurs sont basés en France.
 
 ## 4 - Données utilisées
 
-- Données essentielles de la commande publique du profil d'acheteur de Mégalis Bretagne. Licence Ouverte / Open Licence version 2.0 .
-- Base des entreprises et de leur établissements (SIREN, SIRET). Licence Ouverte / Open Licence version 2.0
+- Données essentielles de la commande publique du profil d'acheteur du GIP RECIA. Licence Ouverte / Open License version 2.0 .
+- Base des entreprises et de leurs établissements (SIREN, SIRET). Licence Ouverte / Open License version 2.0
