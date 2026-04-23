@@ -80,7 +80,7 @@ pip-compile pyproject.toml -o requirements.txt  && \
 pip install -r dev-requirements.txt
 ```
 
-### Tests ![coverage](https://gitlab.csm.ovh/focus-marches/focusmarchev2/badges/main/coverage.svg?job=api-quality)
+### Tests
 
 Les tests sont situés dans le dossier (`api/tests/`). Il s'agit principalement de tests d'intégration avec des appels au niveau de l'API qui remontent jusqu'à la base de données.
 

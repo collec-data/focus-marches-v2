@@ -105,9 +105,9 @@ Des documentations détaillées sont disponibles dans les dossiers suivants :
 - [`api`](./api/README.md) pour le service API (back) ;
 - [`front`](./front/README.md) pour l'application front.
 
-### Tests - Statistiques
-- Back ![coverage](https://gitlab.csm.ovh/focus-marches/focusmarchev2/badges/main/coverage.svg?job=api-quality)
-- Front ![coverage](<https://gitlab.csm.ovh/focus-marches/focusmarchev2/badges/main/coverage.svg?job=build app>)
+### Tests
+
+Les contrôles automatiques sont exécutés via GitHub Actions sur le front et l'API.
 
 ### Exemples de configuration
 
