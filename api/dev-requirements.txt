@@ -113,7 +113,7 @@ pydantic-core==2.46.0
     # via pydantic
 pydantic-extra-types==2.11.2
     # via fastapi
-pydantic-settings==2.13.1
+pydantic-settings==2.14.0
     # via
     #   fastapi
     #   focus-marche-v2 (pyproject.toml)
