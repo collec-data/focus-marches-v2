@@ -57,7 +57,7 @@ httptools==0.7.1
     # via uvicorn
 httpx==0.28.1
     # via fastapi
-idna==3.11
+idna==3.13
     # via
     #   anyio
     #   email-validator
