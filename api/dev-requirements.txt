@@ -24,7 +24,7 @@ certifi==2026.2.25
     #   requests
 charset-normalizer==3.4.7
     # via requests
-click==8.3.2
+click==8.3.3
     # via
     #   rich-toolkit
     #   typer
@@ -86,7 +86,7 @@ marshmallow-dataclass==8.7.1
     # via api-entreprise
 mdurl==0.1.2
     # via markdown-it-py
-mypy==1.20.0
+mypy==1.20.2
     # via focus-marche-v2 (pyproject.toml)
 mypy-extensions==1.1.0
     # via
@@ -103,13 +103,13 @@ pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
-pydantic==2.13.0
+pydantic==2.13.3
     # via
     #   fastapi
     #   focus-marche-v2 (pyproject.toml)
     #   pydantic-extra-types
     #   pydantic-settings
-pydantic-core==2.46.0
+pydantic-core==2.46.3
     # via pydantic
 pydantic-extra-types==2.11.2
     # via fastapi
@@ -149,7 +149,7 @@ rich==14.3.4
     #   typer
 rich-toolkit==0.19.7
     # via fastapi-cli
-ruff==0.15.10
+ruff==0.15.11
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
@@ -161,7 +161,7 @@ testcontainers==4.14.2
     # via focus-marche-v2 (pyproject.toml)
 typeguard==4.5.1
     # via marshmallow-dataclass
-typer==0.24.1
+typer==0.24.2
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
