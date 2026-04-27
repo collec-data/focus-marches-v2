@@ -1,6 +1,5 @@
 # Focus Marche v2
 
-
 ## A propos
 
 Le projet Focus Marchés v2 a été développé par Numih France pour Mégalis et Recia. Il facilite l'exporation des données essentielles de la commande publique. Cette v2 est le fruit de l'évolution du schéma de données et de nouveaux besoins rapportés en ateliers UX.
@@ -44,23 +43,25 @@ Copier les éventuelles favicon et mentions légales dans `./front/src/public/` 
 
 Puis compléter le [`.env`](.env) pour configurer et personnaliser l'instance. Ci-dessous une description des paramètres importants
 
-| Variable | Valeurs possibles | Description |
-|-------|---------|------|
-| MARIADB_DATA | /var/lib/mysql | |
-| API_ENTREPRISE_URL | https://api.siren.do4c.sib.fr/ | Une URL d'une instance de l'API Siren |
-| API_ENTREPRISE_TOKEN | | Un token d'authentification à l'API Siren |
-| DATE_MIN | 2020-01-01 | La borne temporelle minimale en dessous de laquelle les données ne seront pas affichées |
-| OPSN | | Le noms de l'OPSN ou de la structure qui déploie l'instance |
-| REGION | | La région concernée |
-| DEPARTEMENTS | 1,2,3 | Les numéros de département de la région, séparés par une virgule |
+| Variable | Valeurs possibles | Description                                                                                                                                                                                                                                                     |
+|-------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| MARIADB_DATA | /var/lib/mysql |                                                                                                                                                                                                                                                                 |
+| API_ENTREPRISE_URL | https://api.siren.do4c.sib.fr/ | Une URL d'une instance de l'API Siren                                                                                                                                                                                                                           |
+| API_ENTREPRISE_TOKEN | | Un token d'authentification à l'API Siren                                                                                                                                                                                                                       |
+| DATE_MIN | 2020-01-01 | La borne temporelle minimale en dessous de laquelle les données ne seront pas affichées                                                                                                                                                                         |
+| OPSN | | Le noms de l'OPSN ou de la structure qui déploie l'instance                                                                                                                                                                                                     |
+| REGION | | La région concernée                                                                                                                                                                                                                                             |
+| DEPARTEMENTS | 1,2,3 | Les numéros de département de la région, séparés par une virgule                                                                                                                                                                                                |
 | FRONT_THEME_COLOR | amber | Une couleur parmi les suivantes : noir, emerald, green, lime, orange, amber, yellow, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink ou rose. Cette couleur sera utilisée par défaut mais pourra toujours être modifiée ensuite par l'utilisateur. |
-| SOURCES |  | Les liens permanents des fichiers annuels |
+| SOURCES |  | Les liens permanents des fichiers annuels                                                                                                                                                                                                                       |
+| INFOGREFFE_DATASET | chiffres-cles-2024 | le nom du dataset                                                                                                                                                                                                                                               |
+| INFOGREFFE_API_KEY |  | Un token d'identification a l'API infogreffe                                                                                                                                                                                                                    |
 
 _Quelques exemples de configuration sont à retrouver tout en bas de cette page pour Mégalis, Arnia et Recia._
 
 ### 3. Création et lancement des containers docker
 
-Construisez et lancez les container avec 
+Construisez et lancez les containers avec 
 ```bash
 docker compose build
 docker compose up -d
@@ -81,10 +82,13 @@ docker compose exec api sh -c "python app/importation.py decps --import-de-0"
 
 # synchronisation avec l'API entreprise pour récupérer les noms et localisations de structures
 docker compose exec api sh -c "python app/importation.py structures"
+
+# synchronisation avec l'API infogreffe (données financières)
+docker compose exec api sh -c "python app/importation.py infogreffe"
 ```
 
 Une fois l'import initial réalisé, un réimport partiel (marchés uniquement) peut être réalisé régulièrement avec la commande suivante.
-````bash
+```bash
 docker compose exec api sh -c "python app/importation.py decps
 ```
 
