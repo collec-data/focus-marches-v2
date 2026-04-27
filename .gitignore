@@ -1,4 +1,4 @@
 *.code-workspace
-
+.idea
 .env
 compose.override.yml
