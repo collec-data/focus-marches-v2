@@ -2,8 +2,6 @@
 
 [← Revenir au README général](../README.md)
 
-
-
 ## Importer des données
 
 ### Import des DECPS depuis data.gouv
@@ -13,15 +11,19 @@ Les sources sont à renseigner dans le `.env`. Il s'agit des URL stables des fic
 L'importation est ensuite lancée avec la commande suivante.
 
 ```bash
-python app/importation.py decps
+docker compose exec api sh -c "python app/importation.py decps"
 ```
 
 ### Importer les données d'infogreffe (données financières)
 
-La première étape est de récupérer le dernier jeu de données au format JSON depuis le site datainfogreffe. La liste des jeux de données est disponible à cette adresse [https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/](https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/). Une inscription (gratuite) est nécessaire pour pouvoir télécharger le fichier. L'import est ensuite lancé avec la commande suivante.
+La première étape est créé un token api sur le site datainfogreffe.
+La liste des jeux de données est disponible à cette adresse [https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/](https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/).
+Une inscription (gratuite) est nécessaire pour pouvoir creer un token.
+Il faut ajouter le token de le `.env`.
+L'import est ensuite lancé avec la commande suivante.
 
 ```bash
-python app/importation.py infogreffe {le_chemin_du_fichier}
+docker compose exec api sh -c "python app/importation.py infogreffe"
 ```
 
 **Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.
@@ -31,7 +33,7 @@ python app/importation.py infogreffe {le_chemin_du_fichier}
 Les noms et les localisations de structures sont récupérées depuis l'instance Numih France de l'API-Entreprise, avec la commande suivante :
 
 ```bash
-python app/importation.py structures
+docker compose exec api sh -c "python app/importation.py structures"
 ```
 
 **Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.
