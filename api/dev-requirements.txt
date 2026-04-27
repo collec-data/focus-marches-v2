@@ -41,7 +41,7 @@ factory-boy==3.3.3
     # via focus-marche-v2 (pyproject.toml)
 faker==40.15.0
     # via factory-boy
-fastapi[standard-no-fastapi-cloud-cli]==0.136.0
+fastapi[standard-no-fastapi-cloud-cli]==0.136.1
     # via focus-marche-v2 (pyproject.toml)
 fastapi-cli[standard-no-fastapi-cloud-cli]==0.0.24
     # via fastapi
@@ -149,7 +149,7 @@ rich==15.0.0
     #   typer
 rich-toolkit==0.19.7
     # via fastapi-cli
-ruff==0.15.11
+ruff==0.15.12
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
