@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from sqlalchemy import select
 
-from app.importation import ImportateurDecp, load_infogreffe
+from app.importation import ImportateurDecp, build_infogreffe_entries
 from app.models.db import ContratConcession, DecpMalForme, Marche
 from app.models.enums import TypeCodeLieu
 from tests.factories import CPVFactory, LieuFactory
@@ -160,29 +160,32 @@ def test_importation_erreur(db):
     assert len(decp_mal_formes[0].erreurs) > 0
 
 
-def test_load_infogreffe_succes():
-    structures = {
-        "12345678911111": 1111,
-        "12345678922222": 2222,
-        "12345678944444": 4444,
+def test_build_infogreffe_entries_succes():
+    record = {
+        "millesime_1": "2024",
+        "ca_1": "10000",
+        "resultat_1": "2000",
+        "effectif_1": "3",
+        "millesime_2": "2023",
+        "ca_2": "Confidentiel",
+        "resultat_2": "1500",
+        "effectif_2": "",
+        "millesime_3": "",
+        "ca_3": "",
+        "resultat_3": "",
+        "effectif_3": "",
     }
 
-    iterator = load_infogreffe("tests/files/infogreffe.csv", structures, 2)
+    entries = build_infogreffe_entries(1111, record)
 
-    batch1 = next(iterator)
-    assert len(batch1) == 2
-    assert batch1[0].annee == 2020
-    assert batch1[0].ca == 10000
-    assert batch1[0].resultat == 2000
-    assert batch1[0].uid_structure == 1111
-    assert batch1[0].effectif == 3
-    assert batch1[1].annee == 2020
-    assert batch1[1].ca == 20000
-    assert batch1[1].resultat == 1500
-    assert batch1[1].effectif is None
-    assert batch1[1].uid_structure == 2222
-
-    batch2 = next(iterator)
-    assert len(batch2) == 2
-    assert batch2[0].uid_structure == 4444
-    assert batch2[1].uid_structure == 4444
+    assert len(entries) == 2
+    assert entries[0].annee == 2024
+    assert entries[0].ca == 10000
+    assert entries[0].resultat == 2000
+    assert entries[0].uid_structure == 1111
+    assert entries[0].effectif == 3
+    assert entries[1].annee == 2023
+    assert entries[1].ca is None
+    assert entries[1].resultat == 1500
+    assert entries[1].effectif is None
+    assert entries[1].uid_structure == 1111
