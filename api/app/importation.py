@@ -773,9 +773,7 @@ def load_infogreffe(
 def infogreffe(file_path: str) -> None:
     with get_engine().connect() as connexion:
         connexion.execute(
-            text(
-                f"TRUNCATE TABLE {str(StructureInfogreffe.__tablename__)} RESTART IDENTITY"
-            )
+            text(f"TRUNCATE TABLE {str(StructureInfogreffe.__tablename__)}")
         )
         connexion.commit()
     with Session(get_engine()) as session:

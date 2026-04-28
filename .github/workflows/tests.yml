@@ -61,7 +61,7 @@ jobs:
         run: pytest --cov-report xml:cov.xml --cov-report=term
 
       - name: Check formatting
-        run: ruff format --check .
+        run: ruff format --check --diff .
 
       - name: Run linter
         run: ruff check .
