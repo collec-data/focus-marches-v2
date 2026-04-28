@@ -751,7 +751,7 @@ def get_infogreffe_record(
         params={
             "apikey": api_key,
             "where": f'siren={siren} and nic="{nic}"',
-            "limit": 1,
+            "limit": "1",
         },
         timeout=30,
     )
