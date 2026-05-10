@@ -69,7 +69,7 @@ iniconfig==2.3.0
     # via pytest
 jinja2==3.1.6
     # via fastapi
-librt==0.9.0
+librt==0.11.0
     # via mypy
 mariadb==1.1.14
     # via focus-marche-v2 (pyproject.toml)
