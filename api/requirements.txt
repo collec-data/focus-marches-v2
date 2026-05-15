@@ -80,17 +80,17 @@ packaging==26.2
     # via
     #   mariadb
     #   marshmallow
-pydantic==2.13.3
+pydantic==2.13.4
     # via
     #   fastapi
     #   focus-marche-v2 (pyproject.toml)
     #   pydantic-extra-types
     #   pydantic-settings
-pydantic-core==2.46.3
+pydantic-core==2.46.4
     # via pydantic
 pydantic-extra-types==2.11.2
     # via fastapi
-pydantic-settings==2.14.0
+pydantic-settings==2.14.1
     # via
     #   fastapi
     #   focus-marche-v2 (pyproject.toml)
@@ -110,7 +110,7 @@ rich==15.0.0
     # via
     #   rich-toolkit
     #   typer
-rich-toolkit==0.19.7
+rich-toolkit==0.19.9
     # via fastapi-cli
 shellingham==1.5.4
     # via typer
@@ -118,9 +118,9 @@ sqlalchemy==2.0.49
     # via focus-marche-v2 (pyproject.toml)
 starlette==1.0.0
     # via fastapi
-typeguard==4.5.1
+typeguard==4.5.2
     # via marshmallow-dataclass
-typer==0.25.0
+typer==0.25.1
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
