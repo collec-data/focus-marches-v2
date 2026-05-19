@@ -18,6 +18,7 @@ class Config(BaseSettings):
     API_ENTREPRISE_TOKEN: str
 
     SOURCES: str
+    SIRETS: str | None = None
 
 
 @lru_cache

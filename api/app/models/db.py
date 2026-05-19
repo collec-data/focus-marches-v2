@@ -3,7 +3,7 @@ from datetime import date
 from decimal import Decimal
 
 from sqlalchemy import Column, ForeignKey, String, Table, Text, UniqueConstraint
-from sqlalchemy.dialects.mysql import DECIMAL
+from sqlalchemy.dialects.mysql import DECIMAL, MEDIUMTEXT
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import (
@@ -417,7 +417,7 @@ class Erreur(Base):
 
 class DecpMalForme(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    decp: Mapped[str] = mapped_column(Text())
+    decp: Mapped[str] = mapped_column(MEDIUMTEXT())
     erreurs: Mapped[list[Erreur]] = relationship(back_populates="decp")
     uid_structure: Mapped[int | None] = mapped_column(
         ForeignKey(Structure.uid, name="decp_structure_fk"), default=None
