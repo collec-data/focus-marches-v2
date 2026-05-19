@@ -212,7 +212,7 @@ class ImportateurDecp:
             ),
             nature=data.nature.db_value,
             objet=data.objet,
-            code_cpv=data.codeCPV,
+            code_cpv=int(data.codeCPV.split("-")[0]),
             categorie=categorisation.CPV2categorie(data.codeCPV).db_value,
             modalites_execution=[
                 mod.db_value
