@@ -324,11 +324,17 @@ class ImportateurDecp:
                 x[
                     "modificationActeSousTraitance"
                 ].dateNotificationModificationSousTraitance
+                if "modificationActeSousTraitance" in x
+                else x[
+                    "modificationActesSousTraitance"
+                ].dateNotificationModificationSousTraitance
             ),
         ):
-            dmodif: ModificationActeSousTraitanceSchema = tmp_dma[
-                "modificationActeSousTraitance"
-            ]
+            dmodif: ModificationActeSousTraitanceSchema = (
+                tmp_dma["modificationActeSousTraitance"]
+                if "modificationActeSousTraitance" in tmp_dma
+                else tmp_dma["modificationActesSousTraitance"]
+            )
             if dmodif.id not in index_actes_sous_traitance:
                 raise CustomValidationError(
                     errors=[
