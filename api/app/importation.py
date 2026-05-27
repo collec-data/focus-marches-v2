@@ -835,7 +835,9 @@ def infogreffe() -> None:
                     nb_structures += 1
 
                     if not nb_structures % 100:
-                        log.info(f"💾 Commit de {nb_structures}/{len(structures)} structures")
+                        log.info(
+                            f"💾 Commit de {nb_structures}/{len(structures)} structures"
+                        )
                         session.commit()
 
             session.commit()
