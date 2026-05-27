@@ -85,6 +85,10 @@ docker compose exec api sh -c "python app/importation.py decps --import-de-0"
 docker compose exec api sh -c "python app/importation.py structures"
 ```
 
+*Notes :*
+- L'import initial doit faire appel à l'option `--import-de-0` afin de (re)créer la base de données
+- Il est possible de n'importer qu'une fraction des marchés en filtrant par le SIRET des acheteurs en ajoutant la variable d'environnement SIRET contenant une liste de sirets séparés par des espaces. 
+
 Une fois l'import initial réalisé, un réimport partiel (marchés uniquement) peut être réalisé régulièrement avec la commande suivante.
 ````bash
 docker compose exec api sh -c "python app/importation.py decps

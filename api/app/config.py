@@ -21,6 +21,7 @@ class Config(BaseSettings):
     INFOGREFFE_DATASET: str = "chiffres-cles-2024"
 
     SOURCES: str
+    SIRETS: str | None = None
 
 
 @lru_cache

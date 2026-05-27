@@ -95,7 +95,12 @@ class CustomValidationError(Exception):
 
 
 class ImportateurDecp:
-    def __init__(self, session: Session, preload_db: bool = True):
+    def __init__(
+        self,
+        session: Session,
+        preload_db: bool = True,
+        sirets: list[str] | None = None,
+    ):
         self._cache_lieux: dict[str, Lieu] = {}
         self._cache_structures: dict[str, Structure] = {}
         self._cache_accords_cadre: dict[str, Marche] = {}
@@ -106,6 +111,8 @@ class ImportateurDecp:
         self._invalid_objects: int = 0
         self._started_at: float
         self._finished_at: float
+
+        self._sirets = sirets
 
         if preload_db:
             self.load_structures()
@@ -190,12 +197,15 @@ class ImportateurDecp:
     def marche_transformer(
         self,
         objet: dict[str, Any],
-    ) -> None:
+    ) -> bool:
         data: MarcheSchema | MarcheAncienSchema
         if objet.get("dateNotification") and int(objet["dateNotification"][:4]) >= 2024:
             data = MarcheSchema.model_validate(objet)
         else:
             data = MarcheAncienSchema.model_validate(objet)
+
+        if self._sirets and data.acheteur.id not in self._sirets:
+            return False
 
         marche = Marche(
             id=data.id,
@@ -204,7 +214,7 @@ class ImportateurDecp:
             ),
             nature=data.nature.db_value,
             objet=data.objet,
-            code_cpv=data.codeCPV,
+            code_cpv=int(data.codeCPV.split("-")[0]),
             categorie=categorisation.CPV2categorie(data.codeCPV).db_value,
             modalites_execution=[
                 mod.db_value
@@ -316,11 +326,17 @@ class ImportateurDecp:
                 x[
                     "modificationActeSousTraitance"
                 ].dateNotificationModificationSousTraitance
+                if "modificationActeSousTraitance" in x
+                else x[
+                    "modificationActesSousTraitance"
+                ].dateNotificationModificationSousTraitance
             ),
         ):
-            dmodif: ModificationActeSousTraitanceSchema = tmp_dma[
-                "modificationActeSousTraitance"
-            ]
+            dmodif: ModificationActeSousTraitanceSchema = (
+                tmp_dma["modificationActeSousTraitance"]
+                if "modificationActeSousTraitance" in tmp_dma
+                else tmp_dma["modificationActesSousTraitance"]
+            )
             if dmodif.id not in index_actes_sous_traitance:
                 raise CustomValidationError(
                     errors=[
@@ -381,12 +397,16 @@ class ImportateurDecp:
                 marche.titulaires = modif_marche.titulaires
 
         self._session.add(marche)
+        return True
 
     def concession_transformer(
         self,
         objet: dict[str, Any],
-    ) -> None:
+    ) -> bool:
         data = ConcessionSchema.model_validate(objet)
+
+        if self._sirets and data.autoriteConcedante.id not in self._sirets:
+            return False
 
         concession = ContratConcession(
             id=data.id,
@@ -458,6 +478,7 @@ class ImportateurDecp:
                 concession.duree_mois = modif_concession.duree_mois
 
         self._session.add(concession)
+        return True
 
     def build_entite_erreur(
         self,
@@ -529,8 +550,9 @@ class ImportateurDecp:
             liste = ijson.items(f, f"{item_path}.item")  # flux objet par objet
             for objet in liste:
                 try:
-                    transformer(objet)
-                    self._valid_objects += 1
+                    self._valid_objects += transformer(
+                        objet
+                    )  # retourne un booléen, le compteur n'est incrémenté qu'avec les True
                 except (ValidationError, CustomValidationError) as e:
                     self._session.add(self.build_entite_erreur(e, objet, type_contrat))
                     self._invalid_objects += 1
@@ -617,13 +639,15 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
             connexion.execute(text("SET FOREIGN_KEY_CHECKS = 1; "))
             connexion.commit()
 
-    sources: list[str] = get_config().SOURCES.split(" ")
+    config = get_config()
+    sirets: None | list[str] = config.SIRETS.split(" ") if config.SIRETS else None
+    sources: list[str] = config.SOURCES.split(" ")
     RAW_FILE = "./raw_data.json"
     CLEANED_FILE = "./data.json"
     log.info(f"📂 {len(sources)} sources détectées")
 
     with Session(get_engine()) as session:
-        importateur = ImportateurDecp(session=session)
+        importateur = ImportateurDecp(session=session, sirets=sirets)
 
         for source in track(sources):
             log.info(f"🌐 Téléchargement de {source}")
