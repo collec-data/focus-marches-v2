@@ -746,6 +746,10 @@ def get_infogreffe_record(
 ) -> dict[str, Any] | None:
     siren = siret[:9]
     nic = siret[9:]
+    
+    if not siret:
+        return None
+    
     response = session.get(
         f"{INFOGREFFE_API_BASE_URL}/catalog/datasets/{dataset}/records",
         params={
