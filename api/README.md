@@ -14,16 +14,20 @@ L'importation est ensuite lancée avec la commande suivante.
 docker compose exec api sh -c "python app/importation.py decps"
 ```
 
-### Importer les données d'infogreffe (données financières)
+### Importer les données d'Infogreffe (données financières)
 
-La première étape est créé un token api sur le site datainfogreffe.
+La première étape est de créer un token api sur le site datainfogreffe.
 La liste des jeux de données est disponible à cette adresse [https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/](https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/).
 Une inscription (gratuite) est nécessaire pour pouvoir creer un token.
-Il faut ajouter le token de le `.env`.
+Il faut ajouter les variables `INFOGREFFE_API_KEY` et `INFOGREFFE_DATASET` dans le `.env`.
 L'import est ensuite lancé avec la commande suivante.
 
 ```bash
 docker compose exec api sh -c "python app/importation.py infogreffe"
+```
+
+```bash
+python app/importation.py infogreffe
 ```
 
 **Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.

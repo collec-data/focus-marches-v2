@@ -17,7 +17,11 @@ class Config(BaseSettings):
     API_ENTREPRISE_URL: str
     API_ENTREPRISE_TOKEN: str
 
+    INFOGREFFE_API_KEY: str = ""
+    INFOGREFFE_DATASET: str = "chiffres-cles-2024"
+
     SOURCES: str
+    SIRETS: str | None = None
 
 
 @lru_cache
