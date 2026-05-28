@@ -2,8 +2,6 @@
 
 [← Revenir au README général](../README.md)
 
-
-
 ## Importer des données
 
 ### Import des DECPS depuis data.gouv
@@ -13,12 +11,20 @@ Les sources sont à renseigner dans le `.env`. Il s'agit des URL stables des fic
 L'importation est ensuite lancée avec la commande suivante.
 
 ```bash
-python app/importation.py decps
+docker compose exec api sh -c "python app/importation.py decps"
 ```
 
 ### Importer les données d'Infogreffe (données financières)
 
-Les données financières des structures déjà présentes dans la base sont récupérées via l'API Datainfogreffe. Les variables `INFOGREFFE_API_KEY` et `INFOGREFFE_DATASET` doivent être renseignées dans le fichier `.env`.
+La première étape est de créer un token api sur le site datainfogreffe.
+La liste des jeux de données est disponible à cette adresse [https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/](https://opendata.datainfogreffe.fr/explore/assets/chiffres-cles-2024/).
+Une inscription (gratuite) est nécessaire pour pouvoir creer un token.
+Il faut ajouter les variables `INFOGREFFE_API_KEY` et `INFOGREFFE_DATASET` dans le `.env`.
+L'import est ensuite lancé avec la commande suivante.
+
+```bash
+docker compose exec api sh -c "python app/importation.py infogreffe"
+```
 
 ```bash
 python app/importation.py infogreffe
@@ -31,7 +37,7 @@ python app/importation.py infogreffe
 Les noms et les localisations de structures sont récupérées depuis l'instance Numih France de l'API-Entreprise, avec la commande suivante :
 
 ```bash
-python app/importation.py structures
+docker compose exec api sh -c "python app/importation.py structures"
 ```
 
 **Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.
