@@ -7,7 +7,7 @@ RUN npm ci
 
 COPY . .
 RUN npm run build
-FROM nginx:1.30.0-alpine@sha256:0272e4604ed93c1792f03695a033a6e8546840f86e0de20a884bb17d2c924883
+FROM nginx:1.31.1-alpine@sha256:8b1e78743a03dbb2c95171cc58639fef29abc8816598e27fb910ed2e621e589a
 
 # Remove the default nginx.conf
 RUN rm /etc/nginx/conf.d/default.conf
