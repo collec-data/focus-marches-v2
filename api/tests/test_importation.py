@@ -104,6 +104,16 @@ def test_importation_marche_succes(db):
     marche1 = marches_crees[1]
 
 
+def test_importation_filter_sirets(db):
+    CPVFactory(code="12341234")
+
+    i = ImportateurDecp(session=db, sirets=["13579135791357"])
+    i.importer_marches(file="tests/files/liste_marches_valides.json")
+
+    marches_crees = list(db.execute(select(Marche)).scalars())
+    assert len(marches_crees) == 1
+
+
 def test_importation_concession_succes(db):
     i = ImportateurDecp(session=db)
     i.importer_concessions(file="tests/files/liste_concessions_valides.json")

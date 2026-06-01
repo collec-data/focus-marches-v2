@@ -198,14 +198,14 @@ class ImportateurDecp:
         self,
         objet: dict[str, Any],
     ) -> bool:
+        if self._sirets and objet.get("acheteur", {}).get("id") not in self._sirets:
+            return False
+
         data: MarcheSchema | MarcheAncienSchema
         if objet.get("dateNotification") and int(objet["dateNotification"][:4]) >= 2024:
             data = MarcheSchema.model_validate(objet)
         else:
             data = MarcheAncienSchema.model_validate(objet)
-
-        if self._sirets and data.acheteur.id not in self._sirets:
-            return False
 
         marche = Marche(
             id=data.id,
@@ -403,10 +403,13 @@ class ImportateurDecp:
         self,
         objet: dict[str, Any],
     ) -> bool:
-        data = ConcessionSchema.model_validate(objet)
-
-        if self._sirets and data.autoriteConcedante.id not in self._sirets:
+        if (
+            self._sirets
+            and objet.get("autoriteConcedante", {}).get("id") not in self._sirets
+        ):
             return False
+
+        data = ConcessionSchema.model_validate(objet)
 
         concession = ContratConcession(
             id=data.id,
