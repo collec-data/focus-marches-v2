@@ -17,14 +17,14 @@ anyio==4.13.0
     #   watchfiles
 api-entreprise==31.0.1
     # via focus-marche-v2 (pyproject.toml)
-certifi==2026.4.22
+certifi==2026.5.20
     # via
     #   httpcore
     #   httpx
     #   requests
 charset-normalizer==3.4.7
     # via requests
-click==8.3.3
+click==8.4.1
     # via
     #   rich-toolkit
     #   typer
@@ -45,11 +45,11 @@ h11==0.16.0
     #   uvicorn
 httpcore==1.0.9
     # via httpx
-httptools==0.7.1
+httptools==0.8.0
     # via uvicorn
 httpx==0.28.1
     # via fastapi
-idna==3.15
+idna==3.17
     # via
     #   anyio
     #   email-validator
@@ -61,7 +61,7 @@ jinja2==3.1.6
     # via fastapi
 mariadb==1.1.14
     # via focus-marche-v2 (pyproject.toml)
-markdown-it-py==4.0.0
+markdown-it-py==4.2.0
     # via rich
 markupsafe==3.0.3
     # via jinja2
@@ -104,7 +104,7 @@ python-multipart==0.0.29
     # via fastapi
 pyyaml==6.0.3
     # via uvicorn
-requests==2.33.1
+requests==2.34.2
     # via api-entreprise
 rich==15.0.0
     # via
@@ -116,11 +116,11 @@ shellingham==1.5.4
     # via typer
 sqlalchemy==2.0.50
     # via focus-marche-v2 (pyproject.toml)
-starlette==1.0.1
+starlette==1.2.1
     # via fastapi
 typeguard==4.5.2
     # via marshmallow-dataclass
-typer==0.25.1
+typer==0.26.4
     # via
     #   fastapi-cli
     #   focus-marche-v2 (pyproject.toml)
@@ -144,13 +144,13 @@ typing-inspection==0.4.2
     #   pydantic-settings
 urllib3==2.7.0
     # via requests
-uvicorn[standard]==0.46.0
+uvicorn[standard]==0.48.0
     # via
     #   fastapi
     #   fastapi-cli
 uvloop==0.22.1
     # via uvicorn
-watchfiles==1.1.1
+watchfiles==1.2.0
     # via uvicorn
 websockets==16.0
     # via uvicorn
