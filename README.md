@@ -57,6 +57,7 @@ Puis compléter le [`.env`](.env) pour configurer et personnaliser l'instance. C
 | DEPARTEMENTS | 1,2,3 | Les numéros de département de la région, séparés par une virgule |
 | FRONT_THEME_COLOR | amber | Une couleur parmi les suivantes : noir, emerald, green, lime, orange, amber, yellow, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink ou rose. Cette couleur sera utilisée par défaut mais pourra toujours être modifiée ensuite par l'utilisateur. |
 | SOURCES |  | Les liens permanents des fichiers annuels |
+| SIRETS |  | [Optionnel] Une liste de SIRETs à importer uniquement |
 
 _Quelques exemples de configuration sont à retrouver tout en bas de cette page pour Mégalis, Arnia et Recia._
 
@@ -87,7 +88,7 @@ docker compose exec api sh -c "python app/importation.py structures"
 
 *Notes :*
 - L'import initial doit faire appel à l'option `--import-de-0` afin de (re)créer la base de données
-- Il est possible de n'importer qu'une fraction des marchés en filtrant par le SIRET des acheteurs en ajoutant la variable d'environnement SIRET contenant une liste de sirets séparés par des espaces. 
+- Il est possible de n'importer qu'une fraction des marchés en filtrant par le SIRET des acheteurs en ajoutant la variable d'environnement SIRETS contenant une liste de sirets séparés par des espaces. 
 
 Une fois l'import initial réalisé, un réimport partiel (marchés uniquement) peut être réalisé régulièrement avec la commande suivante.
 ````bash
