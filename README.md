@@ -57,7 +57,6 @@ Puis compléter le [`.env`](.env) pour configurer et personnaliser l'instance. C
 | DEPARTEMENTS | 1,2,3 | Les numéros de département de la région, séparés par une virgule |
 | FRONT_THEME_COLOR | amber | Une couleur parmi les suivantes : noir, emerald, green, lime, orange, amber, yellow, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink ou rose. Cette couleur sera utilisée par défaut mais pourra toujours être modifiée ensuite par l'utilisateur. |
 | SOURCES |  | Les liens permanents des fichiers annuels |
-| SIRETS |  | [Optionnel] Une liste de SIRETs à importer uniquement |
 
 _Quelques exemples de configuration sont à retrouver tout en bas de cette page pour Mégalis, Arnia et Recia._
 
