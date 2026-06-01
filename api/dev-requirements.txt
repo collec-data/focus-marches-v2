@@ -135,7 +135,7 @@ python-dotenv==1.2.2
     #   pydantic-settings
     #   testcontainers
     #   uvicorn
-python-multipart==0.0.29
+python-multipart==0.0.30
     # via fastapi
 pyyaml==6.0.3
     # via uvicorn
@@ -149,7 +149,7 @@ rich==15.0.0
     #   typer
 rich-toolkit==0.19.10
     # via fastapi-cli
-ruff==0.15.14
+ruff==0.15.15
     # via focus-marche-v2 (pyproject.toml)
 shellingham==1.5.4
     # via typer
