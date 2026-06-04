@@ -774,7 +774,7 @@ def get_infogreffe_record(
     siren = siret[:9]
     nic = siret[9:]
 
-    if not siret:
+    if not siret or len(siret) < 14:
         return None
 
     response = session.get(
