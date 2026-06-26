@@ -1358,11 +1358,11 @@ cp .env.default .env
                             p.setAttribute('tabindex', '0');
                             p.setAttribute('role', 'link');
                             p.setAttribute('aria-label', `Ouvrir Focus Marchés ${inst.reg}`);
-                            p.addEventListener('click', () => open(inst.url));
+                            p.addEventListener('click', () => openInstance(inst.url));
                             p.addEventListener('keydown', (e) => {
                                 if (e.key === 'Enter' || e.key === ' ') {
                                     e.preventDefault();
-                                    open(inst.url);
+                                    openInstance(inst.url);
                                 }
                             });
                             p.addEventListener('mouseenter', (ev) => {
@@ -1431,7 +1431,7 @@ cp .env.default .env
             function hideTip() {
                 tip.classList.remove('show');
             }
-            function open(url) {
+            function openInstance(url) {
                 window.open(url, '_blank', 'noopener');
             }
 
