@@ -1,455 +1,1231 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Focus Marchés — La commande publique de votre région, en clair</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<style>
-:root{
-  --bg: oklch(0.985 0.003 255);
-  --surface: #ffffff;
-  --surface-2: oklch(0.975 0.004 255);
-  --ink: oklch(0.24 0.02 262);
-  --ink-soft: oklch(0.48 0.015 262);
-  --ink-faint: oklch(0.62 0.012 262);
-  --line: oklch(0.915 0.006 262);
-  --line-soft: oklch(0.945 0.005 262);
-  --map-fill: oklch(0.935 0.004 262);
-  --map-stroke: oklch(0.87 0.006 262);
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Focus Marchés — La commande publique de votre région, en clair</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <style>
+            :root {
+                --bg: oklch(0.985 0.003 255);
+                --surface: #ffffff;
+                --surface-2: oklch(0.975 0.004 255);
+                --ink: oklch(0.24 0.02 262);
+                --ink-soft: oklch(0.48 0.015 262);
+                --ink-faint: oklch(0.62 0.012 262);
+                --line: oklch(0.915 0.006 262);
+                --line-soft: oklch(0.945 0.005 262);
+                --map-fill: oklch(0.935 0.004 262);
+                --map-stroke: oklch(0.87 0.006 262);
 
-  --bret: #2563EB;   /* Bretagne — Mégalis (bleu) */
-  --bfc:  #EA580C;   /* Bourgogne-Franche-Comté — Arnia (orange) */
-  --cvl:  #4F46E5;   /* Centre-Val de Loire — Recia (indigo) */
+                --bret: #2563eb; /* Bretagne — Mégalis (bleu) */
+                --bfc: #ea580c; /* Bourgogne-Franche-Comté — Arnia (orange) */
+                --cvl: #4f46e5; /* Centre-Val de Loire — Recia (indigo) */
 
-  --maxw: 1180px;
-  --radius: 16px;
-}
-*{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--ink);
-  font-family:"Hanken Grotesk", system-ui, sans-serif;
-  font-size:17px;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
-}
-h1,h2,h3,h4{font-family:"Space Grotesk", system-ui, sans-serif; font-weight:600; letter-spacing:-0.02em; line-height:1.08; margin:0;}
-p{margin:0;}
-a{color:inherit;}
-.mono{font-family:"JetBrains Mono", monospace; font-weight:500;}
-.wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px;}
-.eyebrow{
-  font-family:"JetBrains Mono", monospace; font-weight:500;
-  font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase;
-  color:var(--ink-faint);
-  display:flex; align-items:center; gap:10px;
-}
-.eyebrow::before{content:""; width:22px; height:1px; background:var(--ink-faint); display:inline-block;}
+                --maxw: 1180px;
+                --radius: 16px;
+            }
+            * {
+                box-sizing: border-box;
+            }
+            html {
+                scroll-behavior: smooth;
+            }
+            body {
+                margin: 0;
+                background: var(--bg);
+                color: var(--ink);
+                font-family: 'Hanken Grotesk', system-ui, sans-serif;
+                font-size: 17px;
+                line-height: 1.6;
+                -webkit-font-smoothing: antialiased;
+                text-rendering: optimizeLegibility;
+            }
+            h1,
+            h2,
+            h3,
+            h4 {
+                font-family: 'Space Grotesk', system-ui, sans-serif;
+                font-weight: 600;
+                letter-spacing: -0.02em;
+                line-height: 1.08;
+                margin: 0;
+            }
+            p {
+                margin: 0;
+            }
+            a {
+                color: inherit;
+            }
+            .mono {
+                font-family: 'JetBrains Mono', monospace;
+                font-weight: 500;
+            }
+            .wrap {
+                max-width: var(--maxw);
+                margin: 0 auto;
+                padding: 0 28px;
+            }
+            .eyebrow {
+                font-family: 'JetBrains Mono', monospace;
+                font-weight: 500;
+                font-size: 12.5px;
+                letter-spacing: 0.14em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .eyebrow::before {
+                content: '';
+                width: 22px;
+                height: 1px;
+                background: var(--ink-faint);
+                display: inline-block;
+            }
 
-/* ---------- Header ---------- */
-header.nav{
-  position:sticky; top:0; z-index:50;
-  background:color-mix(in oklab, var(--bg) 82%, transparent);
-  backdrop-filter:saturate(1.4) blur(12px);
-  border-bottom:1px solid var(--line-soft);
-}
-.nav-in{display:flex; align-items:center; justify-content:space-between; height:68px; gap:20px;}
-.brand{display:flex; align-items:center; gap:12px; text-decoration:none;}
-.brand img{height:30px; width:auto; display:block;}
-.brand .mark-fallback{
-  height:30px; padding:0 12px; border-radius:8px; display:none;
-  align-items:center; background:var(--ink); color:#fff;
-  font-family:"Space Grotesk"; font-weight:700; letter-spacing:-0.01em;
-}
-.brand .wordmark{font-family:"Space Grotesk"; font-weight:600; font-size:18px; letter-spacing:-0.02em;}
-.brand .wordmark b{font-weight:700;}
-.nav-links{display:flex; align-items:center; gap:30px;}
-.nav-links a{
-  text-decoration:none; color:var(--ink-soft); font-size:15px; font-weight:500;
-  transition:color .18s;
-}
-.nav-links a:hover{color:var(--ink);}
-.btn-gh{
-  display:inline-flex; align-items:center; gap:9px;
-  background:var(--ink); color:#fff; text-decoration:none;
-  padding:9px 16px; border-radius:10px; font-size:14.5px; font-weight:600;
-  font-family:"Space Grotesk"; transition:transform .18s, background .18s;
-}
-.btn-gh:hover{transform:translateY(-1px); background:oklch(0.32 0.02 262);}
-.btn-gh svg{width:17px; height:17px;}
-@media(max-width:860px){ .nav-links{display:none;} }
+            /* ---------- Header ---------- */
+            header.nav {
+                position: sticky;
+                top: 0;
+                z-index: 50;
+                background: color-mix(in oklab, var(--bg) 82%, transparent);
+                backdrop-filter: saturate(1.4) blur(12px);
+                border-bottom: 1px solid var(--line-soft);
+            }
+            .nav-in {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 68px;
+                gap: 20px;
+            }
+            .brand {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                text-decoration: none;
+            }
+            .brand img {
+                height: 30px;
+                width: auto;
+                display: block;
+            }
+            .brand .mark-fallback {
+                height: 30px;
+                padding: 0 12px;
+                border-radius: 8px;
+                display: none;
+                align-items: center;
+                background: var(--ink);
+                color: #fff;
+                font-family: 'Space Grotesk';
+                font-weight: 700;
+                letter-spacing: -0.01em;
+            }
+            .brand .wordmark {
+                font-family: 'Space Grotesk';
+                font-weight: 600;
+                font-size: 18px;
+                letter-spacing: -0.02em;
+            }
+            .brand .wordmark b {
+                font-weight: 700;
+            }
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 30px;
+            }
+            .nav-links a {
+                text-decoration: none;
+                color: var(--ink-soft);
+                font-size: 15px;
+                font-weight: 500;
+                transition: color 0.18s;
+            }
+            .nav-links a:hover {
+                color: var(--ink);
+            }
+            .btn-gh {
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                background: var(--ink);
+                color: #fff;
+                text-decoration: none;
+                padding: 9px 16px;
+                border-radius: 10px;
+                font-size: 14.5px;
+                font-weight: 600;
+                font-family: 'Space Grotesk';
+                transition:
+                    transform 0.18s,
+                    background 0.18s;
+            }
+            .btn-gh:hover {
+                transform: translateY(-1px);
+                background: oklch(0.32 0.02 262);
+            }
+            .btn-gh svg {
+                width: 17px;
+                height: 17px;
+            }
+            @media (max-width: 860px) {
+                .nav-links {
+                    display: none;
+                }
+            }
 
-/* ---------- Hero ---------- */
-.hero{padding:clamp(40px,7vw,86px) 0 clamp(34px,5vw,60px);}
-.hero-grid{display:grid; grid-template-columns:1.02fr 1fr; gap:clamp(32px,5vw,72px); align-items:center;}
-.hero h1{font-size:clamp(38px,5.2vw,64px); margin:22px 0 0;}
-.hero h1 em{font-style:normal; color:var(--ink-soft);}
-.hero .lede{margin-top:22px; font-size:clamp(17px,1.5vw,19.5px); color:var(--ink-soft); max-width:34ch;}
-.hero-cta{margin-top:30px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
-.cta-note{display:flex; align-items:center; gap:9px; color:var(--ink-faint); font-size:14px;}
-.cta-note .dot{width:8px;height:8px;border-radius:50%;background:var(--bret);box-shadow:14px 0 0 var(--bfc), 28px 0 0 var(--cvl);}
-.cta-note span{margin-left:30px;}
+            /* ---------- Hero ---------- */
+            .hero {
+                padding: clamp(40px, 7vw, 86px) 0 clamp(34px, 5vw, 60px);
+            }
+            .hero-grid {
+                display: grid;
+                grid-template-columns: 1.02fr 1fr;
+                gap: clamp(32px, 5vw, 72px);
+                align-items: center;
+            }
+            .hero h1 {
+                font-size: clamp(38px, 5.2vw, 64px);
+                margin: 22px 0 0;
+            }
+            .hero h1 em {
+                font-style: normal;
+                color: var(--ink-soft);
+            }
+            .hero .lede {
+                margin-top: 22px;
+                font-size: clamp(17px, 1.5vw, 19.5px);
+                color: var(--ink-soft);
+                max-width: 34ch;
+            }
+            .hero-cta {
+                margin-top: 30px;
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .cta-note {
+                display: flex;
+                align-items: center;
+                gap: 9px;
+                color: var(--ink-faint);
+                font-size: 14px;
+            }
+            .cta-note .dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: var(--bret);
+                box-shadow:
+                    14px 0 0 var(--bfc),
+                    28px 0 0 var(--cvl);
+            }
+            .cta-note span {
+                margin-left: 30px;
+            }
 
-/* instance list */
-.inst-list{margin-top:38px; display:flex; flex-direction:column; gap:10px; max-width:430px;}
-.inst{
-  display:flex; align-items:center; gap:16px; text-decoration:none;
-  background:var(--surface); border:1px solid var(--line);
-  border-radius:14px; padding:14px 16px;
-  transition:border-color .2s, box-shadow .2s, transform .2s;
-  position:relative; overflow:hidden;
-}
-.inst::before{content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--c); opacity:0; transition:opacity .2s;}
-.inst:hover, .inst.is-active{border-color:color-mix(in oklab, var(--c) 55%, var(--line)); box-shadow:0 10px 30px -16px color-mix(in oklab, var(--c) 70%, transparent); transform:translateY(-2px);}
-.inst:hover::before, .inst.is-active::before{opacity:1;}
-.inst .num{font-family:"JetBrains Mono"; font-size:12px; font-weight:500; color:var(--c); width:22px; flex:none;}
-.inst .body{flex:1; min-width:0;}
-.inst .reg{font-family:"Space Grotesk"; font-weight:600; font-size:16.5px; line-height:1.2;}
-.inst .meta{font-size:13px; color:var(--ink-faint); margin-top:2px;}
-.inst .meta b{color:var(--c); font-weight:600;}
-.inst .go{flex:none; width:34px; height:34px; border-radius:9px; display:grid; place-items:center; background:var(--surface-2); color:var(--ink-soft); transition:background .2s,color .2s;}
-.inst:hover .go, .inst.is-active .go{background:var(--c); color:#fff;}
-.inst .go svg{width:16px;height:16px;}
+            /* instance list */
+            .inst-list {
+                margin-top: 38px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                max-width: 430px;
+            }
+            .inst {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                text-decoration: none;
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                padding: 14px 16px;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s,
+                    transform 0.2s;
+                position: relative;
+                overflow: hidden;
+            }
+            .inst::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 3px;
+                background: var(--c);
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            .inst:hover,
+            .inst.is-active {
+                border-color: color-mix(in oklab, var(--c) 55%, var(--line));
+                box-shadow: 0 10px 30px -16px color-mix(in oklab, var(--c) 70%, transparent);
+                transform: translateY(-2px);
+            }
+            .inst:hover::before,
+            .inst.is-active::before {
+                opacity: 1;
+            }
+            .inst .num {
+                font-family: 'JetBrains Mono';
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--c);
+                width: 22px;
+                flex: none;
+            }
+            .inst .body {
+                flex: 1;
+                min-width: 0;
+            }
+            .inst .reg {
+                font-family: 'Space Grotesk';
+                font-weight: 600;
+                font-size: 16.5px;
+                line-height: 1.2;
+            }
+            .inst .meta {
+                font-size: 13px;
+                color: var(--ink-faint);
+                margin-top: 2px;
+            }
+            .inst .meta b {
+                color: var(--c);
+                font-weight: 600;
+            }
+            .inst .go {
+                flex: none;
+                width: 34px;
+                height: 34px;
+                border-radius: 9px;
+                display: grid;
+                place-items: center;
+                background: var(--surface-2);
+                color: var(--ink-soft);
+                transition:
+                    background 0.2s,
+                    color 0.2s;
+            }
+            .inst:hover .go,
+            .inst.is-active .go {
+                background: var(--c);
+                color: #fff;
+            }
+            .inst .go svg {
+                width: 16px;
+                height: 16px;
+            }
 
-/* ---------- Map ---------- */
-.map-stage{position:relative;}
-.map-card{
-  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
-  padding:18px; position:relative;
-  box-shadow:0 32px 64px -44px oklch(0.4 0.03 262 / 0.5);
-}
-.map-card svg{display:block; width:100%; height:auto; overflow:visible;}
-.map-head{display:flex; align-items:center; justify-content:space-between; padding:2px 6px 14px; gap:12px;}
-.map-head .t{font-family:"JetBrains Mono"; font-size:11.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--ink-faint);}
-.map-head .count{font-family:"JetBrains Mono"; font-size:11.5px; color:var(--ink-faint);}
-.map-head .count b{color:var(--ink);}
+            /* ---------- Map ---------- */
+            .map-stage {
+                position: relative;
+            }
+            .map-card {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                padding: 18px;
+                position: relative;
+                box-shadow: 0 32px 64px -44px oklch(0.4 0.03 262 / 0.5);
+            }
+            .map-card svg {
+                display: block;
+                width: 100%;
+                height: auto;
+                overflow: visible;
+            }
+            .map-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 2px 6px 14px;
+                gap: 12px;
+            }
+            .map-head .t {
+                font-family: 'JetBrains Mono';
+                font-size: 11.5px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+            }
+            .map-head .count {
+                font-family: 'JetBrains Mono';
+                font-size: 11.5px;
+                color: var(--ink-faint);
+            }
+            .map-head .count b {
+                color: var(--ink);
+            }
 
-path.region{fill:var(--map-fill); stroke:var(--surface); stroke-width:1.1; stroke-linejoin:round; transition:fill .2s, filter .2s;}
-path.region.active{fill:var(--c); cursor:pointer; stroke:var(--surface); stroke-width:1.4;}
-path.region.active:hover, path.region.active.is-active{filter:drop-shadow(0 6px 14px color-mix(in oklab, var(--c) 60%, transparent));}
-path.region.active.dim{fill:color-mix(in oklab, var(--c) 32%, var(--map-fill));}
-.pin{pointer-events:none;}
-.pin circle{fill:#fff; stroke:var(--c); stroke-width:3;}
-.pin text{font-family:"JetBrains Mono"; font-weight:500; font-size:13px; fill:var(--c); text-anchor:middle;}
+            path.region {
+                fill: var(--map-fill);
+                stroke: var(--surface);
+                stroke-width: 1.1;
+                stroke-linejoin: round;
+                transition:
+                    fill 0.2s,
+                    filter 0.2s;
+            }
+            path.region.active {
+                fill: var(--c);
+                cursor: pointer;
+                stroke: var(--surface);
+                stroke-width: 1.4;
+            }
+            path.region.active:hover,
+            path.region.active.is-active {
+                filter: drop-shadow(0 6px 14px color-mix(in oklab, var(--c) 60%, transparent));
+            }
+            path.region.active.dim {
+                fill: color-mix(in oklab, var(--c) 32%, var(--map-fill));
+            }
+            .pin {
+                pointer-events: none;
+            }
+            .pin circle {
+                fill: #fff;
+                stroke: var(--c);
+                stroke-width: 3;
+            }
+            .pin text {
+                font-family: 'JetBrains Mono';
+                font-weight: 500;
+                font-size: 13px;
+                fill: var(--c);
+                text-anchor: middle;
+            }
 
-.map-tip{
-  position:absolute; pointer-events:none; z-index:5;
-  background:var(--ink); color:#fff; padding:8px 12px; border-radius:9px;
-  font-size:13px; line-height:1.35; opacity:0; transform:translateY(4px);
-  transition:opacity .15s, transform .15s; white-space:nowrap;
-  box-shadow:0 12px 28px -12px rgba(0,0,0,.5);
-}
-.map-tip.show{opacity:1; transform:translateY(0);}
-.map-tip b{font-family:"Space Grotesk"; font-weight:600;}
-.map-tip .o{display:block; color:oklch(0.78 0.02 262); font-family:"JetBrains Mono"; font-size:11px; margin-top:1px;}
+            .map-tip {
+                position: absolute;
+                pointer-events: none;
+                z-index: 5;
+                background: var(--ink);
+                color: #fff;
+                padding: 8px 12px;
+                border-radius: 9px;
+                font-size: 13px;
+                line-height: 1.35;
+                opacity: 0;
+                transform: translateY(4px);
+                transition:
+                    opacity 0.15s,
+                    transform 0.15s;
+                white-space: nowrap;
+                box-shadow: 0 12px 28px -12px rgba(0, 0, 0, 0.5);
+            }
+            .map-tip.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            .map-tip b {
+                font-family: 'Space Grotesk';
+                font-weight: 600;
+            }
+            .map-tip .o {
+                display: block;
+                color: oklch(0.78 0.02 262);
+                font-family: 'JetBrains Mono';
+                font-size: 11px;
+                margin-top: 1px;
+            }
 
-@media(max-width:880px){
-  .hero-grid{grid-template-columns:1fr;}
-  .map-stage{order:-1;}
-  .inst-list{max-width:none;}
-}
+            @media (max-width: 880px) {
+                .hero-grid {
+                    grid-template-columns: 1fr;
+                }
+                .map-stage {
+                    order: -1;
+                }
+                .inst-list {
+                    max-width: none;
+                }
+            }
 
-/* ---------- Section shells ---------- */
-section.block{padding:clamp(56px,8vw,108px) 0;}
-.block.alt{background:var(--surface-2); border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);}
-.sec-head{max-width:60ch;}
-.sec-head h2{font-size:clamp(28px,3.6vw,44px); margin-top:18px;}
-.sec-head p.intro{margin-top:18px; color:var(--ink-soft); font-size:clamp(16px,1.4vw,18.5px);}
+            /* ---------- Section shells ---------- */
+            section.block {
+                padding: clamp(56px, 8vw, 108px) 0;
+            }
+            .block.alt {
+                background: var(--surface-2);
+                border-top: 1px solid var(--line-soft);
+                border-bottom: 1px solid var(--line-soft);
+            }
+            .sec-head {
+                max-width: 60ch;
+            }
+            .sec-head h2 {
+                font-size: clamp(28px, 3.6vw, 44px);
+                margin-top: 18px;
+            }
+            .sec-head p.intro {
+                margin-top: 18px;
+                color: var(--ink-soft);
+                font-size: clamp(16px, 1.4vw, 18.5px);
+            }
 
-/* presentation */
-.pres-grid{display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,4vw,60px); align-items:start; margin-top:clamp(34px,4vw,52px);}
-.pres-points{display:flex; flex-direction:column; gap:22px;}
-.pres-points .pt{display:flex; gap:16px;}
-.pres-points .pt .ic{flex:none; width:40px; height:40px; border-radius:11px; background:var(--surface); border:1px solid var(--line); display:grid; place-items:center; color:var(--ink);}
-.pres-points .pt .ic svg{width:19px;height:19px;}
-.pres-points .pt h4{font-size:17.5px; font-family:"Space Grotesk";}
-.pres-points .pt p{margin-top:5px; color:var(--ink-soft); font-size:15.5px;}
-.pres-aside{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:clamp(22px,3vw,32px);}
-.pres-aside .q{font-family:"Space Grotesk"; font-weight:500; font-size:clamp(19px,2vw,23px); line-height:1.35; letter-spacing:-0.01em;}
-.pres-aside .q::before{content:"«"; color:var(--ink-faint); margin-right:4px;}
-.pres-aside .q::after{content:"»"; color:var(--ink-faint); margin-left:4px;}
-.pres-aside .by{margin-top:18px; padding-top:18px; border-top:1px solid var(--line); font-size:14px; color:var(--ink-faint);}
-@media(max-width:760px){ .pres-grid{grid-template-columns:1fr;} }
+            /* presentation */
+            .pres-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: clamp(28px, 4vw, 60px);
+                align-items: start;
+                margin-top: clamp(34px, 4vw, 52px);
+            }
+            .pres-points {
+                display: flex;
+                flex-direction: column;
+                gap: 22px;
+            }
+            .pres-points .pt {
+                display: flex;
+                gap: 16px;
+            }
+            .pres-points .pt .ic {
+                flex: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 11px;
+                background: var(--surface);
+                border: 1px solid var(--line);
+                display: grid;
+                place-items: center;
+                color: var(--ink);
+            }
+            .pres-points .pt .ic svg {
+                width: 19px;
+                height: 19px;
+            }
+            .pres-points .pt h4 {
+                font-size: 17.5px;
+                font-family: 'Space Grotesk';
+            }
+            .pres-points .pt p {
+                margin-top: 5px;
+                color: var(--ink-soft);
+                font-size: 15.5px;
+            }
+            .pres-aside {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                padding: clamp(22px, 3vw, 32px);
+            }
+            .pres-aside .q {
+                font-family: 'Space Grotesk';
+                font-weight: 500;
+                font-size: clamp(19px, 2vw, 23px);
+                line-height: 1.35;
+                letter-spacing: -0.01em;
+            }
+            .pres-aside .q::before {
+                content: '«';
+                color: var(--ink-faint);
+                margin-right: 4px;
+            }
+            .pres-aside .q::after {
+                content: '»';
+                color: var(--ink-faint);
+                margin-left: 4px;
+            }
+            .pres-aside .by {
+                margin-top: 18px;
+                padding-top: 18px;
+                border-top: 1px solid var(--line);
+                font-size: 14px;
+                color: var(--ink-faint);
+            }
+            @media (max-width: 760px) {
+                .pres-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
 
-/* DECP */
-.decp-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:clamp(28px,4vw,56px); align-items:center; margin-top:clamp(34px,4vw,52px);}
-.decp-card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:6px;}
-.decp-row{display:flex; align-items:center; gap:18px; padding:18px 20px; border-radius:12px;}
-.decp-row + .decp-row{border-top:1px solid var(--line-soft);}
-.decp-row .k{font-family:"JetBrains Mono"; font-size:12px; color:var(--ink-faint); width:118px; flex:none; letter-spacing:0.04em; text-transform:uppercase;}
-.decp-row .v{font-size:15.5px;}
-.decp-row .v b{font-family:"Space Grotesk";}
-.decp-lead p{color:var(--ink-soft); margin-top:18px; font-size:16.5px;}
-.decp-lead p b{color:var(--ink); font-weight:600;}
-.acr{display:inline-flex; gap:6px; margin-top:8px;}
-.acr span{font-family:"JetBrains Mono"; font-weight:500; font-size:14px; color:var(--ink); background:var(--surface-2); border:1px solid var(--line); padding:4px 9px; border-radius:7px;}
-@media(max-width:760px){ .decp-grid{grid-template-columns:1fr;} }
+            /* DECP */
+            .decp-grid {
+                display: grid;
+                grid-template-columns: 1.1fr 1fr;
+                gap: clamp(28px, 4vw, 56px);
+                align-items: center;
+                margin-top: clamp(34px, 4vw, 52px);
+            }
+            .decp-card {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: var(--radius);
+                padding: 6px;
+            }
+            .decp-row {
+                display: flex;
+                align-items: center;
+                gap: 18px;
+                padding: 18px 20px;
+                border-radius: 12px;
+            }
+            .decp-row + .decp-row {
+                border-top: 1px solid var(--line-soft);
+            }
+            .decp-row .k {
+                font-family: 'JetBrains Mono';
+                font-size: 12px;
+                color: var(--ink-faint);
+                width: 118px;
+                flex: none;
+                letter-spacing: 0.04em;
+                text-transform: uppercase;
+            }
+            .decp-row .v {
+                font-size: 15.5px;
+            }
+            .decp-row .v b {
+                font-family: 'Space Grotesk';
+            }
+            .decp-lead p {
+                color: var(--ink-soft);
+                margin-top: 18px;
+                font-size: 16.5px;
+            }
+            .decp-lead p b {
+                color: var(--ink);
+                font-weight: 600;
+            }
+            .acr {
+                display: inline-flex;
+                gap: 6px;
+                margin-top: 8px;
+            }
+            .acr span {
+                font-family: 'JetBrains Mono';
+                font-weight: 500;
+                font-size: 14px;
+                color: var(--ink);
+                background: var(--surface-2);
+                border: 1px solid var(--line);
+                padding: 4px 9px;
+                border-radius: 7px;
+            }
+            @media (max-width: 760px) {
+                .decp-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
 
-/* features */
-.feat-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:clamp(34px,4vw,52px);}
-.feat{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:26px 24px; transition:transform .2s, box-shadow .2s, border-color .2s;}
-.feat:hover{transform:translateY(-3px); box-shadow:0 22px 44px -30px oklch(0.4 0.03 262/.6); border-color:var(--line);}
-.feat .ic{width:44px; height:44px; border-radius:12px; background:var(--surface-2); border:1px solid var(--line-soft); display:grid; place-items:center; color:var(--ink);}
-.feat .ic svg{width:21px;height:21px;}
-.feat h4{margin-top:18px; font-size:18.5px;}
-.feat p{margin-top:8px; color:var(--ink-soft); font-size:15px;}
-.feat .tag{margin-top:14px; display:inline-block; font-family:"JetBrains Mono"; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-faint);}
-@media(max-width:900px){ .feat-grid{grid-template-columns:repeat(2,1fr);} }
-@media(max-width:560px){ .feat-grid{grid-template-columns:1fr;} }
+            /* features */
+            .feat-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+                margin-top: clamp(34px, 4vw, 52px);
+            }
+            .feat {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                padding: 26px 24px;
+                transition:
+                    transform 0.2s,
+                    box-shadow 0.2s,
+                    border-color 0.2s;
+            }
+            .feat:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 22px 44px -30px oklch(0.4 0.03 262/0.6);
+                border-color: var(--line);
+            }
+            .feat .ic {
+                width: 44px;
+                height: 44px;
+                border-radius: 12px;
+                background: var(--surface-2);
+                border: 1px solid var(--line-soft);
+                display: grid;
+                place-items: center;
+                color: var(--ink);
+            }
+            .feat .ic svg {
+                width: 21px;
+                height: 21px;
+            }
+            .feat h4 {
+                margin-top: 18px;
+                font-size: 18.5px;
+            }
+            .feat p {
+                margin-top: 8px;
+                color: var(--ink-soft);
+                font-size: 15px;
+            }
+            .feat .tag {
+                margin-top: 14px;
+                display: inline-block;
+                font-family: 'JetBrains Mono';
+                font-size: 11px;
+                letter-spacing: 0.06em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+            }
+            @media (max-width: 900px) {
+                .feat-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+            @media (max-width: 560px) {
+                .feat-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
 
-/* partenaires */
-.part-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:clamp(34px,4vw,46px);}
-.part{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:24px; position:relative;}
-.part .bar{height:4px; width:38px; border-radius:4px; background:var(--c); margin-bottom:18px;}
-.part .role{font-family:"JetBrains Mono"; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-faint);}
-.part h4{margin-top:8px; font-size:21px;}
-.part p{margin-top:8px; color:var(--ink-soft); font-size:14.5px;}
-.part-foot{margin-top:26px; display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; color:var(--ink-faint); font-size:14px;}
-.part-foot .chip{display:inline-flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line); border-radius:999px; padding:7px 14px; color:var(--ink-soft); font-size:13.5px;}
-.part-foot .chip b{color:var(--ink); font-weight:600; font-family:"Space Grotesk";}
-@media(max-width:760px){ .part-grid{grid-template-columns:1fr;} }
+            /* partenaires */
+            .part-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+                margin-top: clamp(34px, 4vw, 46px);
+            }
+            .part {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                padding: 24px;
+                position: relative;
+            }
+            .part .bar {
+                height: 4px;
+                width: 38px;
+                border-radius: 4px;
+                background: var(--c);
+                margin-bottom: 18px;
+            }
+            .part .role {
+                font-family: 'JetBrains Mono';
+                font-size: 11px;
+                letter-spacing: 0.1em;
+                text-transform: uppercase;
+                color: var(--ink-faint);
+            }
+            .part h4 {
+                margin-top: 8px;
+                font-size: 21px;
+            }
+            .part p {
+                margin-top: 8px;
+                color: var(--ink-soft);
+                font-size: 14.5px;
+            }
+            .part-foot {
+                margin-top: 26px;
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 10px 14px;
+                color: var(--ink-faint);
+                font-size: 14px;
+            }
+            .part-foot .chip {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 999px;
+                padding: 7px 14px;
+                color: var(--ink-soft);
+                font-size: 13.5px;
+            }
+            .part-foot .chip b {
+                color: var(--ink);
+                font-weight: 600;
+                font-family: 'Space Grotesk';
+            }
+            @media (max-width: 760px) {
+                .part-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
 
-/* open source */
-.os{display:grid; grid-template-columns:1fr 1fr; gap:clamp(30px,4vw,60px); align-items:center; margin-top:clamp(34px,4vw,48px);}
-.os-terminal{background:oklch(0.21 0.02 262); border-radius:14px; overflow:hidden; box-shadow:0 30px 60px -34px oklch(0.2 0.03 262/.7); border:1px solid oklch(0.3 0.02 262);}
-.os-terminal .bar{display:flex; align-items:center; gap:7px; padding:13px 16px; border-bottom:1px solid oklch(0.3 0.02 262);}
-.os-terminal .bar i{width:11px; height:11px; border-radius:50%; background:oklch(0.42 0.02 262);}
-.os-terminal .bar .path{margin-left:8px; font-family:"JetBrains Mono"; font-size:12px; color:oklch(0.65 0.02 262);}
-.os-terminal pre{margin:0; padding:20px 18px; font-family:"JetBrains Mono"; font-size:13.5px; line-height:1.9; color:oklch(0.9 0.01 262); overflow-x:auto;}
-.os-terminal .c{color:oklch(0.62 0.03 262);}
-.os-terminal .p{color:var(--bret);}
-.os-terminal .g{color:oklch(0.78 0.12 150);}
-.os-list{display:flex; flex-direction:column; gap:20px;}
-.os-list .row{display:flex; gap:14px;}
-.os-list .row .ic{flex:none; width:38px;height:38px;border-radius:10px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink);}
-.os-list .row .ic svg{width:18px;height:18px;}
-.os-list .row h4{font-size:16.5px;}
-.os-list .row p{margin-top:4px; color:var(--ink-soft); font-size:14.5px;}
-.os-cta{margin-top:30px; display:flex; gap:14px; flex-wrap:wrap;}
-.btn-line{display:inline-flex; align-items:center; gap:9px; padding:11px 18px; border-radius:11px; border:1px solid var(--line); background:var(--surface); text-decoration:none; font-weight:600; font-family:"Space Grotesk"; font-size:14.5px; color:var(--ink); transition:border-color .2s, transform .2s;}
-.btn-line:hover{border-color:var(--ink-soft); transform:translateY(-1px);}
-.btn-line svg{width:17px;height:17px;}
-@media(max-width:820px){ .os{grid-template-columns:1fr;} .os-terminal{order:2;} }
+            /* open source */
+            .os {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: clamp(30px, 4vw, 60px);
+                align-items: center;
+                margin-top: clamp(34px, 4vw, 48px);
+            }
+            .os-terminal {
+                background: oklch(0.21 0.02 262);
+                border-radius: 14px;
+                overflow: hidden;
+                box-shadow: 0 30px 60px -34px oklch(0.2 0.03 262/0.7);
+                border: 1px solid oklch(0.3 0.02 262);
+            }
+            .os-terminal .bar {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                padding: 13px 16px;
+                border-bottom: 1px solid oklch(0.3 0.02 262);
+            }
+            .os-terminal .bar i {
+                width: 11px;
+                height: 11px;
+                border-radius: 50%;
+                background: oklch(0.42 0.02 262);
+            }
+            .os-terminal .bar .path {
+                margin-left: 8px;
+                font-family: 'JetBrains Mono';
+                font-size: 12px;
+                color: oklch(0.65 0.02 262);
+            }
+            .os-terminal pre {
+                margin: 0;
+                padding: 20px 18px;
+                font-family: 'JetBrains Mono';
+                font-size: 13.5px;
+                line-height: 1.9;
+                color: oklch(0.9 0.01 262);
+                overflow-x: auto;
+            }
+            .os-terminal .c {
+                color: oklch(0.62 0.03 262);
+            }
+            .os-terminal .p {
+                color: var(--bret);
+            }
+            .os-terminal .g {
+                color: oklch(0.78 0.12 150);
+            }
+            .os-list {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            .os-list .row {
+                display: flex;
+                gap: 14px;
+            }
+            .os-list .row .ic {
+                flex: none;
+                width: 38px;
+                height: 38px;
+                border-radius: 10px;
+                background: var(--surface);
+                border: 1px solid var(--line);
+                display: grid;
+                place-items: center;
+                color: var(--ink);
+            }
+            .os-list .row .ic svg {
+                width: 18px;
+                height: 18px;
+            }
+            .os-list .row h4 {
+                font-size: 16.5px;
+            }
+            .os-list .row p {
+                margin-top: 4px;
+                color: var(--ink-soft);
+                font-size: 14.5px;
+            }
+            .os-cta {
+                margin-top: 30px;
+                display: flex;
+                gap: 14px;
+                flex-wrap: wrap;
+            }
+            .btn-line {
+                display: inline-flex;
+                align-items: center;
+                gap: 9px;
+                padding: 11px 18px;
+                border-radius: 11px;
+                border: 1px solid var(--line);
+                background: var(--surface);
+                text-decoration: none;
+                font-weight: 600;
+                font-family: 'Space Grotesk';
+                font-size: 14.5px;
+                color: var(--ink);
+                transition:
+                    border-color 0.2s,
+                    transform 0.2s;
+            }
+            .btn-line:hover {
+                border-color: var(--ink-soft);
+                transform: translateY(-1px);
+            }
+            .btn-line svg {
+                width: 17px;
+                height: 17px;
+            }
+            @media (max-width: 820px) {
+                .os {
+                    grid-template-columns: 1fr;
+                }
+                .os-terminal {
+                    order: 2;
+                }
+            }
 
-/* footer */
-footer.ft{background:var(--ink); color:oklch(0.82 0.01 262); padding:clamp(48px,6vw,72px) 0 34px;}
-.ft a{color:oklch(0.82 0.01 262); text-decoration:none;}
-.ft a:hover{color:#fff;}
-.ft-top{display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; padding-bottom:36px; border-bottom:1px solid oklch(0.32 0.02 262);}
-.ft-brand .wordmark{font-family:"Space Grotesk"; font-weight:600; font-size:20px; color:#fff; letter-spacing:-0.02em;}
-.ft-brand p{margin-top:12px; max-width:36ch; font-size:14.5px; color:oklch(0.7 0.012 262);}
-.ft-cols{display:flex; gap:clamp(40px,6vw,90px); flex-wrap:wrap;}
-.ft-col h5{font-family:"JetBrains Mono"; font-weight:500; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:oklch(0.6 0.012 262); margin:0 0 14px;}
-.ft-col a{display:block; font-size:14.5px; margin-bottom:10px;}
-.ft-bottom{display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; padding-top:26px; font-size:13px; color:oklch(0.62 0.012 262); font-family:"JetBrains Mono", monospace;}
-.ft-bottom a{text-decoration:underline; text-underline-offset:2px;}
+            /* footer */
+            footer.ft {
+                background: var(--ink);
+                color: oklch(0.82 0.01 262);
+                padding: clamp(48px, 6vw, 72px) 0 34px;
+            }
+            .ft a {
+                color: oklch(0.82 0.01 262);
+                text-decoration: none;
+            }
+            .ft a:hover {
+                color: #fff;
+            }
+            .ft-top {
+                display: flex;
+                justify-content: space-between;
+                gap: 40px;
+                flex-wrap: wrap;
+                padding-bottom: 36px;
+                border-bottom: 1px solid oklch(0.32 0.02 262);
+            }
+            .ft-brand .wordmark {
+                font-family: 'Space Grotesk';
+                font-weight: 600;
+                font-size: 20px;
+                color: #fff;
+                letter-spacing: -0.02em;
+            }
+            .ft-brand p {
+                margin-top: 12px;
+                max-width: 36ch;
+                font-size: 14.5px;
+                color: oklch(0.7 0.012 262);
+            }
+            .ft-cols {
+                display: flex;
+                gap: clamp(40px, 6vw, 90px);
+                flex-wrap: wrap;
+            }
+            .ft-col h5 {
+                font-family: 'JetBrains Mono';
+                font-weight: 500;
+                font-size: 11px;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: oklch(0.6 0.012 262);
+                margin: 0 0 14px;
+            }
+            .ft-col a {
+                display: block;
+                font-size: 14.5px;
+                margin-bottom: 10px;
+            }
+            .ft-bottom {
+                display: flex;
+                justify-content: space-between;
+                gap: 18px;
+                flex-wrap: wrap;
+                padding-top: 26px;
+                font-size: 13px;
+                color: oklch(0.62 0.012 262);
+                font-family: 'JetBrains Mono', monospace;
+            }
+            .ft-bottom a {
+                text-decoration: underline;
+                text-underline-offset: 2px;
+            }
 
-.reveal{opacity:0; transform:translateY(18px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);}
-.reveal.in{opacity:1; transform:none;}
-</style>
-</head>
-<body>
+            .reveal {
+                opacity: 0;
+                transform: translateY(18px);
+                transition:
+                    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+                    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+            }
+            .reveal.in {
+                opacity: 1;
+                transform: none;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- ===== Header ===== -->
+        <header class="nav" data-screen-label="Header">
+            <div class="wrap nav-in">
+                <a class="brand" href="#top" aria-label="Focus Marchés, accueil">
+                    <img
+                        src="https://focus-marches-preprod.megalis.bretagne.bzh/assets/logo-Bvc6eNvk.png"
+                        alt="Focus Marchés"
+                        onerror="
+                            this.style.display = 'none';
+                            this.nextElementSibling.style.display = 'flex';
+                        "
+                    />
+                    <span class="mark-fallback">FM</span>
+                    <span class="wordmark">Focus&nbsp;<b>Marchés</b></span>
+                </a>
+                <nav class="nav-links">
+                    <a href="#carte">Les instances</a>
+                    <a href="#outil">L'outil</a>
+                    <a href="#decp">Les DECP</a>
+                    <a href="#opensource">Open source</a>
+                </nav>
+                <a class="btn-gh" href="https://github.com/collec-data/focus-marches-v2" target="_blank" rel="noopener">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"
+                        />
+                    </svg>
+                    GitHub
+                </a>
+            </div>
+        </header>
 
-<!-- ===== Header ===== -->
-<header class="nav" data-screen-label="Header">
-  <div class="wrap nav-in">
-    <a class="brand" href="#top" aria-label="Focus Marchés, accueil">
-      <img src="https://focus-marches-preprod.megalis.bretagne.bzh/assets/logo-Bvc6eNvk.png" alt="Focus Marchés" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-      <span class="mark-fallback">FM</span>
-      <span class="wordmark">Focus&nbsp;<b>Marchés</b></span>
-    </a>
-    <nav class="nav-links">
-      <a href="#carte">Les instances</a>
-      <a href="#outil">L'outil</a>
-      <a href="#decp">Les DECP</a>
-      <a href="#opensource">Open source</a>
-    </nav>
-    <a class="btn-gh" href="https://github.com/collec-data/focus-marches-v2" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
-      GitHub
-    </a>
-  </div>
-</header>
+        <span id="top"></span>
 
-<span id="top"></span>
+        <!-- ===== Hero ===== -->
+        <section class="hero" data-screen-label="Hero / Carte">
+            <div class="wrap hero-grid">
+                <div class="hero-left">
+                    <div class="eyebrow">Données essentielles de la commande publique · DECP</div>
+                    <h1>La commande publique<br />de votre territoire,<br /><em>enfin lisible.</em></h1>
+                    <p class="lede">Focus Marchés rend explorables les marchés publics passés par les collectivités de votre région. Choisissez votre territoire pour ouvrir l'instance correspondante.</p>
 
-<!-- ===== Hero ===== -->
-<section class="hero" data-screen-label="Hero / Carte">
-  <div class="wrap hero-grid">
-    <div class="hero-left">
-      <div class="eyebrow">Données essentielles de la commande publique · DECP</div>
-      <h1>La commande publique<br/>de votre territoire,<br/><em>enfin lisible.</em></h1>
-      <p class="lede">Focus Marchés rend explorables les marchés publics passés par les collectivités de votre région. Choisissez votre territoire pour ouvrir l'instance correspondante.</p>
+                    <div class="inst-list" id="instList"></div>
+                </div>
 
-      <div class="inst-list" id="instList"></div>
-    </div>
+                <div class="map-stage" id="carte">
+                    <div class="map-card">
+                        <div class="map-head">
+                            <span class="t">Instances déployées</span>
+                            <span class="count"><b>3</b> régions · cliquez pour ouvrir</span>
+                        </div>
+                        <div id="mapHolder"><!-- svg injected --></div>
+                        <div class="map-tip" id="mapTip"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <div class="map-stage" id="carte">
-      <div class="map-card">
-        <div class="map-head">
-          <span class="t">Instances déployées</span>
-          <span class="count"><b>3</b> régions · cliquez pour ouvrir</span>
-        </div>
-        <div id="mapHolder"><!-- svg injected --></div>
-        <div class="map-tip" id="mapTip"></div>
-      </div>
-    </div>
-  </div>
-</section>
+        <!-- ===== Présentation de l'outil ===== -->
+        <section class="block alt" id="outil" data-screen-label="Présentation de l'outil">
+            <div class="wrap">
+                <div class="sec-head reveal">
+                    <div class="eyebrow">L'outil</div>
+                    <h2>Un observatoire de la commande publique, pensé pour les agents.</h2>
+                    <p class="intro">
+                        Focus Marchés s'adresse aux acheteurs et agents des collectivités. Il transforme des fichiers de données ouvertes, denses et techniques, en un outil d'exploration concret pour suivre, comparer et comprendre les marchés de son
+                        territoire.
+                    </p>
+                </div>
 
-<!-- ===== Présentation de l'outil ===== -->
-<section class="block alt" id="outil" data-screen-label="Présentation de l'outil">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">L'outil</div>
-      <h2>Un observatoire de la commande publique, pensé pour les agents.</h2>
-      <p class="intro">Focus Marchés s'adresse aux acheteurs et agents des collectivités. Il transforme des fichiers de données ouvertes, denses et techniques, en un outil d'exploration concret pour suivre, comparer et comprendre les marchés de son territoire.</p>
-    </div>
+                <div class="pres-grid">
+                    <div class="pres-points reveal">
+                        <div class="pt">
+                            <div class="ic">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M3 3v18h18" />
+                                    <path d="M7 14l3-4 3 2 4-6" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>Suivre l'activité d'achat</h4>
+                                <p>Visualisez le volume, le montant et la nature des marchés notifiés sur votre territoire, année après année.</p>
+                            </div>
+                        </div>
+                        <div class="pt">
+                            <div class="ic">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <circle cx="11" cy="11" r="7" />
+                                    <path d="m21 21-4.3-4.3" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>Rechercher un marché ou un acheteur</h4>
+                                <p>Retrouvez un contrat, un profil d'acheteur public ou une entreprise titulaire en quelques filtres.</p>
+                            </div>
+                        </div>
+                        <div class="pt">
+                            <div class="ic">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10z" />
+                                    <circle cx="12" cy="11" r="2.5" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>Comparer par territoire</h4>
+                                <p>Filtrez par département pour situer l'achat public local dans son contexte régional.</p>
+                            </div>
+                        </div>
+                    </div>
 
-    <div class="pres-grid">
-      <div class="pres-points reveal">
-        <div class="pt">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l3-4 3 2 4-6"/></svg></div>
-          <div><h4>Suivre l'activité d'achat</h4><p>Visualisez le volume, le montant et la nature des marchés notifiés sur votre territoire, année après année.</p></div>
-        </div>
-        <div class="pt">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></div>
-          <div><h4>Rechercher un marché ou un acheteur</h4><p>Retrouvez un contrat, un profil d'acheteur public ou une entreprise titulaire en quelques filtres.</p></div>
-        </div>
-        <div class="pt">
-          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
-          <div><h4>Comparer par territoire</h4><p>Filtrez par département pour situer l'achat public local dans son contexte régional.</p></div>
-        </div>
-      </div>
+                    <aside class="pres-aside reveal">
+                        <p class="q">Rendre la donnée de la commande publique réellement consultable par celles et ceux qui la produisent et la pilotent.</p>
+                        <div class="by">Focus Marchés v2 — fondé sur le schéma de l'arrêté du 22 décembre 2022 relatif aux données essentielles des marchés publics.</div>
+                    </aside>
+                </div>
+            </div>
+        </section>
 
-      <aside class="pres-aside reveal">
-        <p class="q">Rendre la donnée de la commande publique réellement consultable par celles et ceux qui la produisent et la pilotent.</p>
-        <div class="by">Focus Marchés v2 — fondé sur le schéma de l'arrêté du 22 décembre 2022 relatif aux données essentielles des marchés publics.</div>
-      </aside>
-    </div>
-  </div>
-</section>
+        <!-- ===== DECP ===== -->
+        <section class="block" id="decp" data-screen-label="Les DECP">
+            <div class="wrap">
+                <div class="decp-grid">
+                    <div class="decp-lead reveal">
+                        <div class="eyebrow">Les données</div>
+                        <h2 style="font-size: clamp(28px, 3.6vw, 44px); margin-top: 18px">Les DECP, qu'est-ce que c'est&nbsp;?</h2>
+                        <div class="acr"><span>D</span><span>E</span><span>C</span><span>P</span></div>
+                        <p>Les <b>Données Essentielles de la Commande Publique</b> sont les informations que tout acheteur public doit rendre publiques pour chaque marché conclu : objet, montant, durée, titulaire, lieu d'exécution.</p>
+                        <p>Publiées en <b>open data</b> sur data.gouv.fr, elles sont normalisées mais difficiles à exploiter telles quelles. Focus Marchés les agrège, les nettoie et les rend explorables.</p>
+                    </div>
 
-<!-- ===== DECP ===== -->
-<section class="block" id="decp" data-screen-label="Les DECP">
-  <div class="wrap">
-    <div class="decp-grid">
-      <div class="decp-lead reveal">
-        <div class="eyebrow">Les données</div>
-        <h2 style="font-size:clamp(28px,3.6vw,44px);margin-top:18px;">Les DECP, qu'est-ce que c'est&nbsp;?</h2>
-        <div class="acr">
-          <span>D</span><span>E</span><span>C</span><span>P</span>
-        </div>
-        <p>Les <b>Données Essentielles de la Commande Publique</b> sont les informations que tout acheteur public doit rendre publiques pour chaque marché conclu : objet, montant, durée, titulaire, lieu d'exécution.</p>
-        <p>Publiées en <b>open data</b> sur data.gouv.fr, elles sont normalisées mais difficiles à exploiter telles quelles. Focus Marchés les agrège, les nettoie et les rend explorables.</p>
-      </div>
+                    <div class="decp-card reveal">
+                        <div class="decp-row">
+                            <span class="k">Cadre</span><span class="v"><b>Arrêté</b> du 22 déc. 2022 — schéma de données unifié</span>
+                        </div>
+                        <div class="decp-row">
+                            <span class="k">Source</span><span class="v"><b>data.gouv.fr</b> — fichiers annuels en open data</span>
+                        </div>
+                        <div class="decp-row"><span class="k">Contenu</span><span class="v">Objet · montant · durée · titulaire · localisation</span></div>
+                        <div class="decp-row">
+                            <span class="k">Enrichi par</span><span class="v">API <b>SIRENE</b> &amp; données financières <b>Infogreffe</b></span>
+                        </div>
+                        <div class="decp-row"><span class="k">Licence données</span><span class="v">Ouverte — réutilisation libre</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-      <div class="decp-card reveal">
-        <div class="decp-row"><span class="k">Cadre</span><span class="v"><b>Arrêté</b> du 22 déc. 2022 — schéma de données unifié</span></div>
-        <div class="decp-row"><span class="k">Source</span><span class="v"><b>data.gouv.fr</b> — fichiers annuels en open data</span></div>
-        <div class="decp-row"><span class="k">Contenu</span><span class="v">Objet · montant · durée · titulaire · localisation</span></div>
-        <div class="decp-row"><span class="k">Enrichi par</span><span class="v">API <b>SIRENE</b> &amp; données financières <b>Infogreffe</b></span></div>
-        <div class="decp-row"><span class="k">Licence données</span><span class="v">Ouverte — réutilisation libre</span></div>
-      </div>
-    </div>
-  </div>
-</section>
+        <!-- ===== Fonctionnalités ===== -->
+        <section class="block alt" data-screen-label="Fonctionnalités">
+            <div class="wrap">
+                <div class="sec-head reveal">
+                    <div class="eyebrow">Fonctionnalités</div>
+                    <h2>Ce que vous pouvez faire dans Focus Marchés.</h2>
+                </div>
+                <div class="feat-grid" id="featGrid"></div>
+            </div>
+        </section>
 
-<!-- ===== Fonctionnalités ===== -->
-<section class="block alt" data-screen-label="Fonctionnalités">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">Fonctionnalités</div>
-      <h2>Ce que vous pouvez faire dans Focus Marchés.</h2>
-    </div>
-    <div class="feat-grid" id="featGrid"></div>
-  </div>
-</section>
+        <!-- ===== Partenaires ===== -->
+        <section class="block" data-screen-label="Partenaires">
+            <div class="wrap">
+                <div class="sec-head reveal">
+                    <div class="eyebrow">Porteurs &amp; partenaires</div>
+                    <h2>Un outil mutualisé, porté par les territoires.</h2>
+                    <p class="intro">Trois opérateurs publics du numérique déploient chacun leur instance régionale, à partir d'un socle commun développé par Numih France.</p>
+                </div>
 
-<!-- ===== Partenaires ===== -->
-<section class="block" data-screen-label="Partenaires">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">Porteurs &amp; partenaires</div>
-      <h2>Un outil mutualisé, porté par les territoires.</h2>
-      <p class="intro">Trois opérateurs publics du numérique déploient chacun leur instance régionale, à partir d'un socle commun développé par Numih France.</p>
-    </div>
+                <div class="part-grid">
+                    <div class="part reveal" style="--c: var(--bret)">
+                        <div class="bar"></div>
+                        <div class="role">Porteur · Bretagne</div>
+                        <h4>Mégalis</h4>
+                        <p>Syndicat mixte de coopération territoriale pour le numérique en Bretagne.</p>
+                    </div>
+                    <div class="part reveal" style="--c: var(--bfc)">
+                        <div class="bar"></div>
+                        <div class="role">Porteur · Bourgogne-Franche-Comté</div>
+                        <h4>Arnia</h4>
+                        <p>Opérateur public du numérique au service des collectivités de Bourgogne-Franche-Comté.</p>
+                    </div>
+                    <div class="part reveal" style="--c: var(--cvl)">
+                        <div class="bar"></div>
+                        <div class="role">Porteur · Centre-Val de Loire</div>
+                        <h4>Recia</h4>
+                        <p>Groupement régional pour l'aménagement numérique du territoire Centre-Val de Loire.</p>
+                    </div>
+                </div>
 
-    <div class="part-grid">
-      <div class="part reveal" style="--c:var(--bret);">
-        <div class="bar"></div>
-        <div class="role">Porteur · Bretagne</div>
-        <h4>Mégalis</h4>
-        <p>Syndicat mixte de coopération territoriale pour le numérique en Bretagne.</p>
-      </div>
-      <div class="part reveal" style="--c:var(--bfc);">
-        <div class="bar"></div>
-        <div class="role">Porteur · Bourgogne-Franche-Comté</div>
-        <h4>Arnia</h4>
-        <p>Opérateur public du numérique au service des collectivités de Bourgogne-Franche-Comté.</p>
-      </div>
-      <div class="part reveal" style="--c:var(--cvl);">
-        <div class="bar"></div>
-        <div class="role">Porteur · Centre-Val de Loire</div>
-        <h4>Recia</h4>
-        <p>Groupement régional pour l'aménagement numérique du territoire Centre-Val de Loire.</p>
-      </div>
-    </div>
+                <div class="part-foot reveal">
+                    <span class="chip">Développé par <b>Numih France</b></span>
+                    <span class="chip">Données <b>data.gouv.fr</b></span>
+                    <span class="chip">Licence <b>CeCILL 2.1</b></span>
+                </div>
+            </div>
+        </section>
 
-    <div class="part-foot reveal">
-      <span class="chip">Développé par <b>Numih France</b></span>
-      <span class="chip">Données <b>data.gouv.fr</b></span>
-      <span class="chip">Licence <b>CeCILL 2.1</b></span>
-    </div>
-  </div>
-</section>
+        <!-- ===== Open source ===== -->
+        <section class="block alt" id="opensource" data-screen-label="Open source">
+            <div class="wrap">
+                <div class="sec-head reveal">
+                    <div class="eyebrow">Open source</div>
+                    <h2>Libre, reproductible, déployable.</h2>
+                    <p class="intro">Focus Marchés est un logiciel libre sous licence CeCILL 2.1. Le code de l'API, des scripts d'import et de l'interface est public et installable par toute structure souhaitant ouvrir sa propre instance.</p>
+                </div>
 
-<!-- ===== Open source ===== -->
-<section class="block alt" id="opensource" data-screen-label="Open source">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">Open source</div>
-      <h2>Libre, reproductible, déployable.</h2>
-      <p class="intro">Focus Marchés est un logiciel libre sous licence CeCILL 2.1. Le code de l'API, des scripts d'import et de l'interface est public et installable par toute structure souhaitant ouvrir sa propre instance.</p>
-    </div>
+                <div class="os">
+                    <div class="os-content reveal">
+                        <div class="os-list">
+                            <div class="row">
+                                <div class="ic">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path d="M16 18l6-6-6-6" />
+                                        <path d="M8 6l-6 6 6 6" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4>API + front, conteneurisés</h4>
+                                    <p>Une API et des scripts d'import (Python), une interface Vue / TypeScript, le tout orchestré avec Docker Compose.</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="ic">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <path d="M12 3v12" />
+                                        <path d="m7 10 5 5 5-5" />
+                                        <path d="M5 21h14" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4>Import des données data.gouv</h4>
+                                    <p>Synchronisation des DECP, des structures (API SIRENE) et des données financières (Infogreffe).</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="ic">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                        <circle cx="12" cy="12" r="9" />
+                                        <path d="M12 7v5l3 2" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4>Configurable par région</h4>
+                                    <p>Départements, sources, couleur de thème et mentions légales se paramètrent via un simple fichier <span class="mono">.env</span>.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="os-cta">
+                            <a class="btn-gh" href="https://github.com/collec-data/focus-marches-v2" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"
+                                    />
+                                </svg>
+                                Voir le dépôt
+                            </a>
+                            <a class="btn-line" href="https://github.com/collec-data/focus-marches-v2#configuration-et-installation-avec-docker" target="_blank" rel="noopener">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M4 17l6-6-6-6" />
+                                    <path d="M12 19h8" />
+                                </svg>
+                                Guide d'installation
+                            </a>
+                        </div>
+                    </div>
 
-    <div class="os">
-      <div class="os-content reveal">
-        <div class="os-list">
-          <div class="row">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 18l6-6-6-6"/><path d="M8 6l-6 6 6 6"/></svg></div>
-            <div><h4>API + front, conteneurisés</h4><p>Une API et des scripts d'import (Python), une interface Vue / TypeScript, le tout orchestré avec Docker Compose.</p></div>
-          </div>
-          <div class="row">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg></div>
-            <div><h4>Import des données data.gouv</h4><p>Synchronisation des DECP, des structures (API SIRENE) et des données financières (Infogreffe).</p></div>
-          </div>
-          <div class="row">
-            <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-            <div><h4>Configurable par région</h4><p>Départements, sources, couleur de thème et mentions légales se paramètrent via un simple fichier <span class="mono">.env</span>.</p></div>
-          </div>
-        </div>
-        <div class="os-cta">
-          <a class="btn-gh" href="https://github.com/collec-data/focus-marches-v2" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.4-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17 4.6 18 4.9 18 4.9c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
-            Voir le dépôt
-          </a>
-          <a class="btn-line" href="https://github.com/collec-data/focus-marches-v2#configuration-et-installation-avec-docker" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17l6-6-6-6"/><path d="M12 19h8"/></svg>
-            Guide d'installation
-          </a>
-        </div>
-      </div>
-
-      <div class="os-terminal reveal">
-        <div class="bar"><i></i><i></i><i></i><span class="path">~/focus-marches-v2</span></div>
-        <pre><span class="c"># 1 · Récupérer les sources</span>
+                    <div class="os-terminal reveal">
+                        <div class="bar"><i></i><i></i><i></i><span class="path">~/focus-marches-v2</span></div>
+                        <pre><span class="c"># 1 · Récupérer les sources</span>
 <span class="p">git</span> clone https://github.com/collec-data/focus-marches-v2.git
 
 <span class="c"># 2 · Configurer l'instance régionale</span>
@@ -462,178 +1238,216 @@ cp .env.default .env
 <span class="c"># 4 · Importer les données ouvertes</span>
 <span class="p">docker</span> compose exec api sh -c \
   <span class="g">"python app/importation.py decps --import-de-0"</span></pre>
-      </div>
-    </div>
-  </div>
-</section>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<!-- ===== Footer ===== -->
-<footer class="ft" data-screen-label="Footer">
-  <div class="wrap">
-    <div class="ft-top">
-      <div class="ft-brand">
-        <div class="wordmark">Focus Marchés</div>
-        <p>Datavisualisation et exploration des données essentielles de la commande publique, basée sur le schéma de l'arrêté 2022.</p>
-      </div>
-      <div class="ft-cols">
-        <div class="ft-col">
-          <h5>Instances</h5>
-          <a href="https://focus-marches.megalis.bretagne.bzh/" target="_blank" rel="noopener">Bretagne · Mégalis</a>
-          <a href="https://observatoire-commande-publique.arnia-bfc.fr/" target="_blank" rel="noopener">Bourgogne-Franche-Comté · Arnia</a>
-          <a href="https://focus.arnia.do4c.sib.fr/" target="_blank" rel="noopener">Centre-Val de Loire · Recia</a>
-        </div>
-        <div class="ft-col">
-          <h5>Projet</h5>
-          <a href="https://github.com/collec-data/focus-marches-v2" target="_blank" rel="noopener">Dépôt GitHub</a>
-          <a href="https://github.com/collec-data/focus-marches-v2#configuration-et-installation-avec-docker" target="_blank" rel="noopener">Installation</a>
-          <a href="https://www.data.gouv.fr/" target="_blank" rel="noopener">Source des données</a>
-        </div>
-      </div>
-    </div>
-    <div class="ft-bottom">
-      <span>Développé par Numih France · Porté par Mégalis, Arnia &amp; Recia</span>
-      <span>Logiciel sous licence <a href="http://www.cecill.info/licences/Licence_CeCILL_V2.1-fr.html" target="_blank" rel="noopener">CeCILL 2.1</a></span>
-    </div>
-  </div>
-</footer>
+        <!-- ===== Footer ===== -->
+        <footer class="ft" data-screen-label="Footer">
+            <div class="wrap">
+                <div class="ft-top">
+                    <div class="ft-brand">
+                        <div class="wordmark">Focus Marchés</div>
+                        <p>Datavisualisation et exploration des données essentielles de la commande publique, basée sur le schéma de l'arrêté 2022.</p>
+                    </div>
+                    <div class="ft-cols">
+                        <div class="ft-col">
+                            <h5>Instances</h5>
+                            <a href="https://focus-marches.megalis.bretagne.bzh/" target="_blank" rel="noopener">Bretagne · Mégalis</a>
+                            <a href="https://observatoire-commande-publique.arnia-bfc.fr/" target="_blank" rel="noopener">Bourgogne-Franche-Comté · Arnia</a>
+                            <a href="https://focus.arnia.do4c.sib.fr/" target="_blank" rel="noopener">Centre-Val de Loire · Recia</a>
+                        </div>
+                        <div class="ft-col">
+                            <h5>Projet</h5>
+                            <a href="https://github.com/collec-data/focus-marches-v2" target="_blank" rel="noopener">Dépôt GitHub</a>
+                            <a href="https://github.com/collec-data/focus-marches-v2#configuration-et-installation-avec-docker" target="_blank" rel="noopener">Installation</a>
+                            <a href="https://www.data.gouv.fr/" target="_blank" rel="noopener">Source des données</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="ft-bottom">
+                    <span>Développé par Numih France · Porté par Mégalis, Arnia &amp; Recia</span>
+                    <span>Logiciel sous licence <a href="http://www.cecill.info/licences/Licence_CeCILL_V2.1-fr.html" target="_blank" rel="noopener">CeCILL 2.1</a></span>
+                </div>
+            </div>
+        </footer>
 
-<script>
-const INSTANCES = {
-  "53": { key:"bret", reg:"Bretagne", opsn:"Mégalis", color:"var(--bret)", deps:"22 · 29 · 35 · 56", url:"https://focus-marches.megalis.bretagne.bzh/" },
-  "27": { key:"bfc",  reg:"Bourgogne-Franche-Comté", opsn:"Arnia", color:"var(--bfc)", deps:"21 · 25 · 39 · 58 · 70 · 71 · 89 · 90", url:"https://observatoire-commande-publique.arnia-bfc.fr/" },
-  "24": { key:"cvl",  reg:"Centre-Val de Loire", opsn:"Recia", color:"var(--cvl)", deps:"18 · 28 · 36 · 37 · 41 · 45", url:"https://focus.arnia.do4c.sib.fr/" }
-};
-const ORDER = ["53","27","24"];
+        <script>
+            const INSTANCES = {
+                53: { key: 'bret', reg: 'Bretagne', opsn: 'Mégalis', color: 'var(--bret)', deps: '22 · 29 · 35 · 56', url: 'https://focus-marches.megalis.bretagne.bzh/' },
+                27: { key: 'bfc', reg: 'Bourgogne-Franche-Comté', opsn: 'Arnia', color: 'var(--bfc)', deps: '21 · 25 · 39 · 58 · 70 · 71 · 89 · 90', url: 'https://observatoire-commande-publique.arnia-bfc.fr/' },
+                24: { key: 'cvl', reg: 'Centre-Val de Loire', opsn: 'Recia', color: 'var(--cvl)', deps: '18 · 28 · 36 · 37 · 41 · 45', url: 'https://focus.arnia.do4c.sib.fr/' }
+            };
+            const ORDER = ['53', '27', '24'];
 
-const FEATURES = [
-  { t:"Exploration des marchés", d:"Parcourez l'ensemble des marchés notifiés : objet, montant, durée, procédure et titulaire.", tag:"DECP · arrêté 2022",
-    ic:'<path d="M4 6h16M4 12h16M4 18h10"/>' },
-  { t:"Profils d'acheteurs", d:"Une fiche par acheteur public, avec son historique de marchés et ses principaux fournisseurs.", tag:"Acheteurs",
-    ic:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>' },
-  { t:"Données entreprises", d:"Titulaires enrichis via l'API SIRENE et leurs données financières issues d'Infogreffe.", tag:"SIRENE · Infogreffe",
-    ic:'<path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/>' },
-  { t:"Filtres & recherche", d:"Affinez par période, département, montant ou catégorie pour cibler ce qui vous intéresse.", tag:"Recherche avancée",
-    ic:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>' },
-  { t:"Lecture cartographique", d:"Resituez l'achat public dans son territoire, à l'échelle des départements de la région.", tag:"Territoire",
-    ic:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/>' },
-  { t:"Données ouvertes", d:"Des sources publiques, actualisées depuis data.gouv.fr et librement réutilisables.", tag:"Open data",
-    ic:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>' }
-];
+            const FEATURES = [
+                { t: 'Exploration des marchés', d: "Parcourez l'ensemble des marchés notifiés : objet, montant, durée, procédure et titulaire.", tag: 'DECP · arrêté 2022', ic: '<path d="M4 6h16M4 12h16M4 18h10"/>' },
+                { t: "Profils d'acheteurs", d: 'Une fiche par acheteur public, avec son historique de marchés et ses principaux fournisseurs.', tag: 'Acheteurs', ic: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>' },
+                { t: 'Données entreprises', d: "Titulaires enrichis via l'API SIRENE et leurs données financières issues d'Infogreffe.", tag: 'SIRENE · Infogreffe', ic: '<path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/>' },
+                { t: 'Filtres & recherche', d: 'Affinez par période, département, montant ou catégorie pour cibler ce qui vous intéresse.', tag: 'Recherche avancée', ic: '<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>' },
+                { t: 'Lecture cartographique', d: "Resituez l'achat public dans son territoire, à l'échelle des départements de la région.", tag: 'Territoire', ic: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14M15 6v14"/>' },
+                {
+                    t: 'Données ouvertes',
+                    d: 'Des sources publiques, actualisées depuis data.gouv.fr et librement réutilisables.',
+                    tag: 'Open data',
+                    ic: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>'
+                }
+            ];
 
-/* ---- build instance list ---- */
-const instList = document.getElementById('instList');
-ORDER.forEach((code,i)=>{
-  const o = INSTANCES[code];
-  const a = document.createElement('a');
-  a.className = 'inst';
-  a.href = o.url; a.target = '_blank'; a.rel = 'noopener';
-  a.style.setProperty('--c', o.color);
-  a.dataset.code = code;
-  a.innerHTML = `
-    <span class="num">0${i+1}</span>
+            /* ---- build instance list ---- */
+            const instList = document.getElementById('instList');
+            ORDER.forEach((code, i) => {
+                const o = INSTANCES[code];
+                const a = document.createElement('a');
+                a.className = 'inst';
+                a.href = o.url;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.style.setProperty('--c', o.color);
+                a.dataset.code = code;
+                a.innerHTML = `
+    <span class="num">0${i + 1}</span>
     <span class="body">
       <span class="reg">${o.reg}</span>
       <span class="meta"><b>${o.opsn}</b> · dép. ${o.deps}</span>
     </span>
     <span class="go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></span>`;
-  a.addEventListener('mouseenter',()=>setHover(code,true));
-  a.addEventListener('mouseleave',()=>setHover(code,false));
-  instList.appendChild(a);
-});
+                a.addEventListener('mouseenter', () => setHover(code, true));
+                a.addEventListener('mouseleave', () => setHover(code, false));
+                instList.appendChild(a);
+            });
 
-/* ---- build features ---- */
-const fg = document.getElementById('featGrid');
-FEATURES.forEach(f=>{
-  const d = document.createElement('div');
-  d.className = 'feat reveal';
-  d.innerHTML = `<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${f.ic}</svg></div>
+            /* ---- build features ---- */
+            const fg = document.getElementById('featGrid');
+            FEATURES.forEach((f) => {
+                const d = document.createElement('div');
+                d.className = 'feat reveal';
+                d.innerHTML = `<div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${f.ic}</svg></div>
     <h4>${f.t}</h4><p>${f.d}</p><span class="tag">${f.tag}</span>`;
-  fg.appendChild(d);
-});
+                fg.appendChild(d);
+            });
 
-/* ---- build map ---- */
-const tip = document.getElementById('mapTip');
-const stage = document.querySelector('.map-card');
-let pathByCode = {};
+            /* ---- build map ---- */
+            const tip = document.getElementById('mapTip');
+            const stage = document.querySelector('.map-card');
+            let pathByCode = {};
 
-const REGIONS_URL = (window.__resources && window.__resources.regionsData) || 'data/regions.json';
-fetch(REGIONS_URL).then(r=>r.json()).then(data=>{
-  const svgns = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(svgns,'svg');
-  svg.setAttribute('viewBox', `0 0 ${data.width} ${data.height}`);
-  svg.setAttribute('role','group');
-  svg.setAttribute('aria-label','Carte des régions de France');
+            const REGIONS_URL = (window.__resources && window.__resources.regionsData) || 'data/regions.json';
+            fetch(REGIONS_URL)
+                .then((r) => r.json())
+                .then((data) => {
+                    const svgns = 'http://www.w3.org/2000/svg';
+                    const svg = document.createElementNS(svgns, 'svg');
+                    svg.setAttribute('viewBox', `0 0 ${data.width} ${data.height}`);
+                    svg.setAttribute('role', 'group');
+                    svg.setAttribute('aria-label', 'Carte des régions de France');
 
-  const gRegions = document.createElementNS(svgns,'g');
-  const gPins = document.createElementNS(svgns,'g');
+                    const gRegions = document.createElementNS(svgns, 'g');
+                    const gPins = document.createElementNS(svgns, 'g');
 
-  data.regions.forEach(r=>{
-    const p = document.createElementNS(svgns,'path');
-    p.setAttribute('d', r.d);
-    p.setAttribute('class','region');
-    const inst = INSTANCES[r.code];
-    if(inst){
-      p.classList.add('active');
-      p.style.setProperty('--c', inst.color);
-      p.dataset.code = r.code;
-      p.setAttribute('tabindex','0');
-      p.setAttribute('role','link');
-      p.setAttribute('aria-label', `Ouvrir Focus Marchés ${inst.reg}`);
-      p.addEventListener('click',()=>open(inst.url));
-      p.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();open(inst.url);} });
-      p.addEventListener('mouseenter',ev=>{ setHover(r.code,true); showTip(ev, inst); });
-      p.addEventListener('mousemove',ev=>moveTip(ev));
-      p.addEventListener('mouseleave',()=>{ setHover(r.code,false); hideTip(); });
-      pathByCode[r.code]=p;
-    }
-    gRegions.appendChild(p);
-  });
-  svg.appendChild(gRegions);
-  svg.appendChild(gPins);
-  document.getElementById('mapHolder').appendChild(svg);
+                    data.regions.forEach((r) => {
+                        const p = document.createElementNS(svgns, 'path');
+                        p.setAttribute('d', r.d);
+                        p.setAttribute('class', 'region');
+                        const inst = INSTANCES[r.code];
+                        if (inst) {
+                            p.classList.add('active');
+                            p.style.setProperty('--c', inst.color);
+                            p.dataset.code = r.code;
+                            p.setAttribute('tabindex', '0');
+                            p.setAttribute('role', 'link');
+                            p.setAttribute('aria-label', `Ouvrir Focus Marchés ${inst.reg}`);
+                            p.addEventListener('click', () => open(inst.url));
+                            p.addEventListener('keydown', (e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    open(inst.url);
+                                }
+                            });
+                            p.addEventListener('mouseenter', (ev) => {
+                                setHover(r.code, true);
+                                showTip(ev, inst);
+                            });
+                            p.addEventListener('mousemove', (ev) => moveTip(ev));
+                            p.addEventListener('mouseleave', () => {
+                                setHover(r.code, false);
+                                hideTip();
+                            });
+                            pathByCode[r.code] = p;
+                        }
+                        gRegions.appendChild(p);
+                    });
+                    svg.appendChild(gRegions);
+                    svg.appendChild(gPins);
+                    document.getElementById('mapHolder').appendChild(svg);
 
-  // pins at bbox centre of active regions
-  ORDER.forEach((code,i)=>{
-    const p = pathByCode[code];
-    const b = p.getBBox();
-    const cx = b.x + b.width/2, cy = b.y + b.height/2;
-    const g = document.createElementNS(svgns,'g');
-    g.setAttribute('class','pin');
-    g.style.setProperty('--c', INSTANCES[code].color);
-    const c = document.createElementNS(svgns,'circle');
-    c.setAttribute('cx',cx); c.setAttribute('cy',cy); c.setAttribute('r',15);
-    const t = document.createElementNS(svgns,'text');
-    t.setAttribute('x',cx); t.setAttribute('y',cy+4.5); t.textContent = '0'+(i+1);
-    g.appendChild(c); g.appendChild(t);
-    gPins.appendChild(g);
-  });
-});
+                    // pins at bbox centre of active regions
+                    ORDER.forEach((code, i) => {
+                        const p = pathByCode[code];
+                        const b = p.getBBox();
+                        const cx = b.x + b.width / 2,
+                            cy = b.y + b.height / 2;
+                        const g = document.createElementNS(svgns, 'g');
+                        g.setAttribute('class', 'pin');
+                        g.style.setProperty('--c', INSTANCES[code].color);
+                        const c = document.createElementNS(svgns, 'circle');
+                        c.setAttribute('cx', cx);
+                        c.setAttribute('cy', cy);
+                        c.setAttribute('r', 15);
+                        const t = document.createElementNS(svgns, 'text');
+                        t.setAttribute('x', cx);
+                        t.setAttribute('y', cy + 4.5);
+                        t.textContent = '0' + (i + 1);
+                        g.appendChild(c);
+                        g.appendChild(t);
+                        gPins.appendChild(g);
+                    });
+                });
 
-function setHover(code,on){
-  const p = pathByCode[code];
-  if(p) p.classList.toggle('is-active',on);
-  const card = instList.querySelector(`.inst[data-code="${code}"]`);
-  if(card) card.classList.toggle('is-active',on);
-  // dim the others among the actives
-  ORDER.forEach(c=>{
-    if(pathByCode[c]) pathByCode[c].classList.toggle('dim', on && c!==code);
-  });
-}
-function showTip(ev,inst){ tip.innerHTML = `<b>${inst.reg}</b><span class="o">${inst.opsn} → ouvrir l'instance</span>`; tip.classList.add('show'); moveTip(ev); }
-function moveTip(ev){
-  const r = stage.getBoundingClientRect();
-  let x = ev.clientX - r.left + 14, y = ev.clientY - r.top + 14;
-  if(x > r.width - 180) x = ev.clientX - r.left - 14 - tip.offsetWidth;
-  tip.style.left = x+'px'; tip.style.top = y+'px';
-}
-function hideTip(){ tip.classList.remove('show'); }
-function open(url){ window.open(url,'_blank','noopener'); }
+            function setHover(code, on) {
+                const p = pathByCode[code];
+                if (p) p.classList.toggle('is-active', on);
+                const card = instList.querySelector(`.inst[data-code="${code}"]`);
+                if (card) card.classList.toggle('is-active', on);
+                // dim the others among the actives
+                ORDER.forEach((c) => {
+                    if (pathByCode[c]) pathByCode[c].classList.toggle('dim', on && c !== code);
+                });
+            }
+            function showTip(ev, inst) {
+                tip.innerHTML = `<b>${inst.reg}</b><span class="o">${inst.opsn} → ouvrir l'instance</span>`;
+                tip.classList.add('show');
+                moveTip(ev);
+            }
+            function moveTip(ev) {
+                const r = stage.getBoundingClientRect();
+                let x = ev.clientX - r.left + 14,
+                    y = ev.clientY - r.top + 14;
+                if (x > r.width - 180) x = ev.clientX - r.left - 14 - tip.offsetWidth;
+                tip.style.left = x + 'px';
+                tip.style.top = y + 'px';
+            }
+            function hideTip() {
+                tip.classList.remove('show');
+            }
+            function open(url) {
+                window.open(url, '_blank', 'noopener');
+            }
 
-/* ---- reveal on scroll ---- */
-const io = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-},{threshold:0.12});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-</script>
-</body>
+            /* ---- reveal on scroll ---- */
+            const io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((e) => {
+                        if (e.isIntersecting) {
+                            e.target.classList.add('in');
+                            io.unobserve(e.target);
+                        }
+                    });
+                },
+                { threshold: 0.12 }
+            );
+            document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+        </script>
+    </body>
 </html>
