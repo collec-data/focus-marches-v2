@@ -33,6 +33,16 @@ function hideMarcheModal() {
     marcheDetaille.value = undefined;
     marchesSubsequents.value = [];
 }
+
+function considerationsEnvironnementalesEtSociales(list: string[] | undefined): string {
+    if (list == null) {
+        return 'Aucune'; // Absence de valeur
+    }
+    if (list.length) {
+        return list.join(', ');
+    }
+    return '[Non renseigné]'; // liste présente mais vide
+}
 </script>
 
 <template>
@@ -75,16 +85,20 @@ function hideMarcheModal() {
                 <div class="value">{{ marcheDetaille?.offres_recues }}</div>
 
                 <div class="key">Part de produits issus ou fabriqués</div>
-                <div class="value" aria-label="Pourcentage d'origine France et pourcentage d'origine de l'Union Européenne">
-                    <img src="@/assets/images/flag-fr.svg" alt="le drapeau français" class="flag" /> {{ marcheDetaille?.origine_france }}% | <img src="@/assets/images/flag-eu.svg" alt="le drapeau européen" class="flag" />
-                    {{ marcheDetaille?.origine_ue }}%
+                <div class="value">
+                    <template v-if="marcheDetaille?.origine_france == null && marcheDetaille?.origine_ue == null">Non renseigné</template>
+                    <template v-else>
+                        <template v-if="marcheDetaille?.origine_france != null"><img src="@/assets/images/flag-fr.svg" alt="" class="flag" /> {{ marcheDetaille?.origine_france }}% <span class="sr-only">en France</span></template>
+                        <template v-if="marcheDetaille?.origine_france != null && marcheDetaille?.origine_ue != null"> | </template>
+                        <template v-if="marcheDetaille?.origine_ue != null"><img src="@/assets/images/flag-eu.svg" alt="" class="flag" /> {{ marcheDetaille?.origine_ue }}% <span class="sr-only">dans l'Union Européenne</span></template>
+                    </template>
                 </div>
 
                 <div class="key">Considération environnementale</div>
-                <div class="value">{{ marcheDetaille?.considerations_environnementales ? marcheDetaille.considerations_environnementales.join(', ') : '' }}</div>
+                <div class="value">{{ considerationsEnvironnementalesEtSociales(marcheDetaille?.considerations_environnementales) }}</div>
 
                 <div class="key">Considération sociale</div>
-                <div class="value">{{ marcheDetaille?.considerations_sociales ? marcheDetaille.considerations_sociales.join(', ') : '' }}</div>
+                <div class="value">{{ considerationsEnvironnementalesEtSociales(marcheDetaille?.considerations_sociales) }}</div>
             </div>
             <div class="basis-auto p-3 shrink-0.5 max-w-3xl">
                 <div class="flex flex-row flex-wrap">
