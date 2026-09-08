@@ -1,0 +1,46 @@
+{
+  "marches": {
+    "marche": [
+      {
+        "id": "M-OPSN-1",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2023-01-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      },
+      {
+        "id": "M-OPSN-2",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2023-02-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "55555555555555" } },
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "66666666666666" } }
+        ]
+      },
+      {
+        "id": "M-OPSN-3",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2023-03-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      },
+      {
+        "id": "M-OPSN-5",
+        "acheteur": { "id": "33333333333333" },
+        "dateNotification": "2023-05-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      },
+      {
+        "id": "M-OPSN-6",
+        "acheteur": { "id": "11111111111111" },
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      }
+    ]
+  }
+}

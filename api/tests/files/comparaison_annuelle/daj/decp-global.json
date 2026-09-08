@@ -1,0 +1,18 @@
+{"marches": {"marche": [
+ {"id": "2024T0001", "acheteur": {"id": "11111111111111"}, "objet": "Apparié par identifiant", "dateNotification": "2024-03-01", "montant": 1000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000001"}}]},
+ {"id": "DAJ-X2", "acheteur": {"id": "11111111111111"}, "objet": "Identifiant réécrit par la consolidation", "dateNotification": "2024-04-02", "montant": 2000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000002"}}]},
+ {"id": "2024T0003", "acheteur": {"id": "11111111111111"}, "objet": "Écart de date", "dateNotification": "2024-05-20", "montant": 3000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000003"}}]},
+ {"id": "2024T0004", "acheteur": {"id": "11111111111111"}, "objet": "Écart de titulaires", "dateNotification": "2024-06-04", "montant": 4000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000099"}}]},
+ {"id": "2024T0005", "acheteur": {"id": "11111111111111"}, "objet": "Écart de montant", "dateNotification": "2024-07-05", "montant": 5500, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000005"}}]},
+ {"id": "DAJ-P6", "acheteur": {"id": "22222222222222"}, "objet": "Quasi-candidat par montant", "dateNotification": "2024-11-11", "montant": 6000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000098"}}]},
+ {"id": "DAJ-P7", "acheteur": {"id": "22222222222222"}, "objet": "Quasi-candidat par titulaire", "dateNotification": "2024-09-15", "montant": 8888, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000007"}}]},
+ {"id": "2024T0009", "acheteur": {"id": "11111111111111"}, "objet": "Sans date côté OPSN, datée côté national", "dateNotification": "2024-02-02", "montant": 900, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000010"}}]},
+ {"id": "DAJ-S13", "acheteur": {"id": "11111111111111"}, "objet": "Publié par un autre producteur", "dateNotification": "2024-12-13", "montant": 1300, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000013"}}]},
+ {"id": "2024T0014", "acheteur": {"id": "11111111111111"}, "objet": "Dupliqué côté national", "dateNotification": "2024-11-14", "montant": 1400, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000014"}}]},
+ {"id": "2024T0014", "acheteur": {"id": "11111111111111"}, "objet": "Dupliqué côté national", "dateNotification": "2024-11-14", "montant": 1400, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000014"}}]},
+ {"id": "2024T0014", "acheteur": {"id": "11111111111111"}, "objet": "Dupliqué côté national", "dateNotification": "2024-11-14", "montant": 1400, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000014"}}]},
+ {"id": "DAJ-HORS", "acheteur": {"id": "99999999999999"}, "objet": "Acheteur hors périmètre OPSN", "dateNotification": "2024-01-01", "montant": 4200, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000097"}}]},
+ {"id": "DAJ-NAN", "acheteur": {"id": "11111111111111"}, "objet": "Montant NaN", "dateNotification": "2024-12-20", "montant": NaN, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000020"}}]},
+ {"id": "DAJ-SANS-ACHETEUR", "objet": "Acheteur absent", "dateNotification": "2024-04-04", "montant": 4400, "titulaires": []},
+ {"id": "DAJ-2023", "acheteur": {"id": "11111111111111"}, "objet": "Hors année comparée", "dateNotification": "2023-02-02", "montant": 2100, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000021"}}]}
+]}}

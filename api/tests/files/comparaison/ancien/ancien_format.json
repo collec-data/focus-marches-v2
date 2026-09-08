@@ -1,0 +1,14 @@
+{
+  "marches": {
+    "marche": [
+      {
+        "id": "M-ANCIEN-1",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2019-01-01",
+        "titulaires": [
+          { "typeIdentifiant": "SIRET", "id": "22222222222222" }
+        ]
+      }
+    ]
+  }
+}

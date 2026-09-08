@@ -42,6 +42,41 @@ docker compose exec api sh -c "python app/importation.py structures"
 
 **Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.
 
+## Comparer un profil acheteur au consolidé national
+
+La commande `comparaison_annuelle` vérifie, pour une année de notification donnée, que les
+marchés publiés par un profil acheteur (OPSN) se retrouvent bien dans le fichier consolidé
+national de la DAJ.
+
+```bash
+python app/comparaison_annuelle.py comparer --annee 2024
+```
+
+Les fichiers sont téléchargés depuis data.gouv via les URL stables `/api/1/datasets/r/<id>`
+(les URL `static.data.gouv.fr` sont versionnées et disparaissent), puis conservés dans
+`./decp-cache`. Le nom de cache porte la date de mise à jour de la ressource : une version
+plus récente remplace l'ancienne, et `--rafraichir` force le retéléchargement.
+
+Deux rapports sont produits dans `./rapports` :
+
+- `comparaison-<annee>.csv` : une ligne par marché unifié. La colonne `perimetre` distingue
+  les marchés de l'OPSN (`megalis`), ceux du national sans contrepartie (`daj_seul`) et ceux
+  dont la date de notification est inexploitable (`anomalie`). Les manquants sont triés en
+  tête, suivis des marchés appariés présentant un écart.
+- `synthese-<annee>.csv` : taux de couverture par SIRET acheteur.
+
+Quelques particularités des sources, qui expliquent la forme de l'outil :
+
+- Seul `decp-global.json` est utilisé côté national. Les fichiers annuels de la DAJ ne
+  partitionnent ni par date de notification ni par date de publication.
+- Tous les fichiers annuels de l'OPSN sont lus, car un marché notifié en année N peut être
+  publié dans le fichier d'une autre année.
+- Le périmètre des acheteurs est déduit des fichiers de l'OPSN, sans liste à maintenir.
+- L'appariement se fait en cascade : clé `(acheteur, id)`, puis acheteur, date de
+  notification et titulaire commun. Le niveau retenu figure dans le rapport.
+- Le consolidé national republie certains marchés plusieurs fois : ils sont dédoublonnés sur
+  la clé `(acheteur, id)` et le nombre d'occurrences est reporté.
+
 ## Développement 
 
 ### Initialisation pour le développement

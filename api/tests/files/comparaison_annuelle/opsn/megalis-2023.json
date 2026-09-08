@@ -1,0 +1,4 @@
+{"marches": {"marche": [
+ {"id": "2023T0011", "acheteur": {"id": "11111111111111"}, "objet": "Hors année comparée", "dateNotification": "2023-05-05", "montant": 1100, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000015"}}]},
+ {"id": "2024T0012", "acheteur": {"id": "11111111111111"}, "objet": "Notifié en 2024 mais rangé dans le fichier 2023", "dateNotification": "2024-10-12", "montant": 1200, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000012"}}]}
+]}}

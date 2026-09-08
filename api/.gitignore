@@ -4,3 +4,7 @@ __pycache__/
 .venv/
 
 .coverage
+
+# Sorties de comparaison_annuelle.py (données dérivées)
+rapports/
+decp-cache/

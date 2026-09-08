@@ -1,0 +1,13 @@
+{"marches": {"marche": [
+ {"id": "2024T0001", "acheteur": {"id": "11111111111111"}, "objet": "Apparié par identifiant", "dateNotification": "2024-03-01", "montant": 1000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000001"}}]},
+ {"id": "2024T0002", "acheteur": {"id": "11111111111111"}, "objet": "Apparié par heuristique", "dateNotification": "2024-04-02", "montant": 2000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000002"}}]},
+ {"id": "2024T0003", "acheteur": {"id": "11111111111111"}, "objet": "Écart de date", "dateNotification": "2024-05-03", "montant": 3000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000003"}}]},
+ {"id": "2024T0004", "acheteur": {"id": "11111111111111"}, "objet": "Écart de titulaires", "dateNotification": "2024-06-04", "montant": 4000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000004"}}]},
+ {"id": "2024T0005", "acheteur": {"id": "11111111111111"}, "objet": "Écart de montant", "dateNotification": "2024-07-05", "montant": 5000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000005"}}]},
+ {"id": "2024T0006", "acheteur": {"id": "22222222222222"}, "objet": "Absent, candidat par montant", "dateNotification": "2024-07-06", "montant": 6000, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000006"}}]},
+ {"id": "2024T0007", "acheteur": {"id": "22222222222222"}, "objet": "Absent, candidat par titulaire", "dateNotification": "2024-08-07", "montant": 7777, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000007"}}]},
+ {"id": "2024T0008", "acheteur": {"id": "11111111111111"}, "objet": "Absent, sans candidat", "dateNotification": "2024-09-08", "montant": 8080, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000008"}}]},
+ {"id": "2024T0009", "acheteur": {"id": "11111111111111"}, "objet": "Sans date de notification", "montant": 900, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000010"}}]},
+ {"id": "2027T0010", "acheteur": {"id": "11111111111111"}, "objet": "Date dans le futur", "dateNotification": "2027-01-01", "montant": 1010, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000011"}}]},
+ {"id": "2024T0014", "acheteur": {"id": "11111111111111"}, "objet": "Dupliqué côté national", "dateNotification": "2024-11-14", "montant": 1400, "titulaires": [{"titulaire": {"typeIdentifiant": "SIRET", "id": "10000000000014"}}]}
+]}}

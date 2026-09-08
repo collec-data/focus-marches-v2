@@ -1,0 +1,62 @@
+{
+  "marches": {
+    "marche": [
+      {
+        "id": "M-DAJ-1",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2023-01-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      },
+      {
+        "id": "M-DAJ-2",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2023-02-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "44444444444444" } },
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "55555555555555" } }
+        ]
+      },
+      {
+        "id": "M-DAJ-4",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2023-04-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      },
+      {
+        "id": "M-DAJ-5A",
+        "acheteur": { "id": "33333333333333" },
+        "dateNotification": "2023-05-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      },
+      {
+        "id": "M-DAJ-5B",
+        "acheteur": { "id": "33333333333333" },
+        "dateNotification": "2023-05-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } },
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "44444444444444" } }
+        ]
+      },
+      {
+        "id": "M-DAJ-8",
+        "acheteur": { "id": "11111111111111" },
+        "dateNotification": "2023-08-01",
+        "titulaires": []
+      },
+      {
+        "id": "M-HORS-FILTRE",
+        "acheteur": { "id": "99999999999999" },
+        "dateNotification": "2023-01-01",
+        "titulaires": [
+          { "titulaire": { "typeIdentifiant": "SIRET", "id": "22222222222222" } }
+        ]
+      }
+    ]
+  }
+}
