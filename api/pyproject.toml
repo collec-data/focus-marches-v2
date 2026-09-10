@@ -46,6 +46,9 @@ exclude = ["venv", ".venv", "tests"]
 [[tool.mypy.overrides]]
 module = ['ijson.*', 'api_entreprise.*']
 follow_untyped_imports = true
+# Ces modules tiers ré-exportent leurs symboles sans « as » : on désactive
+# la vérification stricte des ré-exports implicites qui s'applique à eux.
+implicit_reexport = true
 
 [tool.setuptools]
 packages = ["app"]

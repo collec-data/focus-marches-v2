@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from enum import StrEnum
 from pathlib import Path
+from typing import Any
 
 import ijson
 import typer
@@ -105,7 +106,7 @@ def _contient_cle_marches(fichier: Path) -> bool:
 
 
 def _construire_marche(
-    objet: dict, source: Source, fichier: Path, acheteur_id: str
+    objet: dict[str, Any], source: Source, fichier: Path, acheteur_id: str
 ) -> MarcheCompare:
     try:
         valide = MarcheCompareSchema(**objet)

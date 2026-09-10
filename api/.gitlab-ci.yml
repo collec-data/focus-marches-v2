@@ -17,7 +17,7 @@ api-quality:
     - pip install --upgrade pip
     - pip install -r dev-requirements.txt
     - unset DOCKER_AUTH_CONFIG # XXX: On ignore la configuration au sein des tests du à une incompatibilité avec testcontainers
-    - coverage run -m pytest --cov-report xml:cov.xml --cov-report=term
+    - pytest --cov-report xml:cov.xml --cov-report=term
     - ruff format --check . || touch failed
     - ruff check . || touch failed
     - mypy . --strict || touch failed
