@@ -1273,18 +1273,18 @@
                         <div class="os-terminal reveal">
                             <div class="bar"><i></i><i></i><i></i><span class="path">~/focus-marches-v2</span></div>
                             <pre><span class="c"># 1 · Récupérer les sources</span>
-    <span class="p">git</span> clone https://github.com/collec-data/focus-marches-v2.git
+<span class="p">git</span> clone https://github.com/collec-data/focus-marches-v2.git
 
-    <span class="c"># 2 · Configurer l'instance régionale</span>
-    cp .env.default .env
+<span class="c"># 2 · Configurer l'instance régionale</span>
+cp .env.default .env
 
-    <span class="c"># 3 · Lancer les conteneurs</span>
-    <span class="p">docker</span> compose build
-    <span class="p">docker</span> compose up -d
+<span class="c"># 3 · Lancer les conteneurs</span>
+<span class="p">docker</span> compose build
+<span class="p">docker</span> compose up -d
 
-    <span class="c"># 4 · Importer les données ouvertes</span>
-    <span class="p">docker</span> compose exec api sh -c \
-    <span class="g">"python app/importation.py decps --import-de-0"</span></pre>
+<span class="c"># 4 · Importer les données ouvertes</span>
+<span class="p">docker</span> compose exec api sh -c \
+<span class="g">"python app/importation.py decps --import-de-0"</span></pre>
                         </div>
                     </div>
                 </div>
