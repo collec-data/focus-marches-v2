@@ -12,6 +12,8 @@ async function loadMentionsLegales() {
 }
 
 export function loadMarkdowns() {
-    loadAPropos();
-    loadMentionsLegales();
+    // Ces fichiers sont statiques : un échec ici ne concerne pas les données de la plateforme, mais il ne
+    // doit pas non plus remonter en rejet de promesse non traité depuis l'amorçage de l'application.
+    loadAPropos().catch((raison) => console.error("Le document « à propos » n'a pas pu être chargé", raison));
+    loadMentionsLegales().catch((raison) => console.error('Les mentions légales n’ont pas pu être chargées', raison));
 }
