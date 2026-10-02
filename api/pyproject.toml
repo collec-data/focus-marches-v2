@@ -15,7 +15,7 @@ dependencies = [
     "mariadb~=1.1.14",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest",
     "pytest-cov",

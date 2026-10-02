@@ -228,7 +228,17 @@ const marcheUid = ref(null);
                     </div>
                     <div class="basis-1/3">
                         <label for="achat_durable">Achat durable</label>
-                        <Select v-model="filtres.consideration" :options="options_achat_durable" inputId="achat_durable" name="achat_durable" aria-label="Sélecteur des achats durables présents" placeholder="Tous" showClear fluid />
+                        <MultiSelect
+                            v-model="filtres.consideration"
+                            :options="options_achat_durable"
+                            :maxSelectedLabels="1"
+                            inputId="achat_durable"
+                            name="achat_durable"
+                            aria-label="Sélecteur des achats durables présents"
+                            placeholder="Tous"
+                            showClear
+                            fluid
+                        />
                     </div>
                 </div>
                 <div v-if="recherche_avancee" class="flex flex-row gap-5 mb-5">
