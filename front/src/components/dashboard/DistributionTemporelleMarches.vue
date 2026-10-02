@@ -1,27 +1,35 @@
 <script setup lang="ts">
-import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { getMonthAsString, getNow } from '@/service/HelpersService';
-import { computed, onMounted, ref, watch } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 import { getListeMarches, type MarcheAllegeDto } from '@/client';
+import type { PropType } from 'vue';
 import type { PlotData } from 'plotly.js-dist';
 
+// Pas de valeur par défaut : `undefined` signifie « acheteur encore non identifié », `null` « aucun acheteur demandé ».
 const props = defineProps({
-    acheteurUid: { type: [Number, null], default: null },
-    acheteurSiret: { type: [String, null], default: null },
-    vendeurUid: { type: [Number, null], default: null },
+    acheteurUid: { type: Number as PropType<number | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    vendeurUid: { type: Number as PropType<number | null>, required: false },
     dateMin: { type: Date, default: new Date(settings.date_min) },
     dateMax: { type: Date, default: getNow() },
     query: {
-        type: Object,
-        default: () => {
-            return {};
-        }
+        type: Object as PropType<Record<string, unknown>>,
+        default: () => ({})
     }
 });
 
-const loading = ref(false);
-const data = ref<Partial<PlotData>[]>();
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.acheteurUid,
+    () => props.acheteurSiret
+);
+
 const layout = computed(() => ({
     margin: { t: 0, r: 0, l: 60, b: 50 },
     xaxis: {
@@ -32,7 +40,7 @@ const layout = computed(() => ({
     yaxis: { title: { text: 'MONTANT (€)' } }
 }));
 
-function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
+function transform(donnees: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     const common_data = { mode: 'markers' as PlotData['mode'] };
     const common_marker = {
         line: {
@@ -79,7 +87,7 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
         }
     ];
     const keys = ['Travaux', 'Fournitures', 'Services'];
-    for (var marche of data) {
+    for (var marche of donnees) {
         const key = keys.indexOf(marche.categorie);
         traces[key].x.push(marche.date_notification);
         traces[key].y.push(parseFloat(marche.montant));
@@ -87,44 +95,35 @@ function transform(data: Array<MarcheAllegeDto>): Partial<PlotData>[] {
     }
     return traces;
 }
-async function fetchData() {
-    loading.value = true;
-    if (props.acheteurUid == -1) {
-        return;
+
+const options = computed(() => {
+    if (uid.value === undefined) {
+        return undefined;
     }
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    getListeMarches({
+    return {
         query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: acheteurUid,
-            vendeur_uid: props.vendeurUid,
+            date_debut: props.dateMin ?? undefined,
+            date_fin: props.dateMax ?? undefined,
+            acheteur_uid: uid.value ?? undefined,
+            vendeur_uid: props.vendeurUid ?? undefined,
             ...props.query
         }
-    }).then((response) => {
-        if (response.data) {
-            data.value = transform(response.data);
-            loading.value = false;
-        }
-    });
-}
-
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid, () => props.query], () => {
-    fetchData();
+    };
 });
 
-onMounted(() => {
-    fetchData();
-});
+const { etat, refetch } = useReactiveFetch(getListeMarches, options);
+
+const donnees = computed(() => (etat.value.statut === 'succes' ? transform(etat.value.data) : undefined));
 </script>
 
 <template>
     <section>
         <h2>Distribution temporelle des marchés</h2>
-        <Graph :data :layout title="Distribution temporelle des marchés" />
-        <div v-if="loading" class="text-center">
-            <ProgressSpinner style="width: 5rem; height: 5rem" />
-        </div>
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement de la distribution a échoué" @retry="refetch" />
+        <ChargementEnCours v-else-if="etat.statut !== 'succes'" />
+        <Graph v-else :data="donnees" :layout title="Distribution temporelle des marchés" />
         <details>
             <summary>💡 Comment lire ce graphique ?</summary>
             <div class="flex flex-row gap-10">

@@ -1,63 +1,71 @@
 <script setup lang="ts">
-import { getStructureId, listAcheteurs, listVendeurs, type StructureEtendueDto } from '@/client';
+import { listAcheteurs, listVendeurs, type StructureEtendueDto } from '@/client';
 import { getNow, structureName } from '@/service/HelpersService';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { onMounted, type PropType, ref, toRaw, useId, watch } from 'vue';
+import { computed, onMounted, type PropType, ref, toRaw, useId, watch } from 'vue';
 
+// `undefined` plutôt que `null` par défaut : « acheteur demandé mais pas encore identifié » se distingue de « aucun acheteur demandé ».
 const props = defineProps({
-    acheteur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) },
-    acheteurSiret: { type: [String, null], default: null },
-    vendeur: { type: Object as PropType<Partial<StructureEtendueDto>>, default: () => ({}) },
+    acheteur: { type: Object as PropType<Partial<StructureEtendueDto> | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    vendeur: { type: Object as PropType<Partial<StructureEtendueDto> | null>, required: false },
     dateMin: { type: Date, default: new Date(settings.date_min) },
     dateMax: { type: Date, default: getNow() }
 });
 
-const acheteur = ref<Partial<StructureEtendueDto>>(props.acheteur);
-const vendeur = ref<Partial<StructureEtendueDto>>(props.vendeur);
+const {
+    uid: uidAcheteur,
+    structure: acheteur,
+    erreur: erreurIdentite,
+    refetch: refetchIdentite
+} = useStructureIdentifiee(
+    () => props.acheteur?.uid,
+    () => props.acheteurSiret ?? null,
+    { structure: true }
+);
+
+// La carte part de l'acheteur dès qu'il est identifié ; à défaut, elle part du vendeur.
+const coteAcheteur = computed(() => typeof uidAcheteur.value === 'number');
+
+const structurePrincipale = computed<Partial<StructureEtendueDto> | null>(() => (coteAcheteur.value ? acheteur.value : (props.vendeur ?? null)));
+
+const uidPrincipal = computed<number | null>(() => {
+    if (uidAcheteur.value === undefined) {
+        return null;
+    }
+    return coteAcheteur.value ? uidAcheteur.value : (props.vendeur?.uid ?? null);
+});
+
+const options = computed(() => {
+    // Tant que l'acheteur n'est pas identifié, le risque est de cartographier tous les acheteurs de la
+    // plateforme pour une structure demandée : on n'envoie rien plutôt qu'une carte fausse.
+    if (uidAcheteur.value === undefined || uidPrincipal.value === null) {
+        return undefined;
+    }
+    return {
+        query: {
+            acheteur_uid: coteAcheteur.value ? uidPrincipal.value : undefined,
+            vendeur_uid: coteAcheteur.value ? undefined : uidPrincipal.value,
+            date_debut: props.dateMin ?? undefined,
+            date_fin: props.dateMax ?? undefined
+        }
+    };
+});
+
+const lister = (requete: NonNullable<typeof options.value>) => (coteAcheteur.value ? listVendeurs(requete) : listAcheteurs(requete));
+
+const { etat, refetch } = useReactiveFetch(lister, options);
+
+const items = computed(() => (etat.value.statut === 'succes' ? etat.value.data.items : []));
 
 const mapId = useId();
-const initialMap = ref();
+const initialMap = ref<L.Map>();
 
-let mainMarker: null | L.marker = null;
-let markers: Array<L.marker> = [];
-
-function fetchFromSiret(siret: string) {
-    getStructureId({ path: { id: siret, type_id: 'SIRET' } }).then((response) => {
-        if (response.data) {
-            acheteur.value = response.data;
-            setMainStructure(response.data, 'acheteur');
-            fetchData();
-        }
-    });
-}
-
-function fetchData() {
-    if (acheteur.value.uid || vendeur.value.uid) {
-        (acheteur.value.uid ? listVendeurs : listAcheteurs)({
-            query: {
-                acheteur_uid: acheteur.value ? acheteur.value.uid : null,
-                vendeur_uid: vendeur.value ? vendeur.value.uid : null,
-                date_debut: props.dateMin,
-                date_fin: props.dateMax
-            }
-        }).then((response) => {
-            if (response.data) {
-                const icon = L.divIcon({ className: acheteur.value.uid ? 'lf-vendeur-icon' : 'lf-acheteur-icon', iconSize: [20, 20] });
-                markers.forEach((marker) => {
-                    marker.remove();
-                });
-                markers = [];
-                response.data.items.forEach((structure) => {
-                    if (structure.structure.latitude && structure.structure.longitude) {
-                        const coordonnees = [structure.structure.latitude, structure.structure.longitude];
-                        markers.push(L.marker(coordonnees, { icon: icon }).addTo(toRaw(initialMap.value)).bindPopup(structureName(structure.structure)));
-                    }
-                });
-            }
-        });
-    }
-}
+let mainMarker: L.Marker | null = null;
+let markers: Array<L.Marker> = [];
 
 onMounted(() => {
     // Init map, no data set at this point
@@ -74,43 +82,45 @@ onMounted(() => {
         return div;
     };
     legend.addTo(initialMap.value);
-
-    // iframe mode, we get the siret
-    if (props.acheteurSiret) fetchFromSiret(props.acheteurSiret);
 });
 
-function setMainStructure(structure: Partial<StructureEtendueDto>, type: 'acheteur' | 'vendeur') {
-    if (initialMap.value && structure.latitude) {
-        const coordonnees = [structure.latitude, structure.longitude];
-        if (mainMarker) mainMarker.remove();
-        mainMarker = L.marker(coordonnees, { icon: L.divIcon({ className: 'lf-' + type + '-icon', iconSize: [30, 30] }), zIndexOffset: 10000 })
-            .addTo(toRaw(initialMap.value))
-            .bindPopup(structureName(structure));
+watch(structurePrincipale, (structure) => {
+    const carte = initialMap.value;
+    if (!carte || !structure?.latitude) {
+        return;
     }
-}
-
-watch([() => props.dateMin, () => props.dateMax], () => {
-    fetchData();
+    mainMarker?.remove();
+    mainMarker = L.marker([structure.latitude, structure.longitude], { icon: L.divIcon({ className: 'lf-' + (coteAcheteur.value ? 'acheteur' : 'vendeur') + '-icon', iconSize: [30, 30] }), zIndexOffset: 10000 })
+        .addTo(toRaw(carte))
+        .bindPopup(structureName(structure));
 });
 
-watch([() => props.acheteur], () => {
-    acheteur.value = props.acheteur;
-    setMainStructure(props.acheteur, 'acheteur');
-    fetchData();
-});
-
-watch([() => props.vendeur], () => {
-    vendeur.value = props.vendeur;
-    setMainStructure(props.vendeur, 'vendeur');
-    fetchData();
+watch(items, (liste) => {
+    const carte = initialMap.value;
+    if (!carte) {
+        return;
+    }
+    const icon = L.divIcon({ className: coteAcheteur.value ? 'lf-vendeur-icon' : 'lf-acheteur-icon', iconSize: [20, 20] });
+    markers.forEach((marker) => marker.remove());
+    markers = [];
+    for (const agrégat of liste) {
+        if (agrégat.structure.latitude && agrégat.structure.longitude) {
+            markers.push(L.marker([agrégat.structure.latitude, agrégat.structure.longitude], { icon: icon }).addTo(toRaw(carte)).bindPopup(structureName(agrégat.structure)));
+        }
+    }
 });
 </script>
 
 <template>
     <section>
-        <h2>La localisation des {{ acheteur.uid ? 'fournisseurs' : 'acheteurs' }}</h2>
+        <h2>La localisation des {{ coteAcheteur ? 'fournisseurs' : 'acheteurs' }}</h2>
+
+        <ErreurChargement v-if="erreurIdentite" :erreur="erreurIdentite" message="Aucune structure ne correspond à ce SIRET" @retry="refetchIdentite" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement de la carte a échoué" class="my-4" @retry="refetch" />
+        <ChargementEnCours v-else-if="uidAcheteur === undefined || etat.statut !== 'succes'" class="my-4" libelle="Chargement de la carte" />
+
         <div :id="mapId" style="min-height: 30rem; max-width: 60rem; margin: 0 auto"></div>
-        <BoutonIframe v-if="acheteur.identifiant" :path="'acheteur/' + acheteur.identifiant + '/fournisseurs/carte'" name="La répartition géographique des fournisseurs" />
+        <BoutonIframe v-if="structurePrincipale?.identifiant" :path="'acheteur/' + structurePrincipale.identifiant + '/fournisseurs/carte'" name="La répartition géographique des fournisseurs" />
     </section>
 </template>
 
@@ -123,7 +133,6 @@ watch([() => props.vendeur], () => {
     border: 1px solid var(--p-gray-950);
     background-color: var(--p-red-600);
 }
-
 .lf-acheteur-icon {
     display: inline-block;
     border-radius: 50%;
@@ -132,14 +141,12 @@ watch([() => props.vendeur], () => {
     border: 1px solid var(--p-gray-950);
     background-color: var(--p-blue-600);
 }
-
 .lf-legend {
     border: 1px solid var(--p-gray-500);
     background-color: white;
     border-radius: 0.5rem;
     padding: 0.5rem;
 }
-
 .lf-legend h3 {
     margin: 0;
     text-align: left;

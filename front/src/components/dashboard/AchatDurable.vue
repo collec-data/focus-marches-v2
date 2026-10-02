@@ -2,16 +2,20 @@
 import { getConsiderations, getConsiderationsEnvEtSociale, getConsiderationsEnvironnementale, getConsiderationsSociale } from '@/client';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel, getMonthAsString, getNow } from '@/service/HelpersService';
-import { computed, onMounted, ref, watch } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
+import type { ErreurReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 import type { ConsiderationDto, ConsiderationsEnvDto, ConsiderationsSocialeDto } from '@/client';
-import { getAcheteurUid } from '@/service/GetAcheteurService';
+import type { PropType } from 'vue';
 import type { PlotData } from 'plotly.js-dist';
 
+// Pas de valeur par défaut : `undefined` signifie « acheteur encore non identifié », `null` « aucun acheteur demandé ».
 const props = defineProps({
-    acheteurUid: { type: [Number, null], default: null },
-    acheteurSiret: { type: [String, null], default: null },
-    vendeurUid: { type: [Number, null], default: null },
+    acheteurUid: { type: Number as PropType<number | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    vendeurUid: { type: Number as PropType<number | null>, required: false },
     dateMin: { type: Date, required: true },
     dateMax: { type: Date, required: true }
 });
@@ -43,69 +47,88 @@ function transform(input: Array<ConsiderationsEnvDto | ConsiderationsSocialeDto 
     return output;
 }
 
-const dataAnnuel = ref<Partial<PlotData>[]>([]);
 const layoutAnnuel = computed(() => ({
     barmode: 'stack',
     margin: { t: 0, l: 0 },
     xaxis: { type: 'date', range: [getMonthAsString(props.dateMin || new Date(settings.date_min)), getMonthAsString(props.dateMax || getNow())] }
 }));
 
-const dataGlobal = ref<Partial<PlotData>[]>([]);
-const dataEnv = ref<Partial<PlotData>[]>([]);
-const dataSocial = ref<Partial<PlotData>[]>([]);
-const dataSocialEnv = ref<Partial<PlotData>[]>([]);
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.acheteurUid,
+    () => props.acheteurSiret
+);
 
-async function fetchData() {
-    if (props.acheteurUid == -1) {
-        return;
+const options = computed(() => {
+    if (uid.value === undefined) {
+        return undefined;
     }
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    const y2024 = new Date(Date.UTC(2024, 1, 1));
-    const query = {
-        date_debut: props.dateMin > y2024 ? props.dateMin : y2024,
-        date_fin: props.dateMax,
-        acheteur_uid: acheteurUid,
-        vendeur_uid: props.vendeurUid
+    // Les considérations ne sont communiquées qu'à partir du 01/01/2024.
+    const debutObligation = new Date(Date.UTC(2024, 1, 1));
+    return {
+        query: {
+            date_debut: props.dateMin > debutObligation ? props.dateMin : debutObligation,
+            date_fin: props.dateMax,
+            acheteur_uid: uid.value ?? undefined,
+            vendeur_uid: props.vendeurUid ?? undefined
+        }
     };
-    getConsiderationsEnvironnementale({ query: query }).then((response) => {
-        if (response.data) {
-            dataEnv.value = makeCamembert(transform(response.data));
-        }
-    });
-    getConsiderationsSociale({ query: query }).then((response) => {
-        if (response.data) {
-            dataSocial.value = makeCamembert(transform(response.data));
-        }
-    });
-    getConsiderations({ query: query }).then((response) => {
-        if (response.data) {
-            const totaux: dataInterface = { values: [], labels: [] };
-            dataAnnuel.value = (() => {
-                const result = [] as Partial<PlotData>[];
-                for (let [k, e] of response.data.entries()) {
-                    let initialValue = 0;
-                    totaux.labels.push(breakLongLabel(e.consideration, 16));
-                    totaux.values.push(e.data.reduce((accumulator, currentValue) => accumulator + currentValue.nombre, initialValue));
-                    result.push({ x: e.data.map((d) => d.annee), y: e.data.map((d) => d.nombre), name: breakLongLabel(e.consideration, 16), type: 'bar', marker: { color: okabe_ito[k], line: { color: okabe_ito[k], width: 1 } } });
-                }
-                return result;
-            })();
-            dataGlobal.value = makeCamembert(totaux);
-        }
-    });
-    getConsiderationsEnvEtSociale({ query: query }).then((response) => {
-        if (response.data) {
-            dataSocialEnv.value = makeCamembert(transform(response.data));
-        }
-    });
-}
-
-onMounted(() => {
-    fetchData();
 });
 
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
-    fetchData();
+// Quatre agrégats distincts, tous assujettis à la même identité : aucun ne part avant qu'elle soit résolue.
+const environnement = useReactiveFetch(getConsiderationsEnvironnementale, options);
+const sociale = useReactiveFetch(getConsiderationsSociale, options);
+const annuel = useReactiveFetch(getConsiderations, options);
+const socialEnv = useReactiveFetch(getConsiderationsEnvEtSociale, options);
+
+const requetes = [environnement, sociale, annuel, socialEnv];
+
+// L'écran n'a de sens qu'une fois les quatre réponses reçues : le premier échec suffit à le signaler.
+const reussite = computed(() => requetes.every((requete) => requete.etat.value.statut === 'succes'));
+const premiereErreur = computed<ErreurReactiveFetch | null>(() => {
+    for (const requete of requetes) {
+        if (requete.etat.value.statut === 'erreur') {
+            return requete.etat.value.erreur;
+        }
+    }
+    return null;
+});
+
+function camembert(donnees: Array<ConsiderationsEnvDto | ConsiderationsSocialeDto | ConsiderationDto>): Partial<PlotData>[] {
+    return makeCamembert(transform(donnees));
+}
+
+const dataEnv = computed(() => (environnement.etat.value.statut === 'succes' ? camembert(environnement.etat.value.data) : []));
+const dataSocial = computed(() => (sociale.etat.value.statut === 'succes' ? camembert(sociale.etat.value.data) : []));
+const dataSocialEnv = computed(() => (socialEnv.etat.value.statut === 'succes' ? camembert(socialEnv.etat.value.data) : []));
+
+const dataAnnuel = computed<Partial<PlotData>[]>(() => {
+    if (annuel.etat.value.statut !== 'succes') {
+        return [];
+    }
+    const totaux: dataInterface = { values: [], labels: [] };
+    const result = [] as Partial<PlotData>[];
+    for (let [k, e] of annuel.etat.value.data.entries()) {
+        totaux.labels.push(breakLongLabel(e.consideration, 16));
+        totaux.values.push(e.data.reduce((accumulator, currentValue) => accumulator + currentValue.nombre, 0));
+        result.push({ x: e.data.map((d) => d.annee), y: e.data.map((d) => d.nombre), name: breakLongLabel(e.consideration, 16), type: 'bar', marker: { color: okabe_ito[k], line: { color: okabe_ito[k], width: 1 } } });
+    }
+    return result;
+});
+
+const dataGlobal = computed<Partial<PlotData>[]>(() => {
+    if (annuel.etat.value.statut !== 'succes') {
+        return [];
+    }
+    const totaux: dataInterface = { values: [], labels: [] };
+    for (const e of annuel.etat.value.data) {
+        totaux.labels.push(breakLongLabel(e.consideration, 16));
+        totaux.values.push(e.data.reduce((accumulator, currentValue) => accumulator + currentValue.nombre, 0));
+    }
+    return makeCamembert(totaux);
 });
 </script>
 
@@ -113,7 +136,12 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
     <section>
         <h2>L'achat durable</h2>
         <p>Les données sur les considération environnementales et sociales ne sont communiquées qu'à partir du 01/01/2024, date à laquelle elles ont été rendues obligatoires.</p>
-        <div class="grid grid-cols-12 gap-8">
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
+        <ErreurChargement v-else-if="premiereErreur" :erreur="premiereErreur" message="Le chargement des données d'achat durable a échoué" @retry="() => requetes.forEach((requete) => requete.refetch())" />
+        <ChargementEnCours v-else-if="!reussite" libelle="Chargement des données d'achat durable" />
+
+        <div v-else class="grid grid-cols-12 gap-8">
             <div class="col-span-12 xl:col-span-6">
                 <h3>Répartition globale par nombre de marchés</h3>
                 <Graph :data="dataGlobal" title="Répartition globale des considérations sociales en environnementales par nombre de marchés" />

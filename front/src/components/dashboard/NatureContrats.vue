@@ -1,35 +1,36 @@
 <script setup lang="ts">
 import { getMarchesParNature } from '@/client';
-import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { formatCurrency, getDurationInMonths, getMonthAsString, getNow } from '@/service/HelpersService';
-import { computed, onMounted, ref, watch } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 import type { MarcheNatureDto } from '@/client';
+import type { PropType } from 'vue';
 import type Plotly from 'plotly.js-dist';
 
+// Pas de valeur par défaut : `undefined` signifie « acheteur encore non identifié », `null` « aucun acheteur demandé ».
 const props = defineProps({
-    acheteurUid: { type: [Number, null], default: null },
-    acheteurSiret: { type: [String, null], default: null },
-    vendeurUid: { type: [Number, null], default: null },
+    acheteurUid: { type: Number as PropType<number | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    vendeurUid: { type: Number as PropType<number | null>, required: false },
     dateMin: { type: Date, required: false, default: new Date(settings.date_min) },
     dateMax: { type: Date, required: false, default: getNow() }
 });
 
-const stats = ref([
-    { montant_total: 0, nombre_total: 0 },
-    { montant_total: 0, nombre_total: 0 },
-    { montant_total: 0, nombre_total: 0 }
-]);
+interface StatNature {
+    montant_total: number;
+    nombre_total: number;
+}
 
 function transform(input: Array<MarcheNatureDto>) {
-    let output = [
+    const output = [
         { labels: [] as Array<string>, values: [] as Array<number> },
         { labels: [] as Array<string>, values: [] as Array<number> },
         { labels: [] as Array<string>, values: [] as Array<number> }
     ];
-
-    stats.value = [
+    const cumul: Array<StatNature> = [
         { montant_total: 0, nombre_total: 0 },
         { montant_total: 0, nombre_total: 0 },
         { montant_total: 0, nombre_total: 0 }
@@ -40,15 +41,12 @@ function transform(input: Array<MarcheNatureDto>) {
         // pour se caler sur les tableaux dont les indices commencent à 0
         output[line.nature - 1].labels.push(line.mois);
         output[line.nature - 1].values.push(parseFloat(line.montant));
-        stats.value[line.nature - 1].montant_total += parseFloat(line.montant);
-        stats.value[line.nature - 1].nombre_total += line.nombre;
+        cumul[line.nature - 1].montant_total += parseFloat(line.montant);
+        cumul[line.nature - 1].nombre_total += line.nombre;
     }
-    return output;
+    return { series: output, cumul };
 }
 
-const marcheData = ref<Partial<Plotly.PlotData>[]>();
-const partenariatData = ref<Partial<Plotly.Data>[]>();
-const defenseData = ref<Partial<Plotly.Data>[]>();
 const layout = computed(() => ({
     margin: { t: 0, r: 0, b: 20 },
     xaxis: { type: 'date', range: [getMonthAsString(props.dateMin || new Date(settings.date_min)), getMonthAsString(props.dateMax || getNow())] }
@@ -66,64 +64,81 @@ function makeGraph(labels: Array<string | null>, data: Array<number>, color: str
     ];
 }
 
-async function fetchData() {
-    if (props.acheteurUid == -1) {
-        return;
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.acheteurUid,
+    () => props.acheteurSiret
+);
+
+const options = computed(() => {
+    if (uid.value === undefined) {
+        return undefined;
     }
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    getMarchesParNature({
+    return {
         query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: acheteurUid,
-            vendeur_uid: props.vendeurUid
+            date_debut: props.dateMin ?? undefined,
+            date_fin: props.dateMax ?? undefined,
+            acheteur_uid: uid.value ?? undefined,
+            vendeur_uid: props.vendeurUid ?? undefined
         }
-    }).then((data) => {
-        if (data.data) {
-            let rawData = transform(data.data);
-            marcheData.value = makeGraph(rawData[0].labels, rawData[0].values, okabe_ito[0]);
-            partenariatData.value = makeGraph(rawData[1].labels, rawData[1].values, okabe_ito[1]);
-            defenseData.value = makeGraph(rawData[2].labels, rawData[2].values, okabe_ito[2]);
-        }
-    });
+    };
+});
+
+const { etat, refetch } = useReactiveFetch(getMarchesParNature, options);
+
+// Aucun cumul ni graphique avant la réponse : trois zéros présentés comme des totaux seraient une fausse mesure.
+const brut = computed(() => (etat.value.statut === 'succes' ? transform(etat.value.data) : null));
+
+const cumul = computed<Array<StatNature> | null>(() => brut.value?.cumul ?? null);
+
+function graphique(index: number): Partial<Plotly.PlotData>[] | undefined {
+    if (brut.value === null) {
+        return undefined;
+    }
+    const serie = brut.value.series[index];
+    return makeGraph(serie.labels, serie.values, okabe_ito[index]);
 }
 
-onMounted(() => {
-    fetchData();
-});
-
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
-    fetchData();
-});
+const marcheData = computed(() => graphique(0));
+const partenariatData = computed(() => graphique(1));
+const defenseData = computed(() => graphique(2));
 </script>
 
 <template>
     <section class="flex flex-col">
         <h2 class="title">Nature des contrats</h2>
         <p>Répartition des contrats par nature du marché public, en montant et en nombre. La période observée est de {{ getDurationInMonths(dateMin, dateMax) }} mois et les marchés sont groupés par mois.</p>
-        <div class="flex flex-row gap-5 flex-wrap">
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement de la répartition par nature a échoué" @retry="refetch" />
+        <ChargementEnCours v-else-if="!cumul" libelle="Chargement de la répartition par nature" />
+
+        <div v-else class="flex flex-row gap-5 flex-wrap">
             <div class="nature basis-md grow shrink">
                 <h3>Marché</h3>
                 <Graph :data="marcheData" :layout :config title="Répartition des contrats de type marchés" />
                 <ul>
-                    <li><span>Montant</span> {{ formatCurrency(stats[0].montant_total) }}</li>
-                    <li><span>Nombre</span> {{ stats[0].nombre_total }} marchés</li>
+                    <li><span>Montant</span> {{ formatCurrency(cumul[0].montant_total) }}</li>
+                    <li><span>Nombre</span> {{ cumul[0].nombre_total }} marchés</li>
                 </ul>
             </div>
             <div class="nature basis-md grow shrink">
                 <h3>Marché de partenariat</h3>
                 <Graph :data="partenariatData" :layout :config title="Répartition des contrats de type marchés de partenariats" />
                 <ul>
-                    <li><span>Montant</span> {{ formatCurrency(stats[1].montant_total) }}</li>
-                    <li><span>Nombre</span> {{ stats[1].nombre_total }} marchés</li>
+                    <li><span>Montant</span> {{ formatCurrency(cumul[1].montant_total) }}</li>
+                    <li><span>Nombre</span> {{ cumul[1].nombre_total }} marchés</li>
                 </ul>
             </div>
             <div class="nature basis-md grow shrink">
                 <h3>Marché de défense ou de sécurité</h3>
                 <Graph :data="defenseData" :layout :config title="Répartition des contrats de type marchés de défense ou de sécurité" />
                 <ul>
-                    <li><span>Montant</span> {{ formatCurrency(stats[2].montant_total) }}</li>
-                    <li><span>Nombre</span> {{ stats[2].nombre_total }} marchés</li>
+                    <li><span>Montant</span> {{ formatCurrency(cumul[2].montant_total) }}</li>
+                    <li><span>Nombre</span> {{ cumul[2].nombre_total }} marchés</li>
                 </ul>
             </div>
         </div>

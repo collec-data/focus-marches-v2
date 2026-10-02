@@ -1,30 +1,32 @@
 <script setup lang="ts">
 import { CategorieMarche, listAcheteurs, listVendeurs } from '@/client';
-import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel, formatCurrency, formatNumber, getDurationInMonths, getNow, structureName } from '@/service/HelpersService';
-import { onMounted, ref, watch } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
+import type { ErreurReactiveFetch } from '@/utils/query';
+import { computed, ref } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
+import type { PropType } from 'vue';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
+// Pas de valeur par défaut : `undefined` signifie « acheteur encore non identifié », `null` « aucun acheteur demandé ».
 const props = defineProps({
     type: String,
-    acheteurUid: { type: [Number, null], default: null },
-    acheteurSiret: { type: [String, null], default: null },
-    vendeurUid: { type: [Number, null], default: null },
+    acheteurUid: { type: Number as PropType<number | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    vendeurUid: { type: Number as PropType<number | null>, required: false },
     dateMin: { type: Date, default: new Date(settings.date_min) },
     dateMax: { type: Date, default: getNow() }
 });
 
-const listeStructures = ref({
-    tout: [] as StructureAggMarchesDto[],
-    services: [] as StructureAggMarchesDto[],
-    travaux: [] as StructureAggMarchesDto[],
-    fournitures: [] as StructureAggMarchesDto[]
-});
+type Categorie = keyof typeof CATEGORIES;
 
-const listeExhaustiveStructures = ref<StructureAggMarchesDto[]>([]);
+type Graphiques = Record<string, Partial<PlotData>[]>;
+const graphesVides = (): Graphiques => ({ tout: [], services: [], travaux: [], fournitures: [] });
+
+const CATEGORIES = { tout: undefined, services: CategorieMarche.SERVICES, travaux: CategorieMarche.TRAVAUX, fournitures: CategorieMarche.FOURNITURES } as const;
 
 let title = '';
 let description = '';
@@ -43,12 +45,6 @@ if (props.type == 'acheteurs') {
     link_path = '/fournisseur/';
 }
 
-const data = ref({
-    tout: [] as Partial<PlotData>[],
-    services: [] as Partial<PlotData>[],
-    travaux: [] as Partial<PlotData>[],
-    fournitures: [] as Partial<PlotData>[]
-});
 const layout = {
     margin: { t: 0, b: 200, r: 100 },
     xaxis: {
@@ -68,68 +64,108 @@ function transform(input: Array<StructureAggMarchesDto>) {
     return output;
 }
 
-async function fetchData(categorie: CategorieMarche | undefined = undefined, exhaustif: boolean = false) {
-    if (props.acheteurUid == -1) {
-        return;
-    }
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    (props.type == 'acheteurs' ? listAcheteurs : listVendeurs)({
-        query: {
-            limit: exhaustif ? null : 12,
-            acheteur_uid: acheteurUid,
-            vendeur_uid: props.vendeurUid,
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            categorie: categorie
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.acheteurUid,
+    () => props.acheteurSiret
+);
+
+function options(categorie: CategorieMarche | undefined, limite: number | null, actif: () => boolean) {
+    return computed(() => {
+        if (uid.value === undefined || !actif()) {
+            return undefined;
         }
-    }).then((response) => {
-        if (response.data) {
-            if (exhaustif) {
-                listeExhaustiveStructures.value = response.data.items;
-            } else {
-                listeStructures.value[categorie ? categorie.toLowerCase() : 'tout'] = response.data.items;
-                let rawData = transform(response.data.items);
-                data.value[categorie ? categorie.toLowerCase() : 'tout'] = [
-                    {
-                        x: rawData.structures,
-                        y: rawData.montants,
-                        type: 'bar',
-                        marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
-                    }
-                ];
+        return {
+            query: {
+                limit: limite,
+                acheteur_uid: uid.value ?? undefined,
+                vendeur_uid: props.vendeurUid ?? undefined,
+                date_debut: props.dateMin ?? undefined,
+                date_fin: props.dateMax ?? undefined,
+                categorie: categorie
             }
-        }
+        };
     });
 }
 
-onMounted(() => {
-    fetchData();
+// Chaque onglet a sa propre requête, déclenchée à sa première visite puis rejouée à chaque changement de période.
+// Les onglets non encore visités ne consomment aucune requête.
+const ongletsVisites = ref<Set<Categorie>>(new Set(['tout']));
+const lister = () => (props.type === 'acheteurs' ? listAcheteurs : listVendeurs);
+
+const parCategorie = Object.fromEntries(
+    (Object.keys(CATEGORIES) as Categorie[]).map((cle) => [
+        cle,
+        useReactiveFetch(
+            lister(),
+            options(CATEGORIES[cle], 12, () => ongletsVisites.value.has(cle))
+        )
+    ])
+) as Record<Categorie, ReturnType<typeof useReactiveFetch<typeof listAcheteurs, never>>>;
+
+const showModale = ref(false);
+const exhaustive = useReactiveFetch(
+    lister(),
+    options(undefined, null, () => showModale.value)
+);
+
+const reussite = computed(() => Object.values(parCategorie).every((requete) => requete.etat.value.statut === 'succes'));
+const premiereErreur = computed<ErreurReactiveFetch | null>(() => {
+    for (const requete of Object.values(parCategorie)) {
+        if (requete.etat.value.statut === 'erreur') {
+            return requete.etat.value.erreur;
+        }
+    }
+    return null;
 });
 
-// on garde trace de l'onglet sélectionné pour savoir quoi mettre à jour
-let selectedTab = 'tout';
-
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
-    data.value = { tout: [], services: [], travaux: [], fournitures: [] };
-    fetchData();
-    if (selectedTab != 'tout') {
-        fetchData(selectedTab as CategorieMarche);
+const listeStructures = computed(() => {
+    const sortie = {} as Record<Categorie, StructureAggMarchesDto[]>;
+    for (const cle of Object.keys(CATEGORIES) as Categorie[]) {
+        const requete = parCategorie[cle];
+        sortie[cle] = requete.etat.value.statut === 'succes' ? requete.etat.value.data.items : [];
     }
+    return sortie;
+});
+
+const listeExhaustiveStructures = computed<StructureAggMarchesDto[]>(() => (exhaustive.etat.value.statut === 'succes' ? exhaustive.etat.value.data.items : []));
+const etatExhaustive = computed(() => exhaustive.etat.value);
+
+const data = computed<Graphiques>(() => {
+    const sortie = graphesVides();
+    for (const cle of Object.keys(CATEGORIES) as Categorie[]) {
+        const requete = parCategorie[cle];
+        if (requete.etat.value.statut !== 'succes') {
+            continue;
+        }
+        const brut = transform(requete.etat.value.data.items);
+        sortie[cle] = [
+            {
+                x: brut.structures,
+                y: brut.montants,
+                type: 'bar',
+                marker: { color: okabe_ito, line: { color: okabe_ito, width: 1 } }
+            }
+        ];
+    }
+    return sortie;
 });
 
 function change(categorie: string | number) {
-    selectedTab = categorie as CategorieMarche;
-    if (categorie != 'tout' && typeof categorie === 'string' && !data.value[categorie.toLowerCase()].length) {
-        fetchData(categorie as CategorieMarche);
+    const cle = String(categorie).toLowerCase() as Categorie;
+    if (ongletsVisites.value.has(cle)) {
+        return;
     }
+    ongletsVisites.value = new Set(ongletsVisites.value).add(cle);
 }
-
-const showModale = ref(false);
 
 function openModale() {
     showModale.value = true;
     // on recharge systématiquement à l'ouverture au cas où les filtres auraient changé
-    fetchData(undefined, true);
+    exhaustive.refetch();
 }
 </script>
 
@@ -137,7 +173,11 @@ function openModale() {
     <section>
         <h2 class="title">{{ title }}</h2>
         <p class="subtitle">{{ description }}</p>
-        <Tabs value="tout" @update:value="change">
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
+        <ErreurChargement v-else-if="premiereErreur" :erreur="premiereErreur" message="Le chargement du classement a échoué" @retry="() => Object.values(parCategorie).forEach((requete) => requete.refetch())" />
+
+        <Tabs v-else-if="reussite" value="tout" @update:value="change">
             <TabList>
                 <Tab value="tout">Tous les marchés</Tab>
                 <Tab :value="CategorieMarche.SERVICES">{{ CategorieMarche.SERVICES }}</Tab>
@@ -213,7 +253,13 @@ function openModale() {
         <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/top12'" name="Le top12 des fournisseurs" />
     </section>
     <Dialog :visible="showModale" modal :header="btn_label" class="max-w-full" @update:visible="showModale = false">
-        <DataTable :value="listeExhaustiveStructures" sortField="structure.nom" :sortOrder="1" removableSort stripedRows paginator :rows="10">
+        <DataTable v-if="etatExhaustive.statut !== 'succes'" :value="[]" :loading="etatExhaustive.statut === 'chargement'">
+            <template #empty>
+                <ErreurChargement v-if="etatExhaustive.statut === 'erreur'" :erreur="etatExhaustive.erreur" message="Le chargement de la liste a échoué" @retry="exhaustive.refetch()" />
+                <ChargementEnCours v-else libelle="Chargement de la liste" />
+            </template>
+        </DataTable>
+        <DataTable v-else :value="listeExhaustiveStructures" sortField="structure.nom" :sortOrder="1" removableSort stripedRows paginator :rows="10">
             <Column field="structure.nom" header="Nom" sortable>
                 <template #body="slotProps">
                     <RouterLink :to="link_path + slotProps.data.structure.uid">

@@ -2,16 +2,18 @@
 import { getMarchesParDepartement } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { onMounted, ref } from 'vue';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 import type { MarcheDepartementDto } from '@/client';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
-const montantRegion = ref<Partial<PlotData>[]>();
-const nombreRegion = ref<Partial<PlotData>[]>();
-const montantHorsRegion = ref<Partial<PlotData>[]>();
-const nombreHorsRegion = ref<Partial<PlotData>[]>();
 const layout = { margin: { l: 150, t: 0, b: 20, r: 0 } } as Partial<Layout>;
+
+const { etat, refetch } = useReactiveFetch(
+    getMarchesParDepartement,
+    computed(() => ({}))
+);
 
 function makeGraph(labels: Array<string | null>, data: Array<number>): Array<Partial<PlotData>> {
     return [
@@ -58,23 +60,27 @@ function transform(input: Array<MarcheDepartementDto>) {
     return { region: output, horsRegion: outputHorsRegion };
 }
 
-onMounted(() => {
-    getMarchesParDepartement().then((response) => {
-        if (response.data) {
-            const { region, horsRegion } = transform(response.data);
-            montantRegion.value = makeGraph(region.departements, region.montants);
-            nombreRegion.value = makeGraph(region.departements, region.nombres);
-            montantHorsRegion.value = makeGraph(horsRegion.departements, horsRegion.montants);
-            nombreHorsRegion.value = makeGraph(horsRegion.departements, horsRegion.nombres);
-        }
-    });
+const graphiques = computed(() => {
+    if (etat.value.statut !== 'succes') {
+        // Un graphique construit avant la réponse figerait des totaux faux : la barre reste un chargement.
+        return null;
+    }
+    const { region, horsRegion } = transform(etat.value.data);
+    return {
+        montantRegion: makeGraph(region.departements, region.montants),
+        nombreRegion: makeGraph(region.departements, region.nombres),
+        montantHorsRegion: makeGraph(horsRegion.departements, horsRegion.montants),
+        nombreHorsRegion: makeGraph(horsRegion.departements, horsRegion.nombres)
+    };
 });
 </script>
 
 <template>
     <section>
         <h2 class="title">Contrats par départements</h2>
-        <Tabs value="region">
+        <ErreurChargement v-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement des contrats par département a échoué" class="my-4" @retry="refetch" />
+        <ChargementEnCours v-else-if="!graphiques" libelle="Chargement des contrats par département" />
+        <Tabs v-else value="region">
             <TabList>
                 <Tab value="region">Dans la région</Tab>
                 <Tab value="hors-region">Hors région</Tab>
@@ -84,11 +90,11 @@ onMounted(() => {
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Montant des contrats par département</h3>
-                            <Graph :data="montantRegion" :layout title="Montant des contrats par départements dans la région" />
+                            <Graph :data="graphiques.montantRegion" :layout title="Montant des contrats par départements dans la région" />
                         </div>
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Nombre de contrats par département</h3>
-                            <Graph :data="nombreRegion" :layout title="Nombre de contrats par départements dans la région" />
+                            <Graph :data="graphiques.nombreRegion" :layout title="Nombre de contrats par départements dans la région" />
                         </div>
                     </div>
                 </TabPanel>
@@ -96,11 +102,11 @@ onMounted(() => {
                     <div class="grid grid-cols-12 gap-8">
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Montant des contrats par département</h3>
-                            <Graph :data="montantHorsRegion" :layout title="Montant des contrats par département hors région" />
+                            <Graph :data="graphiques.montantHorsRegion" :layout title="Montant des contrats par département hors région" />
                         </div>
                         <div class="col-span-12 xl:col-span-6">
                             <h3>Nombre de contrats par département</h3>
-                            <Graph :data="nombreHorsRegion" :layout title="Nombre de contrats par départements hors région" />
+                            <Graph :data="graphiques.nombreHorsRegion" :layout title="Nombre de contrats par départements hors région" />
                         </div>
                     </div>
                 </TabPanel>

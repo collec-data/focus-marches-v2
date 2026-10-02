@@ -2,12 +2,25 @@
 import { getCategorieDepartement } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { okabe_ito } from '@/service/GraphColorsService';
-import { onMounted, ref } from 'vue';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 import type { SankeyData } from 'plotly.js-dist';
 
-const data = ref<Partial<SankeyData>[]>([
-    {
+const layout = { margin: { l: 0, t: 0, b: 20, r: 0 } };
+
+const { etat, refetch } = useReactiveFetch(
+    getCategorieDepartement,
+    computed(() => ({}))
+);
+
+const data = computed<Partial<SankeyData>[] | null>(() => {
+    if (etat.value.statut !== 'succes') {
+        // On ne construit pas de diagramme construit tant que la réponse n'est pas reçue.
+        return null;
+    }
+    const departementsRegion = settings.departements.split(',');
+    const trace: Partial<SankeyData> = {
         type: 'sankey',
         orientation: 'h',
         node: {
@@ -19,46 +32,42 @@ const data = ref<Partial<SankeyData>[]>([
             target: [],
             value: []
         }
-    }
-]);
-const layout = { margin: { l: 0, t: 0, b: 20, r: 0 } };
+    };
 
-onMounted(() => {
-    const departementsRegion = settings.departements.split(',');
-
-    getCategorieDepartement().then((response) => {
-        if (response.data) {
-            function getOrCreateLabel(label: string): number {
-                let indice = data.value[0].node?.label?.indexOf(label) as number;
-                if (indice == -1) {
-                    indice = data.value[0].node?.label?.length as number;
-                    data.value[0].node?.label?.push(label);
-                }
-                return indice;
-            }
-            let montantAutresRegionsBySource = { Travaux: 0, Fournitures: 0, Services: 0 };
-            for (let line of response.data) {
-                if (departementsRegion.includes(line.code)) {
-                    data.value[0].link?.value?.push(parseFloat(line.montant));
-                    data.value[0].link?.source?.push(getOrCreateLabel(line.categorie));
-                    data.value[0].link?.target?.push(getOrCreateLabel('(' + line.code + ') ' + getNomDepartement(line.code)));
-                } else {
-                    montantAutresRegionsBySource[line.categorie] += parseFloat(line.montant);
-                }
-            }
-            for (const [k, v] of Object.entries(montantAutresRegionsBySource)) {
-                data.value[0].link?.value?.push(v);
-                data.value[0].link?.source?.push(getOrCreateLabel(k));
-                data.value[0].link?.target?.push(getOrCreateLabel('Départements hors région'));
-            }
+    function getOrCreateLabel(label: string): number {
+        let indice = trace.node?.label?.indexOf(label) as number;
+        if (indice == -1) {
+            indice = trace.node?.label?.length as number;
+            trace.node?.label?.push(label);
         }
-    });
+        return indice;
+    }
+
+    const montantAutresRegionsBySource = { Travaux: 0, Fournitures: 0, Services: 0 };
+    for (const line of etat.value.data) {
+        if (departementsRegion.includes(line.code)) {
+            trace.link?.value?.push(parseFloat(line.montant));
+            trace.link?.source?.push(getOrCreateLabel(line.categorie));
+            trace.link?.target?.push(getOrCreateLabel('(' + line.code + ') ' + getNomDepartement(line.code)));
+        } else {
+            montantAutresRegionsBySource[line.categorie] += parseFloat(line.montant);
+        }
+    }
+    for (const [categorie, montant] of Object.entries(montantAutresRegionsBySource)) {
+        trace.link?.value?.push(montant);
+        trace.link?.source?.push(getOrCreateLabel(categorie));
+        trace.link?.target?.push(getOrCreateLabel('Départements hors région'));
+    }
+
+    return [trace];
 });
 </script>
 <template>
     <section>
         <h2 class="title">Distribution des achats par département</h2>
-        <Graph :data :layout title="Distribution croisée des achats par département et par catégorie d'achat" />
+        <ErreurChargement v-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement de la distribution par département a échoué" class="my-4" @retry="refetch" />
+        <ChargementEnCours v-else-if="!data" libelle="Chargement de la distribution par département" />
+        <Graph v-else :data :layout title="Distribution croisée des achats par département et par catégorie d'achat" />
         <details>
             <summary>💡 Comment lire ce graphique ?</summary>
             <div>

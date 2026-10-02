@@ -1,19 +1,22 @@
 <script setup lang="ts">
 import { getCategories } from '@/client';
-import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { bright_okabe_ito } from '@/service/GraphColorsService';
 import { formatCurrency, formatNumber, getMonthAsString, getNow } from '@/service/HelpersService';
-import { computed, onMounted, ref, watch } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 import type { CategoriesDto } from '@/client';
+import type { PropType } from 'vue';
 import type { PlotData } from 'plotly.js-dist';
 
+// Pas de valeur par défaut : `undefined` signifie « acheteur encore non identifié », `null` « aucun acheteur demandé ».
 const props = defineProps({
-    acheteurUid: { type: [Number, null], default: null },
-    acheteurSiret: { type: [String, null], default: null },
-    vendeurUid: { type: [Number, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    acheteurUid: { type: Number as PropType<number | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    vendeurUid: { type: Number as PropType<number | null>, required: false },
+    dateMin: { type: Date as PropType<Date | null>, required: false },
+    dateMax: { type: Date as PropType<Date | null>, required: false }
 });
 
 interface idatas {
@@ -21,14 +24,19 @@ interface idatas {
     services: Partial<PlotData>[];
     fournitures: Partial<PlotData>[];
 }
-const data = ref<Partial<idatas>>({});
 const layout = computed(() => ({
     showlegend: false,
     margin: { t: 0, r: 0, b: 20 },
     xaxis: { type: 'date', range: [getMonthAsString(props.dateMin || new Date(settings.date_min)), getMonthAsString(props.dateMax || getNow())] }
 }));
 
-const stats = ref({
+interface StatCategorie {
+    montant_total: number;
+    nombre_total: number;
+}
+type Stats = StatCategorie & { travaux: StatCategorie; fournitures: StatCategorie; services: StatCategorie };
+
+const statsVides = (): Stats => ({
     montant_total: 0,
     nombre_total: 0,
     travaux: { montant_total: 0, nombre_total: 0 },
@@ -58,7 +66,7 @@ function getPreviousMonth(date: string): string {
     return year + '-' + month.toString().padStart(2, '0');
 }
 
-function transform(input: CategoriesDto[]): idatas {
+function transform(input: CategoriesDto[]): { series: idatas; stats: Stats } {
     const output = <idatas>{
         services: [{ x: [] as string[], y: [] as number[], type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: bright_okabe_ito[3] }, fillcolor: bright_okabe_ito[3] }],
         travaux: [{ x: [], y: [], type: 'scatter', mode: 'lines', fill: 'tozeroy', line: { color: bright_okabe_ito[0] }, fillcolor: bright_okabe_ito[0] }],
@@ -66,13 +74,7 @@ function transform(input: CategoriesDto[]): idatas {
     };
     const total_mensuel: { [month: string]: number } = {};
 
-    stats.value = {
-        montant_total: 0,
-        nombre_total: 0,
-        travaux: { montant_total: 0, nombre_total: 0 },
-        fournitures: { montant_total: 0, nombre_total: 0 },
-        services: { montant_total: 0, nombre_total: 0 }
-    };
+    const stats = statsVides();
 
     // will be used to track gap between two values, and add 0 values to get a nice chart
     const previousByType = { services: null as null | CategoriesDto, travaux: null as null | CategoriesDto, fournitures: null as null | CategoriesDto, tout: null as null | CategoriesDto };
@@ -113,10 +115,10 @@ function transform(input: CategoriesDto[]): idatas {
             total_mensuel[line.mois] = parseFloat(line.montant);
         }
 
-        stats.value[key].montant_total += parseFloat(line.montant);
-        stats.value[key].nombre_total += line.nombre;
-        stats.value.montant_total += parseFloat(line.montant);
-        stats.value.nombre_total += line.nombre;
+        stats[key].montant_total += parseFloat(line.montant);
+        stats[key].nombre_total += line.nombre;
+        stats.montant_total += parseFloat(line.montant);
+        stats.nombre_total += line.nombre;
 
         previousByType[key] = line;
         previousByType.tout = line;
@@ -150,35 +152,39 @@ function transform(input: CategoriesDto[]): idatas {
     output.travaux.unshift(total);
     output.fournitures.unshift(total);
 
-    return output;
+    return { series: output, stats };
 }
 
-async function fetchData() {
-    if (props.acheteurUid == -1) {
-        return;
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.acheteurUid,
+    () => props.acheteurSiret
+);
+
+const options = computed(() => {
+    if (uid.value === undefined) {
+        return undefined;
     }
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    getCategories({
+    return {
         query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: acheteurUid,
-            vendeur_uid: props.vendeurUid
+            date_debut: props.dateMin ?? undefined,
+            date_fin: props.dateMax ?? undefined,
+            acheteur_uid: uid.value ?? undefined,
+            vendeur_uid: props.vendeurUid ?? undefined
         }
-    }).then((response) => {
-        if (response.data) {
-            data.value = transform(response.data);
-        }
-    });
-}
-
-onMounted(() => {
-    fetchData();
+    };
 });
 
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
-    fetchData();
-});
+const { etat, refetch } = useReactiveFetch(getCategories, options);
+
+// Aucun cumul ni graphique avant la réponse : des totaux à zéro seraient une fausse mesure.
+const brut = computed(() => (etat.value.statut === 'succes' ? transform(etat.value.data) : null));
+
+const data = computed<Partial<idatas>>(() => brut.value?.series ?? {});
+const stats = computed<Stats | null>(() => brut.value?.stats ?? null);
 </script>
 
 <template>
@@ -187,42 +193,50 @@ watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => 
             <h2 class="title">Distribution par catégorie principale d'achat</h2>
             <p>Comparaison des trois catégories d'achats (zone colorée) par rapport au total (zone grise).</p>
         </div>
-        <div class="col-span-12 xl:col-span-4">
-            <h3>Services</h3>
-            <Graph :data="data.services" :layout title="Distribution temporelle des marchés de services" />
-            <div class="grid grid-cols-3 gap-1 text-center">
-                <div class="label">Nombre</div>
-                <div class="categorie">{{ formatNumber(stats.services.nombre_total) }}</div>
-                <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
-                <div class="label">Montant</div>
-                <div class="categorie">{{ formatCurrency(stats.services.montant_total) }}</div>
-                <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" class="col-span-12" @retry="refetchAcheteur" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement de la répartition par catégorie a échoué" class="col-span-12" @retry="refetch" />
+        <ChargementEnCours v-else-if="!stats" class="col-span-12" libelle="Chargement de la répartition par catégorie" />
+
+        <template v-else>
+            <div class="col-span-12 xl:col-span-4">
+                <h3>Services</h3>
+                <Graph :data="data.services" :layout title="Distribution temporelle des marchés de services" />
+                <div class="grid grid-cols-3 gap-1 text-center">
+                    <div class="label">Nombre</div>
+                    <div class="categorie">{{ formatNumber(stats.services.nombre_total) }}</div>
+                    <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
+                    <div class="label">Montant</div>
+                    <div class="categorie">{{ formatCurrency(stats.services.montant_total) }}</div>
+                    <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
+                </div>
             </div>
-        </div>
-        <div class="col-span-12 xl:col-span-4">
-            <h3>Travaux</h3>
-            <Graph :data="data.travaux" :layout title="Distribution temporelle des marchés de travaux" />
-            <div class="grid grid-cols-3 gap-1 text-center">
-                <div class="label">Nombre</div>
-                <div class="categorie">{{ formatNumber(stats.travaux.nombre_total) }}</div>
-                <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
-                <div class="label">Montant</div>
-                <div class="categorie">{{ formatCurrency(stats.travaux.montant_total) }}</div>
-                <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
+            <div class="col-span-12 xl:col-span-4">
+                <h3>Travaux</h3>
+                <Graph :data="data.travaux" :layout title="Distribution temporelle des marchés de travaux" />
+                <div class="grid grid-cols-3 gap-1 text-center">
+                    <div class="label">Nombre</div>
+                    <div class="categorie">{{ formatNumber(stats.travaux.nombre_total) }}</div>
+                    <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
+                    <div class="label">Montant</div>
+                    <div class="categorie">{{ formatCurrency(stats.travaux.montant_total) }}</div>
+                    <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
+                </div>
             </div>
-        </div>
-        <div class="col-span-12 xl:col-span-4">
-            <h3>Fournitures</h3>
-            <Graph :data="data.fournitures" :layout title="Distribution temporelle des marchés de fournitures" />
-            <div class="grid grid-cols-3 gap-1 text-center">
-                <div class="label">Nombre</div>
-                <div class="categorie">{{ formatNumber(stats.fournitures.nombre_total) }}</div>
-                <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
-                <div class="label">Montant</div>
-                <div class="categorie">{{ formatCurrency(stats.fournitures.montant_total) }}</div>
-                <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
+            <div class="col-span-12 xl:col-span-4">
+                <h3>Fournitures</h3>
+                <Graph :data="data.fournitures" :layout title="Distribution temporelle des marchés de fournitures" />
+                <div class="grid grid-cols-3 gap-1 text-center">
+                    <div class="label">Nombre</div>
+                    <div class="categorie">{{ formatNumber(stats.fournitures.nombre_total) }}</div>
+                    <div class="total">{{ formatNumber(stats.nombre_total) }} marchés</div>
+                    <div class="label">Montant</div>
+                    <div class="categorie">{{ formatCurrency(stats.fournitures.montant_total) }}</div>
+                    <div class="total">{{ formatCurrency(stats.montant_total) }}</div>
+                </div>
             </div>
-        </div>
+        </template>
+
         <div class="col-span-12">
             <BoutonIframe v-if="acheteurSiret" :path="'acheteur/' + acheteurSiret + '/marches/categorie'" name="La répartition des marchés publics par catégorie, sous forme de graphique" />
         </div>

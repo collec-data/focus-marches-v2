@@ -1,18 +1,21 @@
 <script setup lang="ts">
 import { getMarchesParCcag } from '@/client';
-import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel } from '@/service/HelpersService';
-import { onMounted, ref, watch } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 import type { MarcheCcagDto } from '@/client';
+import type { PropType } from 'vue';
 import type { Layout, PlotData } from 'plotly.js-dist';
 
+// Pas de valeur par défaut : `undefined` signifie « acheteur encore non identifié », `null` « aucun acheteur demandé ».
 const props = defineProps({
-    acheteurUid: { type: [Number, null], default: null },
-    acheteurSiret: { type: [String, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    acheteurUid: { type: Number as PropType<number | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    dateMin: { type: Date as PropType<Date | null>, required: false },
+    dateMax: { type: Date as PropType<Date | null>, required: false }
 });
 
 interface icategorie {
@@ -25,7 +28,6 @@ interface idatas {
     fournitures: icategorie;
 }
 
-const datas = ref<Partial<idatas>>({});
 const layout = { margin: { l: 150, t: 0, b: 20, r: 0 } } as Layout;
 
 function transform(input: Array<MarcheCcagDto>): idatas {
@@ -54,37 +56,43 @@ function transform(input: Array<MarcheCcagDto>): idatas {
     return output;
 }
 
-async function fetchData() {
-    if (props.acheteurUid == -1) {
-        return;
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.acheteurUid,
+    () => props.acheteurSiret
+);
+
+const options = computed(() => {
+    if (uid.value === undefined) {
+        return undefined;
     }
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    getMarchesParCcag({
+    return {
         query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: acheteurUid
+            date_debut: props.dateMin ?? undefined,
+            date_fin: props.dateMax ?? undefined,
+            acheteur_uid: uid.value ?? undefined
         }
-    }).then((response) => {
-        if (response.data) {
-            datas.value = transform(response.data);
-        }
-    });
-}
-
-onMounted(() => {
-    fetchData();
+    };
 });
 
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid], () => {
-    fetchData();
-});
+const { etat, refetch } = useReactiveFetch(getMarchesParCcag, options);
+
+// On ne dessine rien avant la réponse : un graphique à zéro barre laisserait croire à une absence de contrats.
+const datas = computed<Partial<idatas>>(() => (etat.value.statut === 'succes' ? transform(etat.value.data) : {}));
 </script>
 
 <template>
     <section>
         <h2 class="title">Cahier des clauses administratives et générales utilisés</h2>
-        <Tabs value="services">
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement des CCAG a échoué" @retry="refetch" />
+        <ChargementEnCours v-else-if="etat.statut !== 'succes'" libelle="Chargement des CCAG" />
+
+        <Tabs v-else value="services">
             <TabList>
                 <Tab value="services">Services</Tab>
                 <Tab value="travaux">Travaux</Tab>
