@@ -9,19 +9,18 @@ import NatureContrats from '@/components/dashboard/NatureContrats.vue';
 import Procedure from '@/components/dashboard/Procedure.vue';
 import Top12 from '@/components/dashboard/Top12.vue';
 import { formatDate, getNow, getOpsnRegion } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 const dateMin = new Date(settings.date_min);
 const dateMax = getNow();
-const dernierImport = ref<string | null | undefined>(null);
 
-onMounted(() => {
-    getConf().then((response) => {
-        if (response.data) {
-            dernierImport.value = response.data.dernier_import;
-        }
-    });
-});
+const { etat } = useReactiveFetch(
+    getConf,
+    computed(() => ({}))
+);
+
+const dernierImport = computed(() => (etat.value.statut === 'succes' ? etat.value.data.dernier_import : null));
 </script>
 
 <template>

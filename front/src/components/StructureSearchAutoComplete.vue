@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { listStructures, type StructureDto } from '@/client';
+import { listStructures, type ListStructuresData, type StructureDto } from '@/client';
 import { structureName } from '@/service/HelpersService';
+import { useReactiveFetch } from '@/utils/query';
 import type { AutoCompleteCompleteEvent } from 'primevue';
 import { computed, ref, useId } from 'vue';
 
@@ -11,31 +12,30 @@ const props = defineProps<{ structureType: 'acheteur' | 'fournisseur' }>();
 const id = useId();
 const name = computed(() => props.structureType);
 
-const structures = ref<StructureDto[]>([]);
 const filterOptions = {
     ignoreCase: true
 };
-function searchStructure(e: AutoCompleteCompleteEvent) {
-    if (e.query.length > 1) {
-        let nom = e.query.toUpperCase();
-        if (nom.startsWith('SIRET')) {
-            nom = nom.substring(6);
-        }
-        const query = { nom: nom };
-        if (props.structureType == 'acheteur') {
-            query['is_acheteur'] = true;
-        }
-        if (props.structureType == 'fournisseur') {
-            query['is_vendeur'] = true;
-        }
-        listStructures({ query: query }).then((response) => {
-            if (response.data) {
-                structures.value = response.data.map((structure) => ({ ...structure, nom: structureName(structure) }));
-            }
-        });
-    } else {
-        structures.value = [];
+
+/** Saisie en cours. La recherche part dès qu'elle est exploitable, et repart à chaque frappe au-delà. */
+const saisie = ref('');
+
+const options = computed<{ query: NonNullable<ListStructuresData['query']> } | undefined>(() => {
+    if (saisie.value.length <= 1) {
+        return undefined;
     }
+    let nom = saisie.value.toUpperCase();
+    if (nom.startsWith('SIRET')) {
+        nom = nom.substring(6);
+    }
+    return { query: { nom: nom, is_acheteur: props.structureType === 'acheteur', is_vendeur: props.structureType === 'fournisseur' } };
+});
+
+const { etat } = useReactiveFetch(listStructures, options);
+
+const structures = computed<StructureDto[]>(() => (etat.value.statut === 'succes' ? etat.value.data.map((structure) => ({ ...structure, nom: structureName(structure) })) : []));
+
+function searchStructure(e: AutoCompleteCompleteEvent) {
+    saisie.value = e.query;
 }
 </script>
 
