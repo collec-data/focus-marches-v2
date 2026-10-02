@@ -204,8 +204,8 @@ function considerationsEnvironnementalesEtSociales(list: string[] | undefined): 
 
 <style scoped>
 .key {
-    text-transform: uppercase;
-    font-size: 0.8rem;
+    font-size: 1rem;
+    font-weight: 700;
     margin-bottom: 0.2rem;
     margin-top: 1rem;
 }
