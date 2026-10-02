@@ -2,45 +2,18 @@
 import { listVendeurs } from '@/client';
 import { exportStructuresCSV, exportStructuresExcel, exportStructuresPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatNumber, getOpsnRegion, structureName } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
 
-import type { StructureAggMarchesDto, StructuresAggChamps } from '@/client';
+import type { StructuresAggChamps } from '@/client';
 import { rowsPerPageOptions, useApiSideDataTable } from '@/service/DataTableHelper';
 
-const { search, totalRecords, loading, rows, page, first, sortOrder, sortField, onPageChange, onSort } = useApiSideDataTable(fetchData);
-
-const fournisseurs = ref<Array<StructureAggMarchesDto>>([]);
-
-function fetchData() {
-    loading.value = true;
-
-    listVendeurs({
-        query: {
-            limit: rows.value,
-            offset: page.value * rows.value,
-            ordre: sortOrder.value,
-            champs_ordre: sortField.value as StructuresAggChamps,
-            filtre: search.value.toUpperCase()
-        }
-    }).then((response) => {
-        if (response.data) {
-            fournisseurs.value = response.data.items;
-            totalRecords.value = response.data.total;
-        }
-        loading.value = false;
-    });
-}
-
-onMounted(() => {
-    fetchData();
-});
+const { search, filtre, totalRecords, loading, rows, first, sortOrder, sortField, onPageChange, onSort, items, etat, refetch } = useApiSideDataTable(listVendeurs);
 
 async function fetchAndExportAllData() {
     const response = await listVendeurs({
         query: {
             ordre: sortOrder.value,
             champs_ordre: sortField.value as StructuresAggChamps,
-            filtre: search.value.toUpperCase()
+            filtre: filtre.value
         }
     });
     return response.data;
@@ -72,22 +45,9 @@ async function exportPDF() {
             Cliquez sur chaque élement de la liste pour découvrir le profil détaillé du titulaire. Le montant affiché correspond au total des contrats gagnés par le titulaire. La table est triée alphabetiquement par la dénomination des titulaires.
             Certains fournisseurs peuvent être classés en [ND] , c'est-à-dire en données non diffusables ou non diffusibles.
         </p>
-        <DataTable
-            :value="fournisseurs"
-            stripedRows
-            paginator
-            lazy
-            :loading
-            :rows
-            :rowsPerPageOptions
-            :totalRecords
-            :first
-            :sortField
-            :sortOrder
-            @page="(onPageChange($event), fetchData())"
-            @update:rows="rows = $event"
-            @sort="(onSort($event), fetchData())"
-        >
+        <ErreurChargement v-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement de la liste des fournisseurs a échoué" class="my-4" @retry="refetch" />
+
+        <DataTable :value="items" stripedRows paginator lazy :loading :rows :rowsPerPageOptions :totalRecords :first :sortField :sortOrder @page="onPageChange" @update:rows="rows = $event" @sort="onSort">
             <template #header>
                 <div class="flex flex-row">
                     <div class="basis-1/2 flex gap-1">
