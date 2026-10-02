@@ -68,7 +68,7 @@ function removeNnbsp(text: string): string {
                 <div class="label">PÉRIODE</div>
                 <Skeleton v-if="chargement" width="4rem" height="1.25rem" class="mx-auto" />
                 <template v-else>
-                    <div class="value">{{ indicateurs!.periode === null ? 'Période absente' : indicateurs!.periode + 'mois' }}</div>
+                    <div class="value">{{ indicateurs!.periode === null ? 'Période absente' : indicateurs!.periode + ' mois' }}</div>
                 </template>
             </div>
             <div class="indicateur">
