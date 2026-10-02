@@ -1,7 +1,13 @@
 import type { StructureDto, StructureEtendueDto } from '@/client';
 
-export const formatNumber = (value: number) => {
-    return value ? value.toLocaleString('fr-FR') : 0;
+/**
+ * Formate un nombre pour l'affichage.
+ *
+ * Une absence de valeur et un zéro ne sont pas la même chose : une absence ne doit rien afficher
+ * plutôt qu'un « 0 » qui ferait croire à un résultat réel.
+ */
+export const formatNumber = (value: number | null | undefined): string => {
+    return value === null || value === undefined ? '' : value.toLocaleString('fr-FR');
 };
 
 export const formatCurrency = (value: number) => {
