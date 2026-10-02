@@ -34,8 +34,8 @@ class FiltreMarchesEtendus(FiltreTemporelStructure):
     procedure: ProcedureMarche | None = None
     categorie: CategorieMarche | None = None
     technique_achat: TechniqueAchat | None = None
-    consideration: ConsiderationsEnvironnementales | ConsiderationsSociales | None = (
-        None
+    consideration: list[ConsiderationsEnvironnementales | ConsiderationsSociales] = (
+        Field(default_factory=list)
     )
     montant_max: int | None = Field(ge=0, default=None)
     montant_min: int | None = Field(ge=0, default=None)

@@ -2,7 +2,18 @@ from decimal import Decimal
 from typing import Annotated, Any
 
 from fastapi import APIRouter, HTTPException, Query
-from sqlalchemy import Row, Select, String, asc, cast, desc, distinct, func, select
+from sqlalchemy import (
+    Row,
+    Select,
+    String,
+    asc,
+    cast,
+    desc,
+    distinct,
+    exists,
+    func,
+    select,
+)
 from sqlalchemy.orm import aliased
 
 from app.dependencies import SessionDep
@@ -100,15 +111,26 @@ def application_filtres_etendus(
             TechniqueAchatMarche.technique == f.technique_achat.db_value
         )
 
-    if f.consideration and isinstance(f.consideration, ConsiderationsEnvironnementales):
-        stmt = stmt.join(Marche.considerations_environnementales).where(
-            ConsiderationEnvMarche.consideration == f.consideration.db_value
-        )
+    for consideration in f.consideration:
+        if isinstance(consideration, ConsiderationsEnvironnementales):
+            stmt = stmt.where(
+                exists()
+                .where(
+                    ConsiderationEnvMarche.uid_marche == Marche.uid,
+                    ConsiderationEnvMarche.consideration == consideration.db_value,
+                )
+                .correlate(Marche)
+            )
 
-    if f.consideration and isinstance(f.consideration, ConsiderationsSociales):
-        stmt = stmt.join(Marche.considerations_sociales).where(
-            ConsiderationSocialeMarche.consideration == f.consideration.db_value
-        )
+        elif isinstance(consideration, ConsiderationsSociales):
+            stmt = stmt.where(
+                exists()
+                .where(
+                    ConsiderationSocialeMarche.uid_marche == Marche.uid,
+                    ConsiderationSocialeMarche.consideration == consideration.db_value,
+                )
+                .correlate(Marche)
+            )
 
     if f.montant_max:
         stmt = stmt.where(Marche.montant <= f.montant_max)
@@ -253,7 +275,7 @@ def get_indicateurs(
     ).scalar()
     nb_considerations_sociale_env = session.execute(
         application_filtres_etendus(
-            select(func.count(Marche.uid))
+            select(func.count(func.distinct(Marche.uid)))
             .join(Marche.considerations_environnementales)
             .join(Marche.considerations_sociales),
             filtres,
