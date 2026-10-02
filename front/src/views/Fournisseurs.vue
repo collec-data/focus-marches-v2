@@ -1,12 +1,26 @@
 <script setup lang="ts">
 import { listVendeurs } from '@/client';
+import { rowsPerPageOptions, useApiSideDataTable } from '@/service/DataTableHelper';
+import { useEcritureDebouncee } from '@/service/Debouncer';
 import { exportStructuresCSV, exportStructuresExcel, exportStructuresPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatNumber, getOpsnRegion, structureName } from '@/service/HelpersService';
+import { ref } from 'vue';
 
 import type { StructuresAggChamps } from '@/client';
-import { rowsPerPageOptions, useApiSideDataTable } from '@/service/DataTableHelper';
 
-const { search, filtre, totalRecords, loading, rows, first, sortOrder, sortField, onPageChange, onSort, items, etat, refetch } = useApiSideDataTable(listVendeurs);
+const { filtre, page, totalRecords, loading, rows, first, sortOrder, sortField, onPageChange, onSort, items, etat, refetch } = useApiSideDataTable(listVendeurs);
+
+const search = ref('');
+
+// La frappe n'interroge pas l'API : le terme envoyé à la liste est différé et normalisé comme le fait
+// la recherche par structure, et un terme nouveau repart de la première page.
+useEcritureDebouncee(
+    () => search.value.toUpperCase(),
+    filtre,
+    () => {
+        page.value = 0;
+    }
+);
 
 async function fetchAndExportAllData() {
     const response = await listVendeurs({
