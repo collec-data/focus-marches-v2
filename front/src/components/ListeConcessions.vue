@@ -1,49 +1,51 @@
 <script setup lang="ts">
 import { type ContratConcessionDto, getListeConcessions } from '@/client';
 import { exportConcessionsCSV, exportConcessionsExcel, exportConcessionsPdf } from '@/service/ExportDatatableService';
-import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { formatCurrency, formatDate, structureName } from '@/service/HelpersService';
-import { onMounted, ref, watch } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
+import { computed, ref, watch } from 'vue';
 
+import type { PropType } from 'vue';
+
+// Pas de valeur par défaut : `undefined` signifie « autorité encore non identifiée », `null` « aucune autorité demandée ».
 const props = defineProps({
-    autoriteConcedanteUid: { type: [Number, null], default: null },
-    autoriteConcedanteSiret: { type: [String, null], default: null },
-    concessionnaireUid: { type: [Number, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    autoriteConcedanteUid: { type: Number as PropType<number | null>, required: false },
+    autoriteConcedanteSiret: { type: String as PropType<string | null>, required: false },
+    concessionnaireUid: { type: Number as PropType<number | null>, required: false },
+    dateMin: { type: Date as PropType<Date | null>, required: false },
+    dateMax: { type: Date as PropType<Date | null>, required: false }
 });
 
-const listeConcessions = ref<Array<ContratConcessionDto>>([]);
-const loading = ref(false);
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.autoriteConcedanteUid,
+    () => props.autoriteConcedanteSiret
+);
 
-async function fetchData() {
-    loading.value = true;
-    if (props.autoriteConcedanteUid == -1) {
-        return;
+const options = computed(() => {
+    if (uid.value === undefined) {
+        return undefined;
     }
-    const autoriteConcedanteUid = await getAcheteurUid(props.autoriteConcedanteUid, props.autoriteConcedanteSiret);
-
-    getListeConcessions({
+    return {
         query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            autorite_concedante_uid: autoriteConcedanteUid?.toString(),
-            concessionnaire_uid: props.concessionnaireUid?.toString()
+            date_debut: props.dateMin ?? undefined,
+            date_fin: props.dateMax ?? undefined,
+            autorite_concedante_uid: uid.value === null ? undefined : String(uid.value),
+            concessionnaire_uid: props.concessionnaireUid === null || props.concessionnaireUid === undefined ? undefined : String(props.concessionnaireUid)
         }
-    }).then((response) => {
-        if (response.data) {
-            listeConcessions.value = response.data;
-        }
-        loading.value = false;
-    });
-}
-
-onMounted(() => {
-    fetchData();
+    };
 });
 
-watch([() => props.dateMin, () => props.dateMax, () => props.autoriteConcedanteUid, () => props.concessionnaireUid], () => {
-    fetchData();
+const { etat, refetch } = useReactiveFetch(getListeConcessions, options);
+
+const listeConcessions = computed<Array<ContratConcessionDto>>(() => (etat.value.statut === 'succes' ? etat.value.data : []));
+
+watch([() => props.dateMin, () => props.dateMax, () => props.concessionnaireUid], () => {
+    refetch();
 });
 
 const concessionUid = ref(null);
@@ -52,9 +54,23 @@ const concessionUid = ref(null);
 <template>
     <section>
         <h2>Contrat-concessions</h2>
-        <DataTable :value="listeConcessions" sortField="date_notification" :sortOrder="-1" size="small" stripedRows :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }" :loading>
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
+        <ChargementEnCours v-else-if="uid === undefined" class="my-4" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement des concessions a échoué" class="my-4" @retry="refetch" />
+
+        <DataTable
+            v-else
+            :value="listeConcessions"
+            sortField="date_notification"
+            :sortOrder="-1"
+            size="small"
+            stripedRows
+            :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
+            :loading="etat.statut === 'chargement'"
+        >
             <template #empty>
-                <div class="text-center">
+                <div v-if="etat.statut === 'succes'" class="text-center">
                     <Badge size="xlarge" severity="info">Aucune concession</Badge>
                 </div>
             </template>
@@ -70,7 +86,7 @@ const concessionUid = ref(null);
             <Column header="Détails">
                 <template #body="{ data }"> <Button label="Voir" aria-label="Voir les détails de la concessions" @click="concessionUid = data.uid" /> </template
             ></Column>
-            <Column v-if="!autoriteConcedanteUid" field="autorite_concedante.nom" header="Autorité" sortable>
+            <Column v-if="uid === null" field="autorite_concedante.nom" header="Autorité" sortable>
                 <template #body="{ data }">{{ structureName(data.autorite_concedante) }}</template>
             </Column>
             <Column header="Concessionnaires">

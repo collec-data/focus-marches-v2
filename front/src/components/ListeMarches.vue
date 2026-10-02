@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { getListeMarches } from '@/client';
 import { exportMarchesCSV, exportMarchesExcel, exportMarchesPdf } from '@/service/ExportDatatableService';
-import { getAcheteurUid } from '@/service/GetAcheteurService';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { useReactiveFetch } from '@/utils/query';
 import { FilterMatchMode } from '@primevue/core/api';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 
 import type { MarcheAllegeDto } from '@/client';
+import type { PropType } from 'vue';
 
+// Pas de valeur par défaut : `undefined` signifie « acheteur demandé mais pas encore identifié »,
+// tandis que `null` signifie « aucun acheteur demandé », donc aucun filtre.
 const props = defineProps({
-    acheteurUid: { type: [Number, null], default: null },
-    acheteurSiret: { type: [String, null], default: null },
-    vendeurUid: { type: [Number, null], default: null },
-    dateMin: { type: [Date, null], default: null },
-    dateMax: { type: [Date, null], default: null }
+    acheteurUid: { type: Number as PropType<number | null>, required: false },
+    acheteurSiret: { type: String as PropType<string | null>, required: false },
+    vendeurUid: { type: Number as PropType<number | null>, required: false },
+    dateMin: { type: Date as PropType<Date | null>, required: false },
+    dateMax: { type: Date as PropType<Date | null>, required: false }
 });
 
 const filters = ref({
@@ -24,36 +28,35 @@ const filters = ref({
     montant: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
-const loading = ref(false);
-const listeMarches = ref<Array<MarcheAllegeDto>>([]);
+const {
+    uid,
+    erreur: erreurAcheteur,
+    refetch: refetchAcheteur
+} = useStructureIdentifiee(
+    () => props.acheteurUid,
+    () => props.acheteurSiret
+);
 
-async function fetchData() {
-    loading.value = true;
-    if (props.acheteurUid == -1) {
-        return;
+const options = computed(() => {
+    if (uid.value === undefined) {
+        return undefined;
     }
-    const acheteurUid = await getAcheteurUid(props.acheteurUid, props.acheteurSiret);
-    getListeMarches({
+    return {
         query: {
-            date_debut: props.dateMin,
-            date_fin: props.dateMax,
-            acheteur_uid: acheteurUid,
-            vendeur_uid: props.vendeurUid
+            date_debut: props.dateMin ?? undefined,
+            date_fin: props.dateMax ?? undefined,
+            acheteur_uid: uid.value ?? undefined,
+            vendeur_uid: props.vendeurUid ?? undefined
         }
-    }).then((response) => {
-        if (response.data) {
-            listeMarches.value = response.data;
-            loading.value = false;
-        }
-    });
-}
-
-onMounted(() => {
-    fetchData();
+    };
 });
 
-watch([() => props.dateMin, () => props.dateMax, () => props.acheteurUid, () => props.vendeurUid], () => {
-    fetchData();
+const { etat, refetch } = useReactiveFetch(getListeMarches, options);
+
+const listeMarches = computed<Array<MarcheAllegeDto>>(() => (etat.value.statut === 'succes' ? etat.value.data : []));
+
+watch([() => props.dateMin, () => props.dateMax, () => props.vendeurUid], () => {
+    refetch();
 });
 
 const countSousTraitants = (value: Array<any>) => {
@@ -90,7 +93,13 @@ const hiddenCol = computed(() => {
     <section>
         <h2 class="title">Tous les marchés</h2>
         <p>Ce tableau affiche les principales informations des marchés. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
+
+        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
+        <ChargementEnCours v-else-if="uid === undefined" class="my-4" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement des marchés a échoué" class="my-4" @retry="refetch" />
+
         <DataTable
+            v-else
             v-model:filters="filters"
             :value="listeMarches"
             sortField="date_notification"
@@ -101,10 +110,12 @@ const hiddenCol = computed(() => {
             :rows="10"
             :rowsPerPageOptions="[10, 25, 50]"
             :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
-            :loading
+            :loading="etat.statut === 'chargement'"
         >
             <template #empty>
-                <div class="text-center">
+                <!-- Le message « aucun marché » n'est vrai qu'une fois la réponse reçue :
+                     on ne l'affiche pas pendant le chargement. -->
+                <div v-if="etat.statut === 'succes'" class="text-center">
                     <Badge size="xlarge" severity="info">Aucun marché</Badge>
                 </div>
             </template>
