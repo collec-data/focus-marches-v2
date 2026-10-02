@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { getStructureId, type StructureEtendueDto } from '@/client';
+import { type StructureEtendueDto } from '@/client';
 import { formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
-import { onMounted, ref, watchEffect } from 'vue';
+import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
+import { computed } from 'vue';
 
 import type { PropType } from 'vue';
 
@@ -10,26 +11,20 @@ const props = defineProps({
     acheteurSiret: { type: [String, null], default: null }
 });
 
-const acheteur = ref<Partial<StructureEtendueDto>>(props.acheteur);
-watchEffect(() => {
-    acheteur.value = props.acheteur;
-});
+const { structure, erreur, refetch } = useStructureIdentifiee(
+    () => props.acheteur?.uid,
+    () => props.acheteurSiret ?? null,
+    { structure: true }
+);
 
-onMounted(() => {
-    if (props.acheteurSiret) {
-        getStructureId({ path: { id: props.acheteurSiret, type_id: 'SIRET' } }).then((response) => {
-            if (response.data) {
-                acheteur.value = response.data;
-            }
-        });
-    }
-});
+const acheteur = computed<Partial<StructureEtendueDto>>(() => structure.value ?? props.acheteur);
 </script>
 
 <template>
     <section class="mb-10">
         <h2>Localisation et contexte</h2>
-        <div class="grid grid-cols-12 gap-5">
+        <ErreurChargement v-if="erreur" :erreur="erreur" message="Aucune structure ne correspond à ce SIRET" @retry="refetch" />
+        <div v-else class="grid grid-cols-12 gap-5">
             <LeafletMap :lon="acheteur.longitude" :lat="acheteur.latitude" :label="structureName(acheteur) + '<br>' + acheteur.adresse" class="col-span-12 xl:col-span-6" />
             <table class="col-span-12 xl:col-span-6">
                 <tbody>
