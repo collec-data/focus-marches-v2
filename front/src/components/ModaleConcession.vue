@@ -1,31 +1,30 @@
 <script setup lang="ts">
-import { type ContratConcessionDto, getConcession } from '@/client';
+import { getConcession } from '@/client';
 import { formatCurrency, formatDate } from '@/service/HelpersService';
-import { computed, ref, watchEffect } from 'vue';
+import { useReactiveFetch } from '@/utils/query';
+import { computed } from 'vue';
 
 const concessionUid = defineModel<number | null>();
-const concession = ref<Partial<ContratConcessionDto>>();
-const showModale = computed(() => concession.value != null);
 
-watchEffect(() => {
-    if (concessionUid.value) {
-        getConcession({ path: { uid: concessionUid.value } }).then((response) => {
-            if (response.data) {
-                concession.value = response.data;
-            }
-        });
-    }
-});
+const concessionOptions = computed(() => (concessionUid.value ? { path: { uid: concessionUid.value } } : undefined));
+
+const { etat: etatConcession, refetch: refetchConcession } = useReactiveFetch(getConcession, concessionOptions);
+
+const concession = computed(() => (etatConcession.value.statut === 'succes' ? etatConcession.value.data : null));
+
+/** La modale suit la demande d'ouverture, pas la donnée reçue : elle s'affiche et charge. */
+const showModale = computed(() => concessionUid.value != null);
 
 function hideConcessionModal() {
     concessionUid.value = null;
-    concession.value = undefined;
 }
 </script>
 
 <template>
     <Dialog :visible="showModale" modal :header="'Détails du contrat ' + concession?.id" class="max-w-full" @update:visible="hideConcessionModal">
-        <div class="flex flex-row flex-wrap">
+        <ErreurChargement v-if="etatConcession.statut === 'erreur'" :erreur="etatConcession.erreur" message="Le détail de la concession n'a pas pu être chargé" @retry="refetchConcession" />
+        <ChargementEnCours v-else-if="!concession" libelle="Chargement de la concession" />
+        <div v-else class="flex flex-row flex-wrap">
             <div class="bg-neutral-200 basis-10rem pl-3 pr-3">
                 <div class="key">Montant</div>
                 <div class="value text-xl">
