@@ -2,14 +2,12 @@
 import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listCpv, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { exportMarchesCSV, exportMarchesPdf } from '@/service/ExportDatatableService';
-import { formatCurrency, formatDate, getCatEntreprise, getMonthAsString, getNow, structureName } from '@/service/HelpersService';
-import { onMounted, ref } from 'vue';
+import { formatCurrency, formatDate, getCatEntreprise, getNow, structureName } from '@/service/HelpersService';
+import { useReactiveFetch } from '@/utils/query';
+import { computed, ref, toRaw } from 'vue';
 
-import type { CpvDto, LieuDto, MarcheAllegeDto, StructureDto } from '@/client';
+import type { CpvDto, GetLieuxData, GetListeMarchesData, LieuDto, StructureDto } from '@/client';
 import type { AutoCompleteCompleteEvent } from 'primevue';
-
-const loading = ref(false);
-const marches = ref<MarcheAllegeDto[]>([]);
 
 const options_achat_durable: string[] = (Object.values(ConsiderationsEnvironnementales) as string[]).concat(Object.values(ConsiderationsSociales) as string[]).filter((o) => !o.includes('Pas de'));
 
@@ -17,38 +15,32 @@ const filterOptions = {
     ignoreCase: true
 };
 
-const codes_cpv = ref<CpvDto[]>([]);
+const rechercheCpv = ref('');
+
+const cpvOptions = computed(() => (rechercheCpv.value.length > 2 ? { query: { libelle: rechercheCpv.value } } : undefined));
+
+const { etat: etatCpv } = useReactiveFetch(listCpv, cpvOptions);
+
+const codes_cpv = computed(() => (etatCpv.value.statut === 'succes' ? etatCpv.value.data : []));
 
 function searchCpv(e: AutoCompleteCompleteEvent) {
-    if (e.query.length > 2) {
-        listCpv({ query: { libelle: e.query } }).then((response) => {
-            if (response.data) {
-                codes_cpv.value = response.data;
-            }
-        });
-    } else {
-        codes_cpv.value = [];
-    }
+    rechercheCpv.value = e.query;
 }
 
 interface departement {
     value: string;
     code: string;
 }
-const departements = ref<departement[]>([]);
-function getDepartementsRecenses() {
-    getLieux({ query: { type_lieu: TypeCodeLieu.CODE_DÉPARTEMENT } }).then((response) => {
-        if (response.data) {
-            departements.value = response.data.map((lieu: LieuDto) => {
-                return { value: `(${lieu.code}) ${getNomDepartement(lieu.code)}`, code: lieu.code };
-            });
-        }
-    });
-}
 
-onMounted(() => {
-    getDepartementsRecenses();
-});
+const lieuxOptions = computed<{ query: NonNullable<GetLieuxData['query']> }>(() => ({ query: { type_lieu: TypeCodeLieu.CODE_DÉPARTEMENT } }));
+
+const { etat: etatLieux } = useReactiveFetch(getLieux, lieuxOptions);
+
+const departements = computed<departement[]>(() =>
+    (etatLieux.value.statut === 'succes' ? etatLieux.value.data : []).map((lieu: LieuDto) => {
+        return { value: `(${lieu.code}) ${getNomDepartement(lieu.code)}`, code: lieu.code };
+    })
+);
 
 const filtres = ref({
     acheteur: null as null | StructureDto,
@@ -71,44 +63,57 @@ const filtres = ref({
     date_max: getNow()
 });
 
-const query = ref({});
+type Filtres = typeof filtres.value;
 
-function fetchData() {
-    loading.value = true;
-    query.value = {
-        acheteur_uid: filtres.value.acheteur?.uid,
-        vendeur_uid: filtres.value.fournisseur?.uid,
-        objet: filtres.value.objet,
-        cpv: filtres.value.code_cpv || filtres.value.cpv?.code,
-        code_lieu: filtres.value.code_lieu,
-        type_marche: filtres.value.type_marche,
-        forme_prix: filtres.value.forme_prix,
-        procedure: filtres.value.procedure,
-        technique_achat: filtres.value.technique_achat,
-        categorie: filtres.value.categorie,
-        consideration: filtres.value.consideration,
-        montant_min: filtres.value.montant_min,
-        montant_max: filtres.value.montant_max,
-        duree_min: filtres.value.duree_min,
-        duree_max: filtres.value.duree_max,
-        date_debut: getMonthAsString(filtres.value.date_min),
-        date_fin: getMonthAsString(filtres.value.date_max)
+/**
+ * Filtres validés par « Chercher ». `null` tant qu'aucune recherche n'a été lancée : les résultats affichés
+ * comme les indicateurs doivent tous correspondre à la même recherche, et rien n'est demandé avant l'heure.
+ */
+const filtres_appliques = ref<Filtres | null>(null);
+
+type QueryMarches = NonNullable<GetListeMarchesData['query']>;
+
+const query = computed<QueryMarches>(() => {
+    const appliques = filtres_appliques.value;
+    if (!appliques) {
+        return {};
+    }
+    return {
+        acheteur_uid: appliques.acheteur?.uid,
+        vendeur_uid: appliques.fournisseur?.uid,
+        objet: appliques.objet,
+        // Le code CPV saisi comme code libre l'emporte sur celui choisi dans la liste déroulante.
+        cpv: appliques.code_cpv || (appliques.cpv ? String(appliques.cpv.code) : undefined),
+        code_lieu: appliques.code_lieu,
+        type_marche: appliques.type_marche,
+        forme_prix: appliques.forme_prix,
+        procedure: appliques.procedure,
+        technique_achat: appliques.technique_achat,
+        categorie: appliques.categorie,
+        consideration: appliques.consideration,
+        montant_min: appliques.montant_min,
+        montant_max: appliques.montant_max,
+        duree_min: appliques.duree_min,
+        duree_max: appliques.duree_max,
+        date_debut: appliques.date_min,
+        date_fin: appliques.date_max
     };
-    getListeMarches({
-        query: {
-            ...query.value
-        }
-    }).then((response) => {
-        if (response.data) {
-            marches.value = response.data;
-            loading.value = false;
-        }
-    });
-}
+});
 
-function search(event: SubmitEvent) {
-    event.preventDefault();
-    fetchData();
+const marchesOptions = computed<{ query: QueryMarches } | undefined>(() => (filtres_appliques.value ? { query: query.value } : undefined));
+
+const { etat: etatMarches, refetch: refetchMarches } = useReactiveFetch(getListeMarches, marchesOptions);
+
+const marches = computed(() => (etatMarches.value.statut === 'succes' ? etatMarches.value.data : []));
+
+/** Période réellement recherchée, et non celle en cours de saisie. */
+const periode = computed(() => {
+    const appliques = filtres_appliques.value;
+    return { min: appliques?.date_min, max: appliques?.date_max };
+});
+
+function search() {
+    filtres_appliques.value = structuredClone(toRaw(filtres.value));
 }
 
 const recherche_avancee = ref(false);
@@ -149,7 +154,7 @@ const marcheUid = ref(null);
             <template #icons>
                 <ToggleButton v-model="recherche_avancee" onLabel="Recherche simple" offLabel="Recherche avancée" />
             </template>
-            <form @submit="search">
+            <form @submit.prevent="search">
                 <div class="flex flex-row gap-5 mb-5">
                     <div class="basis-1/3">
                         <StructureSearchAutoComplete v-model="filtres.acheteur" structureType="acheteur" />
@@ -181,10 +186,12 @@ const marcheUid = ref(null);
                             :filterOptions
                             @complete="searchCpv"
                         ></AutoComplete>
+                        <p v-if="etatCpv.statut === 'erreur'" class="text-sm mt-1">La liste des codes CPV n'a pas pu être chargée. Le filtre par libellé est indisponible.</p>
                     </div>
                     <div class="basis-1/3">
                         <label for="lieu">Lieu</label>
                         <Select v-model="filtres.code_lieu" :options="departements" optionLabel="value" optionValue="code" inputId="lieu" name="lieu" aria-label="Sélecteur de département" placeholder="Tous les départements" showClear fluid />
+                        <p v-if="etatLieux.statut === 'erreur'" class="text-sm mt-1">La liste des départements n'a pas pu être chargée. Le filtre par lieu est indisponible.</p>
                     </div>
                 </div>
                 <div v-if="recherche_avancee" class="flex flex-row gap-5 mb-5">
@@ -250,20 +257,34 @@ const marcheUid = ref(null);
                         <DatePicker v-model="filtres.date_max" inputId="date_max" name="date_max" updateModelType="date" showIcon showButtonBar fluid />
                     </div>
                 </div>
-                <Message size="small" severity="secondary" variant="simple" class="mb-1">Cliquez sur «&nbsp;Chercher&nbsp;» pour afficher tous les marchés. Limitez la recherche en utilisant les différents filtres ci-dessus.</Message>
+                <Message size="small" severity="secondary" variant="simple" class="mb-1"> Cliquez sur «&nbsp;Chercher&nbsp;» pour afficher tous les marchés. Limitez la recherche en utilisant les différents filtres ci-dessus. </Message>
                 <Button class="uppercase w-full" type="submit" label="Chercher" severity="primary" />
             </form>
         </Panel>
 
         <hr />
-        <IndicateursCles v-if="marches.length" :query :dateMin="filtres.date_min" :dateMax="filtres.date_max" />
-        <DistributionTemporelleMarches v-if="marches.length" :query :dateMin="filtres.date_min" :dateMax="filtres.date_max" />
+        <template v-if="marches.length">
+            <IndicateursCles :query :dateMin="periode.min" :dateMax="periode.max" />
+            <DistributionTemporelleMarches :query :dateMin="periode.min" :dateMax="periode.max" />
+        </template>
 
         <section>
             <h2 class="title">Toutes les données de votre recherche</h2>
             <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
-            <DataTable :value="marches" size="small" stripedRows paginator :rows="10" :rowsPerPageOptions="[10, 25, 50]" :loading :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }">
-                <template #empty>
+            <p v-if="!filtres_appliques" class="mt-4">Lancez une recherche avec le bouton «&nbsp;Chercher&nbsp;» pour afficher les marchés correspondants.</p>
+            <ErreurChargement v-else-if="etatMarches.statut === 'erreur'" :erreur="etatMarches.erreur" message="Le chargement des marchés a échoué" class="my-4" @retry="refetchMarches" />
+            <DataTable
+                v-else
+                :value="marches"
+                size="small"
+                stripedRows
+                paginator
+                :rows="10"
+                :rowsPerPageOptions="[10, 25, 50]"
+                :loading="etatMarches.statut === 'chargement'"
+                :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
+            >
+                <template v-if="etatMarches.statut === 'succes'" #empty>
                     <div class="text-center">
                         <Badge size="xlarge" severity="info">Aucun marché pour cette sélection</Badge>
                     </div>
