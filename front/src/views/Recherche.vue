@@ -227,7 +227,7 @@ const marcheUid = ref(null);
                         />
                     </div>
                     <div class="basis-1/3">
-                        <label for="achat_durable">Achat durable</label>
+                        <HelpTextLabel inputId="achat_durable" label="Achat durable" help="Les résultats contenant l'ensemble des valeurs sélectionnées seront retournés" />
                         <MultiSelect
                             v-model="filtres.consideration"
                             :options="options_achat_durable"

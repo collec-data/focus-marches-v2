@@ -35,6 +35,7 @@ declare module 'vue' {
     FloatLabel: typeof import('primevue/floatlabel')['default']
     Fluid: typeof import('primevue/fluid')['default']
     Graph: typeof import('./src/components/Graph.vue')['default']
+    HelpTextLabel: typeof import('./src/components/HelpTextLabel.vue')['default']
     IconField: typeof import('primevue/iconfield')['default']
     IndicateursCles: typeof import('./src/components/dashboard/IndicateursCles.vue')['default']
     InputIcon: typeof import('primevue/inputicon')['default']
