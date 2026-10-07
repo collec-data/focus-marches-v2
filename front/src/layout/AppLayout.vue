@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useLayout } from '@/layout/composables/layout';
 import { computed, ref, watch } from 'vue';
 import AppFooter from './AppFooter.vue';
@@ -13,7 +13,7 @@ const containerClass = computed(() => {
     };
 });
 
-const outsideClickListener = ref(null);
+const outsideClickListener = ref<((this: Document, ev: PointerEvent) => any) | null>(null);
 
 watch(isSidebarActive, (newVal) => {
     if (newVal) {
@@ -36,7 +36,7 @@ function bindOutsideClickListener() {
 
 function unbindOutsideClickListener() {
     if (outsideClickListener.value) {
-        document.removeEventListener('click', outsideClickListener);
+        document.removeEventListener('click', outsideClickListener.value);
         outsideClickListener.value = null;
     }
 }
@@ -44,7 +44,7 @@ function unbindOutsideClickListener() {
 function isOutsideClicked(event) {
     const topbarEl = document.querySelector('.layout-topbar');
 
-    return !(topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
+    return !topbarEl || !(topbarEl.isSameNode(event.target) || topbarEl.contains(event.target));
 }
 </script>
 

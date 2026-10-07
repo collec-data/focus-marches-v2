@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue';
 
 const items = ref([
@@ -13,7 +13,7 @@ const items = ref([
     <nav aria-label="Menu">
         <ul class="layout-menu">
             <li v-for="item in items" :key="item.label" class="layout-menu-item">
-                <router-link :to="item.to" @click="itemClick($event, item, index)">
+                <router-link :to="item.to">
                     <i :class="item.icon" class="layout-menuitem-icon"></i>
                     <span class="layout-menuitem-text">{{ item.label }}</span>
                 </router-link>

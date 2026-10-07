@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useLayout } from '@/layout/composables/layout';
 import { changePreset, getPresetExt, presets, primaryColors, surfaces } from '@/service/ConfiguratorService';
 import { updatePreset, updateSurfacePalette } from '@primeuix/themes';
