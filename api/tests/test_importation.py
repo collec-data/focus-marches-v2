@@ -51,7 +51,7 @@ def test_importation_marche_succes(db):
     assert marche1.ccag == 1
     assert marche1.offres_recues == 5
     assert marche1.attribution_avance is True
-    assert marche1.taux_avance == Decimal(0.5)
+    assert marche1.taux_avance == Decimal("0.5")
     assert marche1.type_groupement_operateurs is None
     assert marche1.sous_traitance_declaree is True
     assert marche1.procedure == 5
@@ -61,7 +61,7 @@ def test_importation_marche_succes(db):
     assert marche1.duree_mois_initiale == 99
     assert marche1.date_notification == date(2042, 12, 1)
     assert marche1.date_publication == date(2042, 12, 2)
-    assert marche1.montant == Decimal(11111.0)
+    assert marche1.montant == Decimal("11111.0")
     assert marche1.montant_initial == 6.66e7
     assert marche1.type_prix == [3]
     assert marche1.forme_prix == 2
@@ -149,7 +149,7 @@ def test_importation_concession_succes(db):
     assert concession1.considerations_environnementales == []
     assert len(concession1.donnees_execution) == 1
     assert concession1.donnees_execution[0].date_publication == date(2025, 1, 1)
-    assert concession1.donnees_execution[0].depenses_investissement == Decimal("100000")
+    assert concession1.donnees_execution[0].depenses_investissement == Decimal(100000)
     assert len(concession1.donnees_execution[0].tarifs) == 2
     assert concession1.donnees_execution[0].tarifs[0].intitule == "1 voyage"
     assert concession1.donnees_execution[0].tarifs[0].tarif == Decimal(1)

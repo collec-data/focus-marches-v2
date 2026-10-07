@@ -85,10 +85,10 @@ class TypeContrat(Enum):
 
 class CustomValidationError(Exception):
     def __init__(
-        self, message: str = "", errors: list[dict[str, str | list[str]]] = []
+        self, message: str = "", errors: list[dict[str, str | list[str]]] | None = None
     ):
         super().__init__(message)
-        self._errors = errors
+        self._errors = errors or []
 
     def errors(self) -> list[dict[str, str | list[str]]]:
         return self._errors
@@ -140,7 +140,7 @@ class ImportateurDecp:
         structure.vendeur = True
         return structure
 
-    @cache
+    @cache  # noqa: B019 l'importateur est un singleton
     def get_or_create_structure(
         self,
         id: str,
@@ -159,7 +159,7 @@ class ImportateurDecp:
         identique, passer `1` ou `id=1` en paramètre sera considéré
         comme deux appels différents
         """
-        if (id + type_id) in self._cache_structures.keys():
+        if (id + type_id) in self._cache_structures:
             return self._cache_structures[id + type_id]
 
         structure = Structure(identifiant=id, type_identifiant=type_id)
@@ -169,7 +169,7 @@ class ImportateurDecp:
 
         return structure
 
-    @cache
+    @cache  # noqa: B019 l'importateur est un singleton
     def get_or_create_lieu(self, code: str, type_code: TypeCodeLieu) -> Lieu:
         """
         Récupère le lieu ou le créé si il n'existe pas.
@@ -188,7 +188,7 @@ class ImportateurDecp:
             type_code=type_code.db_value,
         )
 
-    @cache
+    @cache  # noqa: B019 l'importateur est un singleton
     def get_accord_cadre(self, id: str) -> Marche | None:
         if id in self._cache_accords_cadre:
             return self._cache_accords_cadre[id]
@@ -489,7 +489,7 @@ class ImportateurDecp:
         o: dict[str, Any],
         type_contrat: TypeContrat,
     ) -> DecpMalForme:
-        def decimal_serializer(obj):  # type: ignore
+        def decimal_serializer(obj):
             if isinstance(obj, Decimal):
                 return str(obj)
             raise TypeError
@@ -657,15 +657,16 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
             response = requests.get(source, stream=True)
             response.raise_for_status()
             with open(RAW_FILE, "wb") as handle:
-                for block in response.iter_content(1024):
-                    handle.write(block)
+                handle.writelines(response.iter_content(1024))
 
             log.info("✨ Nettoyage du JSON")
-            with open(CLEANED_FILE, "w") as cf:
-                with open(f"{RAW_FILE}", "r", errors="ignore") as myFile:
-                    for line in myFile:
-                        line = line.replace("NaN", "null")
-                        cf.write(line)
+            with (
+                open(CLEANED_FILE, "w") as cf,
+                open(f"{RAW_FILE}", "r", errors="ignore") as myFile,
+            ):
+                for line in myFile:
+                    line = line.replace("NaN", "null")
+                    cf.write(line)
             os.remove(RAW_FILE)
 
             log.info("🔄 Import des marchés")
@@ -804,9 +805,7 @@ def infogreffe() -> None:
         raise typer.Exit(1)
 
     with get_engine().connect() as connexion:
-        connexion.execute(
-            text(f"TRUNCATE TABLE {str(StructureInfogreffe.__tablename__)}")
-        )
+        connexion.execute(text(f"TRUNCATE TABLE {StructureInfogreffe.__tablename__!s}"))
         connexion.commit()
     with Session(get_engine()) as session:
         structures = {

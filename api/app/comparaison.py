@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from enum import StrEnum
 from pathlib import Path
-from typing import Any
+from typing import Annotated, Any
 
 import ijson
 import typer
@@ -347,21 +347,33 @@ def principal() -> None:
 
 @app.command()
 def comparer(
-    dossier_daj: Path = typer.Option(
-        ..., exists=True, file_okay=False, help="Dossier des fichiers consolidés DAJ"
-    ),
-    dossier_opsn: Path = typer.Option(
-        ..., exists=True, file_okay=False, help="Dossier des fichiers de l'OPSN"
-    ),
-    sirets: Path = typer.Option(
-        ...,
-        exists=True,
-        dir_okay=False,
-        help="Fichier texte des SIRETs acheteurs à considérer (un par ligne)",
-    ),
-    sortie: Path = typer.Option(
-        Path("rapport.csv"), help="Chemin du rapport CSV à produire"
-    ),
+    dossier_daj: Annotated[
+        Path,
+        typer.Option(
+            exists=True,
+            file_okay=False,
+            help="Dossier des fichiers consolidés DAJ",
+        ),
+    ],
+    dossier_opsn: Annotated[
+        Path,
+        typer.Option(
+            exists=True,
+            file_okay=False,
+            help="Dossier des fichiers de l'OPSN",
+        ),
+    ],
+    sirets: Annotated[
+        Path,
+        typer.Option(
+            exists=True,
+            dir_okay=False,
+            help="Fichier texte des SIRETs acheteurs à considérer (un par ligne)",
+        ),
+    ],
+    sortie: Annotated[
+        Path, typer.Option(help="Chemin du rapport CSV à produire")
+    ] = Path("rapport.csv"),
 ) -> None:
     """Compare la présence des marchés entre le consolidé DAJ et les fichiers
     d'un OPSN, pour les acheteurs de la liste de SIRETs."""

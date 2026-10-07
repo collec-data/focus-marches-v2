@@ -1,8 +1,9 @@
-from datetime import date
+from datetime import datetime
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from app.helpers.timezone import TZ_EUROPE_PARIS
 from app.models.db import Conf
 
 
@@ -17,4 +18,8 @@ def create_or_update(session: Session, clef: str, valeur: str) -> None:
 
 
 def set_dernier_import(session: Session) -> None:
-    create_or_update(session, "dernier_import", date.today().strftime("%Y-%m-%d"))
+    create_or_update(
+        session,
+        "dernier_import",
+        datetime.now(tz=TZ_EUROPE_PARIS).date().strftime("%Y-%m-%d"),
+    )

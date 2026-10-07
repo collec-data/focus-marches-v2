@@ -6,7 +6,7 @@ class CustomStrEnum(StrEnum):
     db_value: int | None
 
     # https://docs.python.org/3/howto/enum.html#when-to-use-new-vs-init
-    def __new__(cls, value: str, db_value: int | None) -> "CustomStrEnum":
+    def __new__(cls, value: str, db_value: int | None) -> Self:
         obj = str.__new__(cls, [value])
         obj._value_ = value
         obj.db_value = db_value

@@ -11,7 +11,7 @@ from app.config import Config, get_config
 from app.db import get_engine
 
 
-def get_db() -> Generator[Session, None, None]:
+def get_db() -> Generator[Session]:
     with Session(get_engine()) as session:
         yield session
 

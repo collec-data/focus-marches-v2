@@ -1,17 +1,19 @@
 import os
 import sys
 
+from app.helpers.timezone import TZ_EUROPE_PARIS
+
 sys.path.append(os.getcwd())
 
 import csv
 import logging
 from collections import defaultdict
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal, InvalidOperation
 from enum import StrEnum
 from pathlib import Path
-from typing import Any, BinaryIO
+from typing import Annotated, Any, BinaryIO
 
 import ijson
 import requests
@@ -274,7 +276,7 @@ def _lire_date(valeur: Any) -> tuple[date | None, str]:
         return None, f"dateNotification illisible : « {valeur} »"
     if lue < DATE_MINIMALE:
         return lue, f"dateNotification antérieure à {DATE_MINIMALE.year} : {lue}"
-    if lue > date.today():
+    if lue > datetime.now(tz=TZ_EUROPE_PARIS).date():
         return lue, f"dateNotification dans le futur : {lue}"
     return lue, ""
 
@@ -421,7 +423,7 @@ def apparier(
             ]
             libres = [autre for autre in possibles if id(autre) not in apparies]
             if libres:
-                retenu = sorted(libres, key=lambda m: m.id_marche)[0]
+                retenu = min(libres, key=lambda m: m.id_marche)
                 rapprochement.daj = retenu
                 rapprochement.niveau = Niveau.HEURISTIQUE
                 rapprochement.ambigu = len(possibles) > 1
@@ -800,19 +802,24 @@ def principal() -> None:
 
 @app.command()
 def comparer(
-    annee: int = typer.Option(..., help="Année de notification à comparer"),
-    cache: Path = typer.Option(
-        Path("./decp-cache"), help="Dossier de cache des fichiers téléchargés"
+    annee: Annotated[
+        int,
+        typer.Option(help="Année de notification à comparer"),
+    ],
+    cache: Annotated[
+        Path,
+        typer.Option(help="Dossier de cache des fichiers téléchargés"),
+    ] = Path("./decp-cache"),
+    sortie: Annotated[Path, typer.Option(help="Dossier des rapports produits")] = Path(
+        "./rapports"
     ),
-    sortie: Path = typer.Option(
-        Path("./rapports"), help="Dossier des rapports produits"
-    ),
-    rafraichir: bool = typer.Option(
-        False, help="Force le retéléchargement même si le cache est à jour"
-    ),
+    rafraichir: Annotated[
+        bool,
+        typer.Option(help="Force le retéléchargement même si le cache est à jour"),
+    ] = False,
 ) -> None:
     """Vérifie que les marchés du profil acheteur figurent dans le national."""
-    if not 2000 <= annee <= date.today().year + 1:
+    if not 2000 <= annee <= datetime.now(tz=TZ_EUROPE_PARIS).year + 1:
         raise typer.BadParameter(f"Année hors bornes : {annee}")
 
     chemin_daj, chemins_opsn = telecharger_sources(annee, cache, rafraichir)

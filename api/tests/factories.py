@@ -98,8 +98,8 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     objet = "Lorem ipsum dolor"
     cpv = factory.declarations.SubFactory(CPVFactory)
     categorie = enums.CategorieMarche.SERVICES.db_value
-    techniques_achat: list[enums.TechniqueAchat] = []
-    modalites_execution: list[enums.ModaliteExecution] = []
+    techniques_achat = factory.declarations.LazyFunction(list)
+    modalites_execution = factory.declarations.LazyFunction(list)
     marche_innovant = False
     ccag: int
     offres_recues = 1
@@ -117,10 +117,10 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     montant_initial = factory.faker.Faker(
         "pydecimal", right_digits=2, min_value=0, max_value=1000000000
     )
-    type_prix: list[enums.TypePrix] = []
-    titulaires: list[VendeurFactory] = []
-    considerations_sociales: list[enums.ConsiderationsSociales] = []
-    considerations_environnementales: list[enums.ConsiderationsEnvironnementales] = []
+    type_prix = factory.declarations.LazyFunction(list)
+    titulaires = factory.declarations.LazyFunction(list)
+    considerations_sociales = factory.declarations.LazyFunction(list)
+    considerations_environnementales = factory.declarations.LazyFunction(list)
     accord_cadre: MarcheFactory | None = None
 
 
@@ -141,9 +141,9 @@ class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
     valeur_globale = factory.faker.Faker("pyint")
     valeur_globale_initiale = factory.faker.Faker("pyint")
     montant_subvention_publique = 0.0
-    considerations_sociales: list[enums.ConsiderationsSociales] = []
-    considerations_environnementales: list[enums.ConsiderationsEnvironnementales] = []
-    concessionnaires: list[VendeurFactory] = []
+    considerations_sociales = factory.declarations.LazyFunction(list)
+    considerations_environnementales = factory.declarations.LazyFunction(list)
+    concessionnaires = factory.declarations.LazyFunction(list)
 
 
 class ErreurFactory(factory.alchemy.SQLAlchemyModelFactory):

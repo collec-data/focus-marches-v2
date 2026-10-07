@@ -1,5 +1,5 @@
 import logging
-from datetime import date
+from datetime import datetime
 from decimal import Decimal
 from typing import Annotated
 
@@ -10,6 +10,7 @@ from sqlalchemy import asc, desc, distinct, func, or_, select
 from sqlalchemy.orm import aliased
 
 from app.dependencies import ApiEntrepriseDep, SessionDep
+from app.helpers.timezone import TZ_EUROPE_PARIS
 from app.models.db import Marche, Structure, StructureInfogreffe
 from app.models.dto import (
     StructureDto,
@@ -224,12 +225,14 @@ def complete_structure_etendue(
                     details.unite_legale.tranche_effectif_salarie.date_reference or "0"
                 )
                 structure_dto.date_creation = (
-                    date.fromtimestamp(float(details.date_creation))
+                    datetime.fromtimestamp(
+                        float(details.date_creation), tz=TZ_EUROPE_PARIS
+                    ).date()
                     if details.date_creation
                     else None
                 )
         except ApiEntrepriseClientError as e:
-            logger.error(f"API entreprise - {str(e)}")
+            logger.error(f"API entreprise - {e!s}")
 
     return structure_dto
 

@@ -153,7 +153,7 @@ class MarcheDto(BaseModel):
     modalites_execution_as_str: list[ModaliteExecution] = Field(
         serialization_alias="modalites_execution"
     )
-    accord_cadre: "MarcheDto | None"
+    accord_cadre: MarcheDto | None
     marche_innovant: bool
     ccag: int | None = Field(
         description="Cahiers des clauses administratives générales de référence du marché public"

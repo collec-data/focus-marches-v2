@@ -35,7 +35,7 @@ from app.models.enums import (
 
 class Base(DeclarativeBase):
     @declared_attr  # type: ignore
-    def __tablename__(cls: "Base") -> str:
+    def __tablename__(cls: Base) -> str:
         # On transforme le nom de CamelCase à snake_case
         return re.sub(r"(?!^)([A-Z]+)", r"_\1", cls.__name__).lower()
 
@@ -59,13 +59,13 @@ class Structure(Base):
     vendeur: Mapped[bool] = mapped_column(default=False)
     acheteur: Mapped[bool] = mapped_column(default=False)
     cat_entreprise: Mapped[str | None] = mapped_column(String(10), default=None)
-    marches_acheteurs: Mapped[list["Marche"]] = relationship(back_populates="acheteur")
-    marches_vendeur: Mapped[list["Marche"]] = relationship(
+    marches_acheteurs: Mapped[list[Marche]] = relationship(back_populates="acheteur")
+    marches_vendeur: Mapped[list[Marche]] = relationship(
         back_populates="titulaires", secondary=marche_titulaire_table
     )
     longitude: Mapped[float | None] = mapped_column(default=None)
     latitude: Mapped[float | None] = mapped_column(default=None)
-    infogreffe: Mapped[list["StructureInfogreffe"]] = relationship(
+    infogreffe: Mapped[list[StructureInfogreffe]] = relationship(
         back_populates="structure"
     )
 
@@ -223,7 +223,7 @@ class Marche(Base):
     modalites_execution: Mapped[list[int]] = mapped_column(
         MutableList.as_mutable(PickleType)
     )
-    accord_cadre: Mapped["Marche | None"] = relationship()  # 1*
+    accord_cadre: Mapped[Marche | None] = relationship()  # 1*
     uid_accord_cadre: Mapped[None | int] = mapped_column(
         ForeignKey("marche.uid", name="marche_accord_cadre_fk")
     )
@@ -406,7 +406,7 @@ class ContratConcession(Base):
 
 class Erreur(Base):
     uid: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    decp: Mapped["DecpMalForme"] = relationship()
+    decp: Mapped[DecpMalForme] = relationship()
     uid_decp: Mapped[int] = mapped_column(
         ForeignKey("decp_mal_forme.uid", name="erreur_decp_fk")
     )

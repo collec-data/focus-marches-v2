@@ -98,7 +98,7 @@ def test_montant_nan_lu_sans_erreur():
 
     par_id = {m.id_marche: m for m in marches}
     assert par_id["DAJ-NAN"].montant is None
-    assert par_id["DAJ-S13"].montant == Decimal("1300")
+    assert par_id["DAJ-S13"].montant == Decimal(1300)
 
 
 def test_dedoublonnage_compte_les_occurrences():
@@ -148,8 +148,8 @@ def test_ecarts_sur_marches_apparies(rapport):
     assert par_id["2024T0003"].ecart_titulaires is False
     assert par_id["2024T0004"].ecart_titulaires is True
     assert par_id["2024T0004"].ecart_date_jours == 0
-    assert par_id["2024T0005"].ecart_montant == Decimal("500")
-    assert par_id["2024T0001"].ecart_montant == Decimal("0")
+    assert par_id["2024T0005"].ecart_montant == Decimal(500)
+    assert par_id["2024T0001"].ecart_montant == Decimal(0)
 
 
 def test_occurrences_du_national_remontees(rapport):
@@ -266,7 +266,7 @@ def test_tri_place_les_manquants_en_tete(rapport):
 
 
 def test_synthese_par_acheteur(rapport):
-    rapprochements, lignes, *_ = rapport
+    _rapprochements, lignes, *_ = rapport
     par_acheteur = {ligne.acheteur: ligne for ligne in lignes}
 
     a = par_acheteur[ACHETEUR_A]

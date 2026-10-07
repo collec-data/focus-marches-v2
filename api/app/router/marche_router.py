@@ -307,7 +307,7 @@ def get_indicateurs(
     return IndicateursDto(
         periode=periode,
         nb_contrats=nb_contrats if nb_contrats else 0,
-        montant_total=montant_total if montant_total else Decimal("0"),
+        montant_total=montant_total if montant_total else Decimal(0),
         nb_acheteurs=nb_acheteurs if nb_acheteurs else 0,
         nb_fournisseurs=nb_fournisseurs if nb_fournisseurs else 0,
         nb_sous_traitance=nb_sous_traitance if nb_sous_traitance else 0,

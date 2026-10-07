@@ -7,7 +7,7 @@ class OpenDataSoft:
     def getCoordonnees(self, siret: str) -> dict[str, int | None]:
         response = requests.get(f"{self.BASE_URL}records?where=siret%3D{siret}")
 
-        if not response.status_code == 200:
+        if response.status_code != 200:
             return {"lon": None, "lat": None}
 
         geoloc = response.json()["results"][0]["geolocetablissement"]
