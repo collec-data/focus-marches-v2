@@ -55,7 +55,7 @@ def list_structures(
 def list_acheteurs(
     session: SessionDep,
     params: Annotated[ParamsAcheteurs, Query()],
-) -> dict[str, int | list[dict[str, Decimal | Structure]]]:
+) -> dict[str, list[dict[str, Structure | Decimal | int]] | int]:
     stmt = (
         select(
             Structure,
@@ -132,7 +132,7 @@ def list_acheteurs(
 def list_vendeurs(
     session: SessionDep,
     params: Annotated[ParamsVendeurs, Query()],
-) -> dict[str, int | list[dict[str, Decimal | Structure]]]:
+) -> dict[str, list[dict[str, Structure | Decimal | int]] | int]:
     stmt = (
         select(
             Structure,

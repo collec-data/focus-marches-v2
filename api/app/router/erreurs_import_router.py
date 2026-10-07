@@ -59,7 +59,7 @@ def get_stats_erreurs(
     date_debut: date | None = None,
     date_fin: date | None = None,
     uid_structure: int | None = None,
-) -> list[Row[tuple[int, str, str, str]]]:
+) -> list[Row[int, str, str, str]]:
     stmt = select(
         func.count(Erreur.message).label("nombre"),
         Erreur.message.label("erreur"),

@@ -489,7 +489,7 @@ class ImportateurDecp:
         o: dict[str, Any],
         type_contrat: TypeContrat,
     ) -> DecpMalForme:
-        def decimal_serializer(obj):
+        def decimal_serializer(obj: Any) -> Any:
             if isinstance(obj, Decimal):
                 return str(obj)
             raise TypeError

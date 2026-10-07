@@ -55,7 +55,9 @@ from app.models.filters import (
 router = APIRouter()
 
 
-def application_filtres(stmt: Select[Any], f: FiltreTemporelStructure) -> Select[Any]:
+def application_filtres[SELECT: Select](  # type: ignore[type-arg] # on ne précise pas d'arguments génériques sur Select sinon ils ne sont pas inférés
+    stmt: SELECT, f: FiltreTemporelStructure
+) -> SELECT:
     acheteur = aliased(Structure)
     titulaires = aliased(Structure)
 
@@ -181,8 +183,8 @@ def get_liste_marches(
 @router.get("/procedure", response_model=list[MarcheProcedureDto])
 def get_marches_par_procedure(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[Row[tuple[int | None, Decimal, int]]]:
-    stmt = (
+) -> list[Row[int | None, Decimal, int]]:
+    stmt: Select[int | None, Decimal, int] = (
         application_filtres(
             select(
                 Marche.procedure,
@@ -201,8 +203,8 @@ def get_marches_par_procedure(
 @router.get("/nature", response_model=list[MarcheNatureDto])
 def get_marches_par_nature(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[Row[tuple[int | None, Decimal, int]]]:
-    stmt = (
+) -> list[Row[int, str, Decimal, int]]:
+    stmt: Select[int, str, Decimal, int] = (
         application_filtres(
             select(
                 Marche.nature,
@@ -221,8 +223,8 @@ def get_marches_par_nature(
 @router.get("/ccag", response_model=list[MarcheCcagDto])
 def get_marches_par_ccag(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[Row[tuple[int | None, Decimal, int]]]:
-    stmt = (
+) -> list[Row[int | None, int, Decimal, int]]:
+    stmt: Select[int | None, int, Decimal, int] = (
         application_filtres(
             select(
                 Marche.ccag,
@@ -325,8 +327,8 @@ def get_indicateurs(
 @router.get("/departement", response_model=list[MarcheDepartementDto])
 def get_marches_par_departement(
     session: SessionDep,
-) -> list[Row[tuple[str, Decimal, int]]]:
-    stmt = (
+) -> list[Row[str, Decimal, int]]:
+    stmt: Select[str, Decimal, int] = (
         (
             select(
                 func.substr(Lieu.code, 1, 2).label("subcode"),
@@ -352,8 +354,8 @@ def get_marches_par_departement(
 )
 def get_categorie_departement(
     session: SessionDep,
-) -> list[Row[tuple[str, int, Decimal]]]:
-    stmt = (
+) -> list[Row[str, int, Decimal]]:
+    stmt: Select[str, int, Decimal] = (
         (
             select(
                 func.substr(Lieu.code, 1, 2).label("subcode"),
@@ -377,8 +379,8 @@ def get_categorie_departement(
 @router.get("/categorie", response_model=list[CategoriesDto])
 def get_categories(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[Row[tuple[str]]]:
-    stmt = (
+) -> list[Row[int, Decimal, int, str]]:
+    stmt: Select[int, Decimal, int, str] = (
         application_filtres(
             select(
                 Marche.categorie,
@@ -400,7 +402,7 @@ def get_categories(
 @router.get("/consideration", response_model=list[ConsiderationsGlobalDto])
 def get_considerations(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[dict[str, str | list[Row[tuple[str, int]]]]]:
+) -> list[dict[str, str | list[Row[int, Any]]]]:
     aucune_consideration = session.execute(
         application_filtres(
             select(
@@ -483,8 +485,8 @@ def get_considerations(
 )
 def get_considerations_environnementale(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[Row[tuple[int, int]]]:
-    stmt = (
+) -> list[Row[int, int]]:
+    stmt: Select[int, int] = (
         application_filtres(
             select(
                 func.count(Marche.uid).label("nombre"),
@@ -505,8 +507,8 @@ def get_considerations_environnementale(
 @router.get("/consideration/sociale", response_model=list[ConsiderationsSocialeDto])
 def get_considerations_sociale(
     session: SessionDep, filtres: Annotated[FiltreTemporelStructure, Query()]
-) -> list[Row[tuple[int, int]]]:
-    stmt = (
+) -> list[Row[int, int]]:
+    stmt: Select[int, int] = (
         application_filtres(
             select(
                 func.count(Marche.uid).label("nombre"),
