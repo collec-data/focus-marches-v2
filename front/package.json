@@ -8,7 +8,7 @@
         "preview": "vite preview",
         "lint": "eslint --fix .",
         "lint-check": "eslint .",
-        "format": "prettier --write .",
+        "format": "prettier --write . -l",
         "format-check": "prettier --check .",
         "gen": "openapi-ts",
         "test": "vitest run --coverage"
