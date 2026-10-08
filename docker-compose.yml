@@ -4,7 +4,7 @@ configs:
 
 services:
   db:
-    image: mariadb:latest@sha256:6a4c4bbf0447c2247801309513fcc0dd17c3f35390368139ce419387fdd1144d
+    image: mariadb:latest@sha256:f1bba652ba57bea3099ca2fe1af692af537c27d96e0bcde39dce29e2ba1ec4f3
     restart: always
     shm_size: 128mb
     environment:
