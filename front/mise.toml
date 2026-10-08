@@ -1,3 +1,15 @@
 [tools]
 nodejs = "24.21.0"
 pnpm = "12.10.0"
+
+[tasks.test]
+run = "pnpm run test"
+
+[tasks.format]
+run = "pnpm run format"
+
+[tasks.lint]
+run = "pnpm run lint"
+
+[tasks.type]
+run = "pnpm exec vue-tsc --noEmit --strict"

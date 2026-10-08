@@ -1,2 +1,14 @@
 [tools]
 uv = "0.12.23"
+
+[tasks.test]
+run = "uv run pytest"
+
+[tasks.format]
+run = "uv run ruff format"
+
+[tasks.lint]
+run = "uv run ruff check --fix"
+
+[tasks.type]
+run = "uv run ty check --fix"
