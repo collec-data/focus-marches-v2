@@ -721,7 +721,7 @@ def structures() -> None:
                         nb = 0
                         session.commit()
             except ApiEntrepriseClientError:
-                log.error(
+                log.exception(
                     f"Erreur ApiEntreprise lors de l'import des données de {structure.identifiant}"
                 )
 

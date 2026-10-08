@@ -4,24 +4,21 @@ docker-image-api:
     IMAGE: "${REGISTRY}focus-marches-v2/api"
     BUILD_CONTEXT: "api/."
 
-api-quality:
+api-qa:
   stage: 🔍 build-quality
-  image: python:3.14.5-alpine@sha256:5a824eb82cc75361f98611f3cfc5091ea33f10a6ccea4d4ebdabbc523b9a1614
+  image: ghcr.io/astral-sh/uv:0.12.23-python3.14-alpine3.23@sha256:5bad981cb914722a38eb1f9de538194f14d03c5f104d3b30f19239327d57eb50
   variables:
     FORCE_COLOR: true
   script:
     - apk add build-base mariadb mariadb-dev
-    - python3 -m venv .venv
-    - source .venv/bin/activate
     - cd api
-    - pip install --upgrade pip
-    - pip install -r dev-requirements.txt
+    - uv sync
     - unset DOCKER_AUTH_CONFIG # XXX: On ignore la configuration au sein des tests du à une incompatibilité avec testcontainers
-    - pytest --cov-report xml:cov.xml --cov-report=term
-    - ruff format --check . || touch failed
-    - ruff check . || touch failed
-    - mypy . --strict || touch failed
-    - '[ ! -e failed ] || ( echo "Ruff et/ou mypy ont remonté des erreurs, voir les logs précédents"; exit 1 )'
+    - uv run pytest --cov-report xml:cov.xml --cov-report=term
+    - uv run ruff format --check || touch failed
+    - uv run ruff check || touch failed
+    - uv run ty check || touch failed
+    - '[ ! -e failed ] || ( echo "Ruff et/ou ty ont remonté des erreurs, voir les logs précédents"; exit 1 )'
   coverage: '/TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
   artifacts:
     reports:

@@ -27,7 +27,7 @@ docker compose exec api sh -c "python app/importation.py infogreffe"
 ```
 
 ```bash
-python app/importation.py infogreffe
+uv run python app/importation.py infogreffe
 ```
 
 **Attention** : cette commande récupère les informations pour les structures présentes dans la base de données. Il faut avoir importé des DECPs avant.
@@ -49,7 +49,7 @@ marchés publiés par un profil acheteur (OPSN) se retrouvent bien dans le fichi
 national de la DAJ.
 
 ```bash
-python app/comparaison_annuelle.py comparer --annee 2024
+uv run python app/comparaison_annuelle.py comparer --annee 2024
 ```
 
 Les fichiers sont téléchargés depuis data.gouv via les URL stables `/api/1/datasets/r/<id>`
@@ -88,13 +88,8 @@ Pré-requis :
 Depuis le dossier courant (`api`) :
 
 ```shell
-# initialiser le virtualenv
-python3 -m venv .venv
-source .venv/bin/activate
-
-# installer les dépendances :
-pip install -r dev-requirements.txt
-pip install pip-tools
+# initialiser le virtualenv et installer les dépendances :
+uv sync
 ```
 
 Utiliser Visual Studio Code et installer les extensions recommandées (extension Python).
@@ -102,24 +97,20 @@ Utiliser Visual Studio Code et installer les extensions recommandées (extension
 ### Lancer l'API en local
 
 ```bash
-fastapi dev
+uv run fastapi dev
 ```
 
-### Epingler les versions des dépendances
+### Gérer les versions des dépendances
 
-Les fichiers (générés) `requirements.txt` et `dev-requirements.txt` listent les dépendances directes et transitives avec leurs versions (pour la reproductibilité des builds).
+Les dépendances sont à gérer dans le fichier [api/pyproject.toml](api/pyproject.toml).
 
-Ces fichiers ne sont pas à modifier manuellement, les dépendances sont à gérer dans le fichier [api/pyproject.toml](api/pyproject.toml).
+`uv` fournit des commandes pour faciliter la gestion des dépendances. Voir la documentation : https://docs.astral.sh/uv/concepts/projects/dependencies/.
 
-Après une mise à jour de version ou un ajout de dépendance dans le `pyproject.toml`, re-générer les requirements :
+Après une mise à jour de version ou un ajout de dépendance dans le fichier [`pyproject.toml`](./pyproject.toml), les paquets peuvent être installés manuellement en lançant `uv sync`.
 
-```shell
-pip-compile pyproject.toml -o requirements.txt  && \
-  pip-compile pyproject.toml --extra dev -o dev-requirements.txt
+Le lancement d'une commande avec `uv run` se chargera automatiquement de cette étape. 
 
-# Ne pas oublier ensuite de réinstaller les dépendances.
-pip install -r dev-requirements.txt
-```
+Le fichier `uv.lock` liste les dépendances directes et transitives avec leurs versions (pour la reproductibilité des builds). Il est généré par `uv` lors de l'installation des dépendances.
 
 ### Tests
 
@@ -129,4 +120,4 @@ On utilise pour cela [`pytest`](https://docs.pytest.org/en/stable/contents.html)
 
 Côté base de donnée, une instance docker de PostgreSQL est démarrée et gérée automatiquement par `pytest` ([`pytest-docker`](https://pypi.org/project/pytest-docker/)). Pour accélérer la vitesse d'exécution des tests, chaque test est exécuté dans une transaction et n'est jamais réellement envoyé dans le PostgreSQL (voir `tests/conftest.py::db_fixture`).
 
-On peut les lancer manuellement à l'aide de la commande `pytest` ou avec VSCode.
+On peut les lancer manuellement à l'aide de la commande `uv run pytest` ou avec VSCode.

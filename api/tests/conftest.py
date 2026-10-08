@@ -95,7 +95,7 @@ def set_factory_db(db):
         CPVFactory,
         ConfFactory,
     ]:
-        my_factory._meta.sqlalchemy_session = db
+        my_factory._meta.sqlalchemy_session = db  # ty: ignore[unresolved-attribute]
 
 
 @pytest.fixture(scope="session", autouse=True)

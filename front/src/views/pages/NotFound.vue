@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
-</script>
-
 <template>
     <FloatingConfigurator />
     <div class="flex items-center justify-center min-h-screen overflow-hidden">

@@ -1,12 +1,15 @@
-FROM node:24-alpine@sha256:2bdb65ed1dab192432bc31c95f94155ca5ad7fc1392fb7eb7526ab682fa5bf14 AS build
+FROM ghcr.io/pnpm/pnpm:12.10.0@sha256:333da074a29dcc495459433955e15e03a2715f6ae3f4904139a544e110d2d411 AS build
+
+RUN pnpm runtime set node 24.21.0 -g
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+RUN pnpm ci
 
 COPY . .
-RUN npm run build
+RUN pnpm run build
+
 FROM nginx:1.31.1-alpine@sha256:8b1e78743a03dbb2c95171cc58639fef29abc8816598e27fb910ed2e621e589a
 
 # Remove the default nginx.conf

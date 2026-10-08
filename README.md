@@ -21,7 +21,9 @@ Le projet se découpe en 2 sous-projets :
 
 ### Prérequis
 
-Avoir installé git, docker et docker-compose.
+Avoir installé git et docker.
+
+[mise](https://mise.jdx.dev/) est également utilisé pour l'installation des autres outils et pour initialiser l'environnement local de développement.
 
 ### 1. Récupération des sources
 
@@ -31,17 +33,23 @@ La première étape est de récupérer le code source du projet.
 git clone https://github.com/collec-data/focus-marches-v2.git
 ```
 
-### 2. Configuration et personnalisation
+### 2. Initialiser l'environnement de développement
 
-Créer le fichier `.env`, en le recopiant depuis `.env.default` :
+Lancer la commande
 
 ```bash
-cp .env.default .env
+mise dev-init
 ```
+
+Cela va installer les outils de développement, créer le fichier `.env` et mettre en place un hook git pour les vérifications automatiques au commit.
+
+### 3. Configuration et personnalisation
 
 Copier les éventuelles favicon et mentions légales dans `./front/src/public/` à la place des fichier existants.
 
-Puis compléter le [`.env`](.env) pour configurer et personnaliser l'instance. Ci-dessous une description des paramètres importants
+Puis compléter le [`.env`](.env)  pour configurer et personnaliser l'instance. Ce fichier a été créé par copie à partir de `.env.default` à l'étape précédente.
+
+Ci-dessous une description des paramètres importants :
 
 | Variable | Valeurs possibles | Description |
 |-------|---------|------|
@@ -61,7 +69,7 @@ Puis compléter le [`.env`](.env) pour configurer et personnaliser l'instance. C
 
 _Quelques exemples de configuration sont à retrouver tout en bas de cette page pour Mégalis, Arnia et Recia._
 
-### 3. Création et lancement des containers docker
+### 4. Création et lancement des containers docker
 
 Construisez et lancez les containers avec 
 ```bash
@@ -74,7 +82,7 @@ L'application est lancée et peut être explorée via un navigateur web à l'adr
 
 _Note : La base de donnée sera persistée dans le dossier /var/lib/mysql par défaut. Il est possible de changer l'emplacement d'installation des données ou d'indiquer un emplacement d'installation existante en modifiant la variable d'environnement `MARIADB_DATA` dans le fichier .env._
 
-### 4. Import des données
+### 5. Import des données
 
 L'ultime étape est de charger les données depuis data.gouv avec les commandes suivantes.
 

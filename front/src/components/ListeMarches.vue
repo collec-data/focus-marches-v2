@@ -4,11 +4,11 @@ import { exportMarchesCSV, exportMarchesExcel, exportMarchesPdf } from '@/servic
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
 import { useReactiveFetch } from '@/utils/query';
-import { FilterMatchMode } from '@primevue/core/api';
 import { computed, ref, watch } from 'vue';
 
 import type { MarcheAllegeDto } from '@/client';
 import type { PropType } from 'vue';
+import type { DataTableFilterMeta } from 'primevue/datatable';
 
 // Pas de valeur par défaut : `undefined` signifie « acheteur demandé mais pas encore identifié »,
 // tandis que `null` signifie « aucun acheteur demandé », donc aucun filtre.
@@ -21,12 +21,12 @@ const props = defineProps({
 });
 
 const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    cpv: { value: null, matchMode: FilterMatchMode.EQUALS },
-    objet: { value: null, matchMode: FilterMatchMode.IN },
-    'acheteur.nom': { value: null, matchMode: FilterMatchMode.IN },
-    montant: { value: null, matchMode: FilterMatchMode.EQUALS }
-});
+    global: { value: null, matchMode: 'contains' },
+    cpv: { value: null, matchMode: 'equals' },
+    objet: { value: null, matchMode: 'in' },
+    'acheteur.nom': { value: null, matchMode: 'in' },
+    montant: { value: null, matchMode: 'equals' }
+} satisfies DataTableFilterMeta);
 
 const {
     uid,

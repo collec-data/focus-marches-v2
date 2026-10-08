@@ -21,10 +21,10 @@ dev = [
     "pytest-cov",
     "pytest-mock",
     "ruff",
-    "mypy<2.0.0,>=1.17.1",
     "factory-boy",
     "testcontainers~=4.9",
     "types-requests",
+    "ty>=0.0.55",
 ]
 
 [tool.ruff]
@@ -40,15 +40,6 @@ extend-select = [
 "typing.Dict".msg = "Utiliser 'dict' sans import"
 "typing.Optional".msg = "Remplacer 'Optional[Foo]' par 'Foo | None'"
 "typing.Union".msg = "Remplacer 'Union[Foo, Bar]' par 'Foo | Bar'"
-
-[tool.mypy]
-exclude = ["venv", ".venv", "tests"]
-[[tool.mypy.overrides]]
-module = ['ijson.*', 'api_entreprise.*']
-follow_untyped_imports = true
-# Ces modules tiers ré-exportent leurs symboles sans « as » : on désactive
-# la vérification stricte des ré-exports implicites qui s'applique à eux.
-implicit_reexport = true
 
 [tool.setuptools]
 packages = ["app"]

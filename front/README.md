@@ -11,21 +11,21 @@ Ce projet utilise :
 ## Initialisation pour le développement
 
 - Avoir installé NodeJS (voir [.tool-versions](.tool-versions) pour la version requise)
-- Installer les dépendances `npm install`
+- Installer les dépendances `pnpm install`
 
 ## Tâches courantes
 
 Depuis le dossier courant (`/front`) :
 
-- Lancer le serveur de dév avec `npm run dev``
-- Régénérer le client pour s'adapter aux changements de l'API avec `npm run gen`
-- Exécuter les contrôles qualité localement avec `npm ci && npm run format-check && npm run lint-check && npm run test`
+- Lancer le serveur de dév avec `pnpm run dev``
+- Régénérer le client pour s'adapter aux changements de l'API avec `pnpm run gen`
+- Exécuter les contrôles qualité localement avec `pnpm ci && pnpm run format-check && pnpm run lint-check && pnpm run test`
 
 ## Tests
 
 Les tests sont situés dans le dossier [tests](./tests/). Il s'agit pour l'instant de tests au niveau des vues (ce qui inclus donc tous les composants qui y sont appelés) ou des services.
 
-Les tests font appel au framework [Vitest](https://vitest.dev/) et peuvent être exécutés avec la commande `npm run test` ou directement depuis VSCode. La couverture de code est calculée et indique les lignes non couvertes fichier par fichier.
+Les tests font appel au framework [Vitest](https://vitest.dev/) et peuvent être exécutés avec la commande `pnpm run test` ou directement depuis VSCode. La couverture de code est calculée et indique les lignes non couvertes fichier par fichier.
 
 ## Accessibilité
 

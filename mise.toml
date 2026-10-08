@@ -1,0 +1,38 @@
+monorepo_root = true
+
+[monorepo]
+config_roots = ["api", "front"]
+
+[tools]
+lefthook = "2.0.15"
+
+[tasks.dev-init]
+description = "Initialisation pour développement local"
+run = '''
+#!/bin/env bash
+# Initialisation et vérifications pour développement local
+set -eu
+
+if which docker > /dev/null; then
+  echo "La commande docker est disponible"
+else
+  echo "❌ Docker non trouvé"
+  return 1
+fi
+
+echo "➡️ Installation des outils"
+mise install --monorepo
+
+if [ ! -e .env ]; then
+  echo "➡️ Copie .env.default vers .env"
+  cp .env.default .env
+else
+  echo ".env déjà présent conservé"
+fi
+
+echo "➡️ Mise en place des hooks git"
+echo "  (lint, typecheck et formatage au commit)"
+lefthook install
+
+echo "✅ Terminé !"
+'''
