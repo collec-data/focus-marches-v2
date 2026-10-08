@@ -1,8 +1,15 @@
 from datetime import date
-from decimal import Decimal
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, Json, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    Json,
+    field_serializer,
+    field_validator,
+)
 
 from app.models.db import Marche
 from app.models.enums import (
@@ -193,6 +200,13 @@ class MarcheDto(BaseModel):
     )
     # modifications_actes_sous_traitance: list[ModificationSousTraitanceDto]
     modifications: list[ModificationMarcheDto]
+
+    @field_serializer("origine_ue", "origine_france")
+    def pourcents(self, v: Decimal | None) -> str | None:
+        if v is None:
+            return None
+        # les valeurs sont comprises entre 0 et 1, on les multiplie par 100 et on arrondie à l'unité
+        return str((v * 100).quantize(Decimal(1), rounding=ROUND_HALF_UP))
 
 
 class ModificationConcessionDto(BaseModel):

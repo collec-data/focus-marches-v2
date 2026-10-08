@@ -477,3 +477,37 @@ def test_get_marche_inconnu(client):
     response = client.get("/marche/1111")
     assert response.status_code == 404
     assert response.json()["detail"] == "Marche inconnu"
+
+
+def test_marche_serialisation_origines(client):
+    marche_fr = MarcheFactory(
+        origine_france=Decimal("1.00"), origine_ue=Decimal("1.00")
+    )
+
+    response = client.get(f"/marche/{marche_fr.uid}")
+
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json["uid"] == marche_fr.uid
+    assert response_json["origine_france"] == "100"
+    assert response_json["origine_ue"] == "100"
+
+    marche_ue = MarcheFactory(
+        origine_france=Decimal("0.00"), origine_ue=Decimal("0.42")
+    )
+
+    response = client.get(f"/marche/{marche_ue.uid}")
+
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json["origine_france"] == "0"
+    assert response_json["origine_ue"] == "42"
+
+    marche_sans_origines = MarcheFactory(origine_france=None, origine_ue=None)
+
+    response = client.get(f"/marche/{marche_sans_origines.uid}")
+
+    assert response.status_code == 200
+    response_json = response.json()
+    assert response_json["origine_france"] is None
+    assert response_json["origine_ue"] is None
