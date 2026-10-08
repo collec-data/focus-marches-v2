@@ -1,0 +1,32 @@
+# https://lefthook.dev/configuration/index.html
+
+glob_matcher: doublestar
+
+pre-commit:
+  jobs:
+    - run: "lefthook validate"
+      glob: "lefthook.yml"
+
+    - name: api
+      root: "api/"
+      glob: "**/*.py"
+      group:
+        jobs:
+          - run: uv run ty check {staged_files}
+          - run: uv run ruff check --fix {staged_files}
+            stage_fixed: true
+          - run: uv run ruff format {staged_files}
+            stage_fixed: true
+
+    - name: front
+      root: "front/"
+      group:
+        jobs:
+          # vue-tsc permet peut prendre des chemins des fichiers en argument mais cela
+          # ne tient pas compte de la configuration du projet et cause des erreurs.
+          # Par conséquent, on le lance pour le projet front complet.
+          - run: pnpm exec vue-tsc --noEmit --strict
+          - run: pnpm exec eslint --fix --no-warn-ignored {staged_files}
+            stage_fixed: true
+          - run: pnpm exec prettier --write -lu {staged_files}
+            stage_fixed: true

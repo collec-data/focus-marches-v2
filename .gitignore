@@ -1,4 +1,6 @@
 *.code-workspace
 .idea
 .env
+.*.swp
+mise.*.toml
 compose.override.yml

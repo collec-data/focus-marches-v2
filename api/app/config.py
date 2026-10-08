@@ -26,4 +26,4 @@ class Config(BaseSettings):
 
 @lru_cache
 def get_config() -> Config:
-    return Config()  # type: ignore
+    return Config()

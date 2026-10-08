@@ -13,22 +13,15 @@ correspondant. Un seul échec parmi elles casse le build.
 
 ```bash
 cd api
-source .venv/bin/activate        # ou utiliser .venv/bin/<outil> directement
-pytest                           # les tests utilisent testcontainers => Docker requis
-ruff format --check .            # sinon : ruff format .
-ruff check .                     # sinon : ruff check --fix .
-mypy . --strict                  # AUCUNE erreur tolérée, le job échoue sinon
+uv run pytest                         # les tests utilisent testcontainers => Docker requis
+uv run ruff check                     # sinon : uv run ruff check --fix
+uv run ty check                       # AUCUNE erreur tolérée, le job échoue sinon
 ```
 
-Points d'attention `mypy --strict` :
+Points d'attention `ty check` :
 
 - toute annotation générique doit être paramétrée : `dict[str, Any]`, jamais `dict` nu ;
 - toute fonction doit être annotée (paramètres **et** retour) ;
-- un module tiers non typé qui ré-exporte ses symboles sans `as` déclenche
-  `does not explicitly export attribute` : l'ajouter à l'override
-  `[[tool.mypy.overrides]]` de `api/pyproject.toml` avec
-  `follow_untyped_imports = true` et `implicit_reexport = true`, plutôt que de
-  poser un `# type: ignore`.
 
 Les imports `typing.List`, `Set`, `Dict`, `Optional`, `Union` sont bannis par ruff
 (règles TID) : utiliser `list`, `set`, `dict`, `X | None`, `X | Y`.
@@ -37,14 +30,13 @@ Les imports `typing.List`, `Set`, `Dict`, `Optional`, `Union` sont bannis par ru
 
 ```bash
 cd front
-npm run format-check             # sinon : npm run format
-npm run lint-check               # sinon : npm run lint
-npm run test
-npm run build                    # lance vue-tsc : les erreurs de types cassent le build
+pnpm run lint-check               # sinon : pnpm run lint
+pnpm run test
+pnpm run build                    # lance vue-tsc : les erreurs de types cassent le build
 ```
 
 ### Si une dépendance est mise à jour
 
 Renovate ouvre des MR de mise à jour : une montée de version peut faire apparaître
-de nouvelles erreurs `mypy --strict` (types ajoutés en amont) ou de lint. Rejouer
+de nouvelles erreurs de typage (types ajoutés en amont) ou de lint. Rejouer
 la séquence complète ci-dessus avant de merger.

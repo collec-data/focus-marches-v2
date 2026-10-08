@@ -1,16 +1,33 @@
+# Stage 1: récupération des dépendances dans un .venv
+FROM ghcr.io/astral-sh/uv:0.12.23-python3.14-alpine3.23@sha256:5bad981cb914722a38eb1f9de538194f14d03c5f104d3b30f19239327d57eb50 AS builder
 
-FROM python:3.14.5-alpine@sha256:5a824eb82cc75361f98611f3cfc5091ea33f10a6ccea4d4ebdabbc523b9a1614
+ENV UV_LINK_MODE=copy \
+    UV_COMPILE_BYTECODE=1 \
+    UV_PYTHON_DOWNLOADS=never
 
-EXPOSE 80
-WORKDIR /code
+WORKDIR /app
 
 RUN apk add --no-cache build-base curl mariadb mariadb-dev
 
-COPY requirements.txt /code/requirements.txt
-RUN pip install -r requirements.txt && apk del --no-cache build-base
+COPY pyproject.toml uv.lock ./
+RUN uv sync --no-dev --locked --no-editable --no-install-project
 
-COPY ./app /code/app
-COPY ./cpv_2008_fr.csv /code/cpv_2008_fr.csv
+# Stage 2: image de déploiement
+FROM python:3.14.8-alpine3.23@sha256:e7cff362a12454395f8dc99607c21a602ea880cdce03538877b90c2ba932b16f
+EXPOSE 80
+WORKDIR /app
 
-# EXPOSE
+RUN apk add --no-cache build-base curl mariadb mariadb-dev
+
+# Copie du .venv
+COPY --from=builder /app/.venv /app/.venv
+
+# Copie des sources
+COPY ./app /app/app
+COPY ./cpv_2008_fr.csv /app/cpv_2008_fr.csv
+
+ENV PATH="/app/.venv/bin:$PATH" \
+    PYTHONPATH="/app" \
+    PYTHONUNBUFFERED=1
+
 CMD [ "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80" ]

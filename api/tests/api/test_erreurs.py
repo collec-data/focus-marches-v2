@@ -25,7 +25,7 @@ def test_list_erreurs(client):
         params={
             "localisation": localisation,
             "type": "Erreur générique",
-            "uid_structure": decp.structure.uid,
+            "uid_structure": decp.structure.uid if decp.structure else None,
             "date_debut": decp.date_creation,
             "date_fin": decp.date_creation,
         },

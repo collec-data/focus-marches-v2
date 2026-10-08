@@ -1,10 +1,19 @@
 import factory
+from factory.alchemy import SQLAlchemyModelFactory
+from factory.base import FactoryMetaClass
 
 from app.models import db, enums
 
 
-class StructureFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+# astuce pour le typer correctement le retour des factories :
+# https://github.com/FactoryBoy/factory_boy/issues/468#issuecomment-3264798657
+class BaseMetaFactory[T](FactoryMetaClass):
+    def __call__(cls, *_args, **kwargs) -> T:
+        return super().__call__(**kwargs)
+
+
+class StructureFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Structure]):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.Structure
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
@@ -22,8 +31,10 @@ class VendeurFactory(StructureFactory):
     vendeur = True
 
 
-class StructureInfogreffeFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class StructureInfogreffeFactory(
+    SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.StructureInfogreffe]
+):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.StructureInfogreffe
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
@@ -38,8 +49,8 @@ class StructureInfogreffeFactory(factory.alchemy.SQLAlchemyModelFactory):
     effectif = factory.faker.Faker("pyint")
 
 
-class LieuFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class LieuFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Lieu]):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.Lieu
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
@@ -47,8 +58,10 @@ class LieuFactory(factory.alchemy.SQLAlchemyModelFactory):
     type_code = enums.TypeCodeLieu.DEP.db_value
 
 
-class CritereSocialFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class CritereSocialFactory(
+    SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.ConsiderationSocialeMarche]
+):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.ConsiderationSocialeMarche
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
@@ -59,8 +72,10 @@ class ClauseSocialeFactory(CritereSocialFactory):
     consideration = enums.ConsiderationsSociales.CLAUSE.db_value
 
 
-class CritereEnvFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class CritereEnvFactory(
+    SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.ConsiderationEnvMarche]
+):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.ConsiderationEnvMarche
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
@@ -71,24 +86,26 @@ class ClauseEnvFactory(CritereEnvFactory):
     consideration = enums.ConsiderationsEnvironnementales.CLAUSE.db_value
 
 
-class TechniqueAchatFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class TechniqueAchatFactory(
+    SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.TechniqueAchatMarche]
+):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.TechniqueAchatMarche
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
     technique = enums.TechniqueAchat.CONCOURS.db_value
 
 
-class CPVFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class CPVFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.CPV]):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.CPV
 
     code = factory.declarations.Sequence(lambda n: n + 1)
     libelle = factory.faker.Faker("word")
 
 
-class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class MarcheFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Marche]):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.Marche
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
@@ -124,8 +141,10 @@ class MarcheFactory(factory.alchemy.SQLAlchemyModelFactory):
     accord_cadre: MarcheFactory | None = None
 
 
-class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class ConcessionFactory(
+    SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.ContratConcession]
+):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.ContratConcession
 
     uid = factory.declarations.Sequence(lambda n: n + 1)
@@ -146,8 +165,8 @@ class ConcessionFactory(factory.alchemy.SQLAlchemyModelFactory):
     concessionnaires = factory.declarations.LazyFunction(list)
 
 
-class ErreurFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class ErreurFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Erreur]):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.Erreur
 
     type = "Erreur générique"
@@ -155,8 +174,10 @@ class ErreurFactory(factory.alchemy.SQLAlchemyModelFactory):
     message = "Lorem ipsum dolor"
 
 
-class DecpMalFormeFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class DecpMalFormeFactory(
+    SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.DecpMalForme]
+):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.DecpMalForme
 
     decp = "{}"
@@ -167,8 +188,8 @@ class DecpMalFormeFactory(factory.alchemy.SQLAlchemyModelFactory):
     date_creation = factory.faker.Faker("date")
 
 
-class ConfFactory(factory.alchemy.SQLAlchemyModelFactory):
-    class Meta:
+class ConfFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Conf]):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
         model = db.Conf
 
     clef = factory.faker.Faker("string")

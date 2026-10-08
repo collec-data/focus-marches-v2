@@ -427,7 +427,7 @@ class DecpMalForme(Base):
 
 
 class CPV(Base):
-    __tablename__ = "cpv"  # type: ignore
+    __tablename__ = "cpv"
     code: Mapped[int] = mapped_column(primary_key=True)
     libelle: Mapped[str] = mapped_column(String(255))
 
