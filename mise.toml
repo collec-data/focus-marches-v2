@@ -4,7 +4,7 @@ monorepo_root = true
 config_roots = ["api", "front"]
 
 [tools]
-lefthook = "2.0.15"
+lefthook = "2.2.1"
 
 [tasks.dev-init]
 description = "Initialisation pour développement local"
