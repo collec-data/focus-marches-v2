@@ -1,4 +1,4 @@
-FROM ghcr.io/pnpm/pnpm:12.10.0@sha256:333da074a29dcc495459433955e15e03a2715f6ae3f4904139a544e110d2d411 AS build
+FROM ghcr.io/pnpm/pnpm:12.10.1@sha256:1aa6cd5e8ec50c046a2690efde0c25ced4c6ed896ada5509f7d33b0b94dc04a3 AS build
 
 RUN pnpm runtime set node 24.21.0 -g
 
@@ -10,7 +10,7 @@ RUN pnpm ci
 COPY . .
 RUN pnpm run build
 
-FROM nginx:1.31.1-alpine@sha256:8b1e78743a03dbb2c95171cc58639fef29abc8816598e27fb910ed2e621e589a
+FROM nginx:1.31.6-alpine@sha256:df221db836e1754089190208cee7eeda94f233197056426eda74a43ab1abeac2
 
 # Remove the default nginx.conf
 RUN rm /etc/nginx/conf.d/default.conf
