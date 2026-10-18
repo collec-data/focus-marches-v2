@@ -33,7 +33,7 @@
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@hey-api/openapi-ts": "^0.99.0",
-        "@primevue/auto-import-resolver": "^4.5.5",
+        "@primevue/auto-import-resolver": "^5.0.0",
         "@rushstack/eslint-patch": "^1.16.1",
         "@testing-library/vue": "^8.1.0",
         "@types/jest-axe": "^3.5.9",

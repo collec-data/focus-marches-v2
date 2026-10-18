@@ -61,8 +61,8 @@ importers:
         specifier: ^0.99.0
         version: 0.99.0(magicast@0.5.5)(typescript@5.9.3)
       '@primevue/auto-import-resolver':
-        specifier: ^4.5.5
-        version: 4.5.5
+        specifier: ^5.0.0
+        version: 5.0.2
       '@rushstack/eslint-patch':
         specifier: ^1.16.1
         version: 1.16.1
@@ -536,9 +536,8 @@ packages:
     resolution: {integrity: sha512-pZ5f+vj7wSzRhC7KoEQRU5fvYAe+RP9+m39CTscZ3UywCD1Y2o6Fe1rRgklMPSkzUcty2jzkA0zMYkiJBD1hgg==}
     engines: {node: '>=12.11.0'}
 
-  '@primevue/auto-import-resolver@4.5.5':
-    resolution: {integrity: sha512-1LWftK+1c/pLgMyW81xqsCLESm2a8GGlLz0eg13oFBVmJdXBs9nmzF+SIhvtkRDROB8TCMwlOpyqVCi1Yw89UQ==}
-    engines: {node: '>=12.11.0'}
+  '@primevue/auto-import-resolver@5.0.2':
+    resolution: {integrity: sha512-cMjBJwTeyyFOBHgIfJbS/Wafv7yj+ZYTfHIXk1IY/XPoEZpK9kvFHoYXQMjvOE2EtXV/MJ+SXeIcSKM9Nkxfgw==}
 
   '@primevue/core@4.5.5':
     resolution: {integrity: sha512-JpkXhq1ddc70JdsC3CC4dM+UbeeWuCW/8DpS9dNBfrOk824TLSlRlMEGFyVKqRMn5WPQvYLiy3xXfLQeNdSqhQ==}
@@ -550,9 +549,8 @@ packages:
     resolution: {integrity: sha512-eteOhTdAOXEYE9qW1AOrBBgDxQ2szHJxSkEK1XVdV2TKxGM5FQf03Ovms0VDyZTc16XBIgvwYjXJQS0BPbhPaA==}
     engines: {node: '>=12.11.0'}
 
-  '@primevue/metadata@4.5.5':
-    resolution: {integrity: sha512-ZYLu9m3Nm5BmL0woqCJX84EZfLBepJn+T19v5oj3PlsMpUVNnDAsm2jgYdT6/b3RkdOuccxk4Pg/0EvlATOAhA==}
-    engines: {node: '>=12.11.0'}
+  '@primevue/metadata@5.0.2':
+    resolution: {integrity: sha512-T95HDAVzacgEYg+usldu66gdRy/gNFt84LEAK4NROsZS/J66tQicUtPTgZ6Fim+Q1Kw4mUJ6l/S3XukMmb5vKg==}
 
   '@rolldown/binding-android-arm-eabi@1.2.12':
     resolution: {integrity: sha512-dB/a1214qKfHMXCpgqR4OZT+jS4kTyEXbQGJPqzobt5EwH5rX080pxE37alt3RzvR1bf1Yz/yGqRfrYAxuPw0A==}
@@ -3175,9 +3173,9 @@ snapshots:
 
   '@primeuix/utils@0.6.4': {}
 
-  '@primevue/auto-import-resolver@4.5.5':
+  '@primevue/auto-import-resolver@5.0.2':
     dependencies:
-      '@primevue/metadata': 4.5.5
+      '@primevue/metadata': 5.0.2
 
   '@primevue/core@4.5.5(vue@3.5.43(typescript@5.9.3))':
     dependencies:
@@ -3192,7 +3190,7 @@ snapshots:
     transitivePeerDependencies:
       - vue
 
-  '@primevue/metadata@4.5.5': {}
+  '@primevue/metadata@5.0.2': {}
 
   '@rolldown/binding-android-arm-eabi@1.2.12':
     optional: true
