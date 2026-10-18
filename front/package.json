@@ -14,7 +14,7 @@
         "test": "vitest run --coverage"
     },
     "dependencies": {
-        "@primeuix/themes": "^2.0.3",
+        "@primeuix/themes": "^3.0.0",
         "@tailwindcss/postcss": "^4.3.3",
         "jspdf": "^4.2.1",
         "jspdf-autotable": "^5.0.8",

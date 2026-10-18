@@ -159,5 +159,7 @@ export function changePreset(layoutConfig: layoutConfigInterface, preset: string
     const presetValue = presets[preset];
     const surfacePalette = surfaces.value.find((s) => s.name === layoutConfig.surface)?.palette;
 
-    $t().preset(presetValue).preset(getPresetExt(layoutConfig)).surfacePalette(surfacePalette).use({ useDefaultOptions: true });
+    if (surfacePalette) {
+        $t().preset(presetValue).preset(getPresetExt(layoutConfig)).surfacePalette(surfacePalette).use({ useDefaultOptions: true });
+    }
 }
