@@ -1,5 +1,5 @@
 # Stage 1: récupération des dépendances dans un .venv
-FROM ghcr.io/astral-sh/uv:0.12.23-python3.14-alpine3.23@sha256:5bad981cb914722a38eb1f9de538194f14d03c5f104d3b30f19239327d57eb50 AS builder
+FROM ghcr.io/astral-sh/uv:0.13.4-python3.14-alpine3.23@sha256:0cb69bb18ffcd57db04f045010b0234132a111da70dde5a393d26ad288d38e13 AS builder
 
 ENV UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
@@ -13,7 +13,7 @@ COPY pyproject.toml uv.lock ./
 RUN uv sync --no-dev --locked --no-editable --no-install-project
 
 # Stage 2: image de déploiement
-FROM python:3.14.8-alpine3.23@sha256:e7cff362a12454395f8dc99607c21a602ea880cdce03538877b90c2ba932b16f
+FROM python:3.15.0-alpine3.23@sha256:d64bc17e0dff27c5c4a31f616450d032aa73d6325855127ce3a305bf1384c8d5
 EXPOSE 80
 WORKDIR /app
 

@@ -16,9 +16,9 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup pnpm
-        uses: pnpm/setup@fbda4c85fc2e1e08721cd8763afea8f48d60f024 # v3.0.0
+        uses: pnpm/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4 # v3.1.1
         with:
-          version: 12.10.0
+          version: 12.14.0
           package-json-file: front/package.json
 
       - name: Setup Node.js
@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
 
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y build-essential libmariadb-dev mariadb-client

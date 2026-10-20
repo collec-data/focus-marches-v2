@@ -1,4 +1,4 @@
-FROM ghcr.io/pnpm/pnpm:12.10.1@sha256:1aa6cd5e8ec50c046a2690efde0c25ced4c6ed896ada5509f7d33b0b94dc04a3 AS build
+FROM ghcr.io/pnpm/pnpm:12.14.0@sha256:71202ae73719148f6b6e129ca1e9fa3ceabbc9a037dc34800715606f2b5290a1 AS build
 
 RUN pnpm runtime set node 24.21.0 -g
 
