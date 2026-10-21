@@ -16,7 +16,7 @@ class MariaDBContainer(DbContainer):
         root_password: str | None = None,
         password: str | None = None,
         dbname: str | None = None,
-        driver: str | None = "mariadbconnector",
+        driver: str | None = "pymysql",
         **kwargs,
     ) -> None:
         raise_for_deprecated_parameter(kwargs, "user", "username")

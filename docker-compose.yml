@@ -27,7 +27,7 @@ services:
     ports:
       - 8000:80
     environment:
-      DATABASE_URL: mariadb+mariadbconnector://${MARIADB_USER}:${MARIADB_PASSWORD}@db:3306/${MARIADB_DATABASE}
+      DATABASE_URL: mariadb+pymysql://${MARIADB_USER}:${MARIADB_PASSWORD}@db:3306/${MARIADB_DATABASE}
     env_file:
       - .env
 

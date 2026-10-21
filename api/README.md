@@ -83,7 +83,6 @@ Quelques particularités des sources, qui expliquent la forme de l'outil :
 
 Pré-requis : 
 - avoir installé Python (3.14).
-- avoir installé les paquets `libmariadb3 libmariadb-dev` (pour Ubuntu)
 
 Depuis le dossier courant (`api`) :
 

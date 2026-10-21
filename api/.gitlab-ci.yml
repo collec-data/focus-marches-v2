@@ -10,7 +10,6 @@ api-qa:
   variables:
     FORCE_COLOR: true
   script:
-    - apk add build-base mariadb mariadb-dev
     - cd api
     - uv sync
     - unset DOCKER_AUTH_CONFIG # XXX: On ignore la configuration au sein des tests du à une incompatibilité avec testcontainers
