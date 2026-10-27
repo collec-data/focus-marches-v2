@@ -37,7 +37,7 @@ function considerationsEnvironnementalesEtSociales(list: string[] | undefined): 
     if (list.length) {
         return list.join(', ');
     }
-    return '[Non renseigné]'; // liste présente mais vide
+    return 'Non renseigné'; // liste présente mais vide
 }
 </script>
 
