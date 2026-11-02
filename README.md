@@ -6,6 +6,7 @@ Le projet Focus Marchés v2 a été développé par Numih France pour Mégalis e
 
 Trois instances de Focus Marchés sont actuellement déployée :
 - Mégalis - [focus-marches.megalis.bretagne.bzh](https://focus-marches.megalis.bretagne.bzh/)
+- Les données mises à disposition par l'éditeur ATEXO sur data.gouv sont documentées ici : [Publication des donnees essentielles sur data.gouv.fr - v2-2.pdf](https://github.com/user-attachments/files/34265284/Publication.des.donnees.essentielles.sur.data.gouv.fr.-.v2-2.pdf)
 - Arnia - [observatoire-commande-publique.arnia-bfc.fr](https://observatoire-commande-publique.arnia-bfc.fr/)
 - Récia
 
