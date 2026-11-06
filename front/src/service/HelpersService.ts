@@ -76,6 +76,11 @@ export function getNow(): Date {
     return date;
 }
 
+/** Le jour affiché par un sélecteur de date (heure locale), exprimé à minuit UTC : l'API attend des dates exactes. */
+export function jourCalendaire(date: Date): Date {
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+}
+
 export function getDurationInMonths(first: Date, last: Date): number {
     return (last.getFullYear() - first.getFullYear()) * 12 + (last.getMonth() - first.getMonth()) + 1;
 }

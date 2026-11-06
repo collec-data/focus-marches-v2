@@ -2,7 +2,7 @@
 import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listCpv, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { exportMarchesCSV, exportMarchesPdf } from '@/service/ExportDatatableService';
-import { formatCurrency, formatDate, getCatEntreprise, getNow, structureName } from '@/service/HelpersService';
+import { formatCurrency, formatDate, getCatEntreprise, getNow, jourCalendaire, structureName } from '@/service/HelpersService';
 import { useReactiveFetch } from '@/utils/query';
 import { computed, ref, toRaw } from 'vue';
 
@@ -113,7 +113,12 @@ const periode = computed(() => {
 });
 
 function search() {
-    filtres_appliques.value = structuredClone(toRaw(filtres.value));
+    const saisie = structuredClone(toRaw(filtres.value));
+    filtres_appliques.value = {
+        ...saisie,
+        date_min: saisie.date_min ? jourCalendaire(saisie.date_min) : saisie.date_min,
+        date_max: saisie.date_max ? jourCalendaire(saisie.date_max) : saisie.date_max
+    };
 }
 
 const recherche_avancee = ref(false);

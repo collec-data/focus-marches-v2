@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { formatBoolean, getDurationInMonths, getOpsnRegion, longLabelsBreaker, structureName } from '../../src/service/HelpersService.ts';
+import { formatBoolean, getDurationInMonths, jourCalendaire, getOpsnRegion, longLabelsBreaker, structureName } from '../../src/service/HelpersService.ts';
 
 it('break long strings', async () => {
     expect(longLabelsBreaker(['Lorem ipsum dolor', null, 'Looooooooooooooorem'], 13)).toStrictEqual(['Lorem ipsum<br>dolor', null, 'Looooooooooooooorem']);
@@ -23,4 +23,9 @@ it('format boolean', async () => {
 
 it('get opsn region', async () => {
     expect(getOpsnRegion()).toStrictEqual('OPSN REGION');
+});
+
+it('jour calendaire : minuit local devient minuit UTC du même jour', async () => {
+    expect(jourCalendaire(new Date(2026, 10, 7, 0, 0, 0)).toISOString()).toStrictEqual('2026-11-07T00:00:00.000Z');
+    expect(jourCalendaire(new Date(2026, 10, 7, 18, 30)).toISOString()).toStrictEqual('2026-11-07T00:00:00.000Z');
 });
