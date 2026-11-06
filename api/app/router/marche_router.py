@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Annotated, Any
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Response
 from sqlalchemy import (
     Row,
     Select,
@@ -16,7 +16,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import aliased
 
-from app.dependencies import SessionDep
+from app.dependencies import ConfigDep, SessionDep
 from app.models.db import (
     CPV,
     ConsiderationEnvMarche,
@@ -149,9 +149,28 @@ def application_filtres_etendus(
     return stmt
 
 
-@router.get("/", response_model=list[MarcheAllegeDto])
+@router.get(
+    "/",
+    response_model=list[MarcheAllegeDto],
+    responses={
+        200: {
+            "headers": {
+                "X-Resultats-Tronques": {
+                    "description": "`true` si la limite de résultats est atteinte : seuls les plus récents sont renvoyés.",
+                    "schema": {"type": "string", "enum": ["true", "false"]},
+                },
+                "X-Limite": {
+                    "description": "Nombre maximal de résultats renvoyés.",
+                    "schema": {"type": "integer"},
+                },
+            }
+        }
+    },
+)
 def get_liste_marches(
     session: SessionDep,
+    config: ConfigDep,
+    response: Response,
     filtres: Annotated[FiltresListeMarches, Query()],
 ) -> list[Marche]:
     acheteur = aliased(Structure)
@@ -166,18 +185,27 @@ def get_liste_marches(
         .outerjoin(accord_cadre, Marche.accord_cadre)
         .outerjoin(Marche.cpv),
         filtres,
-    ).order_by(Marche.date_notification)
+    )
 
     if filtres.accord_cadre_uid is not None:
         stmt = stmt.where(accord_cadre.uid == filtres.accord_cadre_uid)
 
-    if filtres.offset is not None:
-        stmt = stmt.offset(filtres.offset)
+    plafond = config.LIMITE_RESULTATS
+    limite = plafond if filtres.limit is None else min(filtres.limit, plafond)
 
-    if filtres.limit is not None:
-        stmt = stmt.limit(filtres.limit)
+    # On garde les plus récents : un résultat de plus que la limite suffit à savoir si elle est dépassée.
+    stmt = (
+        stmt.order_by(Marche.date_notification.desc(), Marche.uid.desc())
+        .offset(filtres.offset)
+        .limit(limite + 1)
+    )
+    marches = list(session.execute(stmt).scalars())
 
-    return list(session.execute(stmt).scalars())
+    plafond_atteint = limite == plafond and len(marches) > limite
+    response.headers["X-Resultats-Tronques"] = "true" if plafond_atteint else "false"
+    response.headers["X-Limite"] = str(plafond)
+
+    return marches[:limite][::-1]
 
 
 @router.get("/procedure", response_model=list[MarcheProcedureDto])

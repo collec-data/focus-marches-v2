@@ -108,3 +108,12 @@ export function setFaviconFromSettings() {
     const favicon = document.querySelector("link[rel*='icon']") as HTMLAnchorElement;
     if (favicon && settings.favicon) favicon.href = '/' + settings.favicon;
 }
+
+/** La limite de résultats de l'API si elle a tronqué la réponse, `null` sinon. */
+export function limiteSiTronque(entetes: Headers | undefined): number | null {
+    if (entetes?.get('X-Resultats-Tronques') !== 'true') {
+        return null;
+    }
+    const limite = Number(entetes.get('X-Limite'));
+    return Number.isFinite(limite) ? limite : null;
+}

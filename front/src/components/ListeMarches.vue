@@ -2,6 +2,7 @@
 import { getListeMarches } from '@/client';
 import { exportMarchesCSV, exportMarchesExcel, exportMarchesPdf } from '@/service/ExportDatatableService';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
+import { useLimiteResultats } from '@/service/UseLimiteResultats';
 import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
 import { useReactiveFetch } from '@/utils/query';
 import { computed, ref, watch } from 'vue';
@@ -53,6 +54,7 @@ const options = computed(() => {
 
 const { etat, refetch } = useReactiveFetch(getListeMarches, options);
 
+const limite = useLimiteResultats(etat);
 const listeMarches = computed<Array<MarcheAllegeDto>>(() => (etat.value.statut === 'succes' ? etat.value.data : []));
 
 watch([() => props.dateMin, () => props.dateMax, () => props.vendeurUid], () => {
@@ -92,6 +94,7 @@ const hiddenCol = computed(() => {
 <template>
     <section>
         <h2 class="title">Tous les marchés</h2>
+        <AvertissementLimite :limite />
         <p>Ce tableau affiche les principales informations des marchés. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
 
         <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />

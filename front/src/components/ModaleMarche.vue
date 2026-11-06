@@ -4,6 +4,7 @@ import { computed } from 'vue';
 import { getListeMarches, getMarche, ModaliteExecution, TechniqueAchat } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
+import { useLimiteResultats } from '@/service/UseLimiteResultats';
 import { useReactiveFetch } from '@/utils/query';
 
 const marcheUid = defineModel<number | null>();
@@ -23,6 +24,8 @@ const aDesMarchesSubsequents = computed(() => Boolean(marche.value?.techniques_a
 const subsequentsOptions = computed(() => (aDesMarchesSubsequents.value ? { query: { accord_cadre_uid: marche.value!.uid } } : undefined));
 
 const { etat: etatSubsequents } = useReactiveFetch(getListeMarches, subsequentsOptions);
+
+const limiteSubsequents = useLimiteResultats(etatSubsequents);
 
 const marchesSubsequents = computed(() => (etatSubsequents.value.statut === 'succes' ? etatSubsequents.value.data : []));
 
@@ -133,6 +136,7 @@ function considerationsEnvironnementalesEtSociales(list: string[] | undefined): 
                     <hr />
                     <div class="key">Accord-cadre</div>
                     <ErreurChargement v-if="etatSubsequents.statut === 'erreur'" :erreur="etatSubsequents.erreur" message="Le chargement des marchés subséquents a échoué" />
+                    <AvertissementLimite :limite="limiteSubsequents" />
                     <DataTable :value="marchesSubsequents" :loading="etatSubsequents.statut === 'chargement'">
                         <template v-if="etatSubsequents.statut === 'succes'" #empty>
                             <div class="text-center">

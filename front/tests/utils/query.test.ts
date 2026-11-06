@@ -260,4 +260,14 @@ describe('useReactiveFetch', () => {
 
         unmount();
     });
+
+    it("expose les en-têtes de la réponse à l'état succès", async () => {
+        server.use(http.get(base + 'marche/indicateurs', () => HttpResponse.json({ nb_contrats: 1 }, { headers: { 'X-Limite': '5000' } })));
+
+        const { etat, unmount } = monter(() => ({ query: { acheteur_uid: 1 } }));
+        await attendre(etat, 'succes');
+
+        expect(etat.value.statut === 'succes' && etat.value.entetes.get('X-Limite')).toBe('5000');
+        unmount();
+    });
 });

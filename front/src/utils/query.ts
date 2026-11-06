@@ -38,6 +38,8 @@ type ResultatSucces<DATA> = {
     statut: 'succes';
     data: DATA;
     erreur: null;
+    /** En-têtes de la réponse HTTP, pour les métadonnées que l'API ne place pas dans la charge utile. */
+    entetes: Headers;
 };
 
 type ResultatErreur = {
@@ -127,7 +129,7 @@ export function useReactiveFetch<F extends RequeteSdk<O>, O extends Options<TDat
                         etat.value = { statut: 'erreur', data: null, erreur: { nature: classer(statut), statut, detail: resultat.error } };
                         return;
                     }
-                    etat.value = { statut: 'succes', data: resultat.data as DATA, erreur: null };
+                    etat.value = { statut: 'succes', data: resultat.data as DATA, erreur: null, entetes: resultat.response.headers };
                 },
                 (raison) => {
                     if (signal.aborted) {

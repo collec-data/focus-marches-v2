@@ -63,6 +63,7 @@ Ci-dessous une description des paramètres importants :
 | REGION | | La région concernée |
 | DEPARTEMENTS | 1,2,3 | Les numéros de département de la région, séparés par une virgule |
 | FRONT_THEME_COLOR | amber | Une couleur parmi les suivantes : noir, emerald, green, lime, orange, amber, yellow, teal, cyan, sky, blue, indigo, violet, purple, fuchsia, pink ou rose. Cette couleur sera utilisée par défaut mais pourra toujours être modifiée ensuite par l'utilisateur. |
+| LIMITE_RESULTATS | 5000 | Le nombre maximal de résultats renvoyés par une recherche. Au-delà, seuls les plus récents sont renvoyés |
 | SOURCES |  | Les liens permanents des fichiers annuels                                                                                                                                                                                                                       |
 | INFOGREFFE_DATASET | chiffres-cles-2024 | le nom du dataset                                                                                                                                                                                                                                               |
 | INFOGREFFE_API_KEY |  | Un token d'identification a l'API infogreffe                                                                                                                                                                                                                    |

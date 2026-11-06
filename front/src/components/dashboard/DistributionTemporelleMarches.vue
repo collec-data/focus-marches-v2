@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useLimiteResultats } from '@/service/UseLimiteResultats';
 import { getMonthAsString, getNow } from '@/service/HelpersService';
 import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
 import { useReactiveFetch } from '@/utils/query';
@@ -113,12 +114,14 @@ const options = computed(() => {
 
 const { etat, refetch } = useReactiveFetch(getListeMarches, options);
 
+const limite = useLimiteResultats(etat);
 const donnees = computed(() => (etat.value.statut === 'succes' ? transform(etat.value.data) : undefined));
 </script>
 
 <template>
     <section>
         <h2>Distribution temporelle des marchés</h2>
+        <AvertissementLimite :limite />
 
         <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
         <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement de la distribution a échoué" @retry="refetch" />

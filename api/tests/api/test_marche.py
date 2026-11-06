@@ -1,6 +1,8 @@
 from datetime import date
 from decimal import Decimal
 
+from app.config import get_config
+from app.main import app
 from app.models import enums
 from tests.factories import (
     AcheteurFactory,
@@ -66,6 +68,94 @@ def test_list_marche(client):
     assert len(response.json()) == 1
     assert response.json()[0]["uid"] == marche_recherche.uid
     assert response.json()[0]["montant_max_accord_cadre"] == str(ac.montant)
+
+
+def plafonner(limite):
+    config = app.dependency_overrides[get_config]()
+    app.dependency_overrides[get_config] = lambda: config.model_copy(
+        update={"LIMITE_RESULTATS": limite}
+    )
+
+
+def test_list_marche_limite_atteinte_garde_les_plus_recents(client):
+    for jour in range(1, 6):
+        MarcheFactory(date_notification=date(2025, 1, jour))
+    plafonner(3)
+
+    response = client.get("/marche")
+
+    assert response.status_code == 200
+    assert [m["date_notification"] for m in response.json()] == [
+        "2025-01-03",
+        "2025-01-04",
+        "2025-01-05",
+    ]
+    assert response.headers["X-Resultats-Tronques"] == "true"
+    assert response.headers["X-Limite"] == "3"
+
+
+def test_list_marche_limite_non_depassee(client):
+    MarcheFactory.create_batch(3)
+    plafonner(3)
+
+    response = client.get("/marche")
+
+    assert len(response.json()) == 3
+    assert response.headers["X-Resultats-Tronques"] == "false"
+    assert response.headers["X-Limite"] == "3"
+
+
+def test_list_marche_limite_du_client_inferieure_au_plafond(client):
+    for jour in range(1, 6):
+        MarcheFactory(date_notification=date(2025, 1, jour))
+    plafonner(4)
+
+    response = client.get("/marche", params={"limit": 2})
+
+    assert [m["date_notification"] for m in response.json()] == [
+        "2025-01-04",
+        "2025-01-05",
+    ]
+    assert response.headers["X-Resultats-Tronques"] == "false"
+
+
+def test_list_marche_limite_du_client_superieure_au_plafond(client):
+    for jour in range(1, 6):
+        MarcheFactory(date_notification=date(2025, 1, jour))
+    plafonner(3)
+
+    response = client.get("/marche", params={"limit": 10})
+
+    assert [m["date_notification"] for m in response.json()] == [
+        "2025-01-03",
+        "2025-01-04",
+        "2025-01-05",
+    ]
+    assert response.headers["X-Resultats-Tronques"] == "true"
+    assert response.headers["X-Limite"] == "3"
+
+
+def test_list_marche_offset_compte_depuis_les_plus_recents(client):
+    for jour in range(1, 6):
+        MarcheFactory(date_notification=date(2025, 1, jour))
+
+    response = client.get("/marche", params={"offset": 1, "limit": 2})
+
+    assert [m["date_notification"] for m in response.json()] == [
+        "2025-01-03",
+        "2025-01-04",
+    ]
+
+
+def test_list_marche_meme_date_departage_par_uid(client):
+    marches = [MarcheFactory(date_notification=date(2025, 1, 1)) for _ in range(4)]
+    plafonner(2)
+
+    response = client.get("/marche")
+
+    uids = sorted(m.uid for m in marches)
+    assert [m["uid"] for m in response.json()] == uids[-2:]
+    assert response.headers["X-Resultats-Tronques"] == "true"
 
 
 def test_procedure_et_filtres_succes(client):

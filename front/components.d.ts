@@ -13,6 +13,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AchatDurable: typeof import('./src/components/dashboard/AchatDurable.vue')['default']
     AutoComplete: typeof import('primevue/autocomplete')['default']
+    AvertissementLimite: typeof import('./src/components/AvertissementLimite.vue')['default']
     Badge: typeof import('primevue/badge')['default']
     BoutonIframe: typeof import('./src/components/BoutonIframe.vue')['default']
     Button: typeof import('primevue/button')['default']

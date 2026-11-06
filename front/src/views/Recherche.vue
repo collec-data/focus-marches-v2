@@ -3,6 +3,7 @@ import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociale
 import { getNomDepartement } from '@/service/Departements';
 import { exportMarchesCSV, exportMarchesPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatDate, getCatEntreprise, getNow, jourCalendaire, structureName } from '@/service/HelpersService';
+import { useLimiteResultats } from '@/service/UseLimiteResultats';
 import { useReactiveFetch } from '@/utils/query';
 import { computed, ref, toRaw } from 'vue';
 
@@ -105,6 +106,8 @@ const marchesOptions = computed<{ query: QueryMarches } | undefined>(() => (filt
 const { etat: etatMarches, refetch: refetchMarches } = useReactiveFetch(getListeMarches, marchesOptions);
 
 const marches = computed(() => (etatMarches.value.statut === 'succes' ? etatMarches.value.data : []));
+
+const limite = useLimiteResultats(etatMarches);
 
 /** Période réellement recherchée, et non celle en cours de saisie. */
 const periode = computed(() => {
@@ -285,6 +288,7 @@ const marcheUid = ref(null);
 
         <section>
             <h2 class="title">Toutes les données de votre recherche</h2>
+            <AvertissementLimite :limite />
             <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
             <p v-if="!filtres_appliques" class="mt-4">Lancez une recherche avec le bouton «&nbsp;Chercher&nbsp;» pour afficher les marchés correspondants.</p>
             <ErreurChargement v-else-if="etatMarches.statut === 'erreur'" :erreur="etatMarches.erreur" message="Le chargement des marchés a échoué" class="my-4" @retry="refetchMarches" />

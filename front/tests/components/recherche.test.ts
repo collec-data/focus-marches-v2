@@ -78,4 +78,35 @@ describe('Recherche.vue', () => {
         await waitFor(() => expect(screen.getByText(/Le chargement des marchés a échoué/)).toBeTruthy());
         unmount();
     });
+
+    it("avertit que les résultats sont limités quand l'API a tronqué la réponse", async () => {
+        const entetes = { 'X-Resultats-Tronques': 'true', 'X-Limite': '5000' };
+        server.use(http.get(base + 'marche/', () => HttpResponse.json([], { headers: entetes })));
+
+        const { container, unmount } = render(Recherche);
+        expect(screen.queryByText(/limité aux/)).toBeNull();
+
+        await rechercher(container);
+
+        await waitFor(() => expect(screen.getByText('Le nombre de résultats affichés est limité aux 5000 plus récents. Veuillez affiner vos filtres.')).toBeTruthy());
+        unmount();
+    });
+
+    it("n'avertit pas quand la limite n'est pas atteinte", async () => {
+        let reponses = 0;
+        server.use(
+            http.get(base + 'marche/', () => {
+                reponses += 1;
+                return HttpResponse.json([], { headers: { 'X-Resultats-Tronques': 'false', 'X-Limite': '5000' } });
+            })
+        );
+
+        const { container, unmount } = render(Recherche);
+        await rechercher(container);
+
+        await waitFor(() => expect(reponses).toBe(1));
+        await waitFor(() => expect(screen.queryByText(/Lancez une recherche/)).toBeNull());
+        expect(screen.queryByText(/limité aux/)).toBeNull();
+        unmount();
+    });
 });

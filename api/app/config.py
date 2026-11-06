@@ -20,6 +20,8 @@ class Config(BaseSettings):
     INFOGREFFE_API_KEY: str = ""
     INFOGREFFE_DATASET: str = "chiffres-cles-2024"
 
+    LIMITE_RESULTATS: int = 5000
+
     SOURCES: str
     SIRETS: str | None = None
 
