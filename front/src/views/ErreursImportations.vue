@@ -4,7 +4,7 @@ import { computed, ref, toRaw, watch } from 'vue';
 
 import type { StructureDto } from '@/client';
 import StructureSearchAutoComplete from '@/components/StructureSearchAutoComplete.vue';
-import { formatDate, formatNumber, getMonthAsString, getNow, structureName } from '@/service/HelpersService';
+import { formatDate, formatNumber, getMonthAsString, getNow, jourCalendaire, structureName } from '@/service/HelpersService';
 import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
 import { useReactiveFetch } from '@/utils/query';
 import { useRoute, useRouter } from 'vue-router';
@@ -13,11 +13,6 @@ const router = useRouter();
 const route = useRoute();
 
 type Filtres = { acheteur: StructureDto | undefined; date_min: Date; date_max: Date };
-
-function toDate(date: Date): Date {
-    date.setUTCHours(0, 0, 0, 0);
-    return date;
-}
 
 const filtres = ref<Filtres>({
     acheteur: undefined,
@@ -44,8 +39,8 @@ const contexte = ref<Filtres>(structuredClone(toRaw(filtres.value)));
 
 const statsOptions = computed(() => ({
     query: {
-        date_debut: toDate(contexte.value.date_min),
-        date_fin: toDate(contexte.value.date_max),
+        date_debut: jourCalendaire(contexte.value.date_min),
+        date_fin: jourCalendaire(contexte.value.date_max),
         uid_structure: contexte.value.acheteur?.uid
     }
 }));
@@ -66,8 +61,8 @@ const decpsOptions = computed(() => {
         query: {
             localisation: choisie.localisation,
             type: choisie.type,
-            date_debut: toDate(contexte.value.date_min),
-            date_fin: toDate(contexte.value.date_max),
+            date_debut: jourCalendaire(contexte.value.date_min),
+            date_fin: jourCalendaire(contexte.value.date_max),
             uid_structure: contexte.value.acheteur?.uid
         }
     };
