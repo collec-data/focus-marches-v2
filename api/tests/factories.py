@@ -141,6 +141,31 @@ class MarcheFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Marche]
     accord_cadre: MarcheFactory | None = None
 
 
+class TarifFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Tarif]):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
+        model = db.Tarif
+
+    uid = factory.declarations.Sequence(lambda n: n + 1)
+    intitule = "1 voyage"
+    tarif = factory.faker.Faker(
+        "pydecimal", right_digits=2, min_value=0, max_value=1000
+    )
+
+
+class DonneeExecutionFactory(
+    SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.DonneeExecution]
+):
+    class Meta:  # pyright: ignore[reportIncompatibleVariableOverride]
+        model = db.DonneeExecution
+
+    uid = factory.declarations.Sequence(lambda n: n + 1)
+    date_publication = factory.faker.Faker("date")
+    depenses_investissement = factory.faker.Faker(
+        "pydecimal", right_digits=2, min_value=0, max_value=1000000
+    )
+    tarifs = factory.declarations.LazyFunction(list)
+
+
 class ConcessionFactory(
     SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.ContratConcession]
 ):
@@ -163,6 +188,7 @@ class ConcessionFactory(
     considerations_sociales = factory.declarations.LazyFunction(list)
     considerations_environnementales = factory.declarations.LazyFunction(list)
     concessionnaires = factory.declarations.LazyFunction(list)
+    donnees_execution = factory.declarations.LazyFunction(list)
 
 
 class ErreurFactory(SQLAlchemyModelFactory, metaclass=BaseMetaFactory[db.Erreur]):

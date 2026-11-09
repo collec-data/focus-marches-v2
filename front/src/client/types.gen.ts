@@ -308,10 +308,6 @@ export type DonneeExecutionDto = {
      */
     uid: number;
     /**
-     * Id
-     */
-    id: number;
-    /**
      * Date Publication
      */
     date_publication: Date;

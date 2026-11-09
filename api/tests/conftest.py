@@ -17,11 +17,13 @@ from tests.factories import (
     CritereEnvFactory,
     CritereSocialFactory,
     DecpMalFormeFactory,
+    DonneeExecutionFactory,
     ErreurFactory,
     LieuFactory,
     MarcheFactory,
     StructureFactory,
     StructureInfogreffeFactory,
+    TarifFactory,
     TechniqueAchatFactory,
     VendeurFactory,
 )
@@ -94,6 +96,8 @@ def set_factory_db(db):
         StructureInfogreffeFactory,
         CPVFactory,
         ConfFactory,
+        DonneeExecutionFactory,
+        TarifFactory,
     ]:
         my_factory._meta.sqlalchemy_session = db  # ty: ignore[unresolved-attribute]
 

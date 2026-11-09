@@ -109,7 +109,6 @@ class TarifDto(BaseModel):
 
 class DonneeExecutionDto(BaseModel):
     uid: int
-    id: int
     date_publication: date
     depenses_investissement: Decimal
     tarifs: list[TarifDto]

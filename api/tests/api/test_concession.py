@@ -1,4 +1,12 @@
-from tests.factories import ConcessionFactory, VendeurFactory
+from datetime import date
+from decimal import Decimal
+
+from tests.factories import (
+    ConcessionFactory,
+    DonneeExecutionFactory,
+    TarifFactory,
+    VendeurFactory,
+)
 
 
 def test_list_concessions(client):
@@ -34,6 +42,41 @@ def test_get_concession_succes(client):
     assert response.status_code == 200
     assert response.json()["uid"] == concession.uid
     assert response.json()["id"] == concession.id
+
+
+def test_get_concession_donnees_execution(client):
+    concession = ConcessionFactory(
+        donnees_execution=[
+            DonneeExecutionFactory(
+                date_publication=date(2025, 1, 1),
+                depenses_investissement=Decimal(100000),
+                tarifs=[
+                    TarifFactory(intitule="1 voyage", tarif=Decimal(1)),
+                    TarifFactory(intitule="10 voyages", tarif=Decimal(9)),
+                ],
+            )
+        ]
+    )
+
+    response = client.get(f"/contrat-concession/{concession.uid}")
+
+    assert response.status_code == 200
+    (donnee,) = response.json()["donnees_execution"]
+    assert donnee["date_publication"] == "2025-01-01"
+    assert Decimal(donnee["depenses_investissement"]) == 100000
+    assert [(t["intitule"], Decimal(t["tarif"])) for t in donnee["tarifs"]] == [
+        ("1 voyage", 1),
+        ("10 voyages", 9),
+    ]
+
+
+def test_list_concessions_donnees_execution(client):
+    ConcessionFactory(donnees_execution=[DonneeExecutionFactory()])
+
+    response = client.get("/contrat-concession")
+
+    assert response.status_code == 200
+    assert len(response.json()[0]["donnees_execution"]) == 1
 
 
 def test_get_concession_inconnu(client):
