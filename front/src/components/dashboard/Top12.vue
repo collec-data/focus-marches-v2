@@ -112,7 +112,8 @@ const exhaustive = useReactiveFetch(
     options(undefined, null, () => showModale.value)
 );
 
-const reussite = computed(() => Object.values(parCategorie).every((requete) => requete.etat.value.statut === 'succes'));
+// Seul l'onglet « tout » est chargé d'emblée : les autres restent en attente jusqu'à leur première visite.
+const reussite = computed(() => parCategorie.tout.etat.value.statut === 'succes');
 const premiereErreur = computed<ErreurReactiveFetch | null>(() => {
     for (const requete of Object.values(parCategorie)) {
         if (requete.etat.value.statut === 'erreur') {
