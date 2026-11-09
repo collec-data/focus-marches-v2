@@ -147,6 +147,28 @@ def test_list_marche_offset_compte_depuis_les_plus_recents(client):
     ]
 
 
+def test_list_marche_plusieurs_titulaires_pas_de_doublon(client):
+    marche = MarcheFactory(titulaires=VendeurFactory.create_batch(3))
+
+    response = client.get("/marche")
+
+    assert [m["uid"] for m in response.json()] == [marche.uid]
+
+
+def test_list_marche_plusieurs_titulaires_limite_compte_des_marches(client):
+    for jour in range(1, 4):
+        MarcheFactory(
+            date_notification=date(2025, 1, jour),
+            titulaires=VendeurFactory.create_batch(3),
+        )
+    plafonner(3)
+
+    response = client.get("/marche")
+
+    assert len(response.json()) == 3
+    assert response.headers["X-Resultats-Tronques"] == "false"
+
+
 def test_list_marche_meme_date_departage_par_uid(client):
     marches = [MarcheFactory(date_notification=date(2025, 1, 1)) for _ in range(4)]
     plafonner(2)

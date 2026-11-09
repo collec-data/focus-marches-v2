@@ -173,22 +173,12 @@ def get_liste_marches(
     response: Response,
     filtres: Annotated[FiltresListeMarches, Query()],
 ) -> list[Marche]:
-    acheteur = aliased(Structure)
-    titulaires = aliased(Structure)
-    accord_cadre = aliased(Marche)
-
-    stmt = application_filtres_etendus(
-        select(Marche)
-        .outerjoin(acheteur, Marche.acheteur)
-        .outerjoin(titulaires, Marche.titulaires)
-        .outerjoin(Marche.actes_sous_traitance)
-        .outerjoin(accord_cadre, Marche.accord_cadre)
-        .outerjoin(Marche.cpv),
-        filtres,
-    )
+    stmt = application_filtres_etendus(select(Marche), filtres)
 
     if filtres.accord_cadre_uid is not None:
-        stmt = stmt.where(accord_cadre.uid == filtres.accord_cadre_uid)
+        stmt = stmt.where(
+            Marche.accord_cadre.has(Marche.uid == filtres.accord_cadre_uid)
+        )
 
     plafond = config.LIMITE_RESULTATS
     limite = plafond if filtres.limit is None else min(filtres.limit, plafond)
