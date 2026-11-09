@@ -7,7 +7,7 @@ ENV UV_LINK_MODE=copy \
 
 WORKDIR /app
 
-RUN apk add --no-cache build-base curl mariadb mariadb-dev
+RUN apk add --no-cache curl
 
 COPY pyproject.toml uv.lock ./
 RUN uv sync --no-dev --locked --no-editable --no-install-project
@@ -17,7 +17,7 @@ FROM python:3.14.8-alpine3.23@sha256:e7cff362a12454395f8dc99607c21a602ea880cdce0
 EXPOSE 80
 WORKDIR /app
 
-RUN apk add --no-cache build-base curl mariadb mariadb-dev
+RUN apk add --no-cache curl
 
 # Copie du .venv
 COPY --from=builder /app/.venv /app/.venv
