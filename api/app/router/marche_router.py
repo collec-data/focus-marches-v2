@@ -14,11 +14,12 @@ from sqlalchemy import (
     func,
     select,
 )
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import aliased, selectinload
 
 from app.dependencies import ConfigDep, SessionDep
 from app.models.db import (
     CPV,
+    ActeSousTraitance,
     ConsiderationEnvMarche,
     ConsiderationSocialeMarche,
     Lieu,
@@ -188,6 +189,17 @@ def get_liste_marches(
         stmt.order_by(Marche.date_notification.desc(), Marche.uid.desc())
         .offset(filtres.offset)
         .limit(limite + 1)
+        .options(
+            selectinload(Marche.acheteur),
+            selectinload(Marche.cpv),
+            selectinload(Marche.accord_cadre),
+            selectinload(Marche.titulaires),
+            selectinload(Marche.considerations_sociales),
+            selectinload(Marche.considerations_environnementales),
+            selectinload(Marche.actes_sous_traitance).selectinload(
+                ActeSousTraitance.sous_traitant
+            ),
+        )
     )
     marches = list(session.execute(stmt).scalars())
 
