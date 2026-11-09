@@ -27,7 +27,7 @@ from sqlalchemy import desc, select, text
 from sqlalchemy.orm import Session
 
 from app.config import get_config
-from app.db import get_engine
+from app.db import creer_index_manquants, get_engine
 from app.dependencies import get_api_entreprise
 from app.helpers import categorisation
 from app.helpers.conf import set_dernier_import
@@ -641,6 +641,7 @@ def decps(import_de_0: bool = False) -> None:  # pragma: no cover
                 connexion.execute(text(f"TRUNCATE TABLE {table}"))
             connexion.execute(text("SET FOREIGN_KEY_CHECKS = 1; "))
             connexion.commit()
+        creer_index_manquants(get_engine())
 
     config = get_config()
     sirets: None | list[str] = config.SIRETS.split(" ") if config.SIRETS else None

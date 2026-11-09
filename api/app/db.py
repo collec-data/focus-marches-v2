@@ -3,6 +3,7 @@ from functools import cache
 from sqlalchemy import Engine, create_engine
 
 from .config import get_config
+from .models.db import Base
 
 
 @cache
@@ -18,3 +19,10 @@ def get_engine() -> Engine:
         pool_recycle=27_000,
     )
     return engine
+
+
+def creer_index_manquants(engine: Engine) -> None:
+    """Crée les index déclarés dans les modèles et absents de la base (``create_all`` ne le fait pas pour une table existante)."""
+    for table in Base.metadata.sorted_tables:
+        for index in table.indexes:
+            index.create(engine, checkfirst=True)

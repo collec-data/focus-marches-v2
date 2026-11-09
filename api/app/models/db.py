@@ -2,7 +2,15 @@ import re
 from datetime import date
 from decimal import Decimal
 
-from sqlalchemy import Column, ForeignKey, String, Table, Text, UniqueConstraint
+from sqlalchemy import (
+    Column,
+    ForeignKey,
+    Index,
+    String,
+    Table,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.dialects.mysql import DECIMAL, MEDIUMTEXT
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.ext.mutable import MutableList
@@ -263,6 +271,11 @@ class Marche(Base):
     #     relationship()
     # )  # *1
     modifications: Mapped[list[ModificationMarche]] = relationship()  # *1
+
+    __table_args__ = (
+        # sert le filtre par période et le tri de la liste des marchés
+        Index("ix_marche_date_notification_uid", "date_notification", "uid"),
+    )
 
     @hybrid_property
     def nature_as_str(self) -> NatureMarche:
