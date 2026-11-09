@@ -1,7 +1,8 @@
 from datetime import date
 
 from fastapi import APIRouter
-from sqlalchemy import Row, desc, func, select
+from sqlalchemy import Row, and_, desc, func, select
+from sqlalchemy.orm import selectinload
 
 from app.dependencies import SessionDep
 from app.models.db import DecpMalForme, Erreur, Structure
@@ -21,20 +22,23 @@ def get_erreurs_import(
     date_debut: date | None = None,
     date_fin: date | None = None,
 ) -> list[DecpMalForme]:
-    stmt = (
-        select(DecpMalForme)
-        .outerjoin(DecpMalForme.erreurs)
-        .outerjoin(DecpMalForme.structure)
+    stmt = select(DecpMalForme).options(
+        selectinload(DecpMalForme.erreurs),
+        selectinload(DecpMalForme.structure),
     )
 
     if uid_structure is not None:
-        stmt = stmt.where(Structure.uid == uid_structure)
+        stmt = stmt.where(DecpMalForme.structure.has(Structure.uid == uid_structure))
 
+    criteres_erreur = []
     if localisation:
-        stmt = stmt.where(Erreur.localisation == localisation)
+        criteres_erreur.append(Erreur.localisation == localisation)
 
     if type:
-        stmt = stmt.where(Erreur.type == type)
+        criteres_erreur.append(Erreur.type == type)
+
+    if criteres_erreur:
+        stmt = stmt.where(DecpMalForme.erreurs.any(and_(*criteres_erreur)))
 
     if date_debut:
         stmt = stmt.where(DecpMalForme.date_creation >= date_debut)

@@ -36,6 +36,45 @@ def test_list_erreurs(client):
     assert response.json()[0]["uid"] == decp.uid
 
 
+def test_list_erreurs_plusieurs_erreurs_pas_de_doublon(client):
+    decp = DecpMalFormeFactory()
+
+    response = client.get("/erreurs-import")
+
+    assert [d["uid"] for d in response.json()] == [decp.uid]
+    assert len(response.json()[0]["erreurs"]) == 2
+
+
+def test_list_erreurs_filtre_sur_erreur_multiple_pas_de_doublon(client):
+    decp = DecpMalFormeFactory()
+
+    response = client.get("/erreurs-import", params={"type": "Erreur générique"})
+
+    assert [d["uid"] for d in response.json()] == [decp.uid]
+
+
+def test_list_erreurs_limite_compte_des_decp(client):
+    DecpMalFormeFactory.create_batch(4)
+
+    response = client.get("/erreurs-import", params={"limit": 3})
+
+    assert len({d["uid"] for d in response.json()}) == 3
+    assert len(response.json()) == 3
+
+
+def test_list_erreurs_filtres_type_et_localisation_sur_la_meme_erreur(client):
+    DecpMalFormeFactory(
+        erreurs__0__type="A",
+        erreurs__0__localisation="a",
+        erreurs__1__type="B",
+        erreurs__1__localisation="b",
+    )
+
+    response = client.get("/erreurs-import", params={"type": "A", "localisation": "b"})
+
+    assert response.json() == []
+
+
 def test_get_stats_aucune_erreur(client):
     response = client.get("/erreurs-import/stats")
 
