@@ -1,9 +1,10 @@
 import { getListeMarches } from '@/client';
-import type { GetListeMarchesData, MarcheAllegeDto } from '@/client';
 import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
-import type { ErreurReactiveFetch, ResultatReactiveFetch } from '@/utils/query';
 import { useReactiveFetch } from '@/utils/query';
 import { computed } from 'vue';
+
+import type { GetListeMarchesData, MarcheAllegeDto } from '@/client';
+import type { ErreurReactiveFetch, ResultatReactiveFetch } from '@/utils/query';
 
 export type QueryMarches = NonNullable<GetListeMarchesData['query']>;
 
