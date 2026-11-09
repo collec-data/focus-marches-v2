@@ -4,7 +4,6 @@ import { okabe_ito } from '@/service/GraphColorsService';
 import { breakLongLabel, formatCurrency, formatNumber, getDurationInMonths, getNow, structureName } from '@/service/HelpersService';
 import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
 import { useReactiveFetch } from '@/utils/query';
-import type { ErreurReactiveFetch } from '@/utils/query';
 import { computed, ref } from 'vue';
 
 import type { StructureAggMarchesDto } from '@/client';
@@ -112,16 +111,12 @@ const exhaustive = useReactiveFetch(
     options(undefined, null, () => showModale.value)
 );
 
-// Seul l'onglet « tout » est chargé d'emblée : les autres restent en attente jusqu'à leur première visite.
-const reussite = computed(() => parCategorie.tout.etat.value.statut === 'succes');
-const premiereErreur = computed<ErreurReactiveFetch | null>(() => {
-    for (const requete of Object.values(parCategorie)) {
-        if (requete.etat.value.statut === 'erreur') {
-            return requete.etat.value.erreur;
-        }
-    }
-    return null;
-});
+const PANNEAUX: { cle: Categorie; valeur: string; libelle: string; titre: string }[] = [
+    { cle: 'tout', valeur: 'tout', libelle: 'Tous les marchés', titre: 'Montant des contrats du top 12 toutes catégories confondues' },
+    { cle: 'services', valeur: CategorieMarche.SERVICES, libelle: CategorieMarche.SERVICES, titre: 'Montant des contrats du top 12 des services' },
+    { cle: 'travaux', valeur: CategorieMarche.TRAVAUX, libelle: CategorieMarche.TRAVAUX, titre: 'Montant des contrats du top 12 des travaux' },
+    { cle: 'fournitures', valeur: CategorieMarche.FOURNITURES, libelle: CategorieMarche.FOURNITURES, titre: 'Montant des contrats du top 12 des fournitures' }
+];
 
 const listeStructures = computed(() => {
     const sortie = {} as Record<Categorie, StructureAggMarchesDto[]>;
@@ -176,73 +171,26 @@ function openModale() {
         <p class="subtitle">{{ description }}</p>
 
         <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
-        <ErreurChargement v-else-if="premiereErreur" :erreur="premiereErreur" message="Le chargement du classement a échoué" @retry="() => Object.values(parCategorie).forEach((requete) => requete.refetch())" />
 
-        <Tabs v-else-if="reussite" value="tout" @update:value="change">
+        <Tabs v-else value="tout" @update:value="change">
             <TabList>
-                <Tab value="tout">Tous les marchés</Tab>
-                <Tab :value="CategorieMarche.SERVICES">{{ CategorieMarche.SERVICES }}</Tab>
-                <Tab :value="CategorieMarche.TRAVAUX">{{ CategorieMarche.TRAVAUX }}</Tab>
-                <Tab :value="CategorieMarche.FOURNITURES">{{ CategorieMarche.FOURNITURES }}</Tab>
+                <Tab v-for="panneau in PANNEAUX" :key="panneau.cle" :value="panneau.valeur">{{ panneau.libelle }}</Tab>
             </TabList>
             <TabPanels>
-                <TabPanel value="tout">
-                    <div class="flex flex-row gap-5">
+                <TabPanel v-for="panneau in PANNEAUX" :key="panneau.cle" :value="panneau.valeur">
+                    <ErreurChargement v-if="parCategorie[panneau.cle].etat.value.statut === 'erreur'" :erreur="parCategorie[panneau.cle].etat.value.erreur" message="Le chargement du classement a échoué" @retry="parCategorie[panneau.cle].refetch()" />
+                    <ChargementEnCours v-else-if="parCategorie[panneau.cle].etat.value.statut !== 'succes'" libelle="Chargement du classement" />
+                    <div v-else class="flex flex-row gap-5">
                         <table class="basis-1/3 border-collapse text-right">
                             <tbody>
-                                <tr v-for="line in listeStructures.tout" :key="line.structure.uid">
+                                <tr v-for="line in listeStructures[panneau.cle]" :key="line.structure.uid">
                                     <th>{{ structureName(line.structure) }}</th>
                                     <td>{{ formatCurrency(parseFloat(line.montant)) }}</td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="basis-2/3">
-                            <Graph :data="data.tout" :layout style="min-height: 25rem" title="Montant des contrats du top 12 toutes catégories confondues" />
-                        </div>
-                    </div>
-                </TabPanel>
-                <TabPanel :value="CategorieMarche.SERVICES">
-                    <div class="flex flex-row gap-5">
-                        <table class="basis-1/3 border-collapse text-right">
-                            <tbody>
-                                <tr v-for="line in listeStructures.services" :key="line.structure.uid">
-                                    <th>{{ structureName(line.structure) }}</th>
-                                    <td>{{ formatCurrency(parseFloat(line.montant)) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="basis-2/3">
-                            <Graph :data="data.services" :layout style="min-height: 25rem" title="Montant des contrats du top 12 des services" />
-                        </div>
-                    </div>
-                </TabPanel>
-                <TabPanel :value="CategorieMarche.TRAVAUX">
-                    <div class="flex flex-row gap-5">
-                        <table class="basis-1/3 border-collapse text-right">
-                            <tbody>
-                                <tr v-for="line in listeStructures.travaux" :key="line.structure.uid">
-                                    <th>{{ structureName(line.structure) }}</th>
-                                    <td>{{ formatCurrency(parseFloat(line.montant)) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="basis-2/3">
-                            <Graph :data="data.travaux" :layout style="min-height: 25rem" title="Montant des contrats du top 12 des travaux" />
-                        </div>
-                    </div>
-                </TabPanel>
-                <TabPanel :value="CategorieMarche.FOURNITURES">
-                    <div class="flex flex-row gap-5">
-                        <table class="basis-1/3 border-collapse text-right">
-                            <tbody>
-                                <tr v-for="line in listeStructures.fournitures" :key="line.structure.uid">
-                                    <th>{{ structureName(line.structure) }}</th>
-                                    <td>{{ formatCurrency(parseFloat(line.montant)) }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="basis-2/3">
-                            <Graph :data="data.fournitures" :layout style="min-height: 25rem" title="Montant des contrats du top 12 des fournitures" />
+                            <Graph :data="data[panneau.cle]" :layout style="min-height: 25rem" :title="panneau.titre" />
                         </div>
                     </div>
                 </TabPanel>
