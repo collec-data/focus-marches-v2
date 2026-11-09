@@ -6,7 +6,7 @@ import { ModaliteExecution, TechniqueAchat } from '../../src/client';
 import ListeMarches from '../../src/components/ListeMarches.vue';
 import ModaleMarche from '../../src/components/ModaleMarche.vue';
 import { marche } from '../api_test_data';
-import { mockRouter } from '../mocks';
+import { marchesCharges } from '../mocks';
 import { server } from '../setup';
 
 const base = 'http://localhost:3000/';
@@ -15,23 +15,17 @@ const tronque = { headers: { 'X-Resultats-Tronques': 'true', 'X-Limite': '5000' 
 const complet = { headers: { 'X-Resultats-Tronques': 'false', 'X-Limite': '5000' } };
 
 describe('ListeMarches', () => {
-    it('avertit quand la limite de résultats est atteinte', async () => {
-        await mockRouter({ uid: 42 });
-        server.use(http.get(base + 'marche/', () => HttpResponse.json([marche], tronque)));
+    it('avertit quand la limite de résultats est atteinte', () => {
+        const { unmount } = render(ListeMarches, { props: { marches: marchesCharges([marche], tronque.headers), acheteurUid: 42 } });
 
-        const { unmount } = render(ListeMarches, { props: { acheteurUid: 42 } });
-
-        await waitFor(() => expect(screen.getByText(avertissement)).toBeTruthy());
+        expect(screen.getByText(avertissement)).toBeTruthy();
         unmount();
     });
 
-    it("n'avertit pas quand la limite n'est pas atteinte", async () => {
-        await mockRouter({ uid: 42 });
-        server.use(http.get(base + 'marche/', () => HttpResponse.json([marche], complet)));
+    it("n'avertit pas quand la limite n'est pas atteinte", () => {
+        const { unmount } = render(ListeMarches, { props: { marches: marchesCharges([marche], complet.headers), acheteurUid: 42 } });
 
-        const { unmount } = render(ListeMarches, { props: { acheteurUid: 42 } });
-
-        await waitFor(() => expect(screen.getByText('Lorem ipsum dolor')).toBeTruthy());
+        expect(screen.getByText('Lorem ipsum dolor')).toBeTruthy();
         expect(screen.queryByText(/limité aux/)).toBeNull();
         unmount();
     });

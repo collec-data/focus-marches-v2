@@ -89,7 +89,7 @@ const router = createRouter({
                 },
                 {
                     path: 'acheteur/:siret/marches',
-                    component: () => import('@/components/ListeMarches.vue'),
+                    component: () => import('@/components/widgets/ListeMarchesAcheteur.vue'),
                     props: (route) => ({
                         acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,
@@ -98,7 +98,7 @@ const router = createRouter({
                 },
                 {
                     path: 'acheteur/:siret/marches/distribution',
-                    component: () => import('@/components/dashboard/DistributionTemporelleMarches.vue'),
+                    component: () => import('@/components/widgets/DistributionTemporelleMarchesAcheteur.vue'),
                     props: (route) => ({
                         acheteurSiret: route.params.siret,
                         dateMin: route.query.dateMin,

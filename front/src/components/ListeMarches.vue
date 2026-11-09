@@ -1,24 +1,18 @@
 <script setup lang="ts">
-import { getListeMarches } from '@/client';
 import { exportMarchesCSV, exportMarchesExcel, exportMarchesPdf } from '@/service/ExportDatatableService';
 import { formatBoolean, formatCurrency, formatDate, getCatEntreprise, structureName } from '@/service/HelpersService';
 import { useLimiteResultats } from '@/service/UseLimiteResultats';
-import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
-import { useReactiveFetch } from '@/utils/query';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, toRef } from 'vue';
 
 import type { MarcheAllegeDto } from '@/client';
+import type { MarchesPerimetre } from '@/service/UseMarchesPerimetre';
 import type { PropType } from 'vue';
 import type { DataTableFilterMeta } from 'primevue/datatable';
 
-// Pas de valeur par défaut : `undefined` signifie « acheteur demandé mais pas encore identifié »,
-// tandis que `null` signifie « aucun acheteur demandé », donc aucun filtre.
 const props = defineProps({
+    marches: { type: Object as PropType<MarchesPerimetre>, required: true },
     acheteurUid: { type: Number as PropType<number | null>, required: false },
-    acheteurSiret: { type: String as PropType<string | null>, required: false },
-    vendeurUid: { type: Number as PropType<number | null>, required: false },
-    dateMin: { type: Date as PropType<Date | null>, required: false },
-    dateMax: { type: Date as PropType<Date | null>, required: false }
+    acheteurSiret: { type: String as PropType<string | null>, required: false }
 });
 
 const filters = ref({
@@ -29,37 +23,9 @@ const filters = ref({
     montant: { value: null, matchMode: 'equals' }
 } satisfies DataTableFilterMeta);
 
-const {
-    uid,
-    erreur: erreurAcheteur,
-    refetch: refetchAcheteur
-} = useStructureIdentifiee(
-    () => props.acheteurUid,
-    () => props.acheteurSiret
-);
-
-const options = computed(() => {
-    if (uid.value === undefined) {
-        return undefined;
-    }
-    return {
-        query: {
-            date_debut: props.dateMin ?? undefined,
-            date_fin: props.dateMax ?? undefined,
-            acheteur_uid: uid.value ?? undefined,
-            vendeur_uid: props.vendeurUid ?? undefined
-        }
-    };
-});
-
-const { etat, refetch } = useReactiveFetch(getListeMarches, options);
-
+const etat = toRef(() => props.marches.etat);
 const limite = useLimiteResultats(etat);
 const listeMarches = computed<Array<MarcheAllegeDto>>(() => (etat.value.statut === 'succes' ? etat.value.data : []));
-
-watch([() => props.dateMin, () => props.dateMax, () => props.vendeurUid], () => {
-    refetch();
-});
 
 const countSousTraitants = (value: Array<any>) => {
     return value.length ? value.length : '';
@@ -97,9 +63,9 @@ const hiddenCol = computed(() => {
         <AvertissementLimite :limite />
         <p>Ce tableau affiche les principales informations des marchés. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
 
-        <ErreurChargement v-if="erreurAcheteur" :erreur="erreurAcheteur" message="Aucune structure ne correspond à ce SIRET" @retry="refetchAcheteur" />
-        <ChargementEnCours v-else-if="uid === undefined" class="my-4" />
-        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement des marchés a échoué" class="my-4" @retry="refetch" />
+        <ErreurChargement v-if="marches.erreurIdentite" :erreur="marches.erreurIdentite" message="Aucune structure ne correspond à ce SIRET" @retry="marches.refetchIdentite" />
+        <ChargementEnCours v-else-if="etat.statut === 'attente'" class="my-4" />
+        <ErreurChargement v-else-if="etat.statut === 'erreur'" :erreur="etat.erreur" message="Le chargement des marchés a échoué" class="my-4" @retry="marches.refetch" />
 
         <DataTable
             v-else

@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, getListeMarches, listCpv, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
+import { CategorieMarche, ConsiderationsEnvironnementales, ConsiderationsSociales, FormePrix, getLieux, listCpv, NatureMarche, ProcedureMarche, TechniqueAchat, TypeCodeLieu } from '@/client';
 import { getNomDepartement } from '@/service/Departements';
 import { exportMarchesCSV, exportMarchesPdf } from '@/service/ExportDatatableService';
 import { formatCurrency, formatDate, getCatEntreprise, getNow, jourCalendaire, structureName } from '@/service/HelpersService';
 import { useLimiteResultats } from '@/service/UseLimiteResultats';
+import { useMarchesPerimetre } from '@/service/UseMarchesPerimetre';
 import { useReactiveFetch } from '@/utils/query';
-import { computed, ref, toRaw } from 'vue';
+import { computed, ref, toRaw, toRef } from 'vue';
 
-import type { CpvDto, GetLieuxData, GetListeMarchesData, LieuDto, StructureDto } from '@/client';
+import type { CpvDto, GetLieuxData, LieuDto, StructureDto } from '@/client';
+import type { QueryMarches } from '@/service/UseMarchesPerimetre';
 import type { AutoCompleteCompleteEvent } from 'primevue';
 
 const options_achat_durable: string[] = (Object.values(ConsiderationsEnvironnementales) as string[]).concat(Object.values(ConsiderationsSociales) as string[]).filter((o) => !o.includes('Pas de'));
@@ -72,8 +74,6 @@ type Filtres = typeof filtres.value;
  */
 const filtres_appliques = ref<Filtres | null>(null);
 
-type QueryMarches = NonNullable<GetListeMarchesData['query']>;
-
 const query = computed<QueryMarches>(() => {
     const appliques = filtres_appliques.value;
     if (!appliques) {
@@ -101,11 +101,11 @@ const query = computed<QueryMarches>(() => {
     };
 });
 
-const marchesOptions = computed<{ query: QueryMarches } | undefined>(() => (filtres_appliques.value ? { query: query.value } : undefined));
+const marches = useMarchesPerimetre(() => (filtres_appliques.value ? { query: query.value } : undefined));
 
-const { etat: etatMarches, refetch: refetchMarches } = useReactiveFetch(getListeMarches, marchesOptions);
+const etatMarches = toRef(() => marches.etat);
 
-const marches = computed(() => (etatMarches.value.statut === 'succes' ? etatMarches.value.data : []));
+const lignes = computed(() => (etatMarches.value.statut === 'succes' ? etatMarches.value.data : []));
 
 const limite = useLimiteResultats(etatMarches);
 
@@ -281,75 +281,75 @@ const marcheUid = ref(null);
         </Panel>
 
         <hr />
-        <template v-if="marches.length">
+        <p v-if="!filtres_appliques" class="mt-4">Lancez une recherche avec le bouton «&nbsp;Chercher&nbsp;» pour afficher les marchés correspondants.</p>
+        <template v-else>
             <IndicateursCles :query :dateMin="periode.min" :dateMax="periode.max" />
-            <DistributionTemporelleMarches :query :dateMin="periode.min" :dateMax="periode.max" />
-        </template>
+            <DistributionTemporelleMarches :marches :dateMin="periode.min" :dateMax="periode.max" />
 
-        <section>
-            <h2 class="title">Toutes les données de votre recherche</h2>
-            <AvertissementLimite :limite />
-            <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
-            <p v-if="!filtres_appliques" class="mt-4">Lancez une recherche avec le bouton «&nbsp;Chercher&nbsp;» pour afficher les marchés correspondants.</p>
-            <ErreurChargement v-else-if="etatMarches.statut === 'erreur'" :erreur="etatMarches.erreur" message="Le chargement des marchés a échoué" class="my-4" @retry="refetchMarches" />
-            <DataTable
-                v-else
-                :value="marches"
-                size="small"
-                stripedRows
-                paginator
-                :rows="10"
-                :rowsPerPageOptions="[10, 25, 50]"
-                :loading="etatMarches.statut === 'chargement'"
-                :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
-            >
-                <template v-if="etatMarches.statut === 'succes'" #empty>
-                    <div class="text-center">
-                        <Badge size="xlarge" severity="info">Aucun marché pour cette sélection</Badge>
-                    </div>
-                </template>
-                <template #header>
-                    <div class="flex flex-row">
-                        <div class="basis-1/2 flex gap-1">
-                            <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportMarchesCSV(marches)" />
-                            <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportMarchesPdf(marches, 'Liste des marchés')" />
-                        </div>
-                    </div>
-                </template>
-                <Column header="Détails">
-                    <template #body="{ data }">
-                        <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" />
-                    </template>
-                </Column>
-                <Column field="cpv" header="CPV" sortable>
-                    <template #body="{ data }">{{ data.cpv.code + ' ' + data.cpv.libelle }}</template>
-                </Column>
-                <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
-                <Column field="acheteur.nom" header="Acheteur" sortable>
-                    <template #body="{ data }">{{ structureName(data.acheteur) }}</template>
-                </Column>
-                <Column header="Fournisseur">
-                    <template #body="{ data }">
-                        <div v-for="titulaire in data.titulaires" :key="titulaire.uid">
-                            {{ structureName(titulaire) }}&nbsp;<span v-tooltip="getCatEntreprise(titulaire.cat_entreprise)" class="text-sm">[{{ titulaire.cat_entreprise }}]</span>
+            <section>
+                <h2 class="title">Toutes les données de votre recherche</h2>
+                <AvertissementLimite :limite />
+                <p>Ce tableau affiche les principales informations des marchés de votre sélection. Cliquez sur «&nbsp;Voir&nbsp;» pour accéder au détail de chaque marché.</p>
+                <ErreurChargement v-if="etatMarches.statut === 'erreur'" :erreur="etatMarches.erreur" message="Le chargement des marchés a échoué" class="my-4" @retry="marches.refetch" />
+                <DataTable
+                    v-else
+                    :value="lignes"
+                    size="small"
+                    stripedRows
+                    paginator
+                    :rows="10"
+                    :rowsPerPageOptions="[10, 25, 50]"
+                    :loading="etatMarches.statut === 'chargement'"
+                    :pt="{ column: { headerCell: { style: 'font-size:0.8rem; text-transform:uppercase;' } } }"
+                >
+                    <template v-if="etatMarches.statut === 'succes'" #empty>
+                        <div class="text-center">
+                            <Badge size="xlarge" severity="info">Aucun marché pour cette sélection</Badge>
                         </div>
                     </template>
-                </Column>
-                <Column field="date_notification" header="Date" sortable>
-                    <template #body="{ data }">
-                        {{ formatDate(data.date_notification) }}
-                        <br />
-                        ({{ data.duree_mois }} mois)
-                    </template></Column
-                >
-                <Column field="montant" header="Montant" dataType="numeric" sortable>
-                    <template #body="{ data }">
-                        {{ formatCurrency(parseFloat(data.montant)) }}
+                    <template #header>
+                        <div class="flex flex-row">
+                            <div class="basis-1/2 flex gap-1">
+                                <Button icon="pi pi-file-excel" label="CSV" severity="secondary" size="small" @click="exportMarchesCSV(lignes)" />
+                                <Button icon="pi pi-file-pdf" label="PDF" severity="secondary" size="small" @click="exportMarchesPdf(lignes, 'Liste des marchés')" />
+                            </div>
+                        </div>
                     </template>
-                    ></Column
-                >
-            </DataTable>
-        </section>
+                    <Column header="Détails">
+                        <template #body="{ data }">
+                            <Button label="Voir" aria-label="Voir les détails du marché" @click="marcheUid = data.uid" />
+                        </template>
+                    </Column>
+                    <Column field="cpv" header="CPV" sortable>
+                        <template #body="{ data }">{{ data.cpv.code + ' ' + data.cpv.libelle }}</template>
+                    </Column>
+                    <Column field="objet" header="Objet" sortable style="min-width: 20rem"></Column>
+                    <Column field="acheteur.nom" header="Acheteur" sortable>
+                        <template #body="{ data }">{{ structureName(data.acheteur) }}</template>
+                    </Column>
+                    <Column header="Fournisseur">
+                        <template #body="{ data }">
+                            <div v-for="titulaire in data.titulaires" :key="titulaire.uid">
+                                {{ structureName(titulaire) }}&nbsp;<span v-tooltip="getCatEntreprise(titulaire.cat_entreprise)" class="text-sm">[{{ titulaire.cat_entreprise }}]</span>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="date_notification" header="Date" sortable>
+                        <template #body="{ data }">
+                            {{ formatDate(data.date_notification) }}
+                            <br />
+                            ({{ data.duree_mois }} mois)
+                        </template></Column
+                    >
+                    <Column field="montant" header="Montant" dataType="numeric" sortable>
+                        <template #body="{ data }">
+                            {{ formatCurrency(parseFloat(data.montant)) }}
+                        </template>
+                        ></Column
+                    >
+                </DataTable>
+            </section>
+        </template>
         <ModaleMarche v-model="marcheUid" />
     </main>
 </template>

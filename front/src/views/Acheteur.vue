@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue';
 import { getNow, structureName } from '@/service/HelpersService';
+import { useMarchesPerimetre } from '@/service/UseMarchesPerimetre';
 import { useStructureIdentifiee } from '@/service/UseStructureIdentifiee';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
@@ -26,6 +27,8 @@ const uidDepuisUrl = computed(() => {
 const { uid: acheteurUid, structure: acheteur, erreur: erreurIdentite, refetch: refetchIdentite } = useStructureIdentifiee(uidDepuisUrl, () => props.siret ?? null, { structure: true });
 
 const acheteurSiret = computed(() => acheteur.value?.identifiant ?? null);
+
+const marches = useMarchesPerimetre(() => (acheteur.value ? { acheteurUid: acheteurUid.value, dateMin: dateMin.value, dateMax: dateMax.value } : undefined));
 
 const show = !route.path.includes('widget');
 const domain = window.location.origin;
@@ -57,8 +60,8 @@ const domain = window.location.origin;
             <CategoriePrincipaleDAchat :acheteurUid :acheteurSiret :dateMin :dateMax />
             <Top12 type="fournisseurs" :acheteurUid :acheteurSiret :dateMin :dateMax />
             <CarteAcheteursFournisseurs :acheteur :acheteurSiret :dateMin :dateMax />
-            <DistributionTemporelleMarches :acheteurUid :dateMax :dateMin />
-            <ListeMarches :acheteurUid :dateMax :dateMin />
+            <DistributionTemporelleMarches :marches :dateMax :dateMin />
+            <ListeMarches :marches :acheteurUid />
             <NatureContrats :acheteurUid :dateMax :dateMin />
             <CCAG :acheteurUid :dateMax :dateMin />
             <Procedure :acheteurUid :dateMax :dateMin />

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getStructure } from '@/client';
 import { getNow, structureName } from '@/service/HelpersService';
+import { useMarchesPerimetre } from '@/service/UseMarchesPerimetre';
 import { useReactiveFetch } from '@/utils/query';
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
@@ -24,6 +25,8 @@ const options = computed(() => (vendeurUid.value === null ? undefined : { path: 
 const { etat, refetch } = useReactiveFetch(getStructure, options);
 
 const vendeur = computed(() => (etat.value.statut === 'succes' ? etat.value.data : null));
+
+const marches = useMarchesPerimetre(() => (vendeur.value ? { vendeurUid: vendeurUid.value, dateMin: dateMin.value, dateMax: dateMax.value } : undefined));
 </script>
 
 <template>
@@ -39,8 +42,8 @@ const vendeur = computed(() => (etat.value.statut === 'succes' ? etat.value.data
             <CategoriePrincipaleDAchat :vendeurUid :dateMin :dateMax />
             <Top12 type="acheteurs" :vendeurUid :dateMin :dateMax />
             <CarteAcheteursFournisseurs :vendeur :dateMin :dateMax />
-            <DistributionTemporelleMarches :vendeurUid :dateMin :dateMax />
-            <ListeMarches :vendeurUid :dateMin :dateMax />
+            <DistributionTemporelleMarches :marches :dateMin :dateMax />
+            <ListeMarches :marches />
             <NatureContrats :vendeurUid :dateMin :dateMax />
             <Procedure :vendeurUid :dateMin :dateMax />
             <AchatDurable :vendeurUid :dateMin :dateMax />

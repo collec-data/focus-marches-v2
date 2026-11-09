@@ -2,13 +2,14 @@ import { render } from '@testing-library/vue';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { expect, it } from 'vitest';
 import DistributionTemporelleMarches from '../../src/components/dashboard/DistributionTemporelleMarches.vue';
-import { mockRouter } from '../mocks.ts';
+import { marche } from '../api_test_data';
+import { marchesCharges, mockRouter } from '../mocks.ts';
 
 expect.extend(toHaveNoViolations);
 
 it('Distribution temporelle marchés has no accessibility violation', async () => {
     await mockRouter({ uid: 42 });
-    const { container, unmount } = render(DistributionTemporelleMarches, { propsData: { acheteurUid: 42, dateMin: new Date('2020-01-01'), dateMax: new Date('2026-01-01') } });
+    const { container, unmount } = render(DistributionTemporelleMarches, { propsData: { marches: marchesCharges([marche]), dateMin: new Date('2020-01-01'), dateMax: new Date('2026-01-01') } });
     const results = await axe(container);
     expect(results).toHaveNoViolations();
     unmount();

@@ -1,9 +1,10 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/vue';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/vue';
 import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import Recherche from '../../src/views/Recherche.vue';
 
+import { marche } from '../api_test_data';
 import { server } from '../setup';
 
 const base = 'http://localhost:3000/';
@@ -88,7 +89,7 @@ describe('Recherche.vue', () => {
 
         await rechercher(container);
 
-        await waitFor(() => expect(screen.getByText('Le nombre de résultats affichés est limité aux 5000 plus récents. Veuillez affiner vos filtres.')).toBeTruthy());
+        await waitFor(() => expect(screen.getAllByText('Le nombre de résultats affichés est limité aux 5000 plus récents. Veuillez affiner vos filtres.').length).toBeGreaterThan(0));
         unmount();
     });
 
@@ -107,6 +108,81 @@ describe('Recherche.vue', () => {
         await waitFor(() => expect(reponses).toBe(1));
         await waitFor(() => expect(screen.queryByText(/Lancez une recherche/)).toBeNull());
         expect(screen.queryByText(/limité aux/)).toBeNull();
+        unmount();
+    });
+
+    it("n'affiche aucune section avant d'avoir lancé une recherche", () => {
+        const { unmount } = render(Recherche);
+
+        expect(screen.getByText(/Lancez une recherche/)).toBeTruthy();
+        expect(screen.queryByRole('heading', { name: 'Toutes les données de votre recherche' })).toBeNull();
+        expect(screen.queryByRole('heading', { name: 'Distribution temporelle des marchés' })).toBeNull();
+        expect(screen.queryByRole('heading', { name: 'Indicateurs clés' })).toBeNull();
+        unmount();
+    });
+
+    it('affiche les trois sections une fois la recherche lancée, y compris sans résultat', async () => {
+        const { container, unmount } = render(Recherche);
+
+        await rechercher(container);
+
+        await waitFor(() => expect(screen.getByRole('heading', { name: 'Toutes les données de votre recherche' })).toBeTruthy());
+        expect(screen.getByRole('heading', { name: 'Distribution temporelle des marchés' })).toBeTruthy();
+        expect(screen.getByRole('heading', { name: 'Indicateurs clés' })).toBeTruthy();
+        expect(screen.queryByText(/Lancez une recherche/)).toBeNull();
+        unmount();
+    });
+
+    it("ne demande les marchés qu'une fois pour le tableau et le graphique", async () => {
+        let reponses = 0;
+        server.use(
+            http.get(base + 'marche/', () => {
+                reponses += 1;
+                return HttpResponse.json([marche]);
+            })
+        );
+
+        const { container, unmount } = render(Recherche);
+        await rechercher(container);
+
+        await waitFor(() => expect(screen.getByText('Lorem ipsum dolor')).toBeTruthy());
+        const distribution = await screen.findByRole('heading', { name: 'Distribution temporelle des marchés' });
+        await waitFor(() => expect(within(distribution.closest('section') as HTMLElement).queryByLabelText('Chargement en cours')).toBeNull());
+        expect(reponses).toBe(1);
+        unmount();
+    });
+
+    it('donne à chaque section son propre état de chargement', async () => {
+        let liberer: () => void = () => {};
+        const attente = new Promise<void>((resolve) => {
+            liberer = resolve;
+        });
+        server.use(
+            http.get(base + 'marche/', async () => {
+                await attente;
+                return HttpResponse.json([marche]);
+            })
+        );
+
+        const { container, unmount } = render(Recherche);
+        await rechercher(container);
+
+        const distribution = await waitFor(() => {
+            const section = screen.getByRole('heading', { name: 'Distribution temporelle des marchés' }).closest('section');
+            expect(section).not.toBeNull();
+            return section as HTMLElement;
+        });
+        expect(within(distribution).getByLabelText('Chargement en cours')).toBeTruthy();
+
+        const donnees = screen.getByRole('heading', { name: 'Toutes les données de votre recherche' }).closest('section') as HTMLElement;
+        expect(donnees.querySelector('.p-datatable-mask')).not.toBeNull();
+
+        // Les indicateurs ne dépendent pas des marchés : leur section n'attend pas la liste.
+        await waitFor(() => expect(screen.getByText('PÉRIODE')).toBeTruthy());
+
+        liberer();
+        await waitFor(() => expect(within(donnees).getByText('Lorem ipsum dolor')).toBeTruthy());
+        expect(within(distribution).queryByLabelText('Chargement en cours')).toBeNull();
         unmount();
     });
 });
