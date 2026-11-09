@@ -2,10 +2,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import select
-from sqlalchemy.orm import aliased
+from sqlalchemy.orm import selectinload
 
 from app.dependencies import SessionDep
-from app.models.db import ContratConcession, Structure
+from app.models.db import ContratConcession, DonneeExecution, Structure
 from app.models.dto import ContratConcessionDto
 from app.models.filters import FiltreListesConcessions
 
@@ -16,13 +16,12 @@ router = APIRouter()
 def get_liste_concessions(
     session: SessionDep, filtres: Annotated[FiltreListesConcessions, Query()]
 ) -> list[ContratConcession]:
-    autorite_concedante = aliased(Structure)
-    concessionnaires = aliased(Structure)
-
-    stmt = (
-        select(ContratConcession)
-        .outerjoin(autorite_concedante, ContratConcession.autorite_concedante)
-        .outerjoin(concessionnaires, ContratConcession.concessionnaires)
+    stmt = select(ContratConcession).options(
+        selectinload(ContratConcession.autorite_concedante),
+        selectinload(ContratConcession.concessionnaires),
+        selectinload(ContratConcession.donnees_execution).selectinload(
+            DonneeExecution.tarifs
+        ),
     )
 
     if filtres.date_debut:
@@ -33,11 +32,17 @@ def get_liste_concessions(
 
     if filtres.autorite_concedante_uid:
         stmt = stmt.where(
-            autorite_concedante.uid == int(filtres.autorite_concedante_uid)
+            ContratConcession.autorite_concedante.has(
+                Structure.uid == int(filtres.autorite_concedante_uid)
+            )
         )
 
     if filtres.concessionnaire_uid:
-        stmt = stmt.where(concessionnaires.uid == int(filtres.concessionnaire_uid))
+        stmt = stmt.where(
+            ContratConcession.concessionnaires.any(
+                Structure.uid == int(filtres.concessionnaire_uid)
+            )
+        )
 
     if filtres.limit:
         stmt = stmt.limit(filtres.limit)

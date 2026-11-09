@@ -40,3 +40,24 @@ def test_get_concession_inconnu(client):
     response = client.get("/contrat-concession/1111")
     assert response.status_code == 404
     assert response.json()["detail"] == "Concession inconnue"
+
+
+def test_list_concessions_plusieurs_concessionnaires_pas_de_doublon(client):
+    concession = ConcessionFactory(concessionnaires=VendeurFactory.create_batch(3))
+
+    response = client.get("/contrat-concession")
+
+    assert [c["uid"] for c in response.json()] == [concession.uid]
+    assert len(response.json()[0]["concessionnaires"]) == 3
+
+
+def test_list_concessions_plusieurs_concessionnaires_limite_compte_des_concessions(
+    client,
+):
+    for _ in range(4):
+        ConcessionFactory(concessionnaires=VendeurFactory.create_batch(3))
+
+    response = client.get("/contrat-concession", params={"limit": 3})
+
+    assert len({c["uid"] for c in response.json()}) == 3
+    assert len(response.json()) == 3
